@@ -1,0 +1,50 @@
+#include "mt2w.h"
+#include "chi2.h"
+
+int main(){
+    vector<LorentzVector> jets;
+    vector<bool> btag;
+    vector<float> sigma;
+
+    /* Define the event */
+    float met = 60.164054871;
+    float metphi = 0.61534303427;
+
+    // Identified lepton
+    LorentzVector lep(15.622756958,29.060853958,1.0357201099,33.010417938);
+
+    // Jets, b-tagging, and jet-resolution
+    LorentzVector j1(-154.34786987,-95.917778015,-502.48416138,535.081604);
+    bool b1 = false;
+    float s1 = 0.079263068736;
+
+    LorentzVector j2(9.410118103,-52.559776306,150.97743225,160.78645325);
+    bool b2 = false;
+    float s2 = 0.13264077902;
+
+    LorentzVector j3(49.700946808,-8.7576665878,-108.4271698,120.35206604);
+    bool b3 = false;
+    float s3 = 0.13120421767;
+
+    LorentzVector j4(-42.24382019,20.526990891,30.697292328,56.885437012);
+    bool b4 = true;
+    float s4 = 0.1183263585;
+
+    LorentzVector j5(42.017311096,-12.269251823,34.797512054,57.173427582);
+    bool b5 = true;
+    float s5 = 0.12066539377;
+
+    jets.push_back(j1); jets.push_back(j2); jets.push_back(j3); jets.push_back(j4); jets.push_back(j5);
+    btag.push_back(b1); btag.push_back(b2); btag.push_back(b3); btag.push_back(b4); btag.push_back(b5);
+    sigma.push_back(s1);sigma.push_back(s2);sigma.push_back(s3);sigma.push_back(s4);sigma.push_back(s5);
+
+    // Call MT2w and chi2 calculations.
+    double mt2w = calculateMT2w(jets, btag, lep, met, metphi);
+    double chi2 = calculateChi2(jets, sigma, btag);
+
+    // Print results.
+    cout << "MT2w = " << mt2w << endl;
+    cout << "chi2 = " << chi2 << endl;
+
+    return 0.;
+}
