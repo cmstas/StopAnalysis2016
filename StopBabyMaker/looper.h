@@ -47,7 +47,7 @@ class babyMaker {
     float skim_jetpt;
     float skim_jeteta;
 
-    void setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, int jetpt, int jeteta);
+    void setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, float jetpt, float jeteta);
 
   protected:
     TFile* BabyFile;

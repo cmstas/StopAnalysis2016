@@ -68,7 +68,7 @@ babyMaker::babyMaker()
    Tracks = IsoTracksTree();
 }
 
-void babyMaker::setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, int jetpt, int jeteta){
+void babyMaker::setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, float jetpt, float jeteta){
         skim_nvtx = nvtx;
         skim_met = met;
 
@@ -190,7 +190,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.FillCommon(file->GetName()); 
      // std::cout << "[babymaker::looper]: filling event vars completed" << std::endl; 
    //   dumpDocLines();
-
       if(StopEvt.nvtxs<skim_nvtx) continue;
       nEvents_GoodVtx++;
       if(evt_pfmet()<skim_met) continue;
@@ -207,7 +206,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 //std::cout << "[babymaker::looper]: selecting leptons" << std::endl;
       vector<Lepton> GoodLeps;
       for (unsigned int eidx = 0; eidx < els_p4().size(); eidx++){
-        if(!PassElectronPreSelections(eidx, skim_leppt)) continue;
+        if(!PassElectronPreSelections(eidx, skim_leppt,skim_lepeta)) continue;
         Lepton goodlepton;
         goodlepton.id  = -11*els_charge().at(eidx);
         goodlepton.idx = eidx;
@@ -216,7 +215,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       }
 
       for (unsigned int midx = 0; midx < mus_p4().size(); midx++){
-        if(!PassMuonPreSelections(midx, skim_leppt)) continue;
+        if(!PassMuonPreSelections(midx, skim_leppt,skim_lepeta)) continue;
         Lepton goodlepton;
         goodlepton.id  = -13*mus_charge().at(midx);
         goodlepton.idx = midx;
@@ -225,27 +224,30 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       }
    
       sort(GoodLeps.begin(),GoodLeps.end(),sortLepbypt());       
-
       nGoodLeptons = GoodLeps.size();
       if(nGoodLeptons<skim_nlep) continue;
       nEvents_GoodLep++; 
 
       StopEvt.ngoodlep = nGoodLeptons; 
-
 //std::cout << "[babymaker::looper]: filling lepton variables" << std::endl;
       lep1.FillCommon(GoodLeps.at(0).id, GoodLeps.at(0).idx);      
       if( nGoodLeptons > 1 ) lep2.FillCommon(GoodLeps.at(1).id, GoodLeps.at(1).idx);
 
      //get the jets overlapping with the selected leptons
+      jet_overlep1_idx = -9999;
+      jet_overlep2_idx = -9999;
       jet_overlep1_idx = getOverlappingJetIndex(lep1.p4, pfjets_p4() , 0.4);
       if(nGoodLeptons>1) jet_overlep2_idx = getOverlappingJetIndex(lep2.p4, pfjets_p4() , 0.4); 
       
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
      //jets and b-tag variables feeding the index for the jet overlapping the selected leptons
 //std::cout << "[babymaker::looper]: filling jet vars" << std::endl;
+      jets.SetJetSelection("ak4",skim_jetpt,skim_jeteta,true);
+      jets.SetJetSelection("ak8",100.,skim_jeteta,true);
       jets.FillCommon(jet_overlep1_idx, jet_overlep2_idx);
-      if(jets.ak4GoodPFJets < 2) continue;
+      if(jets.ak4GoodPFJets < skim_njets) continue;
       nEvents_2GoodJets++;
+
      // now calculate jets + lep variables
      //DR(lep, leadB) with medium discriminator
      StopEvt.dR_lep1_leadb = dRbetweenVectors(jets.ak4pfjets_leadMEDbjet_p4, lep1.p4);
@@ -269,10 +271,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     int vetotaus=0;
 
     Taus.tau_IDnames = taus_pf_IDnames();
-
- //   for(unsigned int iTau = 0; iTau < taus_pf_IDnames().size(); iTau++){
-   //       cout<<taus_pf_IDnames().at(iTau)<<endl;
-   // }
 
     for(unsigned int iTau = 0; iTau < taus_pf_p4().size(); iTau++){
       Taus.FillCommon(iTau, 20, 2.4);
@@ -314,25 +312,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
    int n_nuelfromt=0;
    int n_numufromt=0;
 
-   int econv = 0;
     //std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
     //gen particles
     for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
       //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
       if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_leptau_els.FillCommon(genx);
-      if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) nelsfromt++;
-//if(abs(genps_id().at(genx)) == pdg_el && abs(genps_id_mother().at(genx)) == pdg_el && genps_charge().at(genx) == (-1)*genps_charge().at(genps_idx_mother().at(genx))) econv++;
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
 
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
       if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_leptau_mus.FillCommon(genx);
-      if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) nmusfromt++;
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
-      //if(abs(genps_id().at(genx)) == pdg_tau) cout<<"found a tau and status ="<<genps_status().at(genx)<<endl;
-      //if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_tau) cout<<"found a tau with mother W and status = "<<genps_status().at(genx) <<endl;
+
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
-      if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) ntausfromt++;
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
       if(abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx); 
 
@@ -359,16 +351,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     gen_mus.gen_nfromt = n_numufromt;
     gen_taus.gen_nfromt = n_nutaufromt;
 
-/*    if(nelsfromt + nmusfromt + ntausfromt == 3){
-      cout<<"***************************BEGIN******************************"<<endl;
-      cout<<"gen els = "<<n_nuelfromt<<" gen mus = "<<n_numufromt<<" gen taus = "<<n_nutaufromt<<endl;
-       dumpDocLines(); 
-    
-
-    for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
-         if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) cout<<"genps_id().at(genx) = "<<genps_id().at(genx)<<" genps_id_mother().at(genx) = "<<genps_id_mother().at(genx)<<" abs(genps_id_mother().at(genps_idx_mother().at(genx))) = "<<abs(genps_id_mother().at(genps_idx_mother().at(genx))) <<" abs(genps_id_mother().at(genps_idx_mother().at(genps_idx_mother().at(genx)))) = "<< abs(genps_id_mother().at(genps_idx_mother().at(genps_idx_mother().at(genx)))) <<endl;
-   }
-}*/
     BabyTree->Fill();
 
     }//close event loop

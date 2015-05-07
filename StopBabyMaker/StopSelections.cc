@@ -18,16 +18,21 @@ int numberOfGoodVertices() {
   return ngv;
 }
 
-bool PassElectronPreSelections(unsigned int elIdx,float pt){
+bool PassElectronPreSelections(unsigned int elIdx,float pt, float eta){
   if(els_p4().at(elIdx).pt() < pt) return false;
-  if(!electronID(elIdx, STOP_loose_v1)) return false;
+  if(fabs(els_p4().at(elIdx).eta()) > eta) return false;
+  if(!electronID(elIdx, STOP_loose_v1)) return false;  //isolation applied at 0.15 
+  //for sync 
+//  if(!isMediumElectronPOGphys14(elIdx)) return false;
+
   return true;
 }
 
-bool PassMuonPreSelections(unsigned int muIdx,float pt){
+bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   if(mus_p4().at(muIdx).pt() < pt) return false;
+  if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
   if(!muonID(muIdx, STOP_tight_v1)) return false;
-//  if(muRelIso03(muIdx, STOP) > 0.15) return false; 
+  if(muRelIso03(muIdx, STOP) > 0.15) return false; 
   return true;
 }
 
@@ -68,14 +73,14 @@ int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, dou
   int closestjet_idx = 0;
 
 	for(unsigned int iJet=1; iJet<jets_.size(); iJet++){
-            if(!PassJetPreSelections(iJet,30., 2.4)) continue;
+            if(!PassJetPreSelections(iJet,30.,2.4)) continue;
             DR_lep_jet1 = ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_);
             DR_lep_jet2 = ROOT::Math::VectorUtil::DeltaR(jets_.at(iJet), lep_);
             if(DR_lep_jet1 > DR_lep_jet2) closestjet_idx = iJet;
 	}
 
 	if(ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_) > dR){
-          cout<<"No overlapping jet found"<<endl;
+       //   cout<<"No overlapping jet found"<<endl;
           return -9999;
         }else return closestjet_idx;
 }
@@ -97,7 +102,6 @@ int getOverlappingTrackIndex(LorentzVector& lep_, int pdgid_, vector<LorentzVect
         }
 
         if(ROOT::Math::VectorUtil::DeltaR(tracks_.at(closesttrack_idx), lep_) > dR){
-          cout<<"No overlapping track found"<<endl;
           return -9999;
         }else return closesttrack_idx;
 }

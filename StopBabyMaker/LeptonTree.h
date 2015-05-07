@@ -52,6 +52,9 @@ public:
     float relIso03DB; //ss
     float relIso03EA;
     float relIso04DB;
+    float miniRelIso_default;
+    float miniRelIso_noDBeta_pTthresh_0;
+    float miniRelIso_noDBeta_pTthresh_0p5;
 
     float ip3d;
     float ip3derr;
@@ -73,6 +76,9 @@ public:
     bool is_eleid_medium;
     bool is_eleid_tight;
     float eoverpin; 
+    bool is_phys14_loose_noIso;
+    bool is_phys14_medium_noIso;
+    bool is_phys14_tight_noIso;
 //    veci els_pfcands_idx;
  
     //

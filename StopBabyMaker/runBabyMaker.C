@@ -14,10 +14,10 @@ int main(int argc, char **argv){
  
   babyMaker *mylooper = new babyMaker();
   //babyMaker::setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, int jetpt, int jeteta){
-   mylooper->setSkimVariables(1, 30., 1, 20., 2.4, 2, 30., 2.4);
+   mylooper->setSkimVariables(1, 30., 1, 20., 2.1, 2, 30., 2.4);
 
-  char* dirpath = "../";  
-  
+  char* dirpath = "/nfs-7/userdata/stopRun2/";  
+
   int file=0;
   int nevents = -1;
   if(argc>2) nevents = atoi(argv[2]);  

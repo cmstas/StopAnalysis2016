@@ -42,8 +42,8 @@ int numberOfGoodVertices();
 //gen functions
 int leptonGenpCount(int& nele, int& nmuon, int& ntau);
 int leptonGenpCount_lepTauDecays(int& nele, int& nmuon, int& ntau);
-bool PassMuonPreSelections(unsigned int muIdx, float pt);
-bool PassElectronPreSelections(unsigned int elIdx, float pt);
+bool PassMuonPreSelections(unsigned int muIdx, float pt, float eta);
+bool PassElectronPreSelections(unsigned int elIdx, float pt, float eta);
 bool PassJetPreSelections(unsigned int jetIdx, float pt, float eta);
 vector<pair <int, LorentzVector>> sort_pt( vector<LorentzVector> p4_, float pt_);
 vector< LorentzVector> getsortedp4(vector<pair <int, LorentzVector>> index_);

@@ -45,7 +45,6 @@ void LeptonTree::FillCommon (int id, int idx)
     if (!evt_isRealData()) {
             mcp4      = abs(id)==11 ? els_mc_p4().at(idx) : mus_mc_p4().at(idx);
             mcid      = abs(id)==11 ? els_mc_id().at(idx) : abs(id)==13 ? mus_mc_id().at(idx) : -9999 ;
- //           mcstatus  = genps_status().at(idx); // PLACEHOLDER, NEEDS FIXING vector<int> &genps_status()??? double check
 
             mcidx       = abs(id)==11 ? els_mcidx().at(idx) : abs(id)==13 ? mus_mcidx().at(idx) : -9999;
             mc_motherid = abs(id)==11 ? els_mc_motherid().at(idx) : abs(id)==13 ? mus_mc_motherid().at(idx) : -9999;
@@ -56,8 +55,6 @@ void LeptonTree::FillCommon (int id, int idx)
     {
         is_el  		= true;
 
-	//d0 and dz
-    	//int gsfidx  = els_gsftrkidx().at(idx);
 	if (vtxidx >= 0) {
             d0 = els_d0().at(idx);
             dz = els_dzPV().at(idx);
@@ -71,14 +68,23 @@ void LeptonTree::FillCommon (int id, int idx)
         is_eleid_loose  = electronID(idx, STOP_loose_v1);
         is_eleid_medium	= electronID(idx, STOP_medium_v1);
         is_eleid_tight  = electronID(idx, STOP_tight_v1);
+        
+        //Phys14 IDs
+        is_phys14_loose_noIso = isLooseElectronPOGphys14noIso(idx);
+        is_phys14_medium_noIso = isMediumElectronPOGphys14noIso(idx);
+        is_phys14_tight_noIso = isTightElectronPOGphys14noIso(idx);
+
         eoverpin        = els_eOverPIn().at(idx); 
         
 	//ISO
 	relIso03DB = eleRelIso03(idx, STOP);
         relIso03EA = eleRelIso03EA(idx);
 
-        //pfcands
-       // els_pfcands_idx = els_PFCand_idx().at(idx);
+       //elMiniRelIso(unsigned int idx, bool useVetoCones, float ptthresh, bool useDBcor)
+       miniRelIso_default = elMiniRelIso(idx, true, 0., true);
+       miniRelIso_noDBeta_pTthresh_0 = elMiniRelIso(idx, true, 0., false);
+       miniRelIso_noDBeta_pTthresh_0p5 = elMiniRelIso(idx, true, 0.5, false);
+
     } // end electron block
 
 //and now muons....
@@ -107,8 +113,12 @@ void LeptonTree::FillCommon (int id, int idx)
     	relIso03EA = muRelIso03EA(idx);
     	relIso04DB = muRelIso04DB(idx);
 
-        //pf cands
-     //   mus_pfcands_idx = mus_pfidx().at(idx);
+         //muMiniRelIso(unsigned int idx, bool useVetoCones=true, float ptthresh = 0.5, bool useDBcor=false);
+           miniRelIso_default = muMiniRelIso(idx, true, 0.5, true);
+           miniRelIso_noDBeta_pTthresh_0 = muMiniRelIso(idx, true, 0., false);
+           miniRelIso_noDBeta_pTthresh_0p5 = muMiniRelIso(idx, true, 0.5, false);
+           //cout<<"miniRelIso_default "<<miniRelIso_default<<endl;
+           //cout<<"miniRelIso_noDBeta_pTthresh_0 "<<miniRelIso_noDBeta_pTthresh_0<<endl;
     } // end muon block
 }
 
@@ -131,6 +141,9 @@ void LeptonTree::Reset()
     relIso03DB      = -9999.;
     relIso03EA      = -9999.;    
     relIso04DB      = -9999.;
+    miniRelIso_default = -9999.;
+    miniRelIso_noDBeta_pTthresh_0 = -9999.;
+    miniRelIso_noDBeta_pTthresh_0p5 = -9999.;
 
     mcid            = -9999;
     mcstatus        = -9999;
@@ -139,6 +152,10 @@ void LeptonTree::Reset()
     is_eleid_medium = false;
     is_eleid_tight  = false;
     eoverpin        = -9999.;
+
+    is_phys14_loose_noIso = false;
+    is_phys14_medium_noIso = false;
+    is_phys14_tight_noIso = false;
    // els_pfcands_idx.clear();
 
     is_muoid_loose  = false;
@@ -178,21 +195,26 @@ void LeptonTree::SetBranches(TTree* tree)
      tree->Branch(Form("%srelIso03EA"       , prefix_.c_str()) , &relIso03EA       );
      tree->Branch(Form("%srelIso04DB"       , prefix_.c_str()) , &relIso04DB       );
 
+     tree->Branch(Form("%sminiRelIso_default"       , prefix_.c_str()) , &miniRelIso_default);
+     tree->Branch(Form("%sminiRelIso_noDBeta_pTthresh_0"       , prefix_.c_str()) , &miniRelIso_noDBeta_pTthresh_0);
+     tree->Branch(Form("%sminiRelIso_noDBeta_pTthresh_0p5"       , prefix_.c_str()) , &miniRelIso_noDBeta_pTthresh_0p5);
+
     tree->Branch(Form("%smcid"            , prefix_.c_str()) , &mcid            ); 
     tree->Branch(Form("%smcstatus"        , prefix_.c_str()) , &mcstatus        ); 
     
     tree->Branch(Form("%sis_eleid_loose" , prefix_.c_str()) , &is_eleid_loose);
     tree->Branch(Form("%sis_eleid_medium" , prefix_.c_str()) , &is_eleid_medium ); 
     tree->Branch(Form("%sis_eleid_tight"  , prefix_.c_str()) , &is_eleid_tight  ); 
+    tree->Branch(Form("%sis_phys14_loose_noIso", prefix_.c_str()) , &is_phys14_loose_noIso);
+    tree->Branch(Form("%sis_phys14_medium_noIso", prefix_.c_str()) , &is_phys14_medium_noIso);
+    tree->Branch(Form("%sis_phys14_tight_noIso", prefix_.c_str()) , &is_phys14_tight_noIso);
     tree->Branch(Form("%seoverpin"        , prefix_.c_str()) , &eoverpin        ); 
-    //tree->Branch(Form("%sels_pfcands_idx", prefix_.c_str()), &els_pfcands_idx);
 
     tree->Branch(Form("%sis_muoid_loose"  , prefix_.c_str()) , &is_muoid_loose  ); 
     tree->Branch(Form("%sis_muoid_tight"  , prefix_.c_str()) , &is_muoid_tight  ); 
     tree->Branch(Form("%sip3d"  		 , prefix_.c_str()) , &ip3d);
     tree->Branch(Form("%sip3derr"	 , prefix_.c_str()) , &ip3derr);
     tree->Branch(Form("%sis_pfmu"	 , prefix_.c_str()) , &is_pfmu);
-   // tree->Branch(Form("%smus_pfcands_idx", prefix_.c_str()), &mus_pfcands_idx);
 
     tree->Branch(Form("%sp4"      , prefix_.c_str()) , "LorentzVector" , &p4      );
     tree->Branch(Form("%smcp4"    , prefix_.c_str()) , "LorentzVector" , &mcp4    );

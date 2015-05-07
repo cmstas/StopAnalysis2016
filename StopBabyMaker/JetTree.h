@@ -21,15 +21,21 @@ class JetTree
 public:
     // constructor/destructor
     JetTree ();
+    JetTree (const std::string &prefix);
     virtual ~JetTree () {}
  
     void Reset ();
     void SetBranches (TTree* tree);
     void SetAliases (TTree* tree);
     void FillCommon(unsigned int overlep1_idx, unsigned int overlep2_idx);
-    void SetJetPtSelection (std::string cone_size, float pt_cut);
-    void GetJetPtSelections (std::string cone_size = "");
-     
+    void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id);
+    void GetJetSelections (std::string cone_size = "");
+
+protected:
+
+    std::string prefix_;
+
+public:
     // branch objects
  
     // ak4 PF jets
@@ -104,6 +110,8 @@ public:
 private:
     float m_ak4_pt_cut;
     float m_ak8_pt_cut;
+    float m_eta_cut;
+    bool m_passid;
 };
  
 #endif
