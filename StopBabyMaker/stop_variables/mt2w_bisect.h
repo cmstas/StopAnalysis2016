@@ -46,7 +46,7 @@ class mt2w
       //    b2 is the other bottom (paired with the invisible W)
       //    pmiss is missing momentum with only x and y components.
       double get_mt2w();  // Calculates result, which is cached until set_momenta is called.
-      void   print();
+      //void   print();
       
    protected:
       void   mt2w_bisect();  // The real work is done here.
