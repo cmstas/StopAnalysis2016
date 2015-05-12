@@ -8,6 +8,7 @@
 #include "MCSelections.h"
 #include "VertexSelections.h"
 #include "StopSelections.h"
+#include "IsolationTools.h"
 
 LeptonTree::LeptonTree ()
 {
