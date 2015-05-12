@@ -28,9 +28,10 @@ CXXFLAGS       += -I$(COREPATH)
 
 FWLIB	       = $(FWLIBPATH)/libMiniFWLite.so 
 CORELIB        = $(COREPATH)/CMS3_CORE.so
+STOPVARLIB     = stop_variables/StopVariables.so
 
 runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o
-	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lTMVA -lEG $(CORELIB) $(FWLIB)
+	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(FWLIB) $(STOPVARLIB)
 
 runBabyMaker.o: runBabyMaker.C looper.h 
 	$(CXX) $(CXXFLAGS) -c runBabyMaker.C 
