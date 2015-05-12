@@ -7,6 +7,7 @@
 #include "JetSelections.h"
 #include "VertexSelections.h"
 #include "IsoTrackVeto.h"
+#include "IsolationTools.h"
 
 using namespace tas;
 
@@ -154,8 +155,8 @@ struct sortbypt{
   }
 };
 
-vector<pair <int, LorentzVector>> sort_pt( vector<LorentzVector> p4_, float pt_){
-  vector<pair <int, LorentzVector>> sorted_;
+vector<pair <int, LorentzVector> > sort_pt( vector<LorentzVector> p4_, float pt_){
+  vector<pair <int, LorentzVector> > sorted_;
   for(unsigned int iObj=0; iObj<p4_.size(); iObj++){
    if(p4_.at(iObj).pt()<pt_) continue;
    sorted_.push_back(make_pair(iObj,p4_.at(iObj)));
@@ -164,7 +165,7 @@ vector<pair <int, LorentzVector>> sort_pt( vector<LorentzVector> p4_, float pt_)
   return sorted_;
 }
 
-vector< LorentzVector> getsortedp4(vector<pair <int, LorentzVector>> index_){
+vector< LorentzVector> getsortedp4(vector<pair <int, LorentzVector> > index_){
   vector<LorentzVector> sorted_p4;
   for(unsigned int iObj=0; iObj<index_.size(); iObj++){
    sorted_p4.push_back(index_.at(iObj).second);
