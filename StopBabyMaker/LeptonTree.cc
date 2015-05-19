@@ -140,7 +140,7 @@ void LeptonTree::FillCommon (int id, int idx)
     	relIso04DB = muRelIso04DB(idx);
 
          //muMiniRelIso(unsigned int idx, bool useVetoCones=true, float ptthresh = 0.5, bool useDBcor=false);
-           miniRelIsoDB = muMiniRelIso(idx, true, 0.5, true, true);
+           miniRelIsoDB = muMiniRelIso(idx, true, 0.5, true, false);
            miniRelIsoEA = muMiniRelIso(idx, true, 0.5, false, true); 
     } // end muon block
 }
