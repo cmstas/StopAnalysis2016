@@ -92,6 +92,13 @@ public:
    //veto
    bool PassTrackVeto;
    bool PassTauVeto;
+
+    float EA_all_rho;
+    float EA_allcalo_rho;
+    float EA_centralcalo_rho;
+    float EA_centralchargedpileup_rho;
+    float EA_centralneutral_rho;
+
 };
  
 #endif
