@@ -47,14 +47,28 @@ public:
     float dz;
     float dzerr;
 
+    float sigmaIEtaEta_fill5x5;
+    float dEtaIn;
+    float dPhiIn;
+    float hOverE;
+    float ooEmooP;
+    int expectedMissingInnerHits ;
+    bool conversionVeto;
+    float etaSC ;
+    float ChiSqr;
+
+    float chiso;
+    float nhiso;
+    float emiso;
+    float deltaBeta;
+
     float pfiso04;  //2012 only available for electrons
     float pfiso03;  //2012 only available for electrons
     float relIso03DB; //ss
     float relIso03EA;
     float relIso04DB;
-    float miniRelIso_default;
-    float miniRelIso_noDBeta_pTthresh_0;
-    float miniRelIso_noDBeta_pTthresh_0p5;
+    float miniRelIsoDB;
+    float miniRelIsoEA;
 
     float ip3d;
     float ip3derr;
@@ -80,10 +94,9 @@ public:
     bool is_phys14_medium_noIso;
     bool is_phys14_tight_noIso;
 //    veci els_pfcands_idx;
- 
     //
     // muon specific info
-    //
+    bool is_muoid_medium; 
     bool is_muoid_loose;
     bool is_muoid_tight;
   //  int mus_pfcands_idx;
