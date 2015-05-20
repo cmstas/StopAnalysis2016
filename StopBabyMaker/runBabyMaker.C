@@ -7,20 +7,23 @@ using namespace std;
 //int main(){
 int main(int argc, char **argv){
  if(argc<2){
-        cout<<" runBabyMaker takes two arguments: ./runBabyMaker sample_name nevents" << endl;
-	cout<<" Need to provide at least sample_name (nevents = -1 by default) "<<endl;
-        return 0;
+   cout<<" runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath" << endl;
+   cout<<" Need to provide at least sample_name; nevents=-1 (-1=all evnets), file_number=0 (0=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default"<<endl;
+   return 0;
  }
  
   babyMaker *mylooper = new babyMaker();
   //babyMaker::setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, int jetpt, int jeteta){
-   mylooper->setSkimVariables(1, 30., 1, 20., 2.1, 2, 30., 2.4);
+  mylooper->setSkimVariables(1, 30., 1, 20., 2.1, 2, 30., 2.4);
 
-  char* dirpath = "/nfs-7/userdata/stopRun2/";  
-
-  int file=0;
   int nevents = -1;
   if(argc>2) nevents = atoi(argv[2]);  
+  
+  int file=0;
+  if(argc>3) file = atoi(argv[3]);
+
+  char* dirpath = "/nfs-7/userdata/stopRun2/";  
+  if(argc>4) dirpath = argv[4];
 
   const char* filename = (file == 0 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
   cout << filename << endl;
