@@ -22,18 +22,14 @@ int numberOfGoodVertices() {
 bool PassElectronPreSelections(unsigned int elIdx,float pt, float eta){
   if(els_p4().at(elIdx).pt() < pt) return false;
   if(fabs(els_p4().at(elIdx).eta()) > eta) return false;
-  if(!electronID(elIdx, STOP_loose_v1)) return false;  //isolation applied at 0.15 
-  //for sync 
-//  if(!isMediumElectronPOGphys14(elIdx)) return false;
-
+  if(!electronID(elIdx, STOP_medium_v2)) return false;  //mini-isolation applied at 0.1
   return true;
 }
 
 bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   if(mus_p4().at(muIdx).pt() < pt) return false;
   if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
-  if(!muonID(muIdx, STOP_tight_v1)) return false;
-  if(muRelIso03(muIdx, STOP) > 0.15) return false; 
+  if(!muonID(muIdx, STOP_medium_v1)) return false;  //mini-isolation applied at 0.1
   return true;
 }
 

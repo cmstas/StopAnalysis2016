@@ -61,7 +61,14 @@ void EventTree::FillCommon (const std::string &root_file_name)
     dataset = evt_dataset().at(0).Data();
     filename = root_file_name;
     cms3tag = evt_CMS3tag().at(0).Data();
-    
+
+
+    //EA rho
+    EA_all_rho    = evt_fixgrid_all_rho();
+    EA_allcalo_rho = evt_fixgridfastjet_allcalo_rho();
+    EA_centralcalo_rho = evt_fixgridfastjet_centralcalo_rho();
+    EA_centralchargedpileup_rho = evt_fixgridfastjet_centralchargedpileup_rho();
+    EA_centralneutral_rho =  evt_fixgridfastjet_centralneutral_rho(); 
 }
  
 void EventTree::Reset ()
@@ -110,7 +117,13 @@ void EventTree::Reset ()
     genmet_phi 	= -9999.;
     PassTrackVeto = false;
     PassTauVeto = false;
- 
+
+    EA_all_rho = -9999.;
+    EA_allcalo_rho = -9999.; 
+    EA_centralcalo_rho = -9999.; 
+    EA_centralchargedpileup_rho = -9999.; 
+    EA_centralneutral_rho =  -9999.; 
+
 }
  
 void EventTree::SetBranches (TTree* tree)
@@ -158,4 +171,9 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("genmet_phi", &genmet_phi);
     tree->Branch("PassTrackVeto",&PassTrackVeto);
     tree->Branch("PassTauVeto",&PassTauVeto);
+    tree->Branch("EA_all_rho", &EA_all_rho);   
+    tree->Branch("EA_allcalo_rho", &EA_allcalo_rho); 
+    tree->Branch("EA_centralcalo_rho", &EA_centralcalo_rho); 
+    tree->Branch("EA_centralchargedpileup_rho", &EA_centralchargedpileup_rho); 
+    tree->Branch("EA_centralneutral_rho", &EA_centralneutral_rho); 
 }
