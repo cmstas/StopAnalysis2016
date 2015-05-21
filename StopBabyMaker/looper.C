@@ -185,7 +185,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       InitBabyNtuple();
 
-      //std::cout << "[babymaker::looper]: filling event vars" << std::endl;
+   //  std::cout << "[babymaker::looper]: filling event vars" << std::endl;
       //Fill Event Variables
       StopEvt.FillCommon(file->GetName()); 
      // std::cout << "[babymaker::looper]: filling event vars completed" << std::endl; 
@@ -232,8 +232,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 //std::cout << "[babymaker::looper]: filling lepton variables" << std::endl;
       lep1.FillCommon(GoodLeps.at(0).id, GoodLeps.at(0).idx);      
       if( nGoodLeptons > 1 ) lep2.FillCommon(GoodLeps.at(1).id, GoodLeps.at(1).idx);
-
      //get the jets overlapping with the selected leptons
+     if(pfjets_p4().size() < 1) continue; 
       jet_overlep1_idx = -9999;
       jet_overlep2_idx = -9999;
       jet_overlep1_idx = getOverlappingJetIndex(lep1.p4, pfjets_p4() , 0.4);
@@ -247,7 +247,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       jets.FillCommon(jet_overlep1_idx, jet_overlep2_idx);
       if(jets.ak4GoodPFJets < skim_njets) continue;
       nEvents_2GoodJets++;
-
      // now calculate jets + lep variables
      //DR(lep, leadB) with medium discriminator
      StopEvt.dR_lep1_leadb = dRbetweenVectors(jets.ak4pfjets_leadMEDbjet_p4, lep1.p4);
@@ -312,7 +311,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
    int n_nuelfromt=0;
    int n_numufromt=0;
 
-    //std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
+//    std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
     //gen particles
     for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
       //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)

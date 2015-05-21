@@ -94,7 +94,7 @@ void LeptonTree::FillCommon (int id, int idx)
         nhiso     = els_pfNeutralHadronIso().at(idx);
         emiso     = els_pfPhotonIso().at(idx);
         deltaBeta = els_pfPUIso().at(idx);               
- 
+
 	//ISO
 	relIso03DB = eleRelIso03(idx, STOP);
         relIso03EA = eleRelIso03EA(idx);
@@ -121,7 +121,6 @@ void LeptonTree::FillCommon (int id, int idx)
         ip3derr = mus_ip3derr().at(idx);;
 
         is_pfmu    = ((mus_type().at(idx) & (1<<5)) != 0);
-
         if (vtxidx >= 0) {
    	    is_muoid_loose  = muonID(idx, STOP_loose_v1); 
             is_muoid_medium = muonID(idx, STOP_medium_v1);
@@ -263,6 +262,7 @@ void LeptonTree::SetBranches(TTree* tree)
     tree->Branch(Form("%seoverpin"        , prefix_.c_str()) , &eoverpin        ); 
 
     tree->Branch(Form("%sis_muoid_loose"  , prefix_.c_str()) , &is_muoid_loose  ); 
+    tree->Branch(Form("%sis_muoid_medium"  , prefix_.c_str()) , &is_muoid_medium  );
     tree->Branch(Form("%sis_muoid_tight"  , prefix_.c_str()) , &is_muoid_tight  ); 
     tree->Branch(Form("%sip3d"  		 , prefix_.c_str()) , &ip3d);
     tree->Branch(Form("%sip3derr"	 , prefix_.c_str()) , &ip3derr);

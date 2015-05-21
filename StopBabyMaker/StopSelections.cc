@@ -30,6 +30,8 @@ bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   if(mus_p4().at(muIdx).pt() < pt) return false;
   if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
   if(!muonID(muIdx, STOP_medium_v1)) return false;  //mini-isolation applied at 0.1
+  if(fabs(mus_dxyPV()             .at(muIdx)) >  0.02 ) return false;
+  if(fabs(mus_dzPV()              .at(muIdx)) >  0.1 ) return false;
   return true;
 }
 
@@ -75,6 +77,8 @@ int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, dou
             DR_lep_jet2 = ROOT::Math::VectorUtil::DeltaR(jets_.at(iJet), lep_);
             if(DR_lep_jet1 > DR_lep_jet2) closestjet_idx = iJet;
 	}
+
+
 
 	if(ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_) > dR){
        //   cout<<"No overlapping jet found"<<endl;
