@@ -29,7 +29,7 @@ class mt2w
 {  
    public:
       
-      mt2w(double upper_bound=500.0, double error_value=499.0, double scan_step=0.5);
+      mt2w(double upper_bound=1000.0, double error_value=999.0, double scan_step=0.5);
       // Constructor where:
       //    upper_bound:  the upper bound of search for MT2W, default value is 500 GeV 
       //    error_value:  if we couldn't find any compatible region below upper_bound, this value gets returned.  

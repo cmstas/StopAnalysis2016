@@ -105,8 +105,8 @@ float MT2_lb_bq(LorentzVector MET, LorentzVector lep, vector<LorentzVector> bjet
     return -999.99;
   }
   if(jet.size()<3){
-    cout << "You have " << jet.size() << " jets, however need at least three. Note, that 'bjet' should be subset of 'jet'. return -9999.99" << endl;
-    return -9999.99;
+    //cout << "You have " << jet.size() << " jets, however need at least three. Note, that 'bjet' should be subset of 'jet'. return -9999.99" << endl;
+    return -99.99 - 100.*jet.size();
   }
   for(unsigned int i = 0; i<bjet.size(); ++i){
     for(unsigned int j = 0; j<bjet.size(); ++j){
@@ -138,12 +138,12 @@ float MT2_lb_bq_(float MET, float METPhi, LorentzVector lep, vector<LorentzVecto
 float MT2_lb_bqq(LorentzVector MET, LorentzVector lep, vector<LorentzVector> bjet, vector<LorentzVector> jet, bool massive, float testmass){
   float MT2 = 99999;
   if(bjet.size()<2) {
-    cout << "You have " << bjet.size() << " bjets, however need at least two. return -999.99" << endl;
+    //cout << "You have " << bjet.size() << " bjets, however need at least two. return -999.99" << endl;
     return -999.99;
   }
   if(jet.size()<4){
-    cout << "You have " << jet.size() << " jets, however need at least four. Note, that 'bjet' should be subset of 'jet'. return -9999.99" << endl;
-    return -9999.99;
+    //cout << "You have " << jet.size() << " jets, however need at least four. Note, that 'bjet' should be subset of 'jet'. return -9999.99" << endl;
+    return -99.99 - 100.*jet.size();
   }
   for(unsigned int i = 0; i<bjet.size(); ++i){
     for(unsigned int j = 0; j<bjet.size(); ++j){

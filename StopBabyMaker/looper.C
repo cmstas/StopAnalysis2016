@@ -18,6 +18,10 @@
 #include "stop_variables/mt2w.cc"
 #include "stop_variables/mt2w_bisect.cpp"
 #include "stop_variables/chi2.cc"
+#include "stop_variables/JetUtil.cc"
+#include "stop_variables/topness.cc"
+#include "stop_variables/MT2_implementations.cc"
+
 
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 
@@ -136,6 +140,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // Benchmark
     TBenchmark *bmark = new TBenchmark();
     bmark->Start("benchmark");
+
+    //find a smarter way
+    float MYBTAG = 0.814;
 
   //Set up loop over chain
     unsigned int nEventsDone = 0;
@@ -265,7 +272,69 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     //MET & Leptons
     StopEvt.MT_MET_lep1 = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
     if(nGoodLeptons>1) StopEvt.MT_MET_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
-
+    //Topness
+    vector<LorentzVector > mybjets = JetUtil::BJetSelector(jets.ak4pfjets_p4,jets.ak4pfjets_btag_disc,MYBTAG,2,3,2);
+    StopEvt.Topness_lep1=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,0);
+    if(nGoodLeptons>1) StopEvt.Topness_lep2=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,0);
+    StopEvt.TopnessMod_lep1=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,1);
+    if(nGoodLeptons>1) StopEvt.TopnessMod_lep2=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,1);
+    //MT2(lb,b)
+    StopEvt.MT2_lb_b_mass_lep1 = MT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,true ,0);
+    StopEvt.MT2_lb_b_lep1 = MT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,false ,0);
+    if(nGoodLeptons>1) StopEvt.MT2_lb_b_mass_lep2 = MT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,true ,0);
+    if(nGoodLeptons>1) StopEvt.MT2_lb_b_lep2 = MT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,false ,0);
+    //MT2(lb,bqq)
+    StopEvt.MT2_lb_bqq_mass_lep1 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,jets.ak4pfjets_p4,true ,0);
+    StopEvt.MT2_lb_bqq_lep1 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,jets.ak4pfjets_p4,false ,0);
+    if(nGoodLeptons>1) StopEvt.MT2_lb_bqq_mass_lep2 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,jets.ak4pfjets_p4,true ,0);
+    if(nGoodLeptons>1) StopEvt.MT2_lb_bqq_lep2 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,jets.ak4pfjets_p4,false ,0);
+    //Mlb + M3b
+    float minDR1 = 99.; float minDR2 = 99.;
+    int jb1 = -1; int jb2 = -1; int jb3 = -1;
+    int jb21 = -1; int jb22 = -1; int jb23 = -1;
+    for (unsigned int idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
+      float myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep1.p4);
+      float myDR1 = -1; float myDR2 = -2; float myDR3 = -3;
+      if(jb1>=0) myDR1 = dRbetweenVectors(jets.ak4pfjets_p4.at(jb1),lep1.p4);
+      else if(jb2>=0) myDR2 = dRbetweenVectors(jets.ak4pfjets_p4.at(jb2),lep1.p4);
+      else if(jb3>=0) myDR3 = dRbetweenVectors(jets.ak4pfjets_p4.at(jb3),lep1.p4);
+      if(myDR>myDR1){ jb3 =jb2; jb2 = jb1; jb1 = idx; }
+      else if(myDR>myDR2){ jb3 = jb2; jb2 = idx; }
+      else if(myDR>myDR3){ jb3 = idx; }
+      if(nGoodLeptons>1){
+	myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep2.p4);
+	float myDR1 = -1; float myDR2 = -2; float myDR3 = -3;
+	if(jb21>=0) myDR1 = dRbetweenVectors(jets.ak4pfjets_p4.at(jb21),lep2.p4);
+	else if(jb22>=0) myDR2 = dRbetweenVectors(jets.ak4pfjets_p4.at(jb22),lep2.p4);
+	else if(jb23>=0) myDR3 = dRbetweenVectors(jets.ak4pfjets_p4.at(jb23),lep2.p4);
+	if(myDR>myDR1){ jb23 =jb22; jb22 = jb22; jb21 = idx; }
+	else if(myDR>myDR2){ jb23 = jb22; jb22 = idx; }
+	else if(myDR>myDR3){ jb23 = idx; }
+      }
+      if(jets.ak4pfjets_btag_disc.at(idx)<MYBTAG) continue;
+      myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep1.p4);
+      if(myDR<minDR1) {
+	StopEvt.Mlb_lep1 = (jets.ak4pfjets_p4.at(idx)+lep1.p4).M();
+	minDR1 =myDR;
+      }
+      if(nGoodLeptons>1){
+	myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep2.p4);
+	if(myDR<minDR2) {
+	  StopEvt.Mlb_lep2 = (jets.ak4pfjets_p4.at(idx)+lep2.p4).M();
+	  minDR2 = myDR;
+	}
+      }
+    }
+    if(jb3>=0) {
+      StopEvt.M3b_lep1 = (jets.ak4pfjets_p4.at(jb1)+jets.ak4pfjets_p4.at(jb2)+jets.ak4pfjets_p4.at(jb3)).M();
+    }
+    if(jb23>=0) {
+      StopEvt.M3b_lep2 = (jets.ak4pfjets_p4.at(jb21)+jets.ak4pfjets_p4.at(jb22)+jets.ak4pfjets_p4.at(jb23)).M();
+    }
+    //cout << __LINE__<<endl;
+    //MT2W
+    //StopEvt.MT2W_lep1 = CalculateMT2W_(mybjets,lep1.p4,StopEvt.pfmet,StopEvt.pfmet_phi,true);
+    //if(nGoodLeptons>1) StopEvt.MT2W_lep2 = CalculateMT2W_(mybjets,lep2.p4,StopEvt.pfmet,StopEvt.pfmet_phi,true);
     //taus
     int vetotaus=0;
 

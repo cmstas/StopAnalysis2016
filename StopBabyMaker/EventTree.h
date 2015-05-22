@@ -50,7 +50,25 @@ public:
     double MT2W_lep1;
     double MT2W_lep2;
     double chi2;
- 
+    double Topness_lep1;
+    double Topness_lep2;
+    double TopnessMod_lep1;
+    double TopnessMod_lep2;
+
+    float MT2_lb_b_lep1;
+    float MT2_lb_b_lep2;
+    float MT2_lb_b_mass_lep1;
+    float MT2_lb_b_mass_lep2;
+    float MT2_lb_bqq_lep1;
+    float MT2_lb_bqq_lep2;
+    float MT2_lb_bqq_mass_lep1;
+    float MT2_lb_bqq_mass_lep2;
+
+    float Mlb_lep1;
+    float Mlb_lep2;
+    float M3b_lep1;
+    float M3b_lep2;
+
     float pfmet;
     float pfmet_phi;
 

@@ -25,8 +25,11 @@ GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
 LIB=StopVariables.so
 
-$(LIB): mt2w_bisect.o mt2w.o chi2.o JetUtil.o
-	$(LD) $(LDFLAGS) $(SOFLAGS) $(ROOTLIBS) mt2w.o mt2w_bisect.o chi2.o JetUtil.o $(GLIBS) -lGenVector -o $@
+$(LIB): Davismt2.o mt2w_bisect.o mt2w.o chi2.o JetUtil.o
+	$(LD) $(LDFLAGS) $(SOFLAGS) $(ROOTLIBS) Davismt2.o mt2w.o mt2w_bisect.o chi2.o JetUtil.o $(GLIBS) -lGenVector -o $@
+
+Davismt2.o: Davismt2.cc Davismt2.h
+	$(CXX) $(CXXFLAGS) -c Davismt2.cc
 
 mt2w.o: mt2w.cc mt2w.h mt2w_bisect.h JetUtil.h
 	$(CXX) $(CXXFLAGS) -c mt2w.cc

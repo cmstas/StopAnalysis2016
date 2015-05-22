@@ -112,9 +112,9 @@ double topnessFunction(double pwx_, double pwy_, double pwz_, double pnz_,
   TLorentzVector vMET; vMET.SetPxPyPzE(pmx_,pmy_,pmz_,pme_);
   TLorentzVector vN; vN.SetPxPyPzE((pmx_-pwx_),(pmy_-pwy_),pnz_,(sqrt(pow((pmx_-pwx_),2)+pow((pmy_-pwy_),2)+pow(pnz_,2))));
   // construct the w-term (lost)
-  //double tWM = ( pow( ((mW*mW) - (vW.M2())),2) ) / (pow(aW,4));//zero by construction
+  double tWM = ( pow( ((mW*mW) - (vW.M2())),2) ) / (pow(aW,4));//zero by construction
   // construct the w-term (lep)
-  double tWL = ( pow( ((mW*mW) - ((vL+vN).M2())),2) ) / (pow(aW,4));
+  //double tWL = ( pow( ((mW*mW) - ((vL+vN).M2())),2) ) / (pow(aW,4));
   // construct the tL-term [seen lepton]
   double tTL = ( pow( ((mT*mT) - ((vL+vB1+vN).M2())),2) ) / (pow(aT,4));
   // construct the tM-term [miss lepton]
@@ -122,7 +122,7 @@ double topnessFunction(double pwx_, double pwy_, double pwz_, double pnz_,
   // construct the CM-term
   double tCM = ( pow( ((4*(mT*mT)) - ((vL+vN+vW+vB1+vB2).M2())),2) ) / (pow(aCM,4));
   // calculate Topness
-  double Topness = tWL + tTL + tTM + tCM;
+  double Topness = tWM + tTL + tTM + tCM;
   return Topness;
 }
 

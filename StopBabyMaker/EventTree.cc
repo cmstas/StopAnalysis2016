@@ -98,6 +98,23 @@ void EventTree::Reset ()
     chi2 	= -9999.; 
     is_data = false;
  
+    Topness_lep1       = -9999.; 
+    Topness_lep2       = -9999.; 
+    TopnessMod_lep1    = -9999.; 
+    TopnessMod_lep2    = -9999.; 
+    MT2_lb_b_lep1        = -9999.; 
+    MT2_lb_b_lep2        = -9999.; 
+    MT2_lb_b_mass_lep1   = -9999.; 
+    MT2_lb_b_mass_lep2   = -9999.; 
+    MT2_lb_bqq_lep1      = -9999.; 
+    MT2_lb_bqq_lep2      = -9999.; 
+    MT2_lb_bqq_mass_lep1 = -9999.; 
+    MT2_lb_bqq_mass_lep2 = -9999.; 
+    Mlb_lep1           = -9999.; 
+    Mlb_lep2           = -9999.; 
+    M3b_lep1           = -9999.; 
+    M3b_lep2           = -9999.; 
+
     dataset = "";
     filename = "";
     cms3tag = "";
@@ -176,4 +193,20 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("EA_centralcalo_rho", &EA_centralcalo_rho); 
     tree->Branch("EA_centralchargedpileup_rho", &EA_centralchargedpileup_rho); 
     tree->Branch("EA_centralneutral_rho", &EA_centralneutral_rho); 
+    tree->Branch("Topness_lep1", &Topness_lep1); 
+    tree->Branch("Topness_lep2", &Topness_lep2); 
+    tree->Branch("TopnessMod_lep1", &TopnessMod_lep1); 
+    tree->Branch("TopnessMod_lep2", &TopnessMod_lep2); 
+    tree->Branch("MT2_lb_b_lep1", &MT2_lb_b_lep1); 
+    tree->Branch("MT2_lb_b_lep2", &MT2_lb_b_lep2); 
+    tree->Branch("MT2_lb_b_mass_lep1", &MT2_lb_b_mass_lep1); 
+    tree->Branch("MT2_lb_b_mass_lep2", &MT2_lb_b_mass_lep2); 
+    tree->Branch("MT2_lb_bqq_lep1", &MT2_lb_bqq_lep1); 
+    tree->Branch("MT2_lb_bqq_lep2", &MT2_lb_bqq_lep2); 
+    tree->Branch("MT2_lb_bqq_mass_lep1", &MT2_lb_bqq_mass_lep1); 
+    tree->Branch("MT2_lb_bqq_mass_lep2", &MT2_lb_bqq_mass_lep2); 
+    tree->Branch("Mlb_lep1", &Mlb_lep1); 
+    tree->Branch("Mlb_lep2", &Mlb_lep2); 
+    tree->Branch("M3b_lep1", &M3b_lep1); 
+    tree->Branch("M3b_lep2", &M3b_lep2); 
 }
