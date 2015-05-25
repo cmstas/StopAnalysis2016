@@ -116,7 +116,14 @@ public:
     float EA_centralcalo_rho;
     float EA_centralchargedpileup_rho;
     float EA_centralneutral_rho;
-
+    //trigger
+    //int  HLT_HT900;
+    int HLT_SingleMu; 
+    int HLT_SingleEl;
+    int HLT_MET170;
+    int HLT_ht350met120; 
+    int HLT_MET120Btag;      
+    int HLT_MET120Mu5;      
 };
  
 #endif
