@@ -3,7 +3,6 @@
 #include "CMS3.h"
 #include "VertexSelections.h"
 #include "StopSelections.h"
-
 using namespace tas; 
 EventTree::EventTree ()
 {
@@ -135,6 +134,13 @@ void EventTree::Reset ()
     PassTrackVeto = false;
     PassTauVeto = false;
 
+    HLT_MET170 = -9999.;
+    HLT_ht350met120 = -9999.; 
+    HLT_SingleMu = -9999.; 
+    HLT_SingleEl = -9999.;
+    HLT_MET120Btag = -9999.;      
+    HLT_MET120Mu5 = -9999.;      
+    
     EA_all_rho = -9999.;
     EA_allcalo_rho = -9999.; 
     EA_centralcalo_rho = -9999.; 
@@ -209,4 +215,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("Mlb_lep2", &Mlb_lep2); 
     tree->Branch("M3b_lep1", &M3b_lep1); 
     tree->Branch("M3b_lep2", &M3b_lep2); 
+    tree->Branch("HLT_SingleEl", &HLT_SingleEl );
+    tree->Branch("HLT_SingleMu", &HLT_SingleMu );
+    tree->Branch("HLT_MET170", &HLT_MET170 );
+    tree->Branch("HLT_ht350met120", &HLT_ht350met120 );
+    tree->Branch("HLT_MET120Btag", &HLT_MET120Btag );
+    tree->Branch("HLT_MET120Mu5", &HLT_MET120Mu5 );
 }
