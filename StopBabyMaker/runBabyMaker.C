@@ -13,8 +13,9 @@ int main(int argc, char **argv){
  }
  
   babyMaker *mylooper = new babyMaker();
-  //babyMaker::setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, int jetpt, int jeteta){
-  mylooper->setSkimVariables(1, 30., 1, 20., 2.1, 2, 30., 2.4);
+
+  //void setSkimVariables(int nvtx, float met, int nlep, float el_pt, float el_eta, float mu_pt, float mu_eta, int njets, float jetpt, float jeteta);
+  mylooper->setSkimVariables(1, 30., 1, 40., 2.1, 30., 2.1, 2, 30., 2.4);
 
   int nevents = -1;
   if(argc>2) nevents = atoi(argv[2]);  
