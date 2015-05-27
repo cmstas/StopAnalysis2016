@@ -25,6 +25,8 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
     int nbtags_med = 0;
     static const float BTAG_MED = 0.814;
     float dPhiM = 0.;
+    float btagdisc = 0.;   
+    unsigned int leadbtag_idx = 0;
 
     float htssm = 0.;
     float htosm = 0.;
@@ -37,7 +39,7 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
         //deal with the overlaps
         if(jindex == overlep1_idx){
 		ak4pfjet_overlep1_p4 = pfjets_p4().at(jindex);
-                ak4pfjet_overlep1_btag_disc = pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
+                ak4pfjet_overlep1_CSV = pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
             //    ak4pfjet_overlep1_pu_id = pfjets_pileupJetId().at(jindex);
                 ak4pfjet_overlep1_chf = pfjets_chargedHadronE().at(jindex);
                 ak4pfjet_overlep1_nhf = pfjets_neutralHadronE().at(jindex);
@@ -48,7 +50,7 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
 	}
         if(jindex == overlep2_idx){
                 ak4pfjet_overlep2_p4 = pfjets_p4().at(jindex);
-                ak4pfjet_overlep2_btag_disc = pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
+                ak4pfjet_overlep2_CSV = pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
                 //ak4pfjet_overlep2_pu_id = pfjets_pileupJetId().at(jindex);
                 ak4pfjet_overlep2_chf = pfjets_chargedHadronE().at(jindex);
                 ak4pfjet_overlep2_nhf = pfjets_neutralHadronE().at(jindex);
@@ -68,7 +70,13 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
         nGoodJets++;
 
         ak4pfjets_p4.push_back(pfjets_p4().at(jindex));
-        ak4pfjets_btag_disc.push_back(pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex));
+        ak4pfjets_pt.push_back(pfjets_p4().at(jindex).pt());
+        ak4pfjets_eta.push_back(pfjets_p4().at(jindex).eta());
+        ak4pfjets_phi.push_back(pfjets_p4().at(jindex).phi());
+        ak4pfjets_mass.push_back(pfjets_p4().at(jindex).mass());
+
+        dphi_ak4pfjet_met.push_back(getdphi(pfjets_p4().at(jindex).phi(), evt_pfmet()));
+        ak4pfjets_CSV.push_back(pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex));
       //  ak4pfjets_pu_id.push_back(pfjets_pileupJetId().at(jindex));
         ak4pfjets_parton_flavor.push_back(pfjets_partonFlavour().at(jindex));
         ak4pfjets_loose_puid.push_back(loosePileupJetId(jindex));
@@ -82,6 +90,14 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
         ak4pfjets_nef.push_back(pfjets_neutralEmE().at(jindex));
         ak4pfjets_cm.push_back(pfjets_chargedMultiplicity().at(jindex));
         ak4pfjets_nm.push_back(cms3.pfjets_neutralMultiplicity().at(jindex));
+
+    if (!evt_isRealData()) {
+          ak4pfjets_mc3dr.push_back(pfjets_mc3dr().at(jindex));
+          ak4pfjets_mc3id.push_back(pfjets_mc3_id().at(jindex));
+          ak4pfjets_mc3idx.push_back(pfjets_mc3idx().at(jindex));
+          ak4pfjets_mcmotherid.push_back(pfjets_mc_motherid().at(jindex));
+   }
+
 
 	//HTRatio
 	dPhiM = getdphi(evt_pfmetPhi(), pfjets_p4().at(jindex).phi() );
@@ -101,17 +117,19 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
              ak4pfjets_MEDbjet_pt.push_back(pfjets_p4().at(jindex).pt());
         }else{ 
              ak4pfjets_passMEDbtag.push_back(false);
-             if(pfjets_p4().at(jindex).pt() > 40. && jindex>0 && pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex) > pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex-1)){
-               ak4pfjets_leadbtag_p4 = pfjets_p4().at(jindex);
+             if(pfjets_p4().at(jindex).pt() > 40. && jindex>0 ){
+               if(pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex)> btagdisc)  leadbtag_idx = jindex;
              }
         }
    }
 
-   ak4GoodPFJets = nGoodJets;
+  ak4pfjets_leadbtag_p4 = pfjets_p4().at(leadbtag_idx);
+
+   ngoodjets = nGoodJets;
    nGoodJets=0;
    ak4_HT = HT;
    HT=0;
-   ak4_nBTags_Med = nbtags_med;
+   ngoodbtags = nbtags_med;
 
    ak4_htssm = htssm;
    ak4_htosm = htosm;
@@ -178,8 +196,14 @@ void JetTree::GetJetSelections (std::string cone_size)
 void JetTree::Reset ()
 {
     ak4pfjets_p4.clear();
+    ak4pfjets_pt.clear();
+    ak4pfjets_eta.clear();
+    ak4pfjets_phi.clear();
+    ak4pfjets_mass.clear();
+
+    dphi_ak4pfjet_met.clear();
     ak4pfjets_qg_disc.clear();    
-    ak4pfjets_btag_disc.clear();
+    ak4pfjets_CSV.clear();
     ak4pfjets_pu_id.clear();
     ak4pfjets_parton_flavor.clear();
     ak4pfjets_loose_puid.clear();
@@ -193,14 +217,19 @@ void JetTree::Reset ()
     ak4pfjets_nef.clear();
     ak4pfjets_cm.clear();
     ak4pfjets_nm.clear();
-    
+
+    ak4pfjets_mc3dr.clear();
+    ak4pfjets_mc3id.clear();
+    ak4pfjets_mc3idx.clear();
+    ak4pfjets_mcmotherid.clear();
+ 
     ak4_htssm = -9999.;
     ak4_htosm = -9999.;
     ak4_htratiom = -9999.; 
 
    //overlaps
     ak4pfjet_overlep1_p4 = LorentzVector(0,0, 0,0);
-    ak4pfjet_overlep1_btag_disc = -9999;
+    ak4pfjet_overlep1_CSV = -9999;
     ak4pfjet_overlep1_pu_id = -9999;
     ak4pfjet_overlep1_chf = -9999;
     ak4pfjet_overlep1_nhf = -9999;
@@ -210,7 +239,7 @@ void JetTree::Reset ()
     ak4pfjet_overlep1_nm = -9999;
 
     ak4pfjet_overlep2_p4 = LorentzVector(0,0, 0,0);
-    ak4pfjet_overlep2_btag_disc = -9999;
+    ak4pfjet_overlep2_CSV = -9999;
     ak4pfjet_overlep2_pu_id = -9999;
     ak4pfjet_overlep2_chf = -9999;
     ak4pfjet_overlep2_nhf = -9999;
@@ -231,33 +260,41 @@ void JetTree::Reset ()
     ak8pfjets_pu_id.clear();    
     ak8pfjets_parton_flavor.clear();
  
-    ak4genjets_p4.clear(); 
+    ak4genjets_p4.clear();
+ 
     ak4pfjets_MEDbjet_pt.clear();
     ak4pfjets_passMEDbtag.clear();
     ak4pfjets_leadMEDbjet_pt = -9999; 
     ak4pfjets_leadMEDbjet_p4 = LorentzVector(0,0, 0,0);
     ak4pfjets_leadbtag_p4 = LorentzVector(0,0, 0,0);
   
-    ak4GoodPFJets = -9999;  
+    ngoodjets = -9999;  
     ak4_HT 	  = -9999.; 
     ak8GoodPFJets = -9999;
     nGoodGenJets = -9999;
-    ak4_nBTags_Med = -9999;
+    ngoodbtags = -9999;
 }
  
 void JetTree::SetBranches (TTree* tree)
 {
     tree->Branch(Form("%snGoodGenJets", prefix_.c_str()) , &nGoodGenJets);
-    tree->Branch(Form("%sak4GoodPFJets", prefix_.c_str()) , &ak4GoodPFJets);
+    tree->Branch(Form("%sngoodjets", prefix_.c_str()) , &ngoodjets);
     tree->Branch(Form("%sak8GoodPFJets", prefix_.c_str()) , &ak8GoodPFJets);
-    tree->Branch(Form("%sak4_nBTags_Med", prefix_.c_str()) , &ak4_nBTags_Med);
+    tree->Branch(Form("%sngoodbtags", prefix_.c_str()) , &ngoodbtags);
     tree->Branch(Form("%sak4_HT", prefix_.c_str()) , &ak4_HT);
     tree->Branch(Form("%sak4_htssm", prefix_.c_str()) , &ak4_htssm);
     tree->Branch(Form("%sak4_htosm", prefix_.c_str()) , &ak4_htosm);
     tree->Branch(Form("%sak4_htratiom", prefix_.c_str()) , &ak4_htratiom);
+    tree->Branch(Form("%sdphi_ak4pfjet_met", prefix_.c_str()) , &dphi_ak4pfjet_met);
+
     tree->Branch(Form("%sak4pfjets_p4", prefix_.c_str()) , &ak4pfjets_p4);
+    tree->Branch(Form("%sak4pfjets_pt", prefix_.c_str()) , &ak4pfjets_pt);
+    tree->Branch(Form("%sak4pfjets_eta", prefix_.c_str()) , &ak4pfjets_eta);
+    tree->Branch(Form("%sak4pfjets_phi", prefix_.c_str()) , &ak4pfjets_phi);
+    tree->Branch(Form("%sak4pfjets_mass", prefix_.c_str()) , &ak4pfjets_mass);
+
     tree->Branch(Form("%sak4pfjets_qg_disc", prefix_.c_str()) , &ak4pfjets_qg_disc);
-    tree->Branch(Form("%sak4pfjets_btag_disc", prefix_.c_str()) , &ak4pfjets_btag_disc);
+    tree->Branch(Form("%sak4pfjets_CSV", prefix_.c_str()) , &ak4pfjets_CSV);
     tree->Branch(Form("%sak4pfjets_pu_id", prefix_.c_str()) , &ak4pfjets_pu_id);
     tree->Branch(Form("%sak4pfjets_parton_flavor", prefix_.c_str()) , &ak4pfjets_parton_flavor);
     tree->Branch(Form("%sak4pfjets_loose_puid", prefix_.c_str()) , &ak4pfjets_loose_puid);
@@ -277,8 +314,13 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak4pfjets_cm", prefix_.c_str()) , &ak4pfjets_cm);
     tree->Branch(Form("%sak4pfjets_nm", prefix_.c_str()) , &ak4pfjets_nm);
 
+    tree->Branch(Form("%sak4pfjets_mc3dr"            , prefix_.c_str()) , &ak4pfjets_mc3dr);
+    tree->Branch(Form("%sak4pfjets_mc3id"            , prefix_.c_str()) , &ak4pfjets_mc3id);
+    tree->Branch(Form("%sak4pfjets_mc3idx"            , prefix_.c_str()) , &ak4pfjets_mc3idx);
+    tree->Branch(Form("%sak4pfjets_mcmotherid"            , prefix_.c_str()) , &ak4pfjets_mcmotherid);
+
     tree->Branch(Form("%sak4pfjet_overlep1_p4", prefix_.c_str()) , &ak4pfjet_overlep1_p4);
-    tree->Branch(Form("%sak4pfjet_overlep1_btag_disc", prefix_.c_str()) , &ak4pfjet_overlep1_p4);
+    tree->Branch(Form("%sak4pfjet_overlep1_CSV", prefix_.c_str()) , &ak4pfjet_overlep1_CSV);
     tree->Branch(Form("%sak4pfjet_overlep1_pu_id",prefix_.c_str()) , &ak4pfjet_overlep1_pu_id);
     tree->Branch(Form("%sak4pfjet_overlep1_chf", prefix_.c_str()) , &ak4pfjet_overlep1_chf);
     tree->Branch(Form("%sak4pfjet_overlep1_nhf", prefix_.c_str()) , &ak4pfjet_overlep1_nhf);
@@ -288,7 +330,7 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak4pfjet_overlep1_nm", prefix_.c_str()) , &ak4pfjet_overlep1_nm);
 
     tree->Branch(Form("%sak4pfjet_overlep2_p4", prefix_.c_str()) , &ak4pfjet_overlep2_p4);
-    tree->Branch(Form("%sak4pfjet_overlep2_btag_disc", prefix_.c_str()) , &ak4pfjet_overlep2_p4);
+    tree->Branch(Form("%sak4pfjet_overlep2_CSV", prefix_.c_str()) , &ak4pfjet_overlep2_CSV);
     tree->Branch(Form("%sak4pfjet_overlep2_pu_id",prefix_.c_str()) , &ak4pfjet_overlep2_pu_id);
     tree->Branch(Form("%sak4pfjet_overlep2_chf", prefix_.c_str()) , &ak4pfjet_overlep2_chf);
     tree->Branch(Form("%sak4pfjet_overlep2_nhf", prefix_.c_str()) , &ak4pfjet_overlep2_nhf);
@@ -309,5 +351,5 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak8pfjets_parton_flavor", prefix_.c_str()) , &ak8pfjets_parton_flavor);
  
     tree->Branch(Form("%sak4genjets_p4", prefix_.c_str()) , &ak4genjets_p4);    
-    tree->Branch(Form("%sak4pfjets_passMEDbtag", prefix_.c_str()) , &ak4pfjets_passMEDbtag);
+    tree->Branch(Form("%sngoodbtags", prefix_.c_str()) , &ngoodbtags);
 }

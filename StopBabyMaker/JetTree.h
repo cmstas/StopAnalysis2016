@@ -39,20 +39,26 @@ public:
     // branch objects
  
     // ak4 PF jets
-    int ak4GoodPFJets;
+    int ngoodjets;
     int ak8GoodPFJets;
     int nGoodGenJets;
-    int ak4_nBTags_Med;
+    int ngoodbtags;
     float ak4_HT;
 
     float ak4_htssm;
     float ak4_htosm;
     float ak4_htratiom;
 
+    vecd dphi_ak4pfjet_met;
     vecLorentzVector ak4pfjets_p4;
+    vecd ak4pfjets_pt;
+    vecd ak4pfjets_eta;
+    vecd ak4pfjets_phi;
+    vecd ak4pfjets_mass;
+
     LorentzVector ak4pfjets_leadMEDbjet_p4;
     vecd ak4pfjets_qg_disc;    
-    vecd ak4pfjets_btag_disc;
+    vecd ak4pfjets_CSV;
     vecd ak4pfjets_pu_id;
     veci ak4pfjets_parton_flavor;
     vecb ak4pfjets_loose_puid;
@@ -71,9 +77,14 @@ public:
     veci ak4pfjets_cm;
     veci ak4pfjets_nm;
 
+    veci ak4pfjets_mc3dr;
+    veci ak4pfjets_mc3id;
+    veci ak4pfjets_mc3idx;
+    veci ak4pfjets_mcmotherid;
+
    //overlaps
     LorentzVector ak4pfjet_overlep1_p4;
-    float ak4pfjet_overlep1_btag_disc;
+    float ak4pfjet_overlep1_CSV;
     float ak4pfjet_overlep1_pu_id;
     float ak4pfjet_overlep1_chf;       
     float ak4pfjet_overlep1_nhf;
@@ -83,7 +94,7 @@ public:
     int ak4pfjet_overlep1_nm;
 
     LorentzVector ak4pfjet_overlep2_p4;
-    float ak4pfjet_overlep2_btag_disc;
+    float ak4pfjet_overlep2_CSV;
     float ak4pfjet_overlep2_pu_id;
     float ak4pfjet_overlep2_chf;
     float ak4pfjet_overlep2_nhf;
