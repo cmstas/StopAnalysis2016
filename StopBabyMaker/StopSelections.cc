@@ -8,6 +8,7 @@
 #include "VertexSelections.h"
 #include "IsoTrackVeto.h"
 #include "IsolationTools.h"
+#include "TVector3.h"
 
 using namespace tas;
 
@@ -29,9 +30,7 @@ bool PassElectronPreSelections(unsigned int elIdx,float pt, float eta){
 bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   if(mus_p4().at(muIdx).pt() < pt) return false;
   if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
-  if(!muonID(muIdx, STOP_medium_v1)) return false;  //mini-isolation applied at 0.1
-  if(fabs(mus_dxyPV()             .at(muIdx)) >  0.02 ) return false;
-  if(fabs(mus_dzPV()              .at(muIdx)) >  0.1 ) return false;
+  if(!muonID(muIdx, STOP_medium_v2)) return false;  //mini-isolation applied at 0.1
   return true;
 }
 
@@ -202,4 +201,12 @@ float calculateMt(const LorentzVector p4, double met, double met_phi){
   float Et2  = met;
 
   return sqrt(2*Et1*Et2*(1.0 - cos(phi1-phi2)));
+}
+
+float DPhi_W_lep(float MET, float MET_Phi, LorentzVector p4){
+  const TVector3 lep(p4.x(), p4.y(), p4.z());
+  const TVector3 met(MET*cos(MET_Phi),MET*sin(MET_Phi),0);
+  const TVector3 w = lep+met;
+  double dphi = fabs(w.DeltaPhi(lep));
+  return dphi;
 }
