@@ -19,7 +19,9 @@ void GenParticleTree::FillCommon (int idx)
 {
 	if (idx < 0) return;
 
-        isfromt.push_back(abs(genps_id_mother().at(genps_idx_mother().at(idx))) == pdg_t);
+        if(abs(genps_id_mother().at(genps_idx_mother().at(idx))) == pdg_t) isfromt.push_back(true);
+        else if(abs(genps_id_mother().at(idx)) == pdg_t) isfromt.push_back(true);
+        else isfromt.push_back(false);
        // if(abs(genps_id().at(idx)) == pdg_tau && abs(genps_id_mother().at(genps_idx_mother().at(idx))) !=pdg_t){
          // cout<<"Mother "<<abs(genps_id_mother().at(genps_idx_mother().at(idx)))<<endl;
          // dumpDocLines();

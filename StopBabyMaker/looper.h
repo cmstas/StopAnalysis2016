@@ -40,14 +40,16 @@ class babyMaker {
     float skim_met;
 
     int skim_nlep;
-    float skim_leppt;
-    float skim_lepeta;
+    float skim_elpt;
+    float skim_eleta;
+    float skim_mupt;
+    float skim_mueta;
 
     int skim_njets;
     float skim_jetpt;
     float skim_jeteta;
 
-    void setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, float jetpt, float jeteta);
+    void setSkimVariables(int nvtx, float met, int nlep, float el_pt, float el_eta, float mu_pt, float mu_eta, int njets, float jetpt, float jeteta);
 
   protected:
     TFile* BabyFile;

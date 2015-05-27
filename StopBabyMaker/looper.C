@@ -73,14 +73,16 @@ babyMaker::babyMaker()
    Tracks = IsoTracksTree();
 }
 
-void babyMaker::setSkimVariables(int nvtx, float met, int nlep, float leppt, float lepeta, int njets, float jetpt, float jeteta){
+void babyMaker::setSkimVariables(int nvtx, float met, int nlep, float el_pt, float el_eta, float mu_pt, float mu_eta, int njets, float jetpt, float jeteta){
         skim_nvtx = nvtx;
         skim_met = met;
 
         skim_nlep = nlep;
-        skim_leppt = leppt;
-        skim_lepeta = lepeta;
-   
+        skim_elpt = el_pt;
+        skim_eleta = el_eta;
+        skim_mupt = mu_pt;
+        skim_mueta = mu_eta;
+
         skim_njets = njets;
         skim_jetpt = jetpt;
         skim_jeteta = jeteta;
@@ -214,7 +216,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 //std::cout << "[babymaker::looper]: selecting leptons" << std::endl;
       vector<Lepton> GoodLeps;
       for (unsigned int eidx = 0; eidx < els_p4().size(); eidx++){
-        if(!PassElectronPreSelections(eidx, skim_leppt,skim_lepeta)) continue;
+        if(!PassElectronPreSelections(eidx, skim_elpt,skim_eleta)) continue;
         Lepton goodlepton;
         goodlepton.id  = -11*els_charge().at(eidx);
         goodlepton.idx = eidx;
@@ -223,7 +225,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       }
 
       for (unsigned int midx = 0; midx < mus_p4().size(); midx++){
-        if(!PassMuonPreSelections(midx, skim_leppt,skim_lepeta)) continue;
+        if(!PassMuonPreSelections(midx, skim_mupt,skim_mueta)) continue;
         Lepton goodlepton;
         goodlepton.id  = -13*mus_charge().at(midx);
         goodlepton.idx = midx;
@@ -236,7 +238,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(nGoodLeptons<skim_nlep) continue;
       nEvents_GoodLep++; 
 
-      StopEvt.ngoodlep = nGoodLeptons; 
+      StopEvt.ngoodleps = nGoodLeptons; 
 //std::cout << "[babymaker::looper]: filling lepton variables" << std::endl;
       lep1.FillCommon(GoodLeps.at(0).id, GoodLeps.at(0).idx);      
       if( nGoodLeptons > 1 ) lep2.FillCommon(GoodLeps.at(1).id, GoodLeps.at(1).idx);
@@ -254,15 +256,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       jets.SetJetSelection("ak4",skim_jetpt,skim_jeteta,true);
       jets.SetJetSelection("ak8",100.,skim_jeteta,true);
       jets.FillCommon(jet_overlep1_idx, jet_overlep2_idx);
-      if(jets.ak4GoodPFJets < skim_njets) continue;
+      if(jets.ngoodjets < skim_njets) continue;
       nEvents_2GoodJets++;
   //  std::cout<<__LINE__<<std::endl;
      // now calculate jets + lep variables
      //DR(lep, leadB) with medium discriminator
-     StopEvt.dR_lep1_leadb = dRbetweenVectors(jets.ak4pfjets_leadMEDbjet_p4, lep1.p4);
+     StopEvt.dR_lep_leadb = dRbetweenVectors(jets.ak4pfjets_leadMEDbjet_p4, lep1.p4);
      if(nGoodLeptons>1) StopEvt.dR_lep2_leadb = dRbetweenVectors(jets.ak4pfjets_leadMEDbjet_p4, lep2.p4);
      //MT2W
-     StopEvt.MT2W_lep1 = calculateMT2w(jets.ak4pfjets_p4, jets.ak4pfjets_passMEDbtag, lep1.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
+     StopEvt.MT2W = calculateMT2w(jets.ak4pfjets_p4, jets.ak4pfjets_passMEDbtag, lep1.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
      if(nGoodLeptons>1) StopEvt.MT2W_lep2 = calculateMT2w(jets.ak4pfjets_p4, jets.ak4pfjets_passMEDbtag, lep2.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
     //chi2
     vector<float> dummy_sigma;
@@ -274,11 +276,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     //Jets & MET
     StopEvt.mindphi_met_j1_j2 =  getMinDphi(StopEvt.pfmet_phi,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
     //MET & Leptons
-    StopEvt.MT_MET_lep1 = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
-    if(nGoodLeptons>1) StopEvt.MT_MET_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
+    StopEvt.mt_met_lep = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
+    if(nGoodLeptons>1) StopEvt.mt_met_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
+
+    StopEvt.dphi_Wlep = DPhi_W_lep(StopEvt.pfmet, StopEvt.pfmet_phi, lep1.p4);
+    StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
+    StopEvt.ak4jets_rho = evt_fixgridfastjet_all_rho();
+
     //Topness
-    vector<LorentzVector > mybjets = JetUtil::BJetSelector(jets.ak4pfjets_p4,jets.ak4pfjets_btag_disc,MYBTAG,2,3,2);
-    StopEvt.Topness_lep1=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,0);
+    vector<LorentzVector > mybjets = JetUtil::BJetSelector(jets.ak4pfjets_p4,jets.ak4pfjets_CSV,MYBTAG,2,3,2);
+    StopEvt.topness=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,0);
     if(nGoodLeptons>1) StopEvt.Topness_lep2=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,0);
     StopEvt.TopnessMod_lep1=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,1);
     if(nGoodLeptons>1) StopEvt.TopnessMod_lep2=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,1);
@@ -315,10 +322,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	else if(myDR>myDR2){ jb23 = jb22; jb22 = idx; }
 	else if(myDR>myDR3){ jb23 = idx; }
       }
-      if(jets.ak4pfjets_btag_disc.at(idx)<MYBTAG) continue;
+      if(jets.ak4pfjets_CSV.at(idx)<MYBTAG) continue;
       myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep1.p4);
       if(myDR<minDR1) {
-	StopEvt.Mlb_lep1 = (jets.ak4pfjets_p4.at(idx)+lep1.p4).M();
+	StopEvt.Mlb = (jets.ak4pfjets_p4.at(idx)+lep1.p4).M();
 	minDR1 =myDR;
       }
       if(nGoodLeptons>1){
@@ -330,7 +337,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       }
     }
     if(jb3>=0) {
-      StopEvt.M3b_lep1 = (jets.ak4pfjets_p4.at(jb1)+jets.ak4pfjets_p4.at(jb2)+jets.ak4pfjets_p4.at(jb3)).M();
+      StopEvt.M3b = (jets.ak4pfjets_p4.at(jb1)+jets.ak4pfjets_p4.at(jb2)+jets.ak4pfjets_p4.at(jb3)).M();
     }
     if(jb23>=0) {
       StopEvt.M3b_lep2 = (jets.ak4pfjets_p4.at(jb21)+jets.ak4pfjets_p4.at(jb22)+jets.ak4pfjets_p4.at(jb23)).M();

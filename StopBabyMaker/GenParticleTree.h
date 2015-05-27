@@ -38,7 +38,6 @@ public:
 
 	veci gentaudecay;
         //TauDecay gentaudecay;
-
 	/*event level genps info
         float alphaQCD;
 	float pthat;
