@@ -11,7 +11,7 @@ class TTree;
 // typedefs
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 typedef std::vector<int> veci;
-enum prodType {fromB, fromC, fromLight, fromZ, fromW, none}; 
+enum prodType {fromW, fromZ, fromB, fromC, fromLight, fromLightFake, none};
 
 class LeptonTree
 {
@@ -35,13 +35,18 @@ public:
     LorentzVector p4;
     LorentzVector pfp4;
     float pt;
-    float eta; 
+    float eta;
+    float phi;
+    float mass; 
     bool is_mu;
     bool is_el;
     int is_fromw;
     int charge;
     int pdgid;
     int type;
+
+    int isFrom;
+
     float d0;
     float d0err;
     float dz;
@@ -70,6 +75,8 @@ public:
     float miniRelIsoDB;
     float miniRelIsoEA;
 
+    float MiniIso;
+
     float ip3d;
     float ip3derr;
     bool is_pfmu;
@@ -83,7 +90,11 @@ public:
     int mcidx;
     int mc_motherid;
     int mc_motheridx;
-    //
+    int mc3dr;    
+    int mc3id;     
+    int mc3idx;     
+    int mc3motherid; 
+    int mc3motheridx;
     // electron specific info
     //
     bool is_eleid_loose;
@@ -99,8 +110,12 @@ public:
     bool is_muoid_medium; 
     bool is_muoid_loose;
     bool is_muoid_tight;
+
+    bool passVeto;
+    bool passMediumID;
+
   //  int mus_pfcands_idx;
-    veci production_type;
+    int production_type;
 };
 
 #endif
