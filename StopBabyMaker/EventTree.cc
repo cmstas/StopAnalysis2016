@@ -76,7 +76,7 @@ void EventTree::Reset ()
     ls = 0;
     evt = 0;
 
-    ngoodlep	=  -9999;
+    ngoodleps	=  -9999;
      
     nvtxs 	=  -9999;
     pu_nvtxs 	=  -9999;
@@ -87,17 +87,17 @@ void EventTree::Reset ()
     xsec 	=  -9999.;
     kfactor 	=  -9999.;
     pu_ntrue 	=  -9999.;
-    dR_lep1_leadb = -9999.;
+    dR_lep_leadb = -9999.;
     dR_lep2_leadb = -9999.;
-    MT2W_lep1 	=  -9999.;
+    MT2W 	=  -9999.;
     MT2W_lep2 	=  -9999.;
     mindphi_met_j1_j2 = -9999.;
-    MT_MET_lep1 = -9999.;
-    MT_MET_lep2 = -9999.;
+    mt_met_lep = -9999.;
+    mt_met_lep2 = -9999.;
     chi2 	= -9999.; 
     is_data = false;
  
-    Topness_lep1       = -9999.; 
+    topness       = -9999.; 
     Topness_lep2       = -9999.; 
     TopnessMod_lep1    = -9999.; 
     TopnessMod_lep2    = -9999.; 
@@ -109,10 +109,14 @@ void EventTree::Reset ()
     MT2_lb_bqq_lep2      = -9999.; 
     MT2_lb_bqq_mass_lep1 = -9999.; 
     MT2_lb_bqq_mass_lep2 = -9999.; 
-    Mlb_lep1           = -9999.; 
+    Mlb           = -9999.; 
     Mlb_lep2           = -9999.; 
-    M3b_lep1           = -9999.; 
+    M3b           = -9999.; 
     M3b_lep2           = -9999.; 
+
+    dphi_Wlep = -9999.;
+    MET_over_sqrtHT = -9999.;
+    ak4jets_rho = -9999.;
 
     dataset = "";
     filename = "";
@@ -162,7 +166,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("xsec", &xsec);
     tree->Branch("kfactor", &kfactor);
     tree->Branch("pu_ntrue", &pu_ntrue);    
-    tree->Branch("ngoodlep",&ngoodlep);
+    tree->Branch("ngoodleps",&ngoodleps);
     tree->Branch("is_data", &is_data);
     tree->Branch("dataset", &dataset);
     tree->Branch("filename", &filename);
@@ -172,14 +176,17 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("nEvents_MET30", &nEvents_MET30);
     tree->Branch("nEvents_1goodlep", &nEvents_1goodlep);
     tree->Branch("nEvents_2goodjets", &nEvents_2goodjets);
-    tree->Branch("MT2W_lep1",&MT2W_lep1);
+    tree->Branch("MT2W",&MT2W);
     tree->Branch("MT2W_lep2",&MT2W_lep2);
     tree->Branch("mindphi_met_j1_j2", &mindphi_met_j1_j2);
-    tree->Branch("MT_MET_lep1", &MT_MET_lep1);
-    tree->Branch("MT_MET_lep2", &MT_MET_lep2);
-    tree->Branch("dR_lep1_leadb", &dR_lep1_leadb);
+    tree->Branch("mt_met_lep", &mt_met_lep);
+    tree->Branch("mt_met_lep2", &mt_met_lep2);
+    tree->Branch("dR_lep_leadb", &dR_lep_leadb);
     tree->Branch("dR_lep2_leadb", &dR_lep2_leadb);
     tree->Branch("chi2", &chi2);
+    tree->Branch("dphi_Wlep", &dphi_Wlep);
+    tree->Branch("MET_over_sqrtHT", &MET_over_sqrtHT);
+    tree->Branch("ak4jets_rho", &ak4jets_rho);
     tree->Branch("sparms_comment", &sparms_comment);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_filterEfficiency", &sparms_filterEfficiency);
@@ -199,7 +206,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("EA_centralcalo_rho", &EA_centralcalo_rho); 
     tree->Branch("EA_centralchargedpileup_rho", &EA_centralchargedpileup_rho); 
     tree->Branch("EA_centralneutral_rho", &EA_centralneutral_rho); 
-    tree->Branch("Topness_lep1", &Topness_lep1); 
+    tree->Branch("topness", &topness); 
     tree->Branch("Topness_lep2", &Topness_lep2); 
     tree->Branch("TopnessMod_lep1", &TopnessMod_lep1); 
     tree->Branch("TopnessMod_lep2", &TopnessMod_lep2); 
@@ -211,9 +218,9 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("MT2_lb_bqq_lep2", &MT2_lb_bqq_lep2); 
     tree->Branch("MT2_lb_bqq_mass_lep1", &MT2_lb_bqq_mass_lep1); 
     tree->Branch("MT2_lb_bqq_mass_lep2", &MT2_lb_bqq_mass_lep2); 
-    tree->Branch("Mlb_lep1", &Mlb_lep1); 
+    tree->Branch("Mlb", &Mlb); 
     tree->Branch("Mlb_lep2", &Mlb_lep2); 
-    tree->Branch("M3b_lep1", &M3b_lep1); 
+    tree->Branch("M3b", &M3b); 
     tree->Branch("M3b_lep2", &M3b_lep2); 
     tree->Branch("HLT_SingleEl", &HLT_SingleEl );
     tree->Branch("HLT_SingleMu", &HLT_SingleMu );

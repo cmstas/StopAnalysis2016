@@ -45,12 +45,13 @@ public:
     unsigned int nEvents_1goodlep;
     unsigned int nEvents_2goodjets;    
 
-    int ngoodlep;
-    
-    double MT2W_lep1;
+    int ngoodleps;
+    int nvetoleps;   
+ 
+    double MT2W;
     double MT2W_lep2;
     double chi2;
-    double Topness_lep1;
+    double topness;
     double Topness_lep2;
     double TopnessMod_lep1;
     double TopnessMod_lep2;
@@ -64,19 +65,23 @@ public:
     float MT2_lb_bqq_mass_lep1;
     float MT2_lb_bqq_mass_lep2;
 
-    float Mlb_lep1;
+    float Mlb;
     float Mlb_lep2;
-    float M3b_lep1;
+    float M3b;
     float M3b_lep2;
 
     float pfmet;
     float pfmet_phi;
 
-    float dR_lep1_leadb;
+    float dR_lep_leadb;
     float dR_lep2_leadb;    
     float mindphi_met_j1_j2;
-    float MT_MET_lep1;
-    float MT_MET_lep2;
+    float mt_met_lep;
+    float mt_met_lep2;
+
+    float dphi_Wlep;
+    float MET_over_sqrtHT;
+    float ak4jets_rho;
  
     bool is_data;
  
