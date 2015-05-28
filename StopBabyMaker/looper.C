@@ -424,12 +424,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
 
-      if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_d && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
-      if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_u && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
-      if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_s && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
-      if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_c && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
+      if(abs(genps_id().at(genx)) == pdg_d && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
+      if(abs(genps_id().at(genx)) == pdg_u && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
+      if(abs(genps_id().at(genx)) == pdg_s && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
+      if(abs(genps_id().at(genx)) == pdg_c && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
        
-      if(abs(genps_id_mother().at(genx)) == pdg_t && abs(genps_id().at(genx)) == pdg_b && genps_status().at(genx) == 23) gen_bs.FillCommon(genx);
+      if(abs(genps_id().at(genx)) == pdg_b && genps_status().at(genx) == 23) gen_bs.FillCommon(genx);
       if(abs(genps_id().at(genx)) == pdg_t && genps_status().at(genx) == 62) gen_tops.FillCommon(genx);
     
       if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) gen_lsp.FillCommon(genx);
