@@ -351,5 +351,5 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak8pfjets_parton_flavor", prefix_.c_str()) , &ak8pfjets_parton_flavor);
  
     tree->Branch(Form("%sak4genjets_p4", prefix_.c_str()) , &ak4genjets_p4);    
-    tree->Branch(Form("%sngoodbtags", prefix_.c_str()) , &ngoodbtags);
+    
 }
