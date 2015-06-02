@@ -33,14 +33,14 @@ public:
 
     // lepton reco info
     LorentzVector p4;
-    LorentzVector pfp4;
+    //LorentzVector pfp4;
     float pt;
     float eta;
     float phi;
     float mass; 
     bool is_mu;
     bool is_el;
-    int is_fromw;
+    //int is_fromw;
     int charge;
     int pdgid;
     int type;
@@ -67,14 +67,14 @@ public:
     float emiso;
     float deltaBeta;
 
-    float pfiso04;  //2012 only available for electrons
-    float pfiso03;  //2012 only available for electrons
+    //float pfiso04;  //2012 only available for electrons
+    //float pfiso03;  //2012 only available for electrons
     float relIso03DB; //ss
     float relIso03EA;
     float relIso04DB;
     float miniRelIsoDB;
     float miniRelIsoEA;
-
+    
     float MiniIso;
 
     float ip3d;

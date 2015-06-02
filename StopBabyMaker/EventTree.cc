@@ -77,6 +77,9 @@ void EventTree::Reset ()
     evt = 0;
 
     ngoodleps	=  -9999;
+    nvetoleps   =  -9999;
+
+    genlepsfromtop = -9999;
      
     nvtxs 	=  -9999;
     pu_nvtxs 	=  -9999;
@@ -94,7 +97,7 @@ void EventTree::Reset ()
     mindphi_met_j1_j2 = -9999.;
     mt_met_lep = -9999.;
     mt_met_lep2 = -9999.;
-    chi2 	= -9999.; 
+    hadronic_top_chi2 = -9999.; 
     is_data = false;
  
     topness       = -9999.; 
@@ -109,14 +112,16 @@ void EventTree::Reset ()
     MT2_lb_bqq_lep2      = -9999.; 
     MT2_lb_bqq_mass_lep1 = -9999.; 
     MT2_lb_bqq_mass_lep2 = -9999.; 
-    Mlb           = -9999.; 
-    Mlb_lep2           = -9999.; 
+    Mlb_closestb           = -9999.; 
+    Mlb_lead_bdiscr           = -9999.; 
+    Mlb_closestb_lep2           = -9999.; 
+    Mlb_lead_bdiscr_lep2           = -9999.; 
     M3b           = -9999.; 
     M3b_lep2           = -9999.; 
 
     dphi_Wlep = -9999.;
     MET_over_sqrtHT = -9999.;
-    ak4jets_rho = -9999.;
+    ak4pfjets_rho = -9999.;
 
     dataset = "";
     filename = "";
@@ -132,6 +137,9 @@ void EventTree::Reset ()
     sparms_xsec			= -9999.;
     sparms_values.clear();
     sparms_subProcessId 	= -9999;
+    mass_stop                   = -9999;
+    mass_lsp                    = -9999;
+    mass_chargino               = -9999;
 
     genmet 	= -9999.;
     genmet_phi 	= -9999.;
@@ -149,7 +157,13 @@ void EventTree::Reset ()
     EA_allcalo_rho = -9999.; 
     EA_centralcalo_rho = -9999.; 
     EA_centralchargedpileup_rho = -9999.; 
-    EA_centralneutral_rho =  -9999.; 
+    EA_centralneutral_rho =  -9999.;
+
+    pu_weight =  -9999;
+    lep_sf =  -9999;
+    btag_sf =  -9999;
+    HLT_SingleMu_eff =  -9999;
+    HLT_SingleEl_eff =  -9999;
 
 }
  
@@ -167,6 +181,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("kfactor", &kfactor);
     tree->Branch("pu_ntrue", &pu_ntrue);    
     tree->Branch("ngoodleps",&ngoodleps);
+    tree->Branch("nvetoleps",&nvetoleps);
     tree->Branch("is_data", &is_data);
     tree->Branch("dataset", &dataset);
     tree->Branch("filename", &filename);
@@ -176,6 +191,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("nEvents_MET30", &nEvents_MET30);
     tree->Branch("nEvents_1goodlep", &nEvents_1goodlep);
     tree->Branch("nEvents_2goodjets", &nEvents_2goodjets);
+    tree->Branch("genlepsfromtop", &genlepsfromtop);
     tree->Branch("MT2W",&MT2W);
     tree->Branch("MT2W_lep2",&MT2W_lep2);
     tree->Branch("mindphi_met_j1_j2", &mindphi_met_j1_j2);
@@ -183,10 +199,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("mt_met_lep2", &mt_met_lep2);
     tree->Branch("dR_lep_leadb", &dR_lep_leadb);
     tree->Branch("dR_lep2_leadb", &dR_lep2_leadb);
-    tree->Branch("chi2", &chi2);
+    tree->Branch("hadronic_top_chi2", &hadronic_top_chi2);
     tree->Branch("dphi_Wlep", &dphi_Wlep);
     tree->Branch("MET_over_sqrtHT", &MET_over_sqrtHT);
-    tree->Branch("ak4jets_rho", &ak4jets_rho);
+    tree->Branch("ak4pfjets_rho", &ak4pfjets_rho);
     tree->Branch("sparms_comment", &sparms_comment);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_filterEfficiency", &sparms_filterEfficiency);
@@ -197,6 +213,9 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("sparms_xsec", &sparms_xsec);
     tree->Branch("sparms_values", &sparms_values);
     tree->Branch("sparms_subProcessId", &sparms_subProcessId);
+    tree->Branch("mass_lsp", &mass_lsp);
+    tree->Branch("mass_chargino", &mass_chargino);
+    tree->Branch("mass_stop", &mass_stop);
     tree->Branch("genmet", &genmet);
     tree->Branch("genmet_phi", &genmet_phi);
     tree->Branch("PassTrackVeto",&PassTrackVeto);
@@ -218,8 +237,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("MT2_lb_bqq_lep2", &MT2_lb_bqq_lep2); 
     tree->Branch("MT2_lb_bqq_mass_lep1", &MT2_lb_bqq_mass_lep1); 
     tree->Branch("MT2_lb_bqq_mass_lep2", &MT2_lb_bqq_mass_lep2); 
-    tree->Branch("Mlb", &Mlb); 
-    tree->Branch("Mlb_lep2", &Mlb_lep2); 
+    tree->Branch("Mlb_closestb", &Mlb_closestb); 
+    tree->Branch("Mlb_lead_bdiscr", &Mlb_lead_bdiscr);
+    tree->Branch("Mlb_closestb_lep2", &Mlb_closestb_lep2); 
+    tree->Branch("Mlb_lead_bdiscr_lep2", &Mlb_lead_bdiscr_lep2);
     tree->Branch("M3b", &M3b); 
     tree->Branch("M3b_lep2", &M3b_lep2); 
     tree->Branch("HLT_SingleEl", &HLT_SingleEl );
@@ -228,4 +249,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_ht350met120", &HLT_ht350met120 );
     tree->Branch("HLT_MET120Btag", &HLT_MET120Btag );
     tree->Branch("HLT_MET120Mu5", &HLT_MET120Mu5 );
+    tree->Branch("pu_weight", &pu_weight); 
+    tree->Branch("lep_sf", &lep_sf); 
+    tree->Branch("btag_sf", &btag_sf); 
+    tree->Branch("HLT_SingleMu_eff", &HLT_SingleMu_eff); 
+    tree->Branch("HLT_SingleMu_eff", &HLT_SingleMu_eff); 
+
 }

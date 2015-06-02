@@ -43,18 +43,20 @@ public:
     unsigned int nEvents_goodvtx;
     unsigned int nEvents_MET30;
     unsigned int nEvents_1goodlep;
-    unsigned int nEvents_2goodjets;    
+    unsigned int nEvents_2goodjets;
+
+    int genlepsfromtop;
 
     int ngoodleps;
     int nvetoleps;   
  
-    double MT2W;
-    double MT2W_lep2;
-    double chi2;
-    double topness;
-    double Topness_lep2;
-    double TopnessMod_lep1;
-    double TopnessMod_lep2;
+    float MT2W;
+    float MT2W_lep2;
+    float hadronic_top_chi2;
+    float topness;
+    float Topness_lep2;
+    float TopnessMod_lep1;
+    float TopnessMod_lep2;
 
     float MT2_lb_b_lep1;
     float MT2_lb_b_lep2;
@@ -65,8 +67,10 @@ public:
     float MT2_lb_bqq_mass_lep1;
     float MT2_lb_bqq_mass_lep2;
 
-    float Mlb;
-    float Mlb_lep2;
+    float Mlb_closestb;
+    float Mlb_lead_bdiscr;
+    float Mlb_closestb_lep2;
+    float Mlb_lead_bdiscr_lep2;
     float M3b;
     float M3b_lep2;
 
@@ -81,7 +85,7 @@ public:
 
     float dphi_Wlep;
     float MET_over_sqrtHT;
-    float ak4jets_rho;
+    float ak4pfjets_rho;
  
     bool is_data;
  
@@ -107,14 +111,17 @@ public:
     float sparms_xsec;
     vecd sparms_values;
     int sparms_subProcessId;
+    float mass_lsp;
+    float mass_chargino;
+    float mass_stop;
         
     //gen met
     float genmet;
     float genmet_phi;
 
-   //veto
-   bool PassTrackVeto;
-   bool PassTauVeto;
+    //veto
+    bool PassTrackVeto;
+    bool PassTauVeto;
 
     float EA_all_rho;
     float EA_allcalo_rho;
@@ -128,7 +135,14 @@ public:
     int HLT_MET170;
     int HLT_ht350met120; 
     int HLT_MET120Btag;      
-    int HLT_MET120Mu5;      
+    int HLT_MET120Mu5;
+
+    float pu_weight;
+    float lep_sf;
+    float btag_sf;
+    float HLT_SingleMu_eff;
+    float HLT_SingleEl_eff;
+    
 };
  
 #endif

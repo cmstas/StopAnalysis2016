@@ -113,6 +113,7 @@ void LeptonTree::FillCommon (int id, int idx)
        //elMiniRelIso(unsigned int idx, bool useVetoCones, float ptthresh, bool useDBcor)
        miniRelIsoDB = elMiniRelIso(idx, true, 0., true, false);
        miniRelIsoEA = elMiniRelIso(idx, true, 0., false, true);
+       MiniIso = elMiniRelIso(idx, true, 0., true, false);//copy of miniRelIsoDB
 
     } // end electron block
 
@@ -151,7 +152,8 @@ void LeptonTree::FillCommon (int id, int idx)
 
          //muMiniRelIso(unsigned int idx, bool useVetoCones=true, float ptthresh = 0.5, bool useDBcor=false);
            miniRelIsoDB = muMiniRelIso(idx, true, 0.5, true, false);
-           miniRelIsoEA = muMiniRelIso(idx, true, 0.5, false, true); 
+           miniRelIsoEA = muMiniRelIso(idx, true, 0.5, false, true);
+	   MiniIso = muMiniRelIso(idx, true, 0.5, true, false);//copy of miniRelIsoDB
     } // end muon block
 }
 
@@ -159,7 +161,7 @@ void LeptonTree::Reset()
 {
     is_mu           = false;
     is_el           = false;
-    is_fromw        = -9999;
+    //is_fromw        = -9999;
     charge          = -9999;
     pdgid           = -9999;
     type            = -9999;
@@ -184,8 +186,8 @@ void LeptonTree::Reset()
     emiso           = -9999.;
     deltaBeta       = -9999.;
 
-    pfiso04         = -9999.;
-    pfiso03         = -9999.;
+    //pfiso04         = -9999.;
+    //pfiso03         = -9999.;
     relIso03DB      = -9999.;
     relIso03EA      = -9999.;    
     relIso04DB      = -9999.;
@@ -224,7 +226,7 @@ void LeptonTree::Reset()
 
     p4           = LorentzVector(0, 0, 0, 0);
     mcp4         = LorentzVector(0, 0, 0, 0);
-    pfp4         = LorentzVector(0, 0, 0, 0);
+    //pfp4         = LorentzVector(0, 0, 0, 0);
 
     pt		= -9999.;
     eta		= -9999.;
@@ -237,7 +239,7 @@ void LeptonTree::SetBranches(TTree* tree)
 {
     tree->Branch(Form("%sis_mu"           , prefix_.c_str()) , &is_mu           ); 
     tree->Branch(Form("%sis_el"           , prefix_.c_str()) , &is_el           ); 
-    tree->Branch(Form("%sis_fromw"        , prefix_.c_str()) , &is_fromw        ); 
+    //tree->Branch(Form("%sis_fromw"        , prefix_.c_str()) , &is_fromw        ); 
     tree->Branch(Form("%scharge"          , prefix_.c_str()) , &charge          ); 
     tree->Branch(Form("%spdgid"           , prefix_.c_str()) , &pdgid           ); 
     tree->Branch(Form("%stype"            , prefix_.c_str()) , &type            ); 
@@ -262,8 +264,8 @@ void LeptonTree::SetBranches(TTree* tree)
     tree->Branch(Form("%semiso"       , prefix_.c_str()) , &emiso);
     tree->Branch(Form("%sdeltaBeta"   , prefix_.c_str()) , &deltaBeta);
 
-     tree->Branch(Form("%spfiso04"	 , prefix_.c_str()) , &pfiso04         );
-     tree->Branch(Form("%spfiso03"        , prefix_.c_str()) , &pfiso03         );
+    //tree->Branch(Form("%spfiso04"	 , prefix_.c_str()) , &pfiso04         );
+    //tree->Branch(Form("%spfiso03"        , prefix_.c_str()) , &pfiso03         );
      tree->Branch(Form("%srelIso03DB"       , prefix_.c_str()) , &relIso03DB       );
      tree->Branch(Form("%srelIso03EA"       , prefix_.c_str()) , &relIso03EA       );
      tree->Branch(Form("%srelIso04DB"       , prefix_.c_str()) , &relIso04DB       );
@@ -302,7 +304,7 @@ void LeptonTree::SetBranches(TTree* tree)
 
     tree->Branch(Form("%sp4"      , prefix_.c_str()) , "LorentzVector" , &p4      );
     tree->Branch(Form("%smcp4"    , prefix_.c_str()) , "LorentzVector" , &mcp4    );
-    tree->Branch(Form("%spfp4"    , prefix_.c_str()) , "LorentzVector" , &pfp4   );
+    //tree->Branch(Form("%spfp4"    , prefix_.c_str()) , "LorentzVector" , &pfp4   );
 
    tree->Branch(Form("%spt"	 , prefix_.c_str()) , &pt);
    tree->Branch(Form("%seta"      , prefix_.c_str()) , &eta);

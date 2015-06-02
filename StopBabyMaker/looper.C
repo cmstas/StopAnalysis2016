@@ -195,10 +195,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       InitBabyNtuple();
 
-   //  std::cout << "[babymaker::looper]: filling event vars" << std::endl;
+      //std::cout << "[babymaker::looper]: filling event vars" << std::endl;
       //Fill Event Variables
       StopEvt.FillCommon(file->GetName()); 
-     // std::cout << "[babymaker::looper]: filling event vars completed" << std::endl; 
+      //std::cout << "[babymaker::looper]: filling event vars completed" << std::endl; 
    //   dumpDocLines();
       if(StopEvt.nvtxs<skim_nvtx) continue;
       nEvents_GoodVtx++;
@@ -239,7 +239,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       nEvents_GoodLep++; 
 
       StopEvt.ngoodleps = nGoodLeptons; 
-//std::cout << "[babymaker::looper]: filling lepton variables" << std::endl;
+      //std::cout << "[babymaker::looper]: filling lepton variables" << std::endl;
       lep1.FillCommon(GoodLeps.at(0).id, GoodLeps.at(0).idx);      
       if( nGoodLeptons > 1 ) lep2.FillCommon(GoodLeps.at(1).id, GoodLeps.at(1).idx);
      //get the jets overlapping with the selected leptons
@@ -248,7 +248,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       jet_overlep2_idx = -9999;
       jet_overlep1_idx = getOverlappingJetIndex(lep1.p4, pfjets_p4() , 0.4);
       if(nGoodLeptons>1) jet_overlep2_idx = getOverlappingJetIndex(lep2.p4, pfjets_p4() , 0.4); 
-//    std::cout<<__LINE__<<std::endl;
+      //std::cout<<__LINE__<<std::endl;
       
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
      //jets and b-tag variables feeding the index for the jet overlapping the selected leptons
@@ -271,8 +271,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     for (size_t idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
       dummy_sigma.push_back(0.1);
     } 
-//    std::cout<<__LINE__<<std::endl;
-    StopEvt.chi2 = calculateChi2(jets.ak4pfjets_p4, dummy_sigma, jets.ak4pfjets_passMEDbtag);
+    //std::cout<<__LINE__<<std::endl;
+    StopEvt.hadronic_top_chi2 = calculateChi2(jets.ak4pfjets_p4, dummy_sigma, jets.ak4pfjets_passMEDbtag);
     //Jets & MET
     StopEvt.mindphi_met_j1_j2 =  getMinDphi(StopEvt.pfmet_phi,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
     //MET & Leptons
@@ -281,7 +281,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
     StopEvt.dphi_Wlep = DPhi_W_lep(StopEvt.pfmet, StopEvt.pfmet_phi, lep1.p4);
     StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
-    StopEvt.ak4jets_rho = evt_fixgridfastjet_all_rho();
+    StopEvt.ak4pfjets_rho = evt_fixgridfastjet_all_rho();
 
     //Topness
     vector<LorentzVector > mybjets = JetUtil::BJetSelector(jets.ak4pfjets_p4,jets.ak4pfjets_CSV,MYBTAG,2,3,2);
@@ -300,7 +300,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     if(nGoodLeptons>1) StopEvt.MT2_lb_bqq_mass_lep2 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,jets.ak4pfjets_p4,true ,0);
     if(nGoodLeptons>1) StopEvt.MT2_lb_bqq_lep2 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,jets.ak4pfjets_p4,false ,0);
     //Mlb + M3b
-    float minDR1 = 99.; float minDR2 = 99.;
+    float minDR1 = 99.; float minDR2 = 99.; float maxCSV = -999;
     int jb1 = -1; int jb2 = -1; int jb3 = -1;
     int jb21 = -1; int jb22 = -1; int jb23 = -1;
     for (unsigned int idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
@@ -322,16 +322,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	else if(myDR>myDR2){ jb23 = jb22; jb22 = idx; }
 	else if(myDR>myDR3){ jb23 = idx; }
       }
+      if(jets.ak4pfjets_CSV.at(idx)>maxCSV){
+	maxCSV = jets.ak4pfjets_CSV.at(idx);
+	StopEvt.Mlb_lead_bdiscr = (jets.ak4pfjets_p4.at(idx)+lep1.p4).M();
+	if(nGoodLeptons>1) StopEvt.Mlb_lead_bdiscr_lep2 = (jets.ak4pfjets_p4.at(idx)+lep2.p4).M();
+      }
       if(jets.ak4pfjets_CSV.at(idx)<MYBTAG) continue;
       myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep1.p4);
       if(myDR<minDR1) {
-	StopEvt.Mlb = (jets.ak4pfjets_p4.at(idx)+lep1.p4).M();
+	StopEvt.Mlb_closestb = (jets.ak4pfjets_p4.at(idx)+lep1.p4).M();
 	minDR1 =myDR;
       }
       if(nGoodLeptons>1){
 	myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep2.p4);
 	if(myDR<minDR2) {
-	  StopEvt.Mlb_lep2 = (jets.ak4pfjets_p4.at(idx)+lep2.p4).M();
+	  StopEvt.Mlb_closestb_lep2 = (jets.ak4pfjets_p4.at(idx)+lep2.p4).M();
 	  minDR2 = myDR;
 	}
       }
@@ -348,7 +353,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     //if(nGoodLeptons>1) StopEvt.MT2W_lep2 = CalculateMT2W_(mybjets,lep2.p4,StopEvt.pfmet,StopEvt.pfmet_phi,true);
     //taus
     int vetotaus=0;
-//    std::cout<<__LINE__<<std::endl;
+    //std::cout<<__LINE__<<std::endl;
 
     Taus.tau_IDnames = taus_pf_IDnames();
 
@@ -362,6 +367,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 //    std::cout<<__LINE__<<std::endl;
     if(vetotaus<1) StopEvt.PassTauVeto = true;
     else StopEvt.PassTauVeto = false;
+    Taus.ngoodtaus = vetotaus;
 
     int vetotracks = 0;
     for (unsigned int ipf = 0; ipf < pfcands_p4().size(); ipf++) {
@@ -376,13 +382,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       //remove everything that is within 0.1 of selected lead and subleading leptons
       if(ROOT::Math::VectorUtil::DeltaR(pfcands_p4().at(ipf), lep1.p4)<0.1) continue;
-//    std::cout<<__LINE__<<std::endl;
+      //std::cout<<__LINE__<<std::endl;
       if(nGoodLeptons>1){
           if(ROOT::Math::VectorUtil::DeltaR(pfcands_p4().at(ipf), lep2.p4)<0.1) continue;
       }
-  //  std::cout<<__LINE__<<std::endl;
+      //std::cout<<__LINE__<< " ipf " << ipf << std::endl;
       Tracks.FillCommon(ipf);
-    //std::cout<<__LINE__<<std::endl;
+      //std::cout<<__LINE__<<std::endl;
       
       if(isVetoTrack(ipf, lep1.p4, lep1.charge)){
     //std::cout<<__LINE__<<std::endl;
@@ -404,7 +410,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
    int n_numufromt=0;
     //std::cout<<__LINE__<<std::endl;
 
-//    std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
+    //std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
     //gen particles
     for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
       //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)
@@ -418,7 +424,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
-      if(abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx); 
+      //if(abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx); 
 
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
       if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
@@ -433,13 +439,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(abs(genps_id().at(genx)) == pdg_t && genps_status().at(genx) == 62) gen_tops.FillCommon(genx);
     
       if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) gen_lsp.FillCommon(genx);
+      if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);
      
       if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) gen_stop.FillCommon(genx);
       if(abs(genps_id().at(genx)) == pdg_stop2 && genps_status().at(genx) == 62) gen_stop.FillCommon(genx);
+      if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);
+      if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);
 
     }
-//    std::cout<<__LINE__<<std::endl;
+    //std::cout<<__LINE__<<std::endl;
 
+    StopEvt.genlepsfromtop = n_nuelfromt+n_numufromt+n_nutaufromt;
     gen_els.gen_nfromt = n_nuelfromt;
     gen_mus.gen_nfromt = n_numufromt;
     gen_taus.gen_nfromt = n_nutaufromt;
