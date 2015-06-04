@@ -252,7 +252,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("pu_weight", &pu_weight); 
     tree->Branch("lep_sf", &lep_sf); 
     tree->Branch("btag_sf", &btag_sf); 
-    tree->Branch("HLT_SingleMu_eff", &HLT_SingleMu_eff); 
+    tree->Branch("HLT_SingleEl_eff", &HLT_SingleEl_eff); 
     tree->Branch("HLT_SingleMu_eff", &HLT_SingleMu_eff); 
 
 }
