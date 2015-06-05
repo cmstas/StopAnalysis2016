@@ -59,7 +59,7 @@ public:
     LorentzVector ak4pfjets_leadMEDbjet_p4;
     vecd ak4pfjets_qg_disc;    
     vecd ak4pfjets_CSV;
-    vecd ak4pfjets_pu_id;
+    vecd ak4pfjets_puid;
     veci ak4pfjets_parton_flavor;
     vecb ak4pfjets_loose_puid;
     vecb ak4pfjets_loose_pfid;
