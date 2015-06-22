@@ -63,4 +63,4 @@ StopSelections.o: StopSelections.cc StopSelections.h
 clean:  
 	rm -v -f \
 	runBabyMaker \
-	*o *d *.so; echo "Done"
+	*.o *.d *.so; echo "Done"

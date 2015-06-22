@@ -1,0 +1,15 @@
+# Ignore compiled code
+*.o
+*.so
+*.d
+
+# Don't commit the main executable
+runBabyMaker
+
+# Ignore screen files
+.display.screen
+
+# Ignore linkDef stuff
+LinkDef.cc
+LinkDef_out.*
+*rdict.pcm
