@@ -13,10 +13,11 @@ make
 
 (don't forget make clean if you have compiled code)
 
-runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath
+runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath sampledat
 
-Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=0 (0=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default
-(Question, for me it says /nfs-7/userdata/stopRun2/ no writing permission?)
+The sampledat contains the directory to the CMS3 ntuples.
+
+Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=0 (0=merged_ntuple_*.root),output=/nfs-7/userdata/stopRun2/, sampledat=sample.dat  by default
 
 samplenames are hardcoded to
 * ttbar
@@ -34,5 +35,9 @@ samplenames are hardcoded to
 * t_tW
 * tbar_tW
 * wjets
+* wjetsHT100
+* wjetsHT200
+* wjetsHT400
+* wjetsHT600
 * wzjets
 * zz

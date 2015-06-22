@@ -35,7 +35,7 @@ void LeptonTree::FillCommon (int id, int idx)
     pt 		= abs(id)==11 ? els_p4().at(idx).pt() : abs(id)==13 ? mus_p4().at(idx).pt() : -9999.;
     eta		= abs(id)==11 ? els_p4().at(idx).eta() : abs(id)==13 ? mus_p4().at(idx).eta() : -9999.;     
     phi         = abs(id)==11 ? els_p4().at(idx).phi() : abs(id)==13 ? mus_p4().at(idx).phi() : -9999.;
-    mass         = abs(id)==11 ? els_p4().at(idx).mass() : abs(id)==13 ? mus_p4().at(idx).mass() : -9999.;
+    mass        = abs(id)==11 ? els_p4().at(idx).mass() : abs(id)==13 ? mus_p4().at(idx).mass() : -9999.;
     type	= abs(id)==11 ? els_type().at(idx) : abs(id)==13 ? mus_type().at(idx) : -9999;
 //mc stuff
     if (!evt_isRealData()) {
@@ -45,11 +45,11 @@ void LeptonTree::FillCommon (int id, int idx)
           mcidx       = abs(id)==11 ? els_mcidx().at(idx) : abs(id)==13 ? mus_mcidx().at(idx) : -9999;
           mc_motherid = abs(id)==11 ? els_mc_motherid().at(idx) : abs(id)==13 ? mus_mc_motherid().at(idx) : -9999;
     
-          if(isFromW(id, idx)) production_type = fromW;
-          else if(isFromZ(id, idx)) production_type = fromZ;
-          else if(isFromB(id, idx)) production_type = fromB;
-          else if(isFromC(id, idx)) production_type = fromC;
-          else if(isFromLight(id, idx)) production_type = fromLight;
+          if(isFromW(id, idx))              production_type = fromW;
+          else if(isFromZ(id, idx))         production_type = fromZ;
+          else if(isFromB(id, idx))         production_type = fromB;
+          else if(isFromC(id, idx))         production_type = fromC;
+          else if(isFromLight(id, idx))     production_type = fromLight;
           else if(isFromLightFake(id, idx)) production_type = fromLightFake;
           else production_type = none;
           
@@ -81,11 +81,12 @@ void LeptonTree::FillCommon (int id, int idx)
         is_eleid_tight  = electronID(idx, STOP_tight_v1);
         
         //Phys14 IDs
-        is_phys14_loose_noIso = isLooseElectronPOGphys14noIso_v2(idx);
+        is_phys14_loose_noIso  = isLooseElectronPOGphys14noIso_v2(idx);
         is_phys14_medium_noIso = isMediumElectronPOGphys14noIso_v2(idx);
-        is_phys14_tight_noIso = isTightElectronPOGphys14noIso_v2(idx);
+        is_phys14_tight_noIso  = isTightElectronPOGphys14noIso_v2(idx);
 
         passMediumID = electronID(idx, STOP_medium_v2);
+        passVeto     = electronID(idx, STOP_veto_v2);
 
         eoverpin        = els_eOverPIn().at(idx); 
 
@@ -113,7 +114,7 @@ void LeptonTree::FillCommon (int id, int idx)
        //elMiniRelIso(unsigned int idx, bool useVetoCones, float ptthresh, bool useDBcor)
        miniRelIsoDB = elMiniRelIso(idx, true, 0., true, false);
        miniRelIsoEA = elMiniRelIso(idx, true, 0., false, true);
-       MiniIso = elMiniRelIso(idx, true, 0., true, false);//copy of miniRelIsoDB
+       MiniIso      = elMiniRelIso(idx, true, 0., true, false);//copy of miniRelIsoDB - change to precomputed for 74X
 
     } // end electron block
 
@@ -139,6 +140,7 @@ void LeptonTree::FillCommon (int id, int idx)
             is_muoid_tight  = muonID(idx, STOP_tight_v1);
         }
         passMediumID = muonID(idx, STOP_medium_v2);
+	passVeto = muonID(idx, STOP_loose_v2);
         //iso variables
         chiso     = mus_isoR04_pf_ChargedHadronPt().at(idx);
         nhiso     = mus_isoR04_pf_NeutralHadronEt().at(idx);
@@ -150,10 +152,10 @@ void LeptonTree::FillCommon (int id, int idx)
     	relIso03EA = muRelIso03EA(idx);
     	relIso04DB = muRelIso04DB(idx);
 
-         //muMiniRelIso(unsigned int idx, bool useVetoCones=true, float ptthresh = 0.5, bool useDBcor=false);
-           miniRelIsoDB = muMiniRelIso(idx, true, 0.5, true, false);
-           miniRelIsoEA = muMiniRelIso(idx, true, 0.5, false, true);
-	   MiniIso = muMiniRelIso(idx, true, 0.5, true, false);//copy of miniRelIsoDB
+	//muMiniRelIso(unsigned int idx, bool useVetoCones=true, float ptthresh = 0.5, bool useDBcor=false);
+	miniRelIsoDB = muMiniRelIso(idx, true, 0.5, true, false);
+	miniRelIsoEA = muMiniRelIso(idx, true, 0.5, false, true);
+	MiniIso      = muMiniRelIso(idx, true, 0.5, true, false);//copy of miniRelIsoDB - change to precomputed for 74X
     } // end muon block
 }
 
@@ -171,12 +173,12 @@ void LeptonTree::Reset()
     dz              = -9999.;
     dzerr           = -9999.;
 
-    sigmaIEtaEta_fill5x5            = -9999.; 
+    sigmaIEtaEta_fill5x5 = -9999.; 
     dEtaIn            = -9999.;
     dPhiIn            = -9999.;
     hOverE            = -9999.;
     ooEmooP           = -9999.;
-    expectedMissingInnerHits        = -9999.;
+    expectedMissingInnerHits = -9999.;
     conversionVeto    = -9999.;
     etaSC             = -9999.;
     ChiSqr            = -9999.;
@@ -191,27 +193,27 @@ void LeptonTree::Reset()
     relIso03DB      = -9999.;
     relIso03EA      = -9999.;    
     relIso04DB      = -9999.;
-    miniRelIsoDB = -9999.;
-    miniRelIsoEA  = -9999.;
-    MiniIso	= -9999.;
+    miniRelIsoDB    = -9999.;
+    miniRelIsoEA    = -9999.;
+    MiniIso         = -9999.;
 
     mcid            = -9999;
     mcstatus        = -9999;
 
-    mc3dr       = -9999;
-    mc3id       = -9999;
-    mc3idx      = -9999;
-    mc3motherid = -9999;
-    mc3motheridx =-9999;
+    mc3dr        = -9999;
+    mc3id        = -9999;
+    mc3idx       = -9999;
+    mc3motherid  = -9999;
+    mc3motheridx = -9999;
 
     is_eleid_loose  = false;
     is_eleid_medium = false;
     is_eleid_tight  = false;
     eoverpin        = -9999.;
 
-    is_phys14_loose_noIso = false;
+    is_phys14_loose_noIso  = false;
     is_phys14_medium_noIso = false;
-    is_phys14_tight_noIso = false;
+    is_phys14_tight_noIso  = false;
 
     is_muoid_loose  = false;
     is_muoid_medium = false;
@@ -220,7 +222,7 @@ void LeptonTree::Reset()
     ip3derr         = -9999.;
     is_pfmu         = false;
 
-    passVeto = false;
+    passVeto     = false;
     passMediumID = false;
    // mus_pfcands_idx = -99999;    
 

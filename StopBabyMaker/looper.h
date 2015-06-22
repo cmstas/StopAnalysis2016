@@ -39,13 +39,12 @@ class babyMaker {
     int skim_nvtx;
     float skim_met;
 
-    int skim_nlep;
+    int   skim_nlep;
     float skim_elpt;
     float skim_eleta;
     float skim_mupt;
     float skim_mueta;
-
-    int skim_njets;
+    int   skim_njets;
     float skim_jetpt;
     float skim_jeteta;
 

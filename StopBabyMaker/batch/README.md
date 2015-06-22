@@ -15,6 +15,11 @@ Instructions (no quotes):
 	   the locations of CORE and Software, be sure to update the 
 	   paths in the StopBabyMaker Makefile, lines 24-25, by correctly 
 	   setting the variables: COREPATH, and FWLIBPATH
+	   b. make sure the Makefile is correctly, usually l.24-25
+	   COREPATH       = ../../CORE
+       FWLIBPATH      = ../../Software/MiniFWLite
+	   c. Update CMSSW release at l.33/43 at condorExecutable.sh
+      	   (check also l.16)
 
   2.  To submit condor jobs to make Stop Babies, execute ". copy.sh" to 
       copy stuff from the parent directory to the batch directory.  
@@ -30,9 +35,12 @@ Instructions (no quotes):
       babies should be produced (line 6).  Line 15 will also specify 
       the directory on /hadoop/ where the output baby files will be
       copied to.
+	  b. Add new samples to this list (l.38,39 and after l.128)
 
   4.  In condorFileTemplate, change line 12 to your email address for
       notifications from the condor queue about the job ending/failing     
 
   5.  ". makeBabies.sh" to submit.  Just let it run, it will quit when 
-      all babies exist.  It will also merge them for you at the end,
+       all babies exist.  It will also merge them for you at the end,
+	   b. run this command in a screen session.
+

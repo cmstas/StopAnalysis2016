@@ -22,11 +22,11 @@ void GenParticleTree::FillCommon (int idx)
         if(abs(genps_id_mother().at(genps_idx_mother().at(idx))) == pdg_t) isfromt.push_back(true);
         else if(abs(genps_id_mother().at(idx)) == pdg_t) isfromt.push_back(true);
         else isfromt.push_back(false);
-       // if(abs(genps_id().at(idx)) == pdg_tau && abs(genps_id_mother().at(genps_idx_mother().at(idx))) !=pdg_t){
+        //if(abs(genps_id().at(idx)) == pdg_tau && abs(genps_id_mother().at(genps_idx_mother().at(idx))) !=pdg_t){
          // cout<<"Mother "<<abs(genps_id_mother().at(genps_idx_mother().at(idx)))<<endl;
          // dumpDocLines();
-      //  }
-//cout<<"Mother "<<abs(genps_id_mother().at(genps_idx_mother().at(idx)))<<endl;
+        //}
+	//cout<<"Mother "<<abs(genps_id_mother().at(genps_idx_mother().at(idx)))<<endl;
 	  p4.push_back(genps_p4().at(idx));
           charge.push_back(genps_charge().at(idx));
   	  iso.push_back(genps_iso().at(idx));
@@ -61,7 +61,7 @@ void GenParticleTree::FillCommon (int idx)
 	  }else if(genps_idx_mother().at(genx) != idx) continue;
 	  if(genps_status().at(genx) != 1 && genps_status().at(genx) != 2) continue;
 	  //rhos and pions show up as status 2
-//          cout<<"Daughter particle  "<<abs(genps_id().at(genx))<<"  status "<<genps_status().at(genx)<<endl;
+	  //cout<<"Daughter particle  "<<abs(genps_id().at(genx))<<"  status "<<genps_status().at(genx)<<endl;
 	  if(abs(genps_id().at(genx)) ==pdg_nue || abs(genps_id().at(genx)) ==pdg_numu || abs(genps_id().at(genx)) ==pdg_nutau) continue; //skip neutrinos
           //for now no continues in case theres something funky going on
 	  if(abs(genps_id().at(genx)) == pdg_el){
@@ -82,10 +82,10 @@ void GenParticleTree::FillCommon (int idx)
           }
  	}
 
-//       if(nprongs>0 && leptonic==false){
-  //         cout<<"N Prongs = "<<nprongs<<endl;
-    //       dumpDocLines();
-      // }
+	//if(nprongs>0 && leptonic==false){
+	// cout<<"N Prongs = "<<nprongs<<endl;
+	// dumpDocLines();
+	//}
         
 	if(nprongs == 1) gentaudecay.push_back(Had_1prong);
         if(nprongs == 3) gentaudecay.push_back(Had_3prong);

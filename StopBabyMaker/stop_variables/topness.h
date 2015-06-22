@@ -45,9 +45,12 @@ void minuitFunctionWrapperV1(int& nDim, double* gout, double& result, double* pa
 }
 
 
-float gettopness(TLorentzVector met, TLorentzVector lep, vector<TLorentzVector > bjets, int version=1);
-float Gettopness(LorentzVector met, LorentzVector lep, vector<LorentzVector > bjets, int version=1);
-float Gettopness_(float met, float metphi, LorentzVector lep, vector<LorentzVector> bjets, int version=1);
+//float gettopness(TLorentzVector met, TLorentzVector lep, vector<TLorentzVector > bjets, int version=1);
+//float Gettopness(LorentzVector met, LorentzVector lep, vector<LorentzVector > bjets, int version=1);
+//float Gettopness_(float met, float metphi, LorentzVector lep, vector<LorentzVector> bjets, int version=1);
 
-float TopnessVersion(int version, LorentzVector MET, LorentzVector lep, vector<LorentzVector> jets, vector<float> jet_bdiscr, float btagdiscr=0.814, unsigned int addnjets=2, int addjets=2);
-float TopnessVersion_(int version, float met, float metphi, LorentzVector lep, vector<LorentzVector> jets, vector<float> jet_bdiscr, float btagdiscr=0.814, unsigned int addnjets=2, int addjets=2);
+//float TopnessVersion(int version, LorentzVector MET, LorentzVector lep, vector<LorentzVector> jets, vector<float> jet_bdiscr, float btagdiscr=0.814, unsigned int addnjets=2, int addjets=2);
+//float TopnessVersion_(int version, float met, float metphi, LorentzVector lep, vector<LorentzVector> jets, vector<float> jet_bdiscr, float btagdiscr=0.814, unsigned int addnjets=2, int addjets=2);
+
+float CalcTopness( int version, LorentzVector MET,       LorentzVector lep, vector<LorentzVector> bjets,  vector<LorentzVector> addjets);
+float CalcTopness_(int version, float MET, float METphi, LorentzVector lep, vector<LorentzVector> bjets,  vector<LorentzVector> addjets);

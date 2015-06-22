@@ -1,17 +1,51 @@
-#include "TChain.h"
 #include "looper.h"
-#include "iostream"
+#include "TChain.h"
+#include "TString.h"
+#include <stdio.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
+
+vector<TString> load(char *type, const char *filename, char *input){
+
+  vector<TString> output;
+  char buffer[200];
+  char StringValue[1000];
+  ifstream IN(input);
+  while( IN.getline(buffer, 200, '\n') ){
+    // ok = false;
+    if (buffer[0] == '#') {
+      continue; // Skip lines commented with '#'
+    }
+    if( !strcmp(buffer, "SAMPLE")){
+      bool add = false;
+      IN.getline(buffer, 200, '\n');
+      sscanf(buffer, "Name\t%s", StringValue);
+      if((string)StringValue==(string)type) add=true;
+      IN.getline(buffer, 200, '\n');
+      sscanf(buffer, "Path\t%s", StringValue);
+      if(add){
+	std::ostringstream addStream;
+	addStream << StringValue << filename;
+	TString addString = addStream.str().c_str();
+	output.push_back(addString);
+      }
+    }
+  }
+  return output;
+}
+  
 
 //int main(){
 int main(int argc, char **argv){
  if(argc<2){
    cout<<" runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath" << endl;
-   cout<<" Need to provide at least sample_name; nevents=-1 (-1=all evnets), file_number=0 (0=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default"<<endl;
+   cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=0 (0=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default"<<endl;
    return 0;
  }
- 
   babyMaker *mylooper = new babyMaker();
 
   //void setSkimVariables(int nvtx, float met, int nlep, float el_pt, float el_eta, float mu_pt, float mu_eta, int njets, float jetpt, float jeteta);
@@ -31,60 +65,15 @@ int main(int argc, char **argv){
   
   const char* suffix = file == 0 ? "" : Form("_%i", file);
 
+  char *input = "sample.dat";
+  if(argc>5) input = argv[5];
+
   TChain *sample = new TChain("Events");
 
-  if(strcmp( argv[1], "ttbar") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-
-  if(strcmp( argv[1], "stop_850_100") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/SMS-T2tt_2J_mStop-850_mLSP-100_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "stop_650_325") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/SMS-T2tt_2J_mStop-650_mLSP-325_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "stop_500_325") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/SMS-T2tt_2J_mStop-500_mLSP-325_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "stop_425_325") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/SMS-T2tt_2J_mStop-425_mLSP-325_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-
-  if(strcmp( argv[1], "ttwjets") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/TTWJets_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "ttzjets") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/TTZJets_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "dyjets") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/DYJetsToLL_M-50_13TeV-madgraph-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "tbar_sch") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/TBarToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "tbar_tch") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/TBarToLeptons_t-channel_Tune4C_CSA14_13TeV-aMCatNLO-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "t_sch") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/TToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "t_tch") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "t_tW") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "tbar_tW") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "wjets") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/WJetsToLNu_13TeV-madgraph-pythia8-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "wzjets") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
-  }
-  if(strcmp( argv[1], "zz") == 0){
-      sample->Add(Form("/hadoop/cms/store/group/snt/phys14/ZZTo4L_Tune4C_13TeV-powheg-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/%s", filename));
+  vector<TString> samplelist = load(argv[1], filename, input);//new
+  for(unsigned int i = 0; i<samplelist.size(); ++i){
+    cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
+    sample->Add(samplelist[i].Data());
   }
 
   mylooper->looper(sample, Form("%s%s", argv[1],suffix), nevents,dirpath);

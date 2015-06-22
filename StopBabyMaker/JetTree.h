@@ -27,7 +27,7 @@ public:
     void Reset ();
     void SetBranches (TTree* tree);
     void SetAliases (TTree* tree);
-    void FillCommon(unsigned int overlep1_idx, unsigned int overlep2_idx);
+    void FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx, unsigned int overlep2_idx);
     void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id);
     void GetJetSelections (std::string cone_size = "");
 
@@ -40,6 +40,7 @@ public:
  
     // ak4 PF jets
     int ngoodjets;
+    int nfailjets; //jets not passing loose jid
     int ak8GoodPFJets;
     int nGoodGenJets;
     int ngoodbtags;
@@ -76,13 +77,14 @@ public:
     vecd ak4pfjets_nef;
     veci ak4pfjets_cm;
     veci ak4pfjets_nm;
+    vecd ak4pfjets_muf;
 
     veci ak4pfjets_mc3dr;
     veci ak4pfjets_mc3id;
     veci ak4pfjets_mc3idx;
     veci ak4pfjets_mcmotherid;
 
-   //overlaps
+   //overlaps for selected leptons only
     LorentzVector ak4pfjet_overlep1_p4;
     float ak4pfjet_overlep1_CSV;
     float ak4pfjet_overlep1_pu_id;
@@ -90,6 +92,7 @@ public:
     float ak4pfjet_overlep1_nhf;
     float ak4pfjet_overlep1_cef;
     float ak4pfjet_overlep1_nef;
+    float ak4pfjet_overlep1_muf;
     int ak4pfjet_overlep1_cm;
     int ak4pfjet_overlep1_nm;
 
@@ -100,6 +103,7 @@ public:
     float ak4pfjet_overlep2_nhf;
     float ak4pfjet_overlep2_cef;
     float ak4pfjet_overlep2_nef;
+    float ak4pfjet_overlep2_muf;
     int ak4pfjet_overlep2_cm;
     int ak4pfjet_overlep2_nm;
  
@@ -121,8 +125,10 @@ public:
 private:
     float m_ak4_pt_cut;
     float m_ak8_pt_cut;
-    float m_eta_cut;
-    bool m_passid;
+    float m_ak4_eta_cut;
+    float m_ak8_eta_cut;
+    bool m_ak4_passid;
+    bool m_ak8_passid;
 };
  
 #endif

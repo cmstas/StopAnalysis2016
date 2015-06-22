@@ -38,12 +38,12 @@ public:
     float eta;
     float phi;
     float mass; 
-    bool is_mu;
-    bool is_el;
+    bool  is_mu;
+    bool  is_el;
     //int is_fromw;
-    int charge;
-    int pdgid;
-    int type;
+    int   charge;
+    int   pdgid;
+    int   type;
 
     int isFrom;
 
@@ -57,8 +57,8 @@ public:
     float dPhiIn;
     float hOverE;
     float ooEmooP;
-    int expectedMissingInnerHits ;
-    bool conversionVeto;
+    int   expectedMissingInnerHits ;
+    bool  conversionVeto;
     float etaSC ;
     float ChiSqr;
 
@@ -79,7 +79,7 @@ public:
 
     float ip3d;
     float ip3derr;
-    bool is_pfmu;
+    bool  is_pfmu;
 
     //
     // lepton gen info
@@ -104,15 +104,15 @@ public:
     bool is_phys14_loose_noIso;
     bool is_phys14_medium_noIso;
     bool is_phys14_tight_noIso;
-//    veci els_pfcands_idx;
+    //veci els_pfcands_idx;
     //
     // muon specific info
     bool is_muoid_medium; 
     bool is_muoid_loose;
     bool is_muoid_tight;
 
-    bool passVeto;
-    bool passMediumID;
+    bool passVeto;    //currently contains miniIso
+    bool passMediumID;//currently contains miniIso
 
   //  int mus_pfcands_idx;
     int production_type;
