@@ -11,7 +11,7 @@
 //Reserved for expert
 #define MIN_MASS  0.1   //if ma<MINMASS and mb<MINMASS, use massless code
 #define ZERO_MASS 0.000 //give massless particles a small mass
-#define SCANSTEP 0.1
+#define SCANSTEP  0.1
 
 #include <iostream>
 #include <math.h>
@@ -36,7 +36,7 @@ public:
 
 private:
 
-	int verbose;
+	int    verbose;
 	bool   solved;
 	bool   momenta_set;
 	double mt2_b;
@@ -47,8 +47,8 @@ private:
 	int    signchange_n( long double t1, long double t2, long double t3, long double t4, long double t5);
 //inline
 	int    signchange_p( long double t1, long double t2, long double t3, long double t4, long double t5);
-	int scan_high(double &Deltasq_high);
-	int find_high(double &Deltasq_high);
+	int    scan_high(double &Deltasq_high);
+	int    find_high(double &Deltasq_high);
 		//data members
 	double pax, pay, ma, Ea;
 	double pmissx, pmissy;

@@ -20,6 +20,20 @@ int numberOfGoodVertices() {
   return ngv;
 }
 
+bool PassElectronVetoSelections(unsigned int elIdx,float pt, float eta){
+  if(els_p4().at(elIdx).pt() < pt) return false;
+  if(fabs(els_p4().at(elIdx).eta()) > eta) return false;
+  if(!electronID(elIdx, STOP_veto_v2)) return false;  //pass veto, mini-isolation applied at 0.2
+  return true;
+}
+
+bool PassMuonVetoSelections(unsigned int muIdx,float pt, float eta){
+  if(mus_p4().at(muIdx).pt() < pt) return false;
+  if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
+  if(!muonID(muIdx, STOP_loose_v2)) return false;  //pass loose, mini-isolation applied at 0.2
+  return true;
+}
+
 bool PassElectronPreSelections(unsigned int elIdx,float pt, float eta){
   if(els_p4().at(elIdx).pt() < pt) return false;
   if(fabs(els_p4().at(elIdx).eta()) > eta) return false;
@@ -30,14 +44,15 @@ bool PassElectronPreSelections(unsigned int elIdx,float pt, float eta){
 bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   if(mus_p4().at(muIdx).pt() < pt) return false;
   if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
+  if(!muonID(muIdx, STOP_loose_v1)) return false;  //pass loose
   if(!muonID(muIdx, STOP_medium_v2)) return false;  //mini-isolation applied at 0.1
   return true;
 }
 
-bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta){
+bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid){
   if(pfjets_p4().at(jetIdx).pt() < pt) return false;
   if(fabs(pfjets_p4().at(jetIdx).eta()) > eta) return false;
-  if(!isLoosePFJet(jetIdx)) return false;
+  if(passjid && !isLoosePFJetV2(jetIdx)) return false;
   return true;
 }
 
@@ -65,18 +80,21 @@ bool isVetoTau(int ipf, LorentzVector lepp4_, int charge){
 }
 
 //overlap removal
-int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR){
+int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid){
   float DR_lep_jet1 = 0.;
   float DR_lep_jet2 = 0.;
   int closestjet_idx = 0;
-
+  
+  if(jets_.size()==0) return -999;
+  
 	for(unsigned int iJet=1; iJet<jets_.size(); iJet++){
-            if(!PassJetPreSelections(iJet,30.,2.4)) continue;
-            DR_lep_jet1 = ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_);
-            DR_lep_jet2 = ROOT::Math::VectorUtil::DeltaR(jets_.at(iJet), lep_);
-            if(DR_lep_jet1 > DR_lep_jet2) closestjet_idx = iJet;
+	  if(!PassJetPreSelections(iJet,pt,eta,passjid)) continue;
+	  //if(jets_.at(iJet).Pt()<pt) continue;
+	  //if(TMath::Abs(jets_.at(iJet).Eta())>eta) continue;
+	  DR_lep_jet1 = ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_);
+	  DR_lep_jet2 = ROOT::Math::VectorUtil::DeltaR(jets_.at(iJet), lep_);
+	  if(DR_lep_jet1 > DR_lep_jet2) closestjet_idx = iJet;
 	}
-
 
 
 	if(ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_) > dR){
@@ -89,7 +107,8 @@ int getOverlappingTrackIndex(LorentzVector& lep_, int pdgid_, vector<LorentzVect
   float DR_lep_track1 = 0.;
   float DR_lep_track2 = 0.;
   int closesttrack_idx = 0;
-  
+  if(tracks_.size()==0) return -999;
+
         for(unsigned int iTrk=1; iTrk<tracks_.size(); iTrk++){
             if(pfcands_particleId().at(iTrk) != pdgid_) continue;
         //    cout<<"Track PDG-id = "<<pfcands_particleId().at(iTrk)<<endl;

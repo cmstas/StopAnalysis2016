@@ -168,7 +168,7 @@ void mt2w::mt2w_bisect()
 	// 
 	
 	// If our starting high guess is not compatible, start the high guess from the low guess...
-    if (teco(mtop_high)==0) {mtop_high = mtop_low;}
+	if (teco(mtop_high)==0) {mtop_high = mtop_low;}
 	
 	// .. and scan up until a compatible high bound is found.
 	//We can also raise the lower bound since we scaned over a region that is not compatible
@@ -205,6 +205,7 @@ void mt2w::mt2w_bisect()
 	
 int mt2w::teco(  double mtop)
 {
+        cout.precision(11);
 	
 //first test if mtop is larger than mb+mw	
 	
@@ -268,7 +269,7 @@ int mt2w::teco(  double mtop)
 //find a point in ellipse 1 and see if it's within the ellipse 2, define h0 for convenience
     double x0, h0, y0, r0;
 	x0 = (c1*d1-b1*e1)/(b1*b1-a1*c1);
-    h0 = (b1*x0 + e1)*(b1*x0 + e1) - c1*(a1*x0*x0 + 2*d1*x0 + f1);
+	h0 = (b1*x0 + e1)*(b1*x0 + e1) - c1*(a1*x0*x0 + 2*d1*x0 + f1);
 	if (h0 < 0.0) {return 0;}  // if h0 < 0, y0 is not real and ellipse 1 is not real, this is a redundant check.
 	y0 = (-b1*x0 -e1 + sqrt(h0))/c1;
 	r0 = a2*x0*x0 + 2*b2*x0*y0 + c2*y0*y0 + 2*d2*x0 + 2*e2*y0 + f2;
@@ -285,10 +286,10 @@ int mt2w::teco(  double mtop)
 	a1*a1*c2*c2;  
 	
 	A3 =
-	(-4*a2*b2*c1*d1 + 8*a2*b1*c2*d1 - 4*a1*b2*c2*d1 - 4*a2*b1*c1*d2 + 
+	  (-4*a2*b2*c1*d1 + 8*a2*b1*c2*d1 - 4*a1*b2*c2*d1 - 4*a2*b1*c1*d2 + 
 	 8*a1*b2*c1*d2 - 4*a1*b1*c2*d2 - 8*a2*b1*b2*e1 + 8*a1*b2*b2*e1 + 
 	 4*a2*a2*c1*e1 - 4*a1*a2*c2*e1 + 8*a2*b1*b1*e2 - 8*a1*b1*b2*e2 - 
-     4*a1*a2*c1*e2 + 4*a1*a1*c2*e2)/Eb1;
+	 4*a1*a2*c1*e2 + 4*a1*a1*c2*e2)/Eb1;
 	
 	
 	A2 =
@@ -297,18 +298,18 @@ int mt2w::teco(  double mtop)
 	 4*a2*a2*e1*e1 + 16*a2*b1*d1*e2 - 8*a1*b2*d1*e2 - 
 	 8*a1*b1*d2*e2 - 8*a1*a2*e1*e2 + 4*a1*a1*e2*e2 - 4*a2*b1*b2*f1 + 
 	 4*a1*b2*b2*f1 + 2*a2*a2*c1*f1 - 2*a1*a2*c2*f1 + 
-     4*a2*b1*b1*f2 - 4*a1*b1*b2*f2 - 2*a1*a2*c1*f2 + 2*a1*a1*c2*f2)/Eb1sq;
+	 4*a2*b1*b1*f2 - 4*a1*b1*b2*f2 - 2*a1*a2*c1*f2 + 2*a1*a1*c2*f2)/Eb1sq;
 	
 	A1 =
 	(-8*a2*d1*d2*e1 + 8*a1*d2*d2*e1 + 8*a2*d1*d1*e2 - 8*a1*d1*d2*e2 - 
 	 4*a2*b2*d1*f1 - 4*a2*b1*d2*f1 + 8*a1*b2*d2*f1 + 4*a2*a2*e1*f1 - 
 	 4*a1*a2*e2*f1 + 8*a2*b1*d1*f2 - 4*a1*b2*d1*f2 - 4*a1*b1*d2*f2 - 
-     4*a1*a2*e1*f2 + 4*a1*a1*e2*f2)/(Eb1sq*Eb1);
+	 4*a1*a2*e1*f2 + 4*a1*a1*e2*f2)/(Eb1sq*Eb1);
 	
 	A0 =
 	(-4*a2*d1*d2*f1 + 4*a1*d2*d2*f1 + a2*a2*f1*f1 + 
 	 4*a2*d1*d1*f2 - 4*a1*d1*d2*f2 - 2*a1*a2*f1*f2 + 
-     a1*a1*f2*f2)/(Eb1sq*Eb1sq);
+	 a1*a1*f2*f2)/(Eb1sq*Eb1sq);
 	
    long  double A0sq, A1sq, A2sq, A3sq, A4sq;
    A0sq = A0*A0;

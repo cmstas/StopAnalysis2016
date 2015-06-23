@@ -48,6 +48,7 @@ Davismt2::Davismt2(){
 Davismt2::~Davismt2(){}
 
 double Davismt2::get_mt2(){
+  cout.precision(11);
 	if (!momenta_set)
 	{
 		cout << "Davismt2::get_mt2() ==> Please set momenta first!" << endl;
@@ -62,6 +63,7 @@ void Davismt2::set_momenta(double* pa0, double* pb0, double* pmiss0){
 	solved = false;     //reset solved tag when momenta are changed.
 	momenta_set = true;
 
+	cout.precision(11);
 	ma = fabs(pa0[0]);  // mass cannot be negative
 
 	if (ma < ZERO_MASS) ma = ZERO_MASS;
@@ -72,7 +74,7 @@ void Davismt2::set_momenta(double* pa0, double* pb0, double* pmiss0){
 	Easq = masq+pax*pax+pay*pay;
 	Ea   = sqrt(Easq);
 
-	mb = fabs(pb0[0]);
+	mb   = fabs(pb0[0]);
 
 	if (mb < ZERO_MASS) mb = ZERO_MASS;
 
@@ -104,22 +106,22 @@ void Davismt2::set_momenta(double* pa0, double* pb0, double* pmiss0){
 	if (sqrt(pmissxsq+pmissysq)/100 > scale) scale = sqrt(pmissxsq+pmissysq)/100;
 	//scale = 1;
 	double scalesq = scale * scale;
-	ma  = ma/scale;
-	mb  = mb/scale;
+	ma   = ma/scale;
+	mb   = mb/scale;
 	masq = masq/scalesq;
 	mbsq = mbsq/scalesq;
-	pax = pax/scale; pay = pay/scale;
-	pbx = pbx/scale; pby = pby/scale;
-	Ea  = Ea/scale;  Eb = Eb/scale;
+	pax  = pax/scale; pay = pay/scale;
+	pbx  = pbx/scale; pby = pby/scale;
+	Ea   = Ea/scale;  Eb = Eb/scale;
 
-	Easq = Easq/scalesq;
-	Ebsq = Ebsq/scalesq;
-	pmissx = pmissx/scale;
-	pmissy = pmissy/scale;
+	Easq     = Easq/scalesq;
+	Ebsq     = Ebsq/scalesq;
+	pmissx   = pmissx/scale;
+	pmissy   = pmissy/scale;
 	pmissxsq = pmissxsq/scalesq;
 	pmissysq = pmissysq/scalesq;
-	mn   = mn_unscale/scale; 
-	mnsq = mn*mn;
+	mn       = mn_unscale/scale; 
+	mnsq     = mn*mn;
 
 	if (ABSOLUTE_PRECISION > 100.*RELATIVE_PRECISION) precision = ABSOLUTE_PRECISION;
 	else precision = 100.*RELATIVE_PRECISION;
@@ -142,6 +144,7 @@ void Davismt2::print(){
 //special case, the visible particle is massless
 void Davismt2::mt2_massless(){
 
+  cout.precision(11);
 //rotate so that pay = 0 
 	double theta,s,c;
 	theta = atan(pay/pax);
@@ -267,6 +270,7 @@ void Davismt2::mt2_massless(){
 }
 
 int Davismt2::nsols_massless(double Dsq){
+  cout.precision(11);
 	double delta;
 	delta = Dsq/(2*Easq);
 	d1    = d11*delta;
@@ -330,7 +334,7 @@ int Davismt2::nsols_massless(double Dsq){
 }
 
 void Davismt2::mt2_bisect(){
-
+  cout.precision(11);
 	solved = true;
 	cout.precision(11);
 
@@ -478,6 +482,7 @@ void Davismt2::mt2_bisect(){
 }
 
 int Davismt2::find_high(double & Deltasq_high){
+  cout.precision(11);
 	double x0,y0;
 	x0 = (c1*d1-b1*e1)/(b1*b1-a1*c1);
 	y0 = (a1*e1-b1*d1)/(b1*b1-a1*c1);
@@ -518,6 +523,7 @@ int Davismt2::find_high(double & Deltasq_high){
 }
 
 int Davismt2::scan_high(double & Deltasq_high){
+  cout.precision(11);
 	int foundhigh = 0 ;
 	int nsols_high;
 
@@ -543,6 +549,7 @@ int Davismt2::scan_high(double & Deltasq_high){
 }
 
 int Davismt2::nsols(double Dsq){
+  cout.precision(11);
 	double delta = (Dsq-masq)/(2*Easq);
 
 //calculate coefficients for the two quadratic equations

@@ -22,14 +22,15 @@
 //Reserved for expert
 #define MIN_MASS  0.1   //if ma<MINMASS and mb<MINMASS, use massless code
 #define ZERO_MASS 0.000 //give massless particles a small mass
-#define SCANSTEP 0.1
+#define SCANSTEP  0.1
 namespace mt2w_bisect
 {
 class mt2w
 {  
    public:
       
-      mt2w(double upper_bound=1000.0, double error_value=999.0, double scan_step=0.5);
+  mt2w(double upper_bound=500.0, double error_value=499.0, double scan_step=0.5);//changed back for sync
+      //mt2w(double upper_bound=1000.0, double error_value=999.0, double scan_step=0.5);
       // Constructor where:
       //    upper_bound:  the upper bound of search for MT2W, default value is 500 GeV 
       //    error_value:  if we couldn't find any compatible region below upper_bound, this value gets returned.  
@@ -55,9 +56,9 @@ class mt2w
 
       bool   solved;
       bool   momenta_set;
-	  double upper_bound;
-	  double error_value;
-	  double scan_step;
+      double upper_bound;
+      double error_value;
+      double scan_step;
       double mt2w_b;
 
       int    teco(double mtop);   // test the compatibility of a given trial top mass mtop
@@ -66,19 +67,19 @@ class mt2w
 
       //data members
       double plx, ply, plz, ml, El;      // l is the visible lepton
-	  double pb1x, pb1y, pb1z, mb1, Eb1;   // b1 is the bottom on the same side as the visible lepton
-	  double pb2x, pb2y, pb2z, mb2, Eb2;   // b2 is the other bottom
+      double pb1x, pb1y, pb1z, mb1, Eb1;   // b1 is the bottom on the same side as the visible lepton
+      double pb2x, pb2y, pb2z, mb2, Eb2;   // b2 is the other bottom
       double pmissx, pmissy;              // x and y component of missing p_T
-	  double mv,mw;           //mass of neutrino and W-boson
+      double mv,mw;           //mass of neutrino and W-boson
      
       //auxiliary definitions
       double mlsq, Elsq;
       double mb1sq, Eb1sq;
-	  double mb2sq, Eb2sq;
+      double mb2sq, Eb2sq;
 
       //auxiliary coefficients
       double a1, b1, c1, a2, b2, c2, d1, e1, f1, d2, e2, f2;
-	  double d2o, e2o, f2o;
+      double d2o, e2o, f2o;
 
       double precision;
 };

@@ -49,6 +49,7 @@ void minuitFunction(int&, double* , double &result, double par[], int){
 // This function calculates the hadronic chi2 - SNT version
 double calculateChi2(vector<LorentzVector>& jets, vector<float>& sigma_jets, vector<bool>& btag){
 
+        cout.precision(11);
 	assert(jets.size() == sigma_jets.size());
 	assert(jets.size() == btag.size());
 
@@ -177,6 +178,8 @@ double calculateChi2(vector<LorentzVector>& jets, vector<float>& sigma_jets, vec
 			double c_chi2 = pow(massT-PDG_TOP_MASS, 2)/smtop2
 				+ pow(massW-PDG_W_MASS, 2)/smw2;
 			if (c_chi2<chi2min) chi2min = c_chi2;
+			//cout << "chi2 " << c_chi2 << " with Wjet1 " << jets[i].Pt() << " Wjet2 " << jets[j].Pt() << " c1 " << c1 << " c2 " << c2
+			//     << " TopB " << jets[b].Pt() << endl << "      sigma_w2 " << sigma_w2 << " sigma_t2 " << sigma_t2 << " smw2 " << smw2 << " smtop2 " << smtop2 << endl; 
 
 		}
 	}

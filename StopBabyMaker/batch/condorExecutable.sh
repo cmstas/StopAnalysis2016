@@ -56,13 +56,14 @@ make
 cd ../../
 
 cd StopAnalysis/StopBabyMaker/
-make clean
-make
-
 cd stop_variables/
 make clean
 make
 cd ../
+make clean
+make
+
+
 
 # Run babyMaker
 ./runBabyMaker "$NAME" $NEVENTS $NUMBER "./"

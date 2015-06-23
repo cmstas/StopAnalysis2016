@@ -3,29 +3,32 @@
 //version 1: without 'reco top' and 'CM' term
 //all other version: full topness (including 'reco W')
 float topnessMinimization(TLorentzVector met, TLorentzVector lep, TLorentzVector bjet1, TLorentzVector bjet2, int version) {
-    
+
+  cout.precision(11);
   TFitter *minimizer=new TFitter(4) ;
   double p1 = -1;
   minimizer->ExecuteCommand("SET PRINTOUT",&p1,1);
   if(version==1) minimizer->SetFCN(minuitFunctionWrapperV1);
   else minimizer->SetFCN(minuitFunctionWrapper);
   // get variables for Topness
-  double iLpx = lep.Px();
-  double iLpy = lep.Py();
-  double iLpz = lep.Pz();
-  double iLpe = lep.E();
-  double iB1px = bjet1.Px();
-  double iB1py = bjet1.Py();
-  double iB1pz = bjet1.Pz();
-  double iB1pe = bjet1.E();
-  double iB2px = bjet2.Px();
-  double iB2py = bjet2.Py();
-  double iB2pz = bjet2.Pz();
-  double iB2pe = bjet2.E();
-  double iMpx = met.Px();
-  double iMpy = met.Py();
-  double iMpz = met.Pz();
-  double iMpe = met.E();
+  int mydigit = 3;
+  double iLpx = JetUtil::round(lep.Px(),mydigit);
+  double iLpy = JetUtil::round(lep.Py(),mydigit);
+  double iLpz = JetUtil::round(lep.Pz(),mydigit);
+  double iLpe = JetUtil::round(lep.E(),mydigit);
+  double iB1px = JetUtil::round(bjet1.Px(),mydigit);
+  double iB1py = JetUtil::round(bjet1.Py(),mydigit);
+  double iB1pz = JetUtil::round(bjet1.Pz(),mydigit);
+  double iB1pe = JetUtil::round(bjet1.E(),mydigit);
+  double iB2px = JetUtil::round(bjet2.Px(),mydigit);
+  double iB2py = JetUtil::round(bjet2.Py(),mydigit);
+  double iB2pz = JetUtil::round(bjet2.Pz(),mydigit);
+  double iB2pe = JetUtil::round(bjet2.E(),mydigit);
+  double iMpx = JetUtil::round(met.Px(),mydigit);
+  double iMpy = JetUtil::round(met.Py(),mydigit);
+  double iMpz = JetUtil::round(met.Pz(),mydigit);
+  double iMpe = JetUtil::round(met.E(),mydigit);
+
   // Define parameters [param number, param name, init val, estimated distance to min, bla, bla] // 300,3000,-3000,3000
   minimizer->SetParameter(0,"pwx",0,500,-3000,3000);
   minimizer->SetParameter(1,"pwy",0,500,-3000,3000);
@@ -72,6 +75,8 @@ float topnessMinimization(TLorentzVector met, TLorentzVector lep, TLorentzVector
   double pwy_fit = minimizer->GetParameter(1);
   double pwz_fit = minimizer->GetParameter(2);
   double pnz_fit = minimizer->GetParameter(3);
+  //cout << "output minimizer" << endl;
+  //cout << "pwx " << pwx_fit << " pwy " << pwy_fit << " pwz " << pwz_fit << " pnz " << pnz_fit << endl;
   delete minimizer;
   // get the function value at best fit
   if(version==1){
@@ -112,9 +117,9 @@ double topnessFunction(double pwx_, double pwy_, double pwz_, double pnz_,
   TLorentzVector vMET; vMET.SetPxPyPzE(pmx_,pmy_,pmz_,pme_);
   TLorentzVector vN; vN.SetPxPyPzE((pmx_-pwx_),(pmy_-pwy_),pnz_,(sqrt(pow((pmx_-pwx_),2)+pow((pmy_-pwy_),2)+pow(pnz_,2))));
   // construct the w-term (lost)
-  double tWM = ( pow( ((mW*mW) - (vW.M2())),2) ) / (pow(aW,4));//zero by construction
+  //double tWM = ( pow( ((mW*mW) - (vW.M2())),2) ) / (pow(aW,4));//zero by construction
   // construct the w-term (lep)
-  //double tWL = ( pow( ((mW*mW) - ((vL+vN).M2())),2) ) / (pow(aW,4));
+  double tWL = ( pow( ((mW*mW) - ((vL+vN).M2())),2) ) / (pow(aW,4));
   // construct the tL-term [seen lepton]
   double tTL = ( pow( ((mT*mT) - ((vL+vB1+vN).M2())),2) ) / (pow(aT,4));
   // construct the tM-term [miss lepton]
@@ -122,7 +127,7 @@ double topnessFunction(double pwx_, double pwy_, double pwz_, double pnz_,
   // construct the CM-term
   double tCM = ( pow( ((4*(mT*mT)) - ((vL+vN+vW+vB1+vB2).M2())),2) ) / (pow(aCM,4));
   // calculate Topness
-  double Topness = tWM + tTL + tTM + tCM;
+  double Topness = tWL + tTL + tTM + tCM;
   return Topness;
 }
 
@@ -160,14 +165,11 @@ double topnessFunctionV1(double pwx_, double pwy_, double pwz_, double pnz_,
   return Topness;
 }
 
-//wrapper function using TLorentzVector
+//wrapper function using TLorentzVector // deprecated
 // double precision needed for minimization
-float gettopness(TLorentzVector met, TLorentzVector lep, vector<TLorentzVector> bjets, int version){
+/*float gettopness(TLorentzVector met, TLorentzVector lep, vector<TLorentzVector> bjets, int version){
   double topness = 9e9;
-  if(bjets.size()<2) {
-    cout << "You have " << bjets.size() << " bjets, but need at least 2, return -999" << endl;
-    return -999.;
-  }
+  if(bjets.size()<2) return -999.;
   for(unsigned int n = 0; n<bjets.size(); ++n){
     for(unsigned int m = 0; m<bjets.size(); ++m){
       if(n==m) continue;
@@ -176,11 +178,11 @@ float gettopness(TLorentzVector met, TLorentzVector lep, vector<TLorentzVector> 
     }
   }
   return topness;
-}
+}*/
 
-//wrapper function to get topness using b-tagged jets as input
+//wrapper function to get topness using b-tagged jets as input // deprecated
 //helper function using Math::LorentzVector
-float Gettopness(LorentzVector met, LorentzVector lep, vector<LorentzVector> bjets, int version){
+/*float Gettopness(LorentzVector met, LorentzVector lep, vector<LorentzVector> bjets, int version){
   TLorentzVector metlv; metlv.SetPxPyPzE(met.Px(),met.Py(),met.Pz(),met.E());
   TLorentzVector leplv; leplv.SetPxPyPzE(lep.Px(),lep.Py(),lep.Pz(),lep.E());
   TLorentzVector temp(0.,0.,0.,0.); vector<TLorentzVector> jetslv;
@@ -189,38 +191,86 @@ float Gettopness(LorentzVector met, LorentzVector lep, vector<LorentzVector> bje
     jetslv.push_back(temp);
   }
   return gettopness(metlv,leplv,jetslv,version);
-}
+}*/
 
-//wrapper function to get topness using b-tagged jets as input (MET as Pt,Phi given)
+//wrapper function to get topness using b-tagged jets as input (MET as Pt,Phi given) // deprecated
 //helper function using Math::LorentzVector, using Met.Pt and MET.Phi
-float Gettopness_(float met, float metphi, LorentzVector lep, vector<LorentzVector> bjets, int version){
+/*float Gettopness_(float met, float metphi, LorentzVector lep, vector<LorentzVector> bjets, int version){
   float metx = met*TMath::Cos(metphi);
   float mety = met*TMath::Sin(metphi);
   LorentzVector metlv; metlv.SetPxPyPzE(metx,mety,0,met);
   return Gettopness(metlv, lep, bjets, version);
-}
+}*/
 
-//wrapper function to get topness using jets as input
+//wrapper function to get topness using jets as input // deprecated
 //addnjets: if <=1 bjets found, have total of addnjets for bjet looper adding jets to bjet vector using addjets (default=2, recommended=2,3)
 //addjets: ==1: according to highest b-tag discriminant, ==2: according to highest jet-pt (default=2)
 //version: ==1: reduced topness (recommended), else: full topness
-float TopnessVersion(int version, LorentzVector MET, LorentzVector lep, vector<LorentzVector> jets, vector<float> jet_bdiscr, float btagdiscr, unsigned int addnjets, int addjets){
-  if(jets.size()!=jet_bdiscr.size() ) {
-    cout << "the vectors jets("<<jets.size()<<") and jet_bdiscr("<<jet_bdiscr.size()<<") have different lengths, please fix. return -99" << endl;
-    return -99;
-  }
+/*float TopnessVersion(int version, LorentzVector MET, LorentzVector lep, vector<LorentzVector> jets, vector<float> jet_bdiscr, float btagdiscr, unsigned int addnjets, int addjets){
+  if(jets.size()!=jet_bdiscr.size() ) return -999.;
   vector<LorentzVector> bjet = JetUtil::BJetSelector(jets,jet_bdiscr,btagdiscr,2,addnjets,addjets);
 
   return Gettopness(MET,lep,bjet,version);
-}
+}*/
 
-//wrapper function to get topness using jets as input (MET as Pt,Phi given)
+//wrapper function to get topness using jets as input (MET as Pt,Phi given) // deprecated
 //addnjets: if <=1 bjets found, have total of addnjets for bjet looper adding jets to bjet vector using addjets (default=2, recommended=2,3)
 //addjets: ==1: according to highest b-tag discriminant, ==2: according to highest jet-pt (default=2)
 //version: ==1: reduced topness (recommended), else: full topness
-float TopnessVersion_(int version, float met, float metphi, LorentzVector lep, vector<LorentzVector> jets, vector<float> jet_bdiscr, float btagdiscr, unsigned int addnjets, int addjets){
+/*float TopnessVersion_(int version, float met, float metphi, LorentzVector lep, vector<LorentzVector> jets, vector<float> jet_bdiscr, float btagdiscr, unsigned int addnjets, int addjets){
   float metx = met*TMath::Cos(metphi);
   float mety = met*TMath::Sin(metphi);
   LorentzVector metlv; metlv.SetPxPyPzE(metx,mety,0,met);
   return TopnessVersion(version,metlv,lep,jets,jet_bdiscr,btagdiscr,addnjets,addjets);
+}*/
+
+//wrapper function to get topness using correct jets as input - full calculation needs JetUtil CSV ordering, see looper
+//version: ==1: reduced topness (recommended), else: full topness
+float CalcTopness(int version, LorentzVector MET, LorentzVector lep, vector<LorentzVector> bjets,  vector<LorentzVector> addjets){
+
+  if((bjets.size()+addjets.size())<2) return -999.;
+  TLorentzVector l, met, b1, b2;
+  l.SetPxPyPzE(lep.Px(),lep.Py(),lep.Pz(),lep.E());
+  met.SetPxPyPzE(MET.Px(),MET.Py(),MET.Pz(),MET.E());
+  float topness = 1e6;
+  for(unsigned int n = 0; n<bjets.size(); ++n){
+    b1.SetPxPyPzE(bjets[n].Px(),bjets[n].Py(),bjets[n].Pz(),bjets[n].E());
+    for(unsigned int m = n+1; m<bjets.size(); ++m){
+      b2.SetPxPyPzE(bjets[m].Px(),bjets[m].Py(),bjets[m].Pz(),bjets[m].E());
+      float tmptop = topnessMinimization(met,l,b1,b2,version);
+      if(tmptop<topness) topness = tmptop;
+      //cout << "topness " << tmptop << " for b1 " << b1.Pt() << " and b2 " << b2.Pt() << endl;
+      tmptop = topnessMinimization(met,l,b2,b1,version);
+      if(tmptop<topness) topness = tmptop;
+      //cout << "topness " << tmptop << " for b1 " << b2.Pt() << " and b2 " << b1.Pt() << endl;
+    }
+    for(unsigned int m = 0; m<addjets.size(); ++m){
+      b2.SetPxPyPzE(addjets[m].Px(),addjets[m].Py(),addjets[m].Pz(),addjets[m].E());
+      float tmptop = topnessMinimization(met,l,b1,b2,version);
+      if(tmptop<topness) topness = tmptop;
+      //cout << "topness " << tmptop << " for b1 " << b1.Pt() << " and a2 " << b2.Pt() << endl;
+      tmptop = topnessMinimization(met,l,b2,b1,version);
+      if(tmptop<topness) topness = tmptop;
+      //cout << "topness " << tmptop << " for a1 " << b2.Pt() << " and b2 " << b1.Pt() << endl;
+    }
+  }
+  if(bjets.size()==0){
+    b1.SetPxPyPzE(addjets[0].Px(),addjets[0].Py(),addjets[0].Pz(),addjets[0].E());
+    for(unsigned int m = 1; m<addjets.size(); ++m){
+      b2.SetPxPyPzE(addjets[m].Px(),addjets[m].Py(),addjets[m].Pz(),addjets[m].E());
+      float tmptop = topnessMinimization(met,l,b1,b2,version);
+      if(tmptop<topness) topness = tmptop;
+      tmptop = topnessMinimization(met,l,b2,b1,version);
+      if(tmptop<topness) topness = tmptop;
+    }
+  }
+  return topness;
+}
+
+//wrapper function with MET and METPhi instead of METlv
+float CalcTopness_(int version, float MET, float METphi, LorentzVector lep, vector<LorentzVector> bjets,  vector<LorentzVector> addjets){
+  float metx = MET*TMath::Cos(METphi);
+  float mety = MET*TMath::Sin(METphi);
+  LorentzVector metlv; metlv.SetPxPyPzE(metx,mety,0,MET);
+  return CalcTopness(version,metlv,lep,bjets,addjets);
 }

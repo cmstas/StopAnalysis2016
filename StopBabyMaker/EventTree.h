@@ -39,6 +39,13 @@ public:
     unsigned int evt;
     int nvtxs;
 
+    int   firstGoodVtxIdx;
+    int   firstVtx_isfake;
+    float firstVtx_ndof;
+    float firstVtx_posRho;
+    float firstVtx_posZ;
+    LorentzVector  firstVtx_posp4;
+
     unsigned int nEvents;
     unsigned int nEvents_goodvtx;
     unsigned int nEvents_MET30;
@@ -54,25 +61,25 @@ public:
     float MT2W_lep2;
     float hadronic_top_chi2;
     float topness;
-    float Topness_lep2;
-    float TopnessMod_lep1;
-    float TopnessMod_lep2;
+    float topness_lep2;
+    float topnessMod;
+    float topnessMod_lep2;
 
-    float MT2_lb_b_lep1;
+    float MT2_lb_b;
     float MT2_lb_b_lep2;
-    float MT2_lb_b_mass_lep1;
+    float MT2_lb_b_mass;
     float MT2_lb_b_mass_lep2;
-    float MT2_lb_bqq_lep1;
+    float MT2_lb_bqq;
     float MT2_lb_bqq_lep2;
-    float MT2_lb_bqq_mass_lep1;
+    float MT2_lb_bqq_mass;
     float MT2_lb_bqq_mass_lep2;
 
     float Mlb_closestb;
     float Mlb_lead_bdiscr;
     float Mlb_closestb_lep2;
     float Mlb_lead_bdiscr_lep2;
-    float M3b;
-    float M3b_lep2;
+    float Mjjj;
+    float Mjjj_lep2;
 
     float pfmet;
     float pfmet_phi;
@@ -98,19 +105,19 @@ public:
     float xsec;
     float kfactor;
     float pu_ntrue;
-    int pu_nvtxs;
+    int   pu_nvtxs;
 
     //sparms
-    vecs sparms_comment;
-    vecs sparms_names;
+    vecs  sparms_comment;
+    vecs  sparms_names;
     float sparms_filterEfficiency;
     float sparms_pdfScale;
     float sparms_pdfWeight1;
     float sparms_pdfWeight2;
     float sparms_weight;
     float sparms_xsec;
-    vecd sparms_values;
-    int sparms_subProcessId;
+    vecd  sparms_values;
+    int   sparms_subProcessId;
     float mass_lsp;
     float mass_chargino;
     float mass_stop;

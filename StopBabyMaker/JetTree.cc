@@ -15,10 +15,11 @@ JetTree::JetTree (const std::string &prefix)
 }
 
 
-void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999)
+void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999)
 {
     // fill info for ak4pfjets
     int nGoodJets=0.;
+    int nFailJets=0.;
     unsigned int jindex=0;
     float HT = 0.;
     float JET_PT = 0.;
@@ -38,24 +39,26 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
         jindex = sortedJets_pt.at(idx).first;
         //deal with the overlaps
         if(jindex == overlep1_idx){
-		ak4pfjet_overlep1_p4 = pfjets_p4().at(jindex);
+		ak4pfjet_overlep1_p4  = pfjets_p4().at(jindex);
                 ak4pfjet_overlep1_CSV = pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
-            //    ak4pfjet_overlep1_pu_id = pfjets_pileupJetId().at(jindex);
-                ak4pfjet_overlep1_chf = pfjets_chargedHadronE().at(jindex);
-                ak4pfjet_overlep1_nhf = pfjets_neutralHadronE().at(jindex);
-                ak4pfjet_overlep1_cef = pfjets_chargedEmE().at(jindex);
-                ak4pfjet_overlep1_nef = pfjets_neutralEmE().at(jindex);
+		//ak4pfjet_overlep1_pu_id = pfjets_pileupJetId().at(jindex);
+                ak4pfjet_overlep1_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep1_nhf = pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep1_cef = pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep1_nef = pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep1_muf = pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
                 ak4pfjet_overlep1_cm  = pfjets_chargedMultiplicity().at(jindex);
                 ak4pfjet_overlep1_nm  = cms3.pfjets_neutralMultiplicity().at(jindex);
 	}
         if(jindex == overlep2_idx){
-                ak4pfjet_overlep2_p4 = pfjets_p4().at(jindex);
+                ak4pfjet_overlep2_p4  = pfjets_p4().at(jindex);
                 ak4pfjet_overlep2_CSV = pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
                 //ak4pfjet_overlep2_pu_id = pfjets_pileupJetId().at(jindex);
-                ak4pfjet_overlep2_chf = pfjets_chargedHadronE().at(jindex);
-                ak4pfjet_overlep2_nhf = pfjets_neutralHadronE().at(jindex);
-                ak4pfjet_overlep2_cef = pfjets_chargedEmE().at(jindex);
-                ak4pfjet_overlep2_nef = pfjets_neutralEmE().at(jindex);
+                ak4pfjet_overlep2_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep2_nhf = pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep2_cef = pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep2_nef = pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep2_muf = pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
                 ak4pfjet_overlep2_cm  = pfjets_chargedMultiplicity().at(jindex);
                 ak4pfjet_overlep2_nm  = cms3.pfjets_neutralMultiplicity().at(jindex);
         }
@@ -63,10 +66,20 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
         //remove overlaps & apply preselections
         if(jindex == overlep1_idx || jindex == overlep2_idx) continue; //remove ovelaps from your jet collection
 
+	bool skipthis = false;
+	for(size_t jdx = 0; jdx < alloverlapjets_idx.size(); ++jdx){
+	  if(alloverlapjets_idx.at(jdx)==jindex) {
+	    skipthis = true;
+	    break;
+	  }
+	}
+	if(skipthis) continue; //remove all overlaps from jet collection
+	
         //Jet selections
         if(pfjets_p4().at(idx).pt() < m_ak4_pt_cut) continue;
-        if(fabs(pfjets_p4().at(idx).eta()) > m_eta_cut) continue;
-        if(m_passid && !isLoosePFJet(idx)) continue;
+        if(fabs(pfjets_p4().at(idx).eta()) > m_ak4_eta_cut) continue;
+	if(!isLoosePFJetV2(idx)) ++nFailJets;
+        if(m_ak4_passid && !isLoosePFJetV2(idx)) continue;
         nGoodJets++;
 
         ak4pfjets_p4.push_back(pfjets_p4().at(jindex));
@@ -80,23 +93,24 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
         ak4pfjets_puid.push_back(loosePileupJetId(jindex));
         ak4pfjets_parton_flavor.push_back(pfjets_partonFlavour().at(jindex));
         ak4pfjets_loose_puid.push_back(loosePileupJetId(jindex));
-        ak4pfjets_loose_pfid.push_back(isLoosePFJet(jindex));
+        ak4pfjets_loose_pfid.push_back(isLoosePFJetV2(jindex));
         ak4pfjets_medium_pfid.push_back(isMediumPFJet(jindex));
         ak4pfjets_tight_pfid.push_back(isTightPFJet(jindex));
 
-        ak4pfjets_chf.push_back(pfjets_chargedHadronE().at(jindex));
-        ak4pfjets_nhf.push_back(pfjets_neutralHadronE().at(jindex));
-        ak4pfjets_cef.push_back(pfjets_chargedEmE().at(jindex));
-        ak4pfjets_nef.push_back(pfjets_neutralEmE().at(jindex));
+        ak4pfjets_chf.push_back(pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
+        ak4pfjets_nhf.push_back(pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
+        ak4pfjets_cef.push_back(pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
+        ak4pfjets_nef.push_back(pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
+	ak4pfjets_muf.push_back(pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
         ak4pfjets_cm.push_back(pfjets_chargedMultiplicity().at(jindex));
         ak4pfjets_nm.push_back(cms3.pfjets_neutralMultiplicity().at(jindex));
-
-    if (!evt_isRealData()) {
+	
+	if (!evt_isRealData()) {
           ak4pfjets_mc3dr.push_back(pfjets_mc3dr().at(jindex));
           ak4pfjets_mc3id.push_back(pfjets_mc3_id().at(jindex));
           ak4pfjets_mc3idx.push_back(pfjets_mc3idx().at(jindex));
           ak4pfjets_mcmotherid.push_back(pfjets_mc_motherid().at(jindex));
-   }
+	}
 
 
 	//HTRatio
@@ -117,16 +131,17 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
              ak4pfjets_MEDbjet_pt.push_back(pfjets_p4().at(jindex).pt());
         }else{ 
              ak4pfjets_passMEDbtag.push_back(false);
-             if(pfjets_p4().at(jindex).pt() > 40. && jindex>0 ){
-               if(pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex)> btagdisc)  leadbtag_idx = jindex;
-             }
         }
+	if(pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex)> btagdisc){
+	  btagdisc = pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
+	  leadbtag_idx = jindex;
+	}
    }
 
-  ak4pfjets_leadbtag_p4 = pfjets_p4().at(leadbtag_idx);
+    ak4pfjets_leadbtag_p4 = pfjets_p4().at(leadbtag_idx);//highest CSV jet
 
    ngoodjets = nGoodJets;
-   nGoodJets=0;
+   nfailjets = nFailJets;
    ak4_HT = HT;
    HT=0;
    ngoodbtags = nbtags_med;
@@ -135,13 +150,15 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
    ak4_htosm = htosm;
    htratiom   = htssm / (htosm + htssm);
    ak4_htratiom = htratiom; 
- 
+
+   nGoodJets = 0;
+
     // fill info for ak8pfjets
     for (size_t idx = 0; idx < ak8jets_p4().size(); ++idx)
     {
         if(pfjets_p4().at(idx).pt() < m_ak8_pt_cut) continue;
-        if(fabs(pfjets_p4().at(idx).eta()) > m_eta_cut) continue;
-        if(m_passid && !isLoosePFJet(idx)) continue;
+        if(fabs(pfjets_p4().at(idx).eta()) > m_ak8_eta_cut) continue;
+        if(m_ak8_passid && !isLoosePFJetV2(idx)) continue;
 
         ak8pfjets_p4.push_back(ak8jets_p4().at(idx));
         ak8pfjets_tau1.push_back(ak8jets_nJettinessTau1().at(idx));
@@ -151,7 +168,7 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
         ak8pfjets_pruned_mass.push_back(ak8jets_prunedMass().at(idx));
         ak8pfjets_trimmed_mass.push_back(ak8jets_trimmedMass().at(idx));
         ak8pfjets_filtered_mass.push_back(ak8jets_filteredMass().at(idx));
-      //  ak8pfjets_pu_id.push_back(ak8jets_pileupJetId().at(idx));    
+	//ak8pfjets_pu_id.push_back(ak8jets_pileupJetId().at(idx));    
         ak8pfjets_parton_flavor.push_back(ak8jets_partonFlavour().at(idx));
 
         nGoodJets++;
@@ -174,12 +191,11 @@ void JetTree::FillCommon(unsigned int overlep1_idx = -9999, unsigned int overlep
         
 void JetTree::SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id)
 {
-    if (cone_size == "ak4") m_ak4_pt_cut = pt_cut;
-    else if (cone_size == "ak8") m_ak8_pt_cut = pt_cut; else {std::cout << "Invalid cone size." << std::endl;}
+  if (cone_size == "ak4") { m_ak4_pt_cut = pt_cut; m_ak4_eta_cut = eta; m_ak4_passid = id; }
+  else if (cone_size == "ak8") { m_ak8_pt_cut = pt_cut; m_ak8_eta_cut = eta; m_ak8_passid = id; }
+  else {std::cout << "Invalid cone size." << std::endl;}
 
-    m_eta_cut = eta;
-    m_passid = id;
-    return;
+  return;
 }
  
 void JetTree::GetJetSelections (std::string cone_size)
@@ -215,6 +231,7 @@ void JetTree::Reset ()
     ak4pfjets_nhf.clear();
     ak4pfjets_cef.clear();
     ak4pfjets_nef.clear();
+    ak4pfjets_muf.clear();
     ak4pfjets_cm.clear();
     ak4pfjets_nm.clear();
 
@@ -223,30 +240,32 @@ void JetTree::Reset ()
     ak4pfjets_mc3idx.clear();
     ak4pfjets_mcmotherid.clear();
  
-    ak4_htssm = -9999.;
-    ak4_htosm = -9999.;
+    ak4_htssm    = -9999.;
+    ak4_htosm    = -9999.;
     ak4_htratiom = -9999.; 
 
    //overlaps
     ak4pfjet_overlep1_p4 = LorentzVector(0,0, 0,0);
-    ak4pfjet_overlep1_CSV = -9999;
+    ak4pfjet_overlep1_CSV   = -9999;
     ak4pfjet_overlep1_pu_id = -9999;
-    ak4pfjet_overlep1_chf = -9999;
-    ak4pfjet_overlep1_nhf = -9999;
-    ak4pfjet_overlep1_cef = -9999;
-    ak4pfjet_overlep1_nef = -9999;
-    ak4pfjet_overlep1_cm = -9999;
-    ak4pfjet_overlep1_nm = -9999;
+    ak4pfjet_overlep1_chf   = -9999;
+    ak4pfjet_overlep1_nhf   = -9999;
+    ak4pfjet_overlep1_cef   = -9999;
+    ak4pfjet_overlep1_nef   = -9999;
+    ak4pfjet_overlep1_muf   = -9999;
+    ak4pfjet_overlep1_cm    = -9999;
+    ak4pfjet_overlep1_nm    = -9999;
 
     ak4pfjet_overlep2_p4 = LorentzVector(0,0, 0,0);
-    ak4pfjet_overlep2_CSV = -9999;
+    ak4pfjet_overlep2_CSV   = -9999;
     ak4pfjet_overlep2_pu_id = -9999;
-    ak4pfjet_overlep2_chf = -9999;
-    ak4pfjet_overlep2_nhf = -9999;
-    ak4pfjet_overlep2_cef = -9999;
-    ak4pfjet_overlep2_nef = -9999;
-    ak4pfjet_overlep2_cm = -9999;
-    ak4pfjet_overlep2_nm = -9999;
+    ak4pfjet_overlep2_chf   = -9999;
+    ak4pfjet_overlep2_nhf   = -9999;
+    ak4pfjet_overlep2_cef   = -9999;
+    ak4pfjet_overlep2_nef   = -9999;
+    ak4pfjet_overlep2_muf   = -9999;
+    ak4pfjet_overlep2_cm    = -9999;
+    ak4pfjet_overlep2_nm    = -9999;
   
     //ak8 
     ak8pfjets_p4.clear();
@@ -268,17 +287,19 @@ void JetTree::Reset ()
     ak4pfjets_leadMEDbjet_p4 = LorentzVector(0,0, 0,0);
     ak4pfjets_leadbtag_p4 = LorentzVector(0,0, 0,0);
   
-    ngoodjets = -9999;  
+    ngoodjets     = -9999;  
+    nfailjets     = -9999;  
     ak4_HT 	  = -9999.; 
     ak8GoodPFJets = -9999;
-    nGoodGenJets = -9999;
-    ngoodbtags = -9999;
+    nGoodGenJets  = -9999;
+    ngoodbtags    = -9999;
 }
  
 void JetTree::SetBranches (TTree* tree)
 {
     tree->Branch(Form("%snGoodGenJets", prefix_.c_str()) , &nGoodGenJets);
     tree->Branch(Form("%sngoodjets", prefix_.c_str()) , &ngoodjets);
+    tree->Branch(Form("%snfailjets", prefix_.c_str()) , &nfailjets);
     tree->Branch(Form("%sak8GoodPFJets", prefix_.c_str()) , &ak8GoodPFJets);
     tree->Branch(Form("%sngoodbtags", prefix_.c_str()) , &ngoodbtags);
     tree->Branch(Form("%sak4_HT", prefix_.c_str()) , &ak4_HT);
@@ -293,6 +314,7 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak4pfjets_phi", prefix_.c_str()) , &ak4pfjets_phi);
     tree->Branch(Form("%sak4pfjets_mass", prefix_.c_str()) , &ak4pfjets_mass);
 
+    tree->Branch(Form("%sak4pfjets_passMEDbtag", prefix_.c_str()) , &ak4pfjets_passMEDbtag);
     tree->Branch(Form("%sak4pfjets_qg_disc", prefix_.c_str()) , &ak4pfjets_qg_disc);
     tree->Branch(Form("%sak4pfjets_CSV", prefix_.c_str()) , &ak4pfjets_CSV);
     tree->Branch(Form("%sak4pfjets_puid", prefix_.c_str()) , &ak4pfjets_puid);
@@ -311,13 +333,14 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak4pfjets_nhf", prefix_.c_str()) , &ak4pfjets_nhf);
     tree->Branch(Form("%sak4pfjets_cef", prefix_.c_str()) , &ak4pfjets_cef);
     tree->Branch(Form("%sak4pfjets_nef", prefix_.c_str()) , &ak4pfjets_nef);
+    tree->Branch(Form("%sak4pfjets_muf", prefix_.c_str()) , &ak4pfjets_muf);
     tree->Branch(Form("%sak4pfjets_cm", prefix_.c_str()) , &ak4pfjets_cm);
     tree->Branch(Form("%sak4pfjets_nm", prefix_.c_str()) , &ak4pfjets_nm);
 
-    tree->Branch(Form("%sak4pfjets_mc3dr"            , prefix_.c_str()) , &ak4pfjets_mc3dr);
-    tree->Branch(Form("%sak4pfjets_mc3id"            , prefix_.c_str()) , &ak4pfjets_mc3id);
-    tree->Branch(Form("%sak4pfjets_mc3idx"            , prefix_.c_str()) , &ak4pfjets_mc3idx);
-    tree->Branch(Form("%sak4pfjets_mcmotherid"            , prefix_.c_str()) , &ak4pfjets_mcmotherid);
+    tree->Branch(Form("%sak4pfjets_mc3dr", prefix_.c_str()) , &ak4pfjets_mc3dr);
+    tree->Branch(Form("%sak4pfjets_mc3id", prefix_.c_str()) , &ak4pfjets_mc3id);
+    tree->Branch(Form("%sak4pfjets_mc3idx", prefix_.c_str()) , &ak4pfjets_mc3idx);
+    tree->Branch(Form("%sak4pfjets_mcmotherid", prefix_.c_str()) , &ak4pfjets_mcmotherid);
 
     tree->Branch(Form("%sak4pfjet_overlep1_p4", prefix_.c_str()) , &ak4pfjet_overlep1_p4);
     tree->Branch(Form("%sak4pfjet_overlep1_CSV", prefix_.c_str()) , &ak4pfjet_overlep1_CSV);
@@ -326,6 +349,7 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak4pfjet_overlep1_nhf", prefix_.c_str()) , &ak4pfjet_overlep1_nhf);
     tree->Branch(Form("%sak4pfjet_overlep1_cef", prefix_.c_str()) , &ak4pfjet_overlep1_cef);
     tree->Branch(Form("%sak4pfjet_overlep1_nef", prefix_.c_str()) , &ak4pfjet_overlep1_nef);
+    tree->Branch(Form("%sak4pfjet_overlep1_muf", prefix_.c_str()) , &ak4pfjet_overlep1_muf);
     tree->Branch(Form("%sak4pfjet_overlep1_cm", prefix_.c_str()) , &ak4pfjet_overlep1_cm);
     tree->Branch(Form("%sak4pfjet_overlep1_nm", prefix_.c_str()) , &ak4pfjet_overlep1_nm);
 
@@ -336,6 +360,7 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak4pfjet_overlep2_nhf", prefix_.c_str()) , &ak4pfjet_overlep2_nhf);
     tree->Branch(Form("%sak4pfjet_overlep2_cef", prefix_.c_str()) , &ak4pfjet_overlep2_cef);
     tree->Branch(Form("%sak4pfjet_overlep2_nef", prefix_.c_str()) , &ak4pfjet_overlep2_nef);
+    tree->Branch(Form("%sak4pfjet_overlep2_muf", prefix_.c_str()) , &ak4pfjet_overlep2_muf);
     tree->Branch(Form("%sak4pfjet_overlep2_cm", prefix_.c_str()) , &ak4pfjet_overlep2_cm);
     tree->Branch(Form("%sak4pfjet_overlep2_nm", prefix_.c_str()) , &ak4pfjet_overlep2_nm);
 

@@ -22,7 +22,6 @@ void TauTree::FillCommon (int idx,float tau_pt_cut, float tau_eta_cut)
     tau_mass.push_back(taus_pf_mass().at(idx));
     tau_ID.push_back(taus_pf_IDs().at(idx));
     tau_charge.push_back(taus_pf_charge().at(idx));
-    //ngoodtaus= -9999.;
     //tau_againstMuonTight.push_back();
     //tau_againstElectronLoose.push_back();
    // tau_isVetoTau.push_back();
