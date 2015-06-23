@@ -53,4 +53,4 @@ JetUtil.o: JetUtil.cc JetUtil.h
 .PHONY: clean
 clean:  
 	rm -v -f \
-	*o *d *.so; echo "Done"
+	*.o *.d *.so; echo "Done"
