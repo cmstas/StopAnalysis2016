@@ -3,7 +3,7 @@
 #samples are: ALL, stop_850_100 stop_650_325 stop_500_325 stop_425_325 ttbar ttwjets ttzjets wjets dyjets t_sch t_tch t_tW tbar_sch tbar_tch tbar_tW wzjets zz
 
 #Choose the sample(s) you want here, separated by commmas
-sampleList_in="ttbar_madgraph_25ns,ttbar_powheg_25ns"
+sampleList_in="T_sch_4f_amc25ns,T_tbarW_5f_powheg25ns,T_tch_4f_amc25ns,WW_25ns,WZ_25ns,ZZ_25ns,ttbar_amc50ns,T_tch_4f_amc50ns,T_tbarW_5f_powheg50ns,Tbar_tch_4f_powheg50ns,T_tch_4f_powheg50ns"
 #,WJetsToLNu_HT100to200_25ns,WJetsToLNu_HT600ToInf_25ns,T_tch_5f_25ns,WJetsToLNu_400To600_25ns,T_sch_4f_25ns,T_tbarW_5f_25ns,T_tch_4f_25ns,WW_25ns,WZ_25ns,ZZ_25ns"
 
 #Choose the number of events (per file): 
@@ -129,11 +129,11 @@ do
       sample_dir=/hadoop/cms/store/group/snt/phys14/ZZTo4L_Tune4C_13TeV-powheg-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
   fi
 
-  if [ "$sample" == "ttbar_madgraph_25ns" ]; then
+  if [ "$sample" == "ttbar_madgraph25ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03
   fi
 
-  if [ "$sample" == "ttbar_powheg_25ns" ]; then
+  if [ "$sample" == "ttbar_powheg25ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03
   fi
 
@@ -149,19 +149,19 @@ do
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03
   fi
 
-  if [ "$sample" == "T_tch_5f_25ns" ]; then
+  if [ "$sample" == "T_tch_5f_amc25ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_5f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
   fi
  
-  if [ "$sample" == "T_sch_4f_25ns" ]; then
+  if [ "$sample" == "T_sch_4f_amc25ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
   fi
 
-  if [ "$sample" == "T_tbarW_5f_25ns" ]; then
+  if [ "$sample" == "T_tbarW_5f_powheg25ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
   fi
 
-  if [ "$sample" == "T_tch_4f_25ns" ]; then
+  if [ "$sample" == "T_tch_4f_amc25ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
   fi
 
@@ -177,23 +177,23 @@ do
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ZZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03
   fi
 
-  if [ "$sample" == "ttbar_amcatnlo_50ns" ]; then
+  if [ "$sample" == "ttbar_amc50ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_50ns/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
   fi
 
-  if [ "$sample" == "T_tch_4f_50ns" ]; then
+  if [ "$sample" == "T_tch_4f_amc50ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
   fi
 
-  if [ "$sample" == "T_tbarW_5f_50ns" ]; then
+  if [ "$sample" == "T_tbarW_5f_powheg50ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03
   fi
 
-  if [ "$sample" == "Tbar_tch_4f_50ns" ]; then
+  if [ "$sample" == "Tbar_tch_4f_powheg50ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
   fi
 
-  if [ "$sample" == "T_tch_4f_50ns" ]; then
+  if [ "$sample" == "T_tch_4f_powheg50ns" ]; then
       sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
   fi
 
