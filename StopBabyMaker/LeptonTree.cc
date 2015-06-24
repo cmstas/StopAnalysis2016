@@ -123,13 +123,13 @@ void LeptonTree::FillCommon (int id, int idx)
     {
         is_mu = true;
         
-        int trkidx = mus_trkidx().at(idx);
-        if (trkidx >= 0 && vtxidx >= 0) {
+        //int trkidx = mus_trkidx().at(idx);
+       // if (trkidx >= 0 && vtxidx >= 0) {
 	    d0 = mus_dxyPV().at(idx);
             dz = mus_dzPV().at(idx);
             d0err = mus_d0Err().at(idx);
             dzerr = mus_z0Err().at(idx);
-        }
+       // }
         ip3d    = mus_ip3d().at(idx);
         ip3derr = mus_ip3derr().at(idx);
 

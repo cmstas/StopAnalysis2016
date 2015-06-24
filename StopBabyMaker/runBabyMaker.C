@@ -49,7 +49,7 @@ int main(int argc, char **argv){
   babyMaker *mylooper = new babyMaker();
 
   //void setSkimVariables(int nvtx, float met, int nlep, float el_pt, float el_eta, float mu_pt, float mu_eta, int njets, float jetpt, float jeteta);
-  mylooper->setSkimVariables(1, 30., 1, 40., 2.1, 30., 2.1, 2, 30., 2.4);
+  mylooper->setSkimVariables(1, 30., 1, 15., 2.1, 15., 2.1, 2, 30., 2.4);
 
   int nevents = -1;
   if(argc>2) nevents = atoi(argv[2]);  
@@ -57,7 +57,7 @@ int main(int argc, char **argv){
   int file=0;
   if(argc>3) file = atoi(argv[3]);
 
-  char* dirpath = "/nfs-7/userdata/stopRun2/";  
+  char* dirpath = ".";  
   if(argc>4) dirpath = argv[4];
 
   const char* filename = (file == 0 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));

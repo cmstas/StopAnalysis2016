@@ -13,7 +13,7 @@ hostname
 
 #Environment
 export CMS_PATH=/cvmfs/cms.cern.ch
-export SCRAM_ARCH=slc6_amd64_gcc481
+export SCRAM_ARCH=slc6_amd64_gcc491
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
 #Set CMSSW environment
@@ -25,12 +25,13 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 #Untar the zip dir
 echo "This this the current dir: "
 THISDIR=`pwd`
+echo $THISDIR
 echo "LS to check that all files were transferred: "
 ls
-tar xzfv forCondor_stopBabyMaker.tar.gz
+tar xzfv forCondor_stopBabyMaker_74x.tar.gz
 echo "LS to check that tarball was unpacked: "
 ls
-cd forCondor_stopBabyMaker/CMSSW_7_2_0/src
+cd forCondor_stopBabyMaker_74x/CMSSW_7_4_1_patch1/src
 echo "LS to check contents of unpacked CMSSW: "
 ls
 
@@ -40,7 +41,7 @@ echo "G++ INFORMATION"
 g++ --version
 which g++
 
-pushd /cvmfs/cms.cern.ch/slc6_amd64_gcc481/cms/cmssw/CMSSW_7_2_0/src/
+pushd /cvmfs/cms.cern.ch/slc6_amd64_gcc491/cms/cmssw/CMSSW_7_4_1/src/
 eval `scramv1 runtime -sh`
 popd
 
@@ -50,20 +51,19 @@ make clean
 make
 cd ../
 
-cd Software/MiniFWLite/
-make clean
-make
-cd ../../
+#cd Software/MiniFWLite/
+#make clean
+#make
+#cd ../../
 
-cd StopAnalysis/StopBabyMaker/
-cd stop_variables/
+cd StopAnalysis/StopBabyMaker/stop_variables/
 make clean
 make
 cd ../
+
+#cd /home/users/isuarez/ROOT6/babymaker_main/StopAnalysis/StopBabyMaker/
 make clean
 make
-
-
 
 # Run babyMaker
 ./runBabyMaker "$NAME" $NEVENTS $NUMBER "./"

@@ -86,3 +86,52 @@ Path /hadoop/cms/store/group/snt/phys14/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauol
 SAMPLE
 Name zz
 Path /hadoop/cms/store/group/snt/phys14/ZZTo4L_Tune4C_13TeV-powheg-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/
+
+SAMPLE
+Name ttbar_madgraph_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+
+SAMPLE
+Name ttbar_powheg_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+
+SAMPLE
+Name WJetsToLNu_HT100to200_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name  WJetsToLNu_HT600ToInf_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name WJetsToLNu_400To600_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
+
+SAMPLE
+Name T_tch_5f_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_5f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE 
+name T_sch_4f_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+name T_tbarW_5f_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+name T_tch_4f_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+name WW_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WWToLNuQQ_13TeV-powheg_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+name WZ_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+name ZZ_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/ZZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
+

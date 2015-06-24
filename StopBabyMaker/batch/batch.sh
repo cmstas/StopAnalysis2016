@@ -3,7 +3,8 @@
 #samples are: ALL, stop_850_100 stop_650_325 stop_500_325 stop_425_325 ttbar ttwjets ttzjets wjets dyjets t_sch t_tch t_tW tbar_sch tbar_tch tbar_tW wzjets zz
 
 #Choose the sample(s) you want here, separated by commmas
-sampleList_in=ALL
+sampleList_in="ttbar_madgraph_25ns,ttbar_powheg_25ns"
+#,WJetsToLNu_HT100to200_25ns,WJetsToLNu_HT600ToInf_25ns,T_tch_5f_25ns,WJetsToLNu_400To600_25ns,T_sch_4f_25ns,T_tbarW_5f_25ns,T_tch_4f_25ns,WW_25ns,WZ_25ns,ZZ_25ns"
 
 #Choose the number of events (per file): 
 nEvents=-1
@@ -12,18 +13,18 @@ nEvents=-1
 verbose="false"
 
 #Set directory to copy results to when finished
-copy_dir=/hadoop/cms/store/user/jgwood/condor/stop_1l_babies
+copy_dir=/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/25ns
 if [ ! -d $copy_dir/merged_files ]; then
     mkdir $copy_dir/merged_files
 fi
 
 #Check that log file folder and tarball files exists
 if [ ! -d logs ]; then echo "Run . copy.sh first!"; return 1; fi
-if [ ! -e $HOME/forCondor_stopBabyMaker.tar.gz ]; then echo "Run . copy.sh first!"; return 1; fi
+if [ ! -e $HOME/forCondor_stopBabyMaker_74x.tar.gz ]; then echo "Run . copy.sh first!"; return 1; fi
 
 
 #Set directory with the location of the tarball with code
-tar_file=$HOME/forCondor_stopBabyMaker.tar.gz
+tar_file=$HOME/forCondor_stopBabyMaker_74x.tar.gz
 
 #------HERE THERE BE DRAGONS---------
 
@@ -126,6 +127,54 @@ do
 
   if [ "$sample" == "zz" ]; then
       sample_dir=/hadoop/cms/store/group/snt/phys14/ZZTo4L_Tune4C_13TeV-powheg-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
+  fi
+
+  if [ "$sample" == "ttbar_madgraph_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03
+  fi
+
+  if [ "$sample" == "ttbar_powheg_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03
+  fi
+
+  if [ "$sample" == "WJetsToLNu_HT100to200_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
+  fi
+
+  if [ "$sample" == " WJetsToLNu_HT600ToInf_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "WJetsToLNu_400To600_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03
+  fi
+
+  if [ "$sample" == "T_tch_5f_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_5f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
+  fi
+ 
+  if [ "$sample" == "T_sch_4f_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "T_tbarW_5f_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "T_tch_4f_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "WW_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WWToLNuQQ_13TeV-powheg_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "WZ_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "ZZ_25ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ZZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03
   fi
 
   for file in `/bin/ls $sample_dir/merged_ntuple_*.root`; do
