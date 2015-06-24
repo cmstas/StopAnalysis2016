@@ -177,6 +177,26 @@ do
       sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ZZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03
   fi
 
+  if [ "$sample" == "ttbar_amcatnlo_50ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "T_tch_4f_50ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "T_tbarW_5f_50ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03
+  fi
+
+  if [ "$sample" == "Tbar_tch_4f_50ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
+  fi
+
+  if [ "$sample" == "T_tch_4f_50ns" ]; then
+      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
+  fi
+
   for file in `/bin/ls $sample_dir/merged_ntuple_*.root`; do
 
     number_temp=${file##*/merged_ntuple_}
