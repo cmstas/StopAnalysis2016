@@ -11,16 +11,20 @@ Name ttbar_powheg25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
 
 SAMPLE
-Name WJetsToLNu_HT100to200_25ns
+Name WJetsToLNu_HT100To200_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
-Name  WJetsToLNu_HT600ToInf_25ns
-Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+Name WJetsToLNu_HT200To400_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
 
 SAMPLE
 Name WJetsToLNu_400To600_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
+
+SAMPLE
+Name  WJetsToLNu_HT600ToInf_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
 Name T_tch_5f_amc25ns
