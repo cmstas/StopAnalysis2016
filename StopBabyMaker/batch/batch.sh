@@ -59,143 +59,41 @@ for sample in $sampleList
 do
   #Make a list of all the files on hadoop you want to run on
   sample_dir=""
-  
-  if [ "$sample" == "stop_850_100" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/SMS-T2tt_2J_mStop-850_mLSP-100_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/V07-02-08
-  fi      
-      
-  if [ "$sample" == "stop_650_325" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/SMS-T2tt_2J_mStop-650_mLSP-325_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/V07-02-08
-  fi
 
-  if [ "$sample" == "stop_500_325" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/SMS-T2tt_2J_mStop-500_mLSP-325_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/V07-02-08
-  fi
+  #number of lines in sample.dat
+  nLines=`wc -l < ../sample.dat`
 
-  if [ "$sample" == "stop_425_325" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/SMS-T2tt_2J_mStop-425_mLSP-325_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/V07-02-08
-  fi
+  samplename=""
+  sampledir=""
 
-  
-  if [ "$sample" == "ttbar" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
+  #loop to find sample_dir
+  for (( i = 1; i <= $nLines; i++ ))
+  do
 
-  if [ "$sample" == "ttwjets" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/TTWJets_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
+    #get string in sample.dat, temptwo is either the samplename or the sampledirectory
+    temp=`awk "NR==$i" ../sample.dat`
+    tempone=`echo $temp |cut -d' ' -f1`
+    temptwo=`echo $temp |cut -d' ' -f2`
 
-  if [ "$sample" == "ttzjets" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/TTZJets_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
+    #store the sample name
+    if [ "$tempone" == "Name" ]; then
+        samplename="$temptwo"
+    fi
 
-  if [ "$sample" == "dyjets" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/DYJetsToLL_M-50_13TeV-madgraph-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
+    #store the sampledir
+    if [ "$tempone" == "Path" ]; then
+        sampledir="$temptwo"
+	#if sampledir is in the list make it sample_dir
+        if [ "$sample" == "$samplename" ]; then
+           sample_dir="$sampledir"
+        fi
+    fi
+    #sample_dir already found
+    if [ "$sample_dir$" == "$sampledir" ]; then
+       break
+    fi
 
-  if [ "$sample" == "tbar_sch" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/TBarToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "tbar_tch" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/TBarToLeptons_t-channel_Tune4C_CSA14_13TeV-aMCatNLO-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "t_sch" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/TToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "t_tch" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "t_tW" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "tbar_tW" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "wjets" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/WJetsToLNu_13TeV-madgraph-pythia8-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "wzjets" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "zz" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/phys14/ZZTo4L_Tune4C_13TeV-powheg-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08
-  fi
-
-  if [ "$sample" == "ttbar_madgraph25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03
-  fi
-
-  if [ "$sample" == "ttbar_powheg25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03
-  fi
-
-  if [ "$sample" == "WJetsToLNu_HT100to200_25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
-  fi
-
-  if [ "$sample" == " WJetsToLNu_HT600ToInf_25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "WJetsToLNu_400To600_25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03
-  fi
-
-  if [ "$sample" == "T_tch_5f_amc25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_5f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
-  fi
- 
-  if [ "$sample" == "T_sch_4f_amc25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "T_tbarW_5f_powheg25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "T_tch_4f_amc25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "WW_25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WWToLNuQQ_13TeV-powheg_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "WZ_25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/WZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "ZZ_25ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_25ns/ZZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03
-  fi
-
-  if [ "$sample" == "ttbar_amc50ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "T_tch_4f_amc50ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "T_tbarW_5f_powheg50ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03
-  fi
-
-  if [ "$sample" == "Tbar_tch_4f_powheg50ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
-  fi
-
-  if [ "$sample" == "T_tch_4f_powheg50ns" ]; then
-      sample_dir=/hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03
-  fi
+  done
 
   for file in `/bin/ls $sample_dir/merged_ntuple_*.root`; do
 
