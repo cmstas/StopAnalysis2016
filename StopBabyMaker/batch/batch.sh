@@ -59,6 +59,12 @@ do
   #Make a list of all the files on hadoop you want to run on
   sample_dir=""
 
+  #number of lines in sample.dat
+  nLines=`wc -l < ../sample.dat`
+
+  samplename=""
+  sampledir=""
+
   #loop to find sample_dir
   for (( i = 1; i <= $nLines; i++ ))
   do
