@@ -83,6 +83,8 @@ public:
 
     float pfmet;
     float pfmet_phi;
+    float calomet;
+    float calomet_phi;
 
     float dR_lep_leadb;
     float dR_lep2_leadb;    
@@ -140,9 +142,23 @@ public:
     int HLT_SingleMu; 
     int HLT_SingleEl;
     int HLT_MET170;
-    int HLT_ht350met120; 
     int HLT_MET120Btag;      
     int HLT_MET120Mu5;
+    //new
+    int HLT_HT350MET120;
+    int HLT_DiEl;
+    int HLT_DiMu;
+    int HLT_EMu;
+    int HLT_MuE;
+    int HLT_SingleElTight;
+    int HLT_SingleEl27;
+    int HLT_SingleEl27Tight;
+    int HLT_SingleElHT200;
+    int HLT_SingleMuNoEta;
+    int HLT_SingleMuNoIso;
+    int HLT_SingleMuNoIsoNoEta;
+    int HLT_Mu6HT200MET125;
+
 
     float pu_weight;
     float lep_sf;
