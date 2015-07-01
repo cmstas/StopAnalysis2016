@@ -285,9 +285,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       for (size_t idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
 	dummy_sigma.push_back(0.1);
       } 
-      StopEvt.hadronic_top_chi2 = calculateChi2(jets.ak4pfjets_p4, dummy_sigma, jets.ak4pfjets_passMEDbtag);
+      //add protection for skim settings of no jet requirement.
+      if (jets.ak4pfjets_p4.size()>1&&skim_njets>1)
+     { StopEvt.hadronic_top_chi2 = calculateChi2(jets.ak4pfjets_p4, dummy_sigma, jets.ak4pfjets_passMEDbtag);
       //Jets & MET
       StopEvt.mindphi_met_j1_j2 =  getMinDphi(StopEvt.pfmet_phi,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
+     }
       //MET & Leptons
       StopEvt.mt_met_lep = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>1) StopEvt.mt_met_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
@@ -295,13 +298,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.dphi_Wlep = DPhi_W_lep(StopEvt.pfmet, StopEvt.pfmet_phi, lep1.p4);
       StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
       StopEvt.ak4pfjets_rho = evt_fixgridfastjet_all_rho();
-    
       vector<int> jetIndexSortedCSV = JetUtil::JetIndexCSVsorted(jets.ak4pfjets_CSV,jets.ak4pfjets_p4,jets.ak4pfjets_loose_pfid,30.,2.4,true);
       vector<LorentzVector> mybjets; vector<LorentzVector> myaddjets;
       for(unsigned int idx = 0; idx<jetIndexSortedCSV.size(); ++idx){
 	if(jets.ak4pfjets_passMEDbtag.at(jetIndexSortedCSV[idx])==true) mybjets.push_back(jets.ak4pfjets_p4.at(jetIndexSortedCSV[idx]) );
 	else if(mybjets.size()<=1 && (mybjets.size()+myaddjets.size())<3) myaddjets.push_back(jets.ak4pfjets_p4.at(jetIndexSortedCSV[idx]) );
       }
+      //looks like all the following variables need jets to be calculated. add protection for skim settings of njets==0
+      if(skim_njets>1){
       //MT2W
       StopEvt.MT2W = CalcMT2W_(mybjets,myaddjets,lep1.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>1) StopEvt.MT2W_lep2 = CalcMT2W_(mybjets,myaddjets,lep2.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
@@ -388,7 +392,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(jb23>=0) {//as sorted, jb21 and jb22 also >=0
 	StopEvt.Mjjj_lep2 = (jets.ak4pfjets_p4.at(jb21)+jets.ak4pfjets_p4.at(jb22)+jets.ak4pfjets_p4.at(jb23)).M();
       }
-      
+    }
     //taus
     int vetotaus=0;
     //std::cout<<__LINE__<<std::endl;
