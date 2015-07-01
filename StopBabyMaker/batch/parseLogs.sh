@@ -1,6 +1,52 @@
 #!/bin/bash
 
-targetDir=$1
+# Parses cutflow event counts from batch-submission stdout logs
+#
+# Usage: ./parseLogs.sh [-lt] some/directory/containing/logs/
+#  Use option -l to format output for a LaTeX table
+#  Use option -t to format output for a TWiki table
+#  Use no option to format output for human reading
+
+outtype="screen"
+
+# Get command-line options
+while getopts "lt" opt; do
+	case $opt in
+		l) outtype="latex" ;;
+		t) outtype="twiki" ;;
+		\?) exit 1 ;;
+	esac
+done
+shift $((OPTIND-1))
+
+
+# Check for valid target directory
+if [ "$1" = "" ]; then
+	echo Please specify a directory in which to look for stdout logs!
+	exit 1
+elif [ -d $1 ]; then
+	targetDir=$1
+else
+	echo $1 is not a valid directory!
+	exit 1
+fi
+
+
+# Set the table delimiters to be used
+if [ "$outtype" = "latex" ]; then
+	startLine=""
+	separator="&"
+	endLine=" \\\\"
+elif [ "$outtype" = "twiki" ]; then
+	startLine="|"
+	separator="|"
+	endLine="|"
+else
+	startLine=""
+	separator=""
+	endLine=""
+fi
+
 
 oldSample="null"
 
@@ -26,11 +72,12 @@ for file in `ls -1 $targetDir/*.stdout | sort`;do
 		if [ "$oldSample" != "null" ]; then
 			echo
 			echo $oldSample
-			printf "Events processed                     %s\n" $countProc
-			printf "Events with 1 Good Vertex            %s\n" $countVtx
-			printf "Events with MET > 30 GeV             %s\n" $countMet
-			printf "Events with at least 1 Good Lepton   %s\n" $countLep
-			printf "Events with at least 2 Good Jets     %s\n" $countJet
+			printf $startLine" Events processed                   "$separator"  %8s %s\n"  $countProc $endLine
+			printf $startLine" Events with 1 Good Vertex          "$separator"  %8s %s\n"  $countVtx  $endLine
+			printf $startLine" Events with MET > 30 GeV           "$separator"  %8s %s\n"  $countMet  $endLine
+			printf $startLine" Events with at least 1 Good Lepton "$separator"  %8s %s\n"  $countLep  $endLine
+			printf $startLine" Events with at least 2 Good Jets   "$separator"  %8s %s\n"  $countJet  $endLine
+
 		fi
 
 		oldSample=$sample
@@ -54,8 +101,8 @@ done
 
 echo
 echo $sample
-printf "Events processed                     %s\n" $countProc
-printf "Events with 1 Good Vertex            %s\n" $countVtx
-printf "Events with MET > 30 GeV             %s\n" $countMet
-printf "Events with at least 1 Good Lepton   %s\n" $countLep
-printf "Events with at least 2 Good Jets     %s\n" $countJet
+printf $startLine" Events processed                   "$separator"  %8s %s\n"  $countProc $endLine
+printf $startLine" Events with 1 Good Vertex          "$separator"  %8s %s\n"  $countVtx  $endLine
+printf $startLine" Events with MET > 30 GeV           "$separator"  %8s %s\n"  $countMet  $endLine
+printf $startLine" Events with at least 1 Good Lepton "$separator"  %8s %s\n"  $countLep  $endLine
+printf $startLine" Events with at least 2 Good Jets   "$separator"  %8s %s\n"  $countJet  $endLine
