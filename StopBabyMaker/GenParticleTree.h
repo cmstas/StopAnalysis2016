@@ -68,6 +68,8 @@ public:
         veci motherid;
         veci motheridx;
         veci motherstatus;
+	veci gmotherid;
+        veci gmotheridx;
 };
 
 #endif

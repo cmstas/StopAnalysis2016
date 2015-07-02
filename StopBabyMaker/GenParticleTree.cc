@@ -44,7 +44,15 @@ void GenParticleTree::FillCommon (int idx)
         motherid.push_back(genps_id().at(motherindex));
         motheridx.push_back(motherindex);
         motherstatus.push_back(genps_status().at(motherindex));
-
+	int gmindex = -1;
+	if(motherindex>=0) {
+	  gmindex = genps_idx_mother().at(motherindex);
+	  gmotherid.push_back(genps_id().at(gmindex));
+	  gmotheridx.push_back(gmindex);
+	} else {
+	  gmotherid.push_back(-9999.);//to keep the same length as other genparticle vectors
+	  gmotheridx.push_back(gmindex);
+	}
 
 	//if gen taus
 	if(abs(genps_id().at(idx)) != pdg_tau){
@@ -112,6 +120,8 @@ void GenParticleTree::Reset()
         motherid.clear();
         motheridx.clear();
         motherstatus.clear();
+	gmotherid.clear();
+        gmotheridx.clear();
 }
 
 void GenParticleTree::SetBranches(TTree* tree)
@@ -132,4 +142,6 @@ void GenParticleTree::SetBranches(TTree* tree)
         tree->Branch(Form("gen%smotherid", prefix_.c_str()) ,           &motherid);
         tree->Branch(Form("gen%smotheridx", prefix_.c_str()) ,           &motheridx);
         tree->Branch(Form("gen%smotherstatus", prefix_.c_str()) ,           &motherstatus);
+	tree->Branch(Form("gen%sgmotherid", prefix_.c_str()) ,           &gmotherid);
+        tree->Branch(Form("gen%sgmotheridx", prefix_.c_str()) ,           &gmotheridx);
 }

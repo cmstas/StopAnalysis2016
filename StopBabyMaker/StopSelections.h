@@ -14,6 +14,7 @@ using namespace std;
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 typedef std::vector<LorentzVector> vecLorentzVector;
 
+   const int pdg_p = 2212;
    const int pdg_el = 11;
    const int pdg_nue = 12;
    const int pdg_mu = 13;
