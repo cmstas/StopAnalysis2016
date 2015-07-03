@@ -63,8 +63,8 @@ class babyMaker {
     JetTree jets;
     GenParticleTree gen_els;
     GenParticleTree gen_mus;
-    GenParticleTree gen_leptau_els;
-    GenParticleTree gen_leptau_mus;
+    //GenParticleTree gen_leptau_els;
+    //GenParticleTree gen_leptau_mus;
     GenParticleTree gen_taus;
     GenParticleTree gen_nus;
     GenParticleTree gen_bs;

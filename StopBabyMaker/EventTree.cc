@@ -36,6 +36,8 @@ void EventTree::FillCommon (const std::string &root_file_name)
  
     pfmet = evt_pfmet();
     pfmet_phi = evt_pfmetPhi();
+    calomet = evt_calomet();
+    calomet_phi = evt_calometPhi();
      
     is_data = evt_isRealData();
 
@@ -98,6 +100,8 @@ void EventTree::Reset ()
     firstVtx_posp4    = LorentzVector(0,0, 0,0);
     pfmet             = -9999.;
     pfmet_phi         = -9999.;
+    calomet           = -9999.;
+    calomet_phi       = -9999.;
     scale1fb          = -9999.;
     xsec              = -9999.;
     kfactor           = -9999.;
@@ -158,12 +162,24 @@ void EventTree::Reset ()
     PassTrackVeto = false;
     PassTauVeto   = false;
 
-    HLT_MET170      = -9999.;
-    HLT_ht350met120 = -9999.; 
-    HLT_SingleMu    = -9999.; 
-    HLT_SingleEl    = -9999.;
-    HLT_MET120Btag  = -9999.;      
-    HLT_MET120Mu5   = -9999.;      
+    HLT_MET170             = -9999.;
+    HLT_SingleMu           = -9999.; 
+    HLT_SingleEl           = -9999.;
+    HLT_MET120Btag         = -9999.;      
+    HLT_MET120Mu5          = -9999.;      
+    HLT_HT350MET120        = -9999.;
+    HLT_DiEl               = -9999.;
+    HLT_DiMu               = -9999.;
+    HLT_EMu                = -9999.;
+    HLT_MuE                = -9999.;
+    HLT_SingleEl27         = -9999.;
+    HLT_SingleEl27Tight    = -9999.;
+    HLT_SingleElTight      = -9999.;
+    HLT_SingleElHT200      = -9999.;
+    HLT_SingleMuNoEta      = -9999.;
+    HLT_SingleMuNoIso      = -9999.;
+    HLT_SingleMuNoIsoNoEta = -9999.;
+    HLT_Mu6HT200MET125     = -9999.;
     
     EA_all_rho                  = -9999.;
     EA_allcalo_rho              = -9999.; 
@@ -194,6 +210,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("pu_nvtxs", &pu_nvtxs);
     tree->Branch("pfmet", &pfmet);
     tree->Branch("pfmet_phi", &pfmet_phi);
+    tree->Branch("calomet", &calomet);
+    tree->Branch("calomet_phi", &calomet_phi);
     tree->Branch("scale1fb", &scale1fb);
     tree->Branch("xsec", &xsec);
     tree->Branch("kfactor", &kfactor);
@@ -264,9 +282,21 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_SingleEl", &HLT_SingleEl );
     tree->Branch("HLT_SingleMu", &HLT_SingleMu );
     tree->Branch("HLT_MET170", &HLT_MET170 );
-    tree->Branch("HLT_ht350met120", &HLT_ht350met120 );
     tree->Branch("HLT_MET120Btag", &HLT_MET120Btag );
     tree->Branch("HLT_MET120Mu5", &HLT_MET120Mu5 );
+    tree->Branch("HLT_HT350MET120", &HLT_HT350MET120 );
+    tree->Branch("HLT_DiEl", &HLT_DiEl );
+    tree->Branch("HLT_DiMu", &HLT_DiMu );
+    tree->Branch("HLT_EMu", &HLT_EMu );
+    tree->Branch("HLT_MuE", &HLT_MuE );
+    tree->Branch("HLT_SingleEl27", &HLT_SingleEl27 );
+    tree->Branch("HLT_SingleEl27Tight", &HLT_SingleEl27Tight );
+    tree->Branch("HLT_SingleElTight", &HLT_SingleElTight );
+    tree->Branch("HLT_SingleElHT200", &HLT_SingleElHT200 );
+    tree->Branch("HLT_SingleMuNoEta", &HLT_SingleMuNoEta );
+    tree->Branch("HLT_SingleMuNoIso", &HLT_SingleMuNoIso );
+    tree->Branch("HLT_SingleMuNoIsoNoEta", &HLT_SingleMuNoIsoNoEta );
+    tree->Branch("HLT_Mu6HT200MET100", &HLT_Mu6HT200MET125 );
     tree->Branch("pu_weight", &pu_weight); 
     tree->Branch("lep_sf", &lep_sf); 
     tree->Branch("btag_sf", &btag_sf); 

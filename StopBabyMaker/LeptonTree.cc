@@ -112,9 +112,12 @@ void LeptonTree::FillCommon (int id, int idx)
         relIso03EA = eleRelIso03EA(idx);
 
        //elMiniRelIso(unsigned int idx, bool useVetoCones, float ptthresh, bool useDBcor)
-       miniRelIsoDB = elMiniRelIso(idx, true, 0., true, false);
-       miniRelIsoEA = elMiniRelIso(idx, true, 0., false, true);
-       MiniIso      = elMiniRelIso(idx, true, 0., true, false);//copy of miniRelIsoDB - change to precomputed for 74X
+       //miniRelIsoDB = elMiniRelIso(idx, true, 0., true, false);
+       //miniRelIsoEA = elMiniRelIso(idx, true, 0., false, true);
+       //MiniIso      = elMiniRelIso(idx, true, 0., true, false);//copy of miniRelIsoDB - change to precomputed for 74X
+       miniRelIsoDB = elMiniRelIsoCMS3_DB(idx);
+       miniRelIsoEA = elMiniRelIsoCMS3_EA(idx);
+       MiniIso      = elMiniRelIsoCMS3_DB(idx);
 
     } // end electron block
 
@@ -153,9 +156,13 @@ void LeptonTree::FillCommon (int id, int idx)
     	relIso04DB = muRelIso04DB(idx);
 
 	//muMiniRelIso(unsigned int idx, bool useVetoCones=true, float ptthresh = 0.5, bool useDBcor=false);
-	miniRelIsoDB = muMiniRelIso(idx, true, 0.5, true, false);
-	miniRelIsoEA = muMiniRelIso(idx, true, 0.5, false, true);
-	MiniIso      = muMiniRelIso(idx, true, 0.5, true, false);//copy of miniRelIsoDB - change to precomputed for 74X
+	//miniRelIsoDB = muMiniRelIso(idx, true, 0.5, true, false);
+	//miniRelIsoEA = muMiniRelIso(idx, true, 0.5, false, true);
+	//MiniIso      = muMiniRelIso(idx, true, 0.5, true, false);//copy of miniRelIsoDB - change to precomputed for 74X
+	miniRelIsoDB = muMiniRelIsoCMS3_DB(idx);
+	miniRelIsoEA = muMiniRelIsoCMS3_EA(idx);
+	MiniIso      = muMiniRelIsoCMS3_DB(idx);
+
     } // end muon block
 }
 
