@@ -78,10 +78,10 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
 	if(skipthis) continue; //remove all overlaps from jet collection
 
         //Jet selections
-        if(pfjets_p4().at(idx).pt() < m_ak4_pt_cut) continue;
-        if(fabs(pfjets_p4().at(idx).eta()) > m_ak4_eta_cut) continue;
-	if(!isLoosePFJetV2(idx)) ++nFailJets;
-        if(m_ak4_passid && !isLoosePFJetV2(idx)) continue;
+        if(pfjets_p4().at(jindex).pt() < m_ak4_pt_cut) continue;
+        if(fabs(pfjets_p4().at(jindex).eta()) > m_ak4_eta_cut) continue;
+	if(!isLoosePFJetV2(jindex)) ++nFailJets;
+        if(m_ak4_passid && !isLoosePFJetV2(jindex)) continue;
         nGoodJets++;
         ak4pfjets_p4.push_back(pfjets_p4().at(jindex));
         ak4pfjets_pt.push_back(pfjets_p4().at(jindex).pt());

@@ -50,6 +50,7 @@ bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
 }
 
 bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid){
+  if(jetIdx>=pfjets_p4().size()) return false;//safety requirement
   if(pfjets_p4().at(jetIdx).pt() < pt) return false;
   if(fabs(pfjets_p4().at(jetIdx).eta()) > eta) return false;
   if(passjid && !isLoosePFJetV2(jetIdx)) return false;
