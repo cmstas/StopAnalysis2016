@@ -70,6 +70,9 @@ public:
         veci motherstatus;
 	veci gmotherid;
         veci gmotheridx;
+	veci simplemotherid;
+	veci simplegmotherid;
+
 };
 
 #endif

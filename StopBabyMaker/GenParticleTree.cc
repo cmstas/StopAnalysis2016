@@ -44,6 +44,8 @@ void GenParticleTree::FillCommon (int idx)
         motherid.push_back(genps_id().at(motherindex));
         motheridx.push_back(motherindex);
         motherstatus.push_back(genps_status().at(motherindex));
+	simplemotherid.push_back(genps_id_simplemother().at(idx));
+	simplegmotherid.push_back(genps_id_simplegrandma().at(idx));
 	int gmindex = -1;
 	if(motherindex>=0) {
 	  gmindex = genps_idx_mother().at(motherindex);
@@ -122,6 +124,9 @@ void GenParticleTree::Reset()
         motherstatus.clear();
 	gmotherid.clear();
         gmotheridx.clear();
+	simplemotherid.clear();
+	simplegmotherid.clear();
+
 }
 
 void GenParticleTree::SetBranches(TTree* tree)
@@ -144,4 +149,7 @@ void GenParticleTree::SetBranches(TTree* tree)
         tree->Branch(Form("gen%smotherstatus", prefix_.c_str()) ,           &motherstatus);
 	tree->Branch(Form("gen%sgmotherid", prefix_.c_str()) ,           &gmotherid);
         tree->Branch(Form("gen%sgmotheridx", prefix_.c_str()) ,           &gmotheridx);
+	tree->Branch(Form("gen%ssimplemotherid", prefix_.c_str()) ,           &simplemotherid);
+	tree->Branch(Form("gen%ssimplegmotherid", prefix_.c_str()) ,           &simplegmotherid);
+
 }
