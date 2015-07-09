@@ -178,12 +178,13 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
     nGoodJets=0;
 
     // fill info for genjets
-    for (size_t idx = 0; idx < genjets_p4NoMuNoNu().size(); ++idx)
-    {
+    if (!evt_isRealData()){
+      for (size_t idx = 0; idx < genjets_p4NoMuNoNu().size(); ++idx){
         if (genjets_p4NoMuNoNu().at(idx).pt() < m_ak4_pt_cut) continue;
  
         ak4genjets_p4.push_back(genjets_p4NoMuNoNu().at(idx));
         if(genjets_p4NoMuNoNu().at(idx).pt() > 20.)  nGoodJets++;
+      }
     }
     nGoodGenJets = nGoodJets;
     

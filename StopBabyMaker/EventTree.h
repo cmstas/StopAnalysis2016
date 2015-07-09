@@ -86,6 +86,20 @@ public:
     float calomet;
     float calomet_phi;
 
+    float filt_cscbeamhalo;
+    float filt_ecallaser;
+    float filt_ecaltp;
+    float filt_eebadsc;
+    float filt_goodvtx;
+    float filt_hbhenoise;
+    float filt_hcallaser;
+    float filt_met;
+    float filt_trkfail;
+    float filt_trkPOG;
+    float filt_trkPOG_tmc;
+    float filt_trkPOG_tms;
+    float filt_eff;
+
     float dR_lep_leadb;
     float dR_lep2_leadb;    
     float mindphi_met_j1_j2;
@@ -159,6 +173,10 @@ public:
     int HLT_SingleMuNoIsoNoEta;
     int HLT_Mu6HT200MET125;
 
+    int HLT_HT350MET100;
+    int HLT_SingleMu17 ;
+    int HLT_SingleMu20 ;
+    int HLT_SingleMu24 ;
 
     float pu_weight;
     float lep_sf;

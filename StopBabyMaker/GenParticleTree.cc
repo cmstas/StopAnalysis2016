@@ -19,6 +19,8 @@ void GenParticleTree::FillCommon (int idx)
 {
 	if (idx < 0) return;
 
+        if (!evt_isRealData()) return;
+
         if(abs(genps_id_mother().at(genps_idx_mother().at(idx))) == pdg_t) isfromt.push_back(true);
         else if(abs(genps_id_mother().at(idx)) == pdg_t) isfromt.push_back(true);
         else isfromt.push_back(false);

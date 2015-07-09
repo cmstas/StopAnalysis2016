@@ -38,8 +38,25 @@ void EventTree::FillCommon (const std::string &root_file_name)
     pfmet_phi = evt_pfmetPhi();
     calomet = evt_calomet();
     calomet_phi = evt_calometPhi();
-     
+
     is_data = evt_isRealData();
+
+    if(is_data){
+        filt_cscbeamhalo = filt_cscBeamHalo();
+        filt_ecallaser = filt_ecalLaser();
+        filt_ecaltp = filt_ecalTP();
+        filt_eebadsc = filt_eeBadSc();
+        filt_goodvtx = filt_goodVertices();
+        filt_hbhenoise = filt_hbheNoise();
+        filt_hcallaser = filt_hcalLaser();
+        filt_met = filt_metfilter();
+        filt_trkfail = filt_trackingFailure();
+        filt_trkPOG = filt_trkPOGFilters();
+        filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
+        filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
+        filt_eff = evt_filt_eff();
+
+    }
 
     if (!is_data)
     {
@@ -180,6 +197,10 @@ void EventTree::Reset ()
     HLT_SingleMuNoIso      = -9999.;
     HLT_SingleMuNoIsoNoEta = -9999.;
     HLT_Mu6HT200MET125     = -9999.;
+    HLT_HT350MET100	   = -9999.;
+    HLT_SingleMu17         = -9999.;
+    HLT_SingleMu20         = -9999.;
+    HLT_SingleMu24         = -9999.;
     
     EA_all_rho                  = -9999.;
     EA_allcalo_rho              = -9999.; 
@@ -192,6 +213,22 @@ void EventTree::Reset ()
     btag_sf          =  -9999;
     HLT_SingleMu_eff =  -9999;
     HLT_SingleEl_eff =  -9999;
+
+        filt_cscbeamhalo = false;
+        filt_ecallaser = false;
+        filt_ecaltp = false;
+        filt_eebadsc = false;
+        filt_goodvtx = false;
+        filt_hbhenoise = false;
+        filt_hcallaser = false;
+        filt_met = false;
+        filt_trkfail = false;
+        filt_trkPOG = false;
+        filt_trkPOG_tmc = false;
+        filt_trkPOG_tms = false;
+        filt_eff = -9999.;
+
+
 
 }
  
@@ -212,6 +249,19 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("pfmet_phi", &pfmet_phi);
     tree->Branch("calomet", &calomet);
     tree->Branch("calomet_phi", &calomet_phi);
+    tree->Branch("filt_cscbeamhalo", &filt_cscbeamhalo);
+    tree->Branch("filt_ecallaser", &filt_ecallaser);
+    tree->Branch("filt_ecaltp", &filt_ecaltp);
+    tree->Branch("filt_eebadsc", &filt_eebadsc);
+    tree->Branch("filt_goodvtx", &filt_goodvtx);
+    tree->Branch("filt_hbhenoise", &filt_hbhenoise);
+    tree->Branch("filt_hcallaser", &filt_hcallaser);
+    tree->Branch("filt_met", &filt_met);
+    tree->Branch("filt_trkfail", &filt_trkfail);
+    tree->Branch("filt_trkPOG", &filt_trkPOG);
+    tree->Branch("filt_trkPOG_tmc", &filt_trkPOG_tmc);
+    tree->Branch("filt_trkPOG_tms", &filt_trkPOG_tms);
+    tree->Branch("filt_eff", &filt_eff);
     tree->Branch("scale1fb", &scale1fb);
     tree->Branch("xsec", &xsec);
     tree->Branch("kfactor", &kfactor);
@@ -297,6 +347,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_SingleMuNoIso", &HLT_SingleMuNoIso );
     tree->Branch("HLT_SingleMuNoIsoNoEta", &HLT_SingleMuNoIsoNoEta );
     tree->Branch("HLT_Mu6HT200MET100", &HLT_Mu6HT200MET125 );
+    tree->Branch("HLT_HT350MET100", &HLT_HT350MET100);
+    tree->Branch("HLT_SingleMu17", &HLT_SingleMu17);
+    tree->Branch("HLT_SingleMu20", &HLT_SingleMu20);
+    tree->Branch("HLT_SingleMu24", &HLT_SingleMu24);
     tree->Branch("pu_weight", &pu_weight); 
     tree->Branch("lep_sf", &lep_sf); 
     tree->Branch("btag_sf", &btag_sf); 
