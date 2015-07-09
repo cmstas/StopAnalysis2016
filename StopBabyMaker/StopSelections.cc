@@ -76,7 +76,8 @@ bool isVetoTau(int ipf, LorentzVector lepp4_, int charge){
       if(fabs(taus_pf_p4().at(ipf).eta()) > 2.4) return false;
       if(ROOT::Math::VectorUtil::DeltaR(taus_pf_p4().at(ipf), lepp4_) < 0.4)  return false;
       if(taus_pf_charge().at(ipf) * charge > 0) return false;
-      if(taus_pf_IDs().at(ipf).at(33) < 1) return false;
+      if(passTauID("byMediumIsolationMVA3newDMwLT",ipf) < 1) return false;
+      //if(taus_pf_IDs().at(ipf).at(33) < 1) return false;
       return true;
 }
 
