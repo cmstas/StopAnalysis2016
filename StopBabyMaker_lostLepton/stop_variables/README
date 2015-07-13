@@ -1,0 +1,10 @@
+MT2w and Chi2 calculation, one example is provided in example.cc
+
+MT2w calculation is done using the code from arXiv1203.4813 provided: 
+https://sites.google.com/a/ucdavis.edu/mass/
+we added the selection of the candidates using the b-tag information.
+
+compile with make
+
+$ make
+$ ./example

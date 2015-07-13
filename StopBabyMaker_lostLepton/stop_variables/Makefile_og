@@ -1,0 +1,5 @@
+all: example
+
+example: mt2w_bisect.cpp mt2w.cc chi2.cc example.cc
+	g++ -o example mt2w_bisect.cpp mt2w.cc chi2.cc example.cc -I `root-config --incdir` `root-config --libs` -lMinuit -lGenVector
+
