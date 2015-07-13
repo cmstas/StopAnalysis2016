@@ -21,8 +21,8 @@ NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
-COREPATH       = $(HOME)/CORE
-FWLIBPATH      = $(HOME)/Software/MiniFWLite
+COREPATH       = ../../CORE
+FWLIBPATH      = ../../Software/MiniFWLite
 
 CXXFLAGS       += -I$(COREPATH)
 

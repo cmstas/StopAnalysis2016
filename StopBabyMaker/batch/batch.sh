@@ -4,6 +4,7 @@
 
 #Choose the sample(s) you want here, separated by commmas
 sampleList_in=ALL
+#sampleList_in=stop_850_100
 
 #Choose the number of events (per file): 
 nEvents=-1
@@ -12,7 +13,7 @@ nEvents=-1
 verbose="false"
 
 #Set directory to copy results to when finished
-copy_dir=/hadoop/cms/store/user/jgwood/condor/stop_1l_babies
+copy_dir=/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__leptonPt15__20150603
 if [ ! -d $copy_dir/merged_files ]; then
     mkdir $copy_dir/merged_files
 fi
