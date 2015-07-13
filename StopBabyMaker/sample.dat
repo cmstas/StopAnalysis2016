@@ -76,6 +76,10 @@ Name WW_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/WWToLNuQQ_13TeV-powheg_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
+Name WW2L_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WWTo2L2Nu_13TeV-powheg_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
 Name WZ_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/WZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
