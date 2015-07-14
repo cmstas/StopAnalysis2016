@@ -151,7 +151,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleMuon_MINIAOD_PromptRec
 ## Muon EG ##
 SAMPLE
 Name data_muon_eg_2015B_50ns
-Path /hadoop/cms/store/group/snt/run2_data/Run2015B_MuonEG_MINIAOD_PromptReco-v1/merged/V07-04-04/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_MuonEG_MINIAOD_PromptReco-v1/merged/
 
 ## Single Electron ##
 SAMPLE
@@ -166,7 +166,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015B_SingleMuon_MINIAOD_PromptRec
 ## MET ##
 SAMPLE
 Name data_met_2015B_50ns
-Path /hadoop/cms/store/group/snt/run2_data/Run2015B_MET_MINIAOD_PromptReco-v1/merged/V07-0404/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_MET_MINIAOD_PromptReco-v1/merged/V07-04-04/
 
 
 
