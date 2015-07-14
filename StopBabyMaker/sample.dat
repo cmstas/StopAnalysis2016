@@ -1,13 +1,14 @@
 ##############################
 # Collection of 25ns samples #
 ##############################
-##ttbar###
+
+## ttbar ###
 SAMPLE
-Name ttbar_madgraph25ns
+Name ttbar_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
 
 SAMPLE
-Name ttbar_powheg25ns
+Name ttbar_powheg_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
 
 SAMPLE
@@ -15,97 +16,237 @@ Name ttbar_powheg_pythia6_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TT_TuneZ2star_13TeV-powheg-pythia6-tauola_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
-Name ttbar_amcnlo25ns
+Name ttbar_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
-Name ttbar_powheg2l2nu_25ns
+Name ttbarTo2L2Nu_powheg_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TTTo2L2Nu_13TeV-powheg_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
-##W+jets##
-SAMPLE
-Name WJetsToLNu_HT100To200_25ns
-Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
-
-SAMPLE
-Name WJetsToLNu_HT200To400_25ns
-Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
-
-SAMPLE
-Name WJetsToLNu_400To600_25ns
-Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
-
-SAMPLE
-Name WJetsToLNu_HT600ToInf_25ns
-Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 ##single top ##
 ## t channel ##
 SAMPLE
-Name T_tch_5f_amc25ns
+Name t_tch_5f_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_5f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
-Name T_tch_4f_amc25ns
+Name t_tch_4f_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
-Name tbar_tch_4f_powheg25ns 
+Name tbar_tch_4f_powheg_pythia8_25ns 
 Path /hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
-Name t_tch_4f_powheg25ns
+Name t_tch_4f_powheg_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 ## s channel ##
 SAMPLE
-Name T_sch_4f_amc25ns
+Name t_sch_4f_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
+## tW channel ##
 SAMPLE
-Name T_tbarW_5f_powheg25ns
+Name t_tbarW_5f_powheg_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
-Name T_tW_5f_powheg25ns
+Name t_tW_5f_powheg_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+
+## DYJets ##
+SAMPLE
+Name DYJetsToLL_m10To50_amcnlo_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name DYJetsToLL_m50_amcnlo_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
+
+## W+jets ##
+SAMPLE
+Name WJetsToLNu_amcnlo_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name WJetsToLNu_HT100To200_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name WJetsToLNu_HT200To400_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name WJetsToLNu_400To600_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
+
+SAMPLE
+Name WJetsToLNu_HT600ToInf_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name WJetsToLNu_HT800To1200_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name WJetsToLNu_HT1200To2500_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
 
 ## diboson ##
 SAMPLE
-Name WW_25ns
+Name WWToLNuQQ_powheg_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/WWToLNuQQ_13TeV-powheg_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
+SAMPLE 
+Name WWTo2l2Nu_powheg_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WWTo2L2Nu_13TeV-powheg_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
 SAMPLE
-Name WZ_25ns
+Name WpWpJJ_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name WZ_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/WZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
-Name ZZ_25ns
+Name WZTo3LNu_powheg_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name WZTo1Lnu2Q_amcnlo_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name ZZ_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/ZZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
 
-##############################
-## Collection of 50ns samples #
-###############################
+SAMPLE
+Name ZZTo2L2Q_amcnlo_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name ZZTo4L_powheg_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/ZZTo4L_13TeV_powheg_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+
+#####################################
+## Collection of 50ns Data samples ##
+#####################################
+##
+## Double EG ##
+SAMPLE
+Name data_double_eg_2015B_50ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleEG_MINIAOD_PromptReco-v1/merged/V07-04-04/
+
+## Double Mu ##
+SAMPLE
+Name data_double_mu_2015B_50ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleMuon_MINIAOD_PromptReco-v1/merged/V07-04-04/
+
+## Muon EG ##
+SAMPLE
+Name data_muon_eg_2015B_50ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_MuonEG_MINIAOD_PromptReco-v1/merged/V07-04-04/
+
+## Single Electron ##
+SAMPLE
+Name data_single_electron_2015B_50ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_SingleElectron_MINIAOD_PromptReco-v1/merged/V07-04-04/
+
+## Single Muon ##
+SAMPLE
+Name data_single_muon_2015B_50ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_SingleMuon_MINIAOD_PromptReco-v1/merged/V07-04-04/
+
+## MET ##
+SAMPLE
+Name data_met_2015B_50ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_MET_MINIAOD_PromptReco-v1/merged/V07-0404/
+
+
+
+
+###################################
+## Collection of 50ns MC samples ##
+###################################
 ##
 ## ttbar ##
 SAMPLE
-Name ttbar_amc50ns
+Name ttbar_madgraph_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
+
+SAMPLE
+Name ttbar_amcnlo_pythia8_50ns
 Path /hadoop/cms/store/group/snt/run2_50ns/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
+
+SAMPLE
+Name ttbar_powheg_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v4/V07-04-03/
+
+SAMPLE
+Name ttbar_powheg_pythia6_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/TT_TuneZ2star_13TeV-powheg-pythia6-tauola_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v3/V07-04-03/
+
+SAMPLE
+Name ttbar_2l2nu_powheg_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/TTTo2L2Nu_13TeV-powheg_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03/
 
 ## single top ##
 SAMPLE
-Name T_tch_4f_amc50ns
+Name T_tch_4f_amcnlo_pythia8_50ns
 Path /hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
 
 SAMPLE
-Name T_tbarW_5f_powheg50ns
+Name T_tch_5f_amcnlo_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_5f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03/
+
+SAMPLE
+Name T_tbarW_5f_powheg_pythia8_50ns
 Path /hadoop/cms/store/group/snt/run2_50ns/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03/
 
 SAMPLE
-Name Tbar_tch_4f_powheg50ns
-Path /hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
-
-SAMPLE
-Name T_tch_4f_powheg50ns
+Name T_tch_4f_powheg_pythia8_50ns
 Path /hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
 
+SAMPLE
+Name Tbar_tch_4f_powheg_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
+
+
+## DY Jets ##
+SAMPLE
+Name DYJetsToLL_m10to50_amcnlo_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
+
+SAMPLE
+Name DYJetsToLL_m50_amcnlo_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03/
+
+
+## W Jets ##
+SAMPLE
+Name WJetsToLNu_amcnlo_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
+
+
+## DiBoson ##
+SAMPLE
+Name WW_2l2nu_powheg_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/WWTo2L2Nu_13TeV-powheg_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03/
+
+SAMPLE
+Name WZ_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/WZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03/
+
+SAMPLE
+Name ZZ_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/ZZ_TuneCUETP8M1_13TeV-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/V07-04-03
+
+SAMPLE
+Name ZZ_4l_powheg_pythia8_50ns
+Path /hadoop/cms/store/group/snt/run2_50ns/ZZTo4L_13TeV_powheg_pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
