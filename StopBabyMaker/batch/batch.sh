@@ -59,7 +59,7 @@ pathToProxy=`awk -v var="$lineWithPath" 'NR==var {print $3}' voms_status.txt`
 #Do all this stuff once per sample
 for sample in $sampleList
 do
-  echo "Submitting $sample"
+  #echo "Submitting $sample"
   
   #Make a list of all the files on hadoop you want to run on
   sample_dir=""
