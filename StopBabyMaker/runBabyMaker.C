@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 vector<TString> load(char *type, const char *filename, char *input){
 
   vector<TString> output;
@@ -39,18 +40,75 @@ vector<TString> load(char *type, const char *filename, char *input){
 }
   
 
-//int main(){
 int main(int argc, char **argv){
- if(argc<2){
-   cout<<" runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath" << endl;
-   cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=0 (0=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default"<<endl;
-   return 0;
- }
+  
+  //
+  // Input sanitation
+  //
+  if(argc<2){
+    cout<<" runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath" << endl;
+    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=0 (0=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default"<<endl;
+    return 0;
+  }
+
+  //
+  // Initialize looper
+  //
   babyMaker *mylooper = new babyMaker();
 
-  //void setSkimVariables(int nvtx, float met, int nlep, float el_pt, float el_eta, float mu_pt, float mu_eta, int njets, float jetpt, float jeteta);
-  mylooper->setSkimVariables(1, 30., 1, 15., 2.1, 15., 2.1, 2, 30., 2.4);
+  //
+  // Skim Parameters 
+  //
+  int nVtx              = 1;
 
+  float met             = 30.0;
+
+  int nGoodLeptons      = 1;
+  float goodLep_el_pt   = 40.0;
+  float goodLep_el_eta  = 2.1;
+  float goodLep_mu_pt   = 30.0;
+  float goodLep_mu_eta  = 2.1;
+
+  float looseLep_el_pt  = 20.0;
+  float looseLep_el_eta = 2.4;
+  float looseLep_mu_pt  = 20.0;
+  float looseLep_mu_eta = 2.4;
+
+  float vetoLep_el_pt   = 10.0;
+  float vetoLep_el_eta  = 2.4;
+  float vetoLep_mu_pt   = 10.0;
+  float vetoLep_mu_eta  = 2.4;
+
+  int nJets             = 2;
+  float jet_pt          = 30.0;
+  float jet_eta         = 2.4;
+  
+  float jet_ak8_pt      = 100.0;
+  float jet_ak8_eta     = 2.4;
+
+  // Input sanitation
+  if( !( goodLep_mu_pt>looseLep_mu_pt && looseLep_mu_pt>vetoLep_mu_pt) ){
+    cout << "   Problem with muon pT hierachy for good, loose, and veto pT!" << endl;
+    cout << "     Exiting..." << endl;
+    return 0;
+  }
+
+  if( !(goodLep_el_pt>looseLep_el_pt && looseLep_el_pt>vetoLep_el_pt) ){
+    cout << "   Problem with electron pT hierarchy for good, loose, and veto pT!" << endl;
+    cout << "     Exiting..." << endl;
+    return 0;
+  }
+
+
+  //
+  // Set Skim Variables
+  //
+  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta );
+
+
+  //
+  // Use arguments to set run parameters
+  //
   int nevents = -1;
   if(argc>2) nevents = atoi(argv[2]);  
   
@@ -68,6 +126,10 @@ int main(int argc, char **argv){
   char *input = "sample.dat";
   if(argc>5) input = argv[5];
 
+
+  //
+  // Intialize TChain, load samples
+  //
   TChain *sample = new TChain("Events");
 
   vector<TString> samplelist = load(argv[1], filename, input);//new
@@ -76,7 +138,15 @@ int main(int argc, char **argv){
     sample->Add(samplelist[i].Data());
   }
 
+
+  //
+  // Run Looper
+  //
   mylooper->looper(sample, Form("%s%s", argv[1],suffix), nevents,dirpath);
 
+
+  //
+  // Return
+  //
   return 0;
 }

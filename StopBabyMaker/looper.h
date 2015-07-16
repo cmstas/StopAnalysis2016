@@ -12,8 +12,8 @@
 #include "TChain.h"
 #include "Math/LorentzVector.h"
 
-// // typedefs
- typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
+// typedefs
+typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 
 #ifndef LOOPER_H
 #define LOOPER_H
@@ -25,7 +25,7 @@ using namespace std;
 class babyMaker {
 
   public:
-    //constructor/destructor
+    // Constructor/destructor
     babyMaker ();
     babyMaker (const std::string &prefix);
     virtual ~babyMaker (){}
@@ -35,20 +35,35 @@ class babyMaker {
     int looper(TChain* chain, char* output_name, int nEvents = -1, char* path = "./");
     char* babypath;
     
-    //vaariables for baby skim
+    // Variables for baby skim
     int skim_nvtx;
     float skim_met;
 
-    int   skim_nlep;
-    float skim_elpt;
-    float skim_eleta;
-    float skim_mupt;
-    float skim_mueta;
-    int   skim_njets;
-    float skim_jetpt;
-    float skim_jeteta;
+    int   skim_nGoodLep;
+    float skim_goodLep_el_pt;
+    float skim_goodLep_el_eta;
+    float skim_goodLep_mu_pt;
+    float skim_goodLep_mu_eta;
+  
+    float skim_looseLep_el_pt;
+    float skim_looseLep_el_eta;
+    float skim_looseLep_mu_pt;
+    float skim_looseLep_mu_eta;
+    
+    float skim_vetoLep_el_pt;
+    float skim_vetoLep_el_eta;
+    float skim_vetoLep_mu_pt;
+    float skim_vetoLep_mu_eta;
+  
+    int   skim_nJets;
+    float skim_jet_pt;
+    float skim_jet_eta;
 
-    void setSkimVariables(int nvtx, float met, int nlep, float el_pt, float el_eta, float mu_pt, float mu_eta, int njets, float jetpt, float jeteta);
+    float skim_jet_ak8_pt;
+    float skim_jet_ak8_eta;
+
+    void setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta);
+    
 
   protected:
     TFile* BabyFile;
@@ -56,7 +71,7 @@ class babyMaker {
 
   private:
 
-    //for tree
+    // Tree Branches
     EventTree StopEvt;
     LeptonTree lep1;
     LeptonTree lep2;
@@ -73,8 +88,8 @@ class babyMaker {
     GenParticleTree gen_lsp;
     GenParticleTree gen_stop;
     TauTree Taus;
-    IsoTracksTree Tracks;
-// = new EventTree(); //dont make a pointer
+    IsoTracksTree Tracks;  
+  
 };
 
 struct val_err_t { float value; float error; };
