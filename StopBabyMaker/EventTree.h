@@ -144,6 +144,7 @@ public:
 
     //veto
     bool PassTrackVeto;
+    bool PassTrackVeto_v2;
     bool PassTauVeto;
 
     float EA_all_rho;

@@ -557,6 +557,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       //std::cout << "[babymaker::looper]: filling isotrack vars" << std::endl;
       int vetotracks = 0;
+      int vetotracks_v2 = 0;
       for (unsigned int ipf = 0; ipf < pfcands_p4().size(); ipf++) {
 	//some selections
 	if(pfcands_charge().at(ipf) == 0) continue;
@@ -572,6 +573,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	}
 	Tracks.FillCommon(ipf);
 
+	// 8 TeV Track Isolation Configuration
 	if(nVetoLeptons>0){
 	  if(isVetoTrack(ipf, lep1.p4, lep1.charge)){
 	    Tracks.isoTracks_isVetoTrack.push_back(true);
@@ -585,9 +587,29 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    vetotracks++;
 	  }else Tracks.isoTracks_isVetoTrack.push_back(false);
 	}
-      }
+
+	// 13 TeV Track Isolation Configuration
+	if(nVetoLeptons>0){
+	  if(isVetoTrack_v2(ipf, lep1.p4, lep1.charge)){
+	    Tracks.isoTracks_isVetoTrack_v2.push_back(true);
+	    vetotracks_v2++;
+	  }else Tracks.isoTracks_isVetoTrack_v2.push_back(false);
+	}
+	else{
+	  LorentzVector temp( -99.9, -99.9, -99.9, -99.9 );
+	  if(isVetoTrack_v2(ipf, temp, 0)){
+	    Tracks.isoTracks_isVetoTrack_v2.push_back(true);
+	    vetotracks_v2++;
+	  }else Tracks.isoTracks_isVetoTrack_v2.push_back(false);
+	}
+
+      } // end loop over pfCands
+
       if(vetotracks<1) StopEvt.PassTrackVeto = true;
       else StopEvt.PassTrackVeto = false;
+    
+      if(vetotracks_v2<1) StopEvt.PassTrackVeto_v2 = true;
+      else StopEvt.PassTrackVeto_v2 = false;
     
 
       //

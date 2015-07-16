@@ -33,6 +33,7 @@ void IsoTracksTree::Reset()
     isoTracks_selectedidx.clear();
     isoTracks_nselected = -9999;
     isoTracks_isVetoTrack.clear();
+    isoTracks_isVetoTrack_v2.clear();
 }
 
 void IsoTracksTree::SetBranches(TTree* tree)
@@ -46,4 +47,5 @@ void IsoTracksTree::SetBranches(TTree* tree)
     tree->Branch("isoTracks_selectedidx", &isoTracks_selectedidx);
     tree->Branch("isoTracks_nselected", &isoTracks_nselected);
     tree->Branch("isoTracks_isVetoTrack", &isoTracks_isVetoTrack);
+    tree->Branch("isoTracks_isVetoTrack_v2", &isoTracks_isVetoTrack_v2);
 }

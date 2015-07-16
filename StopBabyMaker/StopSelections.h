@@ -61,6 +61,7 @@ float  calculateMt(const LorentzVector p4, double met, double met_phi);
 int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid);
 int getOverlappingTrackIndex(LorentzVector& lep_, int pdgid_, vector<LorentzVector> tracks_, double dR);
 bool isVetoTrack(int ipf, LorentzVector lepp4_, int charge);
+bool isVetoTrack_v2(int ipf, LorentzVector lepp4_, int charge);
 bool isVetoTau(int ipf, LorentzVector lepp4_, int charge);
 float DPhi_W_lep(float MET, float MET_Phi, LorentzVector p4);
 //int leptonIsFromW(int idx, int id, bool alsoSusy);

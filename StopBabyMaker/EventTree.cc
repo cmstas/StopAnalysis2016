@@ -176,8 +176,9 @@ void EventTree::Reset ()
 
     genmet 	= -9999.;
     genmet_phi 	= -9999.;
-    PassTrackVeto = false;
-    PassTauVeto   = false;
+    PassTrackVeto    = false;
+    PassTrackVeto_v2 = false;
+    PassTauVeto      = false;
 
     HLT_MET170             = -9999.;
     HLT_SingleMu           = -9999.; 
@@ -305,6 +306,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("genmet", &genmet);
     tree->Branch("genmet_phi", &genmet_phi);
     tree->Branch("PassTrackVeto",&PassTrackVeto);
+    tree->Branch("PassTrackVeto_v2",&PassTrackVeto_v2);
     tree->Branch("PassTauVeto",&PassTauVeto);
     tree->Branch("EA_all_rho", &EA_all_rho);   
     tree->Branch("EA_allcalo_rho", &EA_allcalo_rho); 
