@@ -21,17 +21,25 @@ NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
+#COREPATH       = ../../CORE
+#TOOLSPATH      = ../../Tools
+#FWLIBPATH      = ../../Software/MiniFWLite
+
 COREPATH       = $(HOME)/CORE
+TOOLSPATH      = $(HOME)/Tools
 #FWLIBPATH      = $(HOME)/Software/MiniFWLite
 
+
 CXXFLAGS       += -I$(COREPATH)
+CXXFLAGS       += -I$(TOOLSPATH)
 
 #FWLIB	       = $(FWLIBPATH)/libMiniFWLite.so 
 CORELIB        = $(COREPATH)/CMS3_CORE.so
+TOOLSLIB       = $(TOOLSPATH)/libTools.so
 STOPVARLIB     = stop_variables/StopVariables.so
 
 runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o LinkDef_out.so
-	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) LinkDef_out.so -Wl,-rpath,./
+	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) $(TOOLSLIB) LinkDef_out.so -Wl,-rpath,./
 
 runBabyMaker.o: runBabyMaker.C looper.h 
 	$(CXX) $(CXXFLAGS) -c runBabyMaker.C 

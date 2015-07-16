@@ -26,6 +26,8 @@
 #include "MuonSelections.h"//93991
 #include "IsolationTools.h"//93991
 
+#include "goodrun.h"
+
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 
 using namespace std;
@@ -215,6 +217,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   InitBabyNtuple();
 
   //
+  // Set JSON file
+  //
+  const char* json_file = "json_files/json_DCSONLY_Run2015B_snt.txt";
+  set_goodrun_file(json_file);
+
+  //
   // File Loop
   //
   while ( (currentFile = (TFile*)fileIter.Next()) ) { 
@@ -251,6 +259,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Intialize Baby NTuple Branches
       //
       InitBabyNtuple();
+
+      //
+      // If data, check against good run list
+      //
+      if( evt_isRealData() && !goodrun(evt_run(), evt_lumiBlock()) ) continue;
 
       //
       // Fill Event Variables
