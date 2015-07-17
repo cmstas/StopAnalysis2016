@@ -64,19 +64,19 @@ int main(int argc, char **argv){
   float met             = 30.0;
 
   int nGoodLeptons      = 1;
-  float goodLep_el_pt   = 40.0;
+  float goodLep_el_pt   = 20.0;
   float goodLep_el_eta  = 2.1;
-  float goodLep_mu_pt   = 30.0;
+  float goodLep_mu_pt   = 20.0;
   float goodLep_mu_eta  = 2.1;
 
-  float looseLep_el_pt  = 20.0;
+  float looseLep_el_pt  = 10.0;
   float looseLep_el_eta = 2.4;
-  float looseLep_mu_pt  = 20.0;
+  float looseLep_mu_pt  = 10.0;
   float looseLep_mu_eta = 2.4;
 
-  float vetoLep_el_pt   = 10.0;
+  float vetoLep_el_pt   = 5.0;
   float vetoLep_el_eta  = 2.4;
-  float vetoLep_mu_pt   = 10.0;
+  float vetoLep_mu_pt   = 5.0;
   float vetoLep_mu_eta  = 2.4;
 
   int nJets             = 2;
