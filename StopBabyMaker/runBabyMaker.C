@@ -47,7 +47,7 @@ int main(int argc, char **argv){
   //
   if(argc<2){
     cout<<" runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath" << endl;
-    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=0 (0=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default"<<endl;
+    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=-1 (-1=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default"<<endl;
     return 0;
   }
 
@@ -79,7 +79,7 @@ int main(int argc, char **argv){
   float vetoLep_mu_pt   = 5.0;
   float vetoLep_mu_eta  = 2.4;
 
-  int nJets             = 2;
+  int nJets             = 1;
   float jet_pt          = 30.0;
   float jet_eta         = 2.4;
   
@@ -112,16 +112,16 @@ int main(int argc, char **argv){
   int nevents = -1;
   if(argc>2) nevents = atoi(argv[2]);  
   
-  int file=0;
+  int file=-1;
   if(argc>3) file = atoi(argv[3]);
 
   char* dirpath = ".";  
   if(argc>4) dirpath = argv[4];
 
-  const char* filename = (file == 0 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
+  const char* filename = (file == -1 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
   cout << filename << endl;
   
-  const char* suffix = file == 0 ? "" : Form("_%i", file);
+  const char* suffix = file == -1 ? "" : Form("_%i", file);
 
   char *input = "sample.dat";
   if(argc>5) input = argv[5];
