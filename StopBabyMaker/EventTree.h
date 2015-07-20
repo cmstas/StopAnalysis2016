@@ -163,8 +163,10 @@ public:
     int HLT_HT350MET120;
     int HLT_DiEl;
     int HLT_DiMu;
-    int HLT_EMu;
-    int HLT_MuE;
+    int HLT_Mu8El17;
+    int HLT_Mu8El23;
+    int HLT_Mu17El12;
+    int HLT_Mu23El12;
     int HLT_SingleElTight;
     int HLT_SingleEl27;
     int HLT_SingleEl27Tight;

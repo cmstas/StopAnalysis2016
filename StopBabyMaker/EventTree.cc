@@ -188,8 +188,10 @@ void EventTree::Reset ()
     HLT_HT350MET120        = -9999.;
     HLT_DiEl               = -9999.;
     HLT_DiMu               = -9999.;
-    HLT_EMu                = -9999.;
-    HLT_MuE                = -9999.;
+    HLT_Mu8El17            = -9999.;
+    HLT_Mu8El23            = -9999.;
+    HLT_Mu17El12           = -9999.;
+    HLT_Mu23El12           = -9999.;
     HLT_SingleEl27         = -9999.;
     HLT_SingleEl27Tight    = -9999.;
     HLT_SingleElTight      = -9999.;
@@ -339,8 +341,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_HT350MET120", &HLT_HT350MET120 );
     tree->Branch("HLT_DiEl", &HLT_DiEl );
     tree->Branch("HLT_DiMu", &HLT_DiMu );
-    tree->Branch("HLT_EMu", &HLT_EMu );
-    tree->Branch("HLT_MuE", &HLT_MuE );
+    tree->Branch("HLT_Mu8El17", &HLT_Mu8El17 );
+    tree->Branch("HLT_Mu8El23", &HLT_Mu8El23 );
+    tree->Branch("HLT_Mu17El12", &HLT_Mu17El12 );
+    tree->Branch("HLT_Mu23El12", &HLT_Mu23El12 );
     tree->Branch("HLT_SingleEl27", &HLT_SingleEl27 );
     tree->Branch("HLT_SingleEl27Tight", &HLT_SingleEl27Tight );
     tree->Branch("HLT_SingleElTight", &HLT_SingleElTight );

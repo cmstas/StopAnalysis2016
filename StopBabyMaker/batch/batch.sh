@@ -14,7 +14,7 @@ nEvents=-1
 verbose="false"
 
 #Set directory to copy results to when finished
-copy_dir=/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V070403_BabyMaker_V0704X_v2__run50ns_run25ns/
+copy_dir=/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V070403_BabyMaker_V0704X_v2__run50ns_run25ns__20150720/
 if [ ! -d $copy_dir/merged_files ]; then
     mkdir $copy_dir/merged_files
 fi

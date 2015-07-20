@@ -23,15 +23,18 @@ GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
 #COREPATH       = ../../CORE
 #TOOLSPATH      = ../../Tools
+#DORKYPATH      = ../../Tools/dorky
 #FWLIBPATH      = ../../Software/MiniFWLite
 
 COREPATH       = $(HOME)/CORE
 TOOLSPATH      = $(HOME)/Tools
+DORKYPATH      = $(HOME)/Tools/dorky
 #FWLIBPATH      = $(HOME)/Software/MiniFWLite
 
 
 CXXFLAGS       += -I$(COREPATH)
 CXXFLAGS       += -I$(TOOLSPATH)
+CXXFLAGS       += -I$(DORKYPATH)
 
 #FWLIB	       = $(FWLIBPATH)/libMiniFWLite.so 
 CORELIB        = $(COREPATH)/CMS3_CORE.so

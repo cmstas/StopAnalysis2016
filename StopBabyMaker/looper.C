@@ -27,12 +27,13 @@
 #include "IsolationTools.h"//93991
 
 #include "goodrun.h"
+#include "dorky.cc"
 
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 
 using namespace std;
 using namespace tas;
-
+using namespace duplicate_removal;
 
 
 //====================//
@@ -219,8 +220,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Set JSON file
   //
-  //const char* json_file = "json_files/json_DCSONLY_Run2015B_snt.txt";
-  const char* json_file = "Cert_246908-251252_13TeV_PromptReco_Collisions15_JSON_snt.txt";
+  const char* json_file = "json_files/json_DCSONLY_Run2015B_snt.txt";
+  //const char* json_file = "Cert_246908-251252_13TeV_PromptReco_Collisions15_JSON_snt.txt";
   set_goodrun_file(json_file);
 
   //
@@ -265,6 +266,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // If data, check against good run list
       //
       if( evt_isRealData() && !goodrun(evt_run(), evt_lumiBlock()) ) continue;
+      if( evt_isRealData() ) {
+	DorkyEventIdentifier id(evt_run(), evt_event(), evt_lumiBlock());
+	if (is_duplicate(id) ) continue;
+      }
 
       //
       // Fill Event Variables
@@ -732,8 +737,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
       StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
-      StopEvt.HLT_EMu = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v");
-      StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v");
+      StopEvt.HLT_Mu8El17 = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v");
+      StopEvt.HLT_Mu8El23 = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v");
+      StopEvt.HLT_Mu17El12 = passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v");
+      StopEvt.HLT_Mu23El12 = passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v");
 
       //notation in RunIISpring15MC is WP85/WP75, for data will have WPLoose and WPTight
       StopEvt.HLT_SingleEl27 = passHLTTriggerPattern("HLT_Ele27_eta2p1_WP75_Gsf_v")||passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v")||passHLTTriggerPattern("Ele27_eta2p1_WPLoose_Gsf_v");//precsaled for 14e33
