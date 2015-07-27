@@ -56,10 +56,10 @@ cd ../
 #make
 #cd ../../
 
-cd Tools/
-make clean
-make
-cd ../
+#cd Tools/
+#make clean
+#make
+#cd ../
 
 cd StopAnalysis/StopBabyMaker/stop_variables/
 make clean
