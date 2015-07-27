@@ -220,8 +220,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Set JSON file
   //
-  const char* json_file = "json_files/json_DCSONLY_Run2015B_snt.txt";
-  //const char* json_file = "Cert_246908-251252_13TeV_PromptReco_Collisions15_JSON_snt.txt";
+  const char* json_file = "json_files/Cert_246908-251883_13TeV_PromptReco_Collisions15_JSON_v2_snt.txt";
   set_goodrun_file(json_file);
 
   //
@@ -577,6 +576,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //std::cout << "[babymaker::looper]: filling isotrack vars" << std::endl;
       int vetotracks = 0;
       int vetotracks_v2 = 0;
+      int vetotracks_v3 = 0;
       for (unsigned int ipf = 0; ipf < pfcands_p4().size(); ipf++) {
 	//some selections
 	if(pfcands_charge().at(ipf) == 0) continue;
@@ -607,7 +607,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }else Tracks.isoTracks_isVetoTrack.push_back(false);
 	}
 
-	// 13 TeV Track Isolation Configuration
+	// 13 TeV Track Isolation Configuration, pfLep and pfCH
 	if(nVetoLeptons>0){
 	  if(isVetoTrack_v2(ipf, lep1.p4, lep1.charge)){
 	    Tracks.isoTracks_isVetoTrack_v2.push_back(true);
@@ -622,6 +622,22 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }else Tracks.isoTracks_isVetoTrack_v2.push_back(false);
 	}
 
+	// 13 TeV Track Isolation Configuration, pfCH
+	if(nVetoLeptons>0){
+	  if(isVetoTrack_v3(ipf, lep1.p4, lep1.charge)){
+	    Tracks.isoTracks_isVetoTrack_v3.push_back(true);
+	    vetotracks_v3++;
+	  }else Tracks.isoTracks_isVetoTrack_v3.push_back(false);
+	}
+	else{
+	  LorentzVector temp( -99.9, -99.9, -99.9, -99.9 );
+	  if(isVetoTrack_v3(ipf, temp, 0)){
+	    Tracks.isoTracks_isVetoTrack_v3.push_back(true);
+	    vetotracks_v3++;
+	  }else Tracks.isoTracks_isVetoTrack_v3.push_back(false);
+	}
+
+
       } // end loop over pfCands
 
       if(vetotracks<1) StopEvt.PassTrackVeto = true;
@@ -629,6 +645,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     
       if(vetotracks_v2<1) StopEvt.PassTrackVeto_v2 = true;
       else StopEvt.PassTrackVeto_v2 = false;
+    
+      if(vetotracks_v3<1) StopEvt.PassTrackVeto_v3 = true;
+      else StopEvt.PassTrackVeto_v3 = false;
     
 
       //

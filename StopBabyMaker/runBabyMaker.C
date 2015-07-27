@@ -46,8 +46,8 @@ int main(int argc, char **argv){
   // Input sanitation
   //
   if(argc<2){
-    cout<<" runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath" << endl;
-    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=-1 (-1=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  by default"<<endl;
+    cout<<" runBabyMaker takes five arguments: ./runBabyMaker sample_name nevents file_number outpath samplelist" << endl;
+    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=-1 (-1=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  samplelist=sample.dat by default"<<endl;
     return 0;
   }
 
