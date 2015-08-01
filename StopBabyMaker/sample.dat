@@ -133,6 +133,10 @@ SAMPLE
 Name ZZTo4L_powheg_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/ZZTo4L_13TeV_powheg_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
+SAMPLE
+Name T6bbWW_mStop425_mCh400_mLSP50
+Path /hadoop/cms/store/user/rcoelhol/T6bbWW_mStop425_mCh400_mLSP50/crab_T6bbWW_mStop425_mCh400_mLSP50_rcoelhol-T6bbWW_mStop425_mCh400_mLSP50_MINIAODSIM-6ba8269c843a1d8c287850c1a83e8873/CMS3_V07-04-06/merged/
+
 
 #####################################
 ## Collection of 50ns Data samples ##
