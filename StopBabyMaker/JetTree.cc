@@ -25,7 +25,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
     float HT = 0.;
     float JET_PT = 0.;
     int nbtags_med = 0;
-    static const float BTAG_MED = 0.814;
+    static const float BTAG_MED = 0.890;
     float dPhiM = 0.;
     float btagdisc = 0.;   
     unsigned int leadbtag_idx = 0;
