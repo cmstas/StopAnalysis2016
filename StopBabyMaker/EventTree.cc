@@ -205,6 +205,10 @@ void EventTree::Reset ()
     HLT_SingleMu17         = -9999.;
     HLT_SingleMu20         = -9999.;
     HLT_SingleMu24         = -9999.;
+    HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight = -9999.;
+    HLT_MET90_MHT90_IDTight                         = -9999.;
+    HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight    = -9999.; 
+
     
     EA_all_rho                  = -9999.;
     EA_allcalo_rho              = -9999.; 
@@ -359,6 +363,9 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_SingleMu17", &HLT_SingleMu17);
     tree->Branch("HLT_SingleMu20", &HLT_SingleMu20);
     tree->Branch("HLT_SingleMu24", &HLT_SingleMu24);
+    tree->Branch("HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight", &HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight);
+    tree->Branch("HLT_MET90_MHT90_IDTight", &HLT_MET90_MHT90_IDTight);
+    tree->Branch("HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight", &HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight); 
     tree->Branch("pu_weight", &pu_weight); 
     tree->Branch("lep_sf", &lep_sf); 
     tree->Branch("btag_sf", &btag_sf); 

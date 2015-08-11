@@ -182,6 +182,10 @@ public:
     int HLT_SingleMu20 ;
     int HLT_SingleMu24 ;
 
+    int HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight;
+    int HLT_MET90_MHT90_IDTight;
+    int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;      
+
     float pu_weight;
     float lep_sf;
     float btag_sf;
