@@ -76,20 +76,26 @@ class babyMaker {
     LeptonTree lep1;
     LeptonTree lep2;
     JetTree jets;
-    GenParticleTree gen_els;
-    GenParticleTree gen_mus;
-    //GenParticleTree gen_leptau_els;
-    //GenParticleTree gen_leptau_mus;
-    GenParticleTree gen_taus;
-    GenParticleTree gen_nus;
-    GenParticleTree gen_bs;
-    GenParticleTree gen_tops;
-    GenParticleTree gen_qs;
-    GenParticleTree gen_lsp;
-    GenParticleTree gen_stop;
     TauTree Taus;
     IsoTracksTree Tracks;  
-  
+    GenParticleTree gen_els;
+    GenParticleTree gen_mus;
+    GenParticleTree gen_taus;
+    GenParticleTree gen_nuels;
+    GenParticleTree gen_numus;
+    GenParticleTree gen_nutaus;
+    GenParticleTree gen_tops;
+    GenParticleTree gen_bs;
+    GenParticleTree gen_cs;
+    GenParticleTree gen_qs;
+    GenParticleTree gen_glus;
+    GenParticleTree gen_ws;
+    GenParticleTree gen_zs;
+    GenParticleTree gen_phs;
+    GenParticleTree gen_hs;
+    GenParticleTree gen_lsp;
+    GenParticleTree gen_stop;
+    
 };
 
 struct val_err_t { float value; float error; };

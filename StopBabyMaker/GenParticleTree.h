@@ -35,9 +35,9 @@ protected:
 public:
    
  	//commented out variables are available on CMS3 but not stored
-
 	veci gentaudecay;
         //TauDecay gentaudecay;
+	
 	/*event level genps info
         float alphaQCD;
 	float pthat;
@@ -47,31 +47,48 @@ public:
 
 	vecLorentzVector p4;
         
-//        LorentzVector prod_vtx;
-  //      vecLorentzVector lepdaughter_p4;
+	//LorentzVector prod_vtx;
+	//vecLorentzVector lepdaughter_p4;
         vecd charge;
 	vecd iso;
 	vecd mass;
 	veci id;
 	veci genpsidx;
         vecb isfromt;
-//	veci id_simplegrandma;
-//	veci id_simplemother;
-//	veci idx_mother;
-//	veci idx_simplemother;
 	veci status;
-	std::vector<veci> lepdaughter_id;
-//	veci lepdaughter_idx;
-        int gen_nfromt;
+	vecb fromHardProcessBeforeFSR;
+	vecb fromHardProcessDecayed;
+	vecb fromHardProcessFinalState;
+	vecb isDirectHardProcessTauDecayProductFinalState;
+	vecb isDirectPromptTauDecayProductFinalState;
+	vecb isHardProcess;
+	vecb isLastCopy;
+	vecb isLastCopyBeforeFSR;
+	vecb isMostlyLikePythia6Status3;
+	vecb isPromptDecayed;
+	vecb isPromptFinalState;
+        std::vector<veci> lepdaughter_id;
+	int gen_nfromt;
         vecLorentzVector motherp4;
         vecd mothercharge;
         veci motherid;
         veci motheridx;
         veci motherstatus;
+	vecLorentzVector gmotherp4;
+	veci gmothercharge;
 	veci gmotherid;
         veci gmotheridx;
+	veci gmotherstatus;
+	vecLorentzVector simplemotherp4;
+	veci simplemothercharge;
 	veci simplemotherid;
+	veci simplemotheridx;
+	veci simplemotherstatus;
+	vecLorentzVector simplegmotherp4;
+	veci simplegmothercharge;
 	veci simplegmotherid;
+	veci simplegmotheridx;
+	veci simplegmotherstatus;
 
 };
 

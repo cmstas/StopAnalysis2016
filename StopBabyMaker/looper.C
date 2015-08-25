@@ -74,19 +74,26 @@ babyMaker::babyMaker(){
    lep1 = LeptonTree("lep1_");
    lep2 = LeptonTree("lep2_");
    jets = JetTree();
-   gen_els = GenParticleTree("els_");
-   gen_mus = GenParticleTree("mus_");
-   //gen_leptau_els = GenParticleTree("leptau_els_");
-   //gen_leptau_mus = GenParticleTree("leptau_mus_");
-   gen_taus = GenParticleTree("taus_");
-   gen_nus = GenParticleTree("nus_");
-   gen_bs  = GenParticleTree("bs_");
-   gen_tops = GenParticleTree("ts_");
-   gen_qs  = GenParticleTree("qs_");
-   gen_lsp = GenParticleTree("lsp_");
-   gen_stop = GenParticleTree("stop_");
    Taus = TauTree();
    Tracks = IsoTracksTree();
+   gen_els = GenParticleTree("els_");
+   gen_mus = GenParticleTree("mus_");
+   gen_taus = GenParticleTree("taus_");
+   gen_nuels = GenParticleTree("nuels_");
+   gen_numus = GenParticleTree("numus_");
+   gen_nutaus = GenParticleTree("nutaus_");
+   gen_tops = GenParticleTree("ts_");
+   gen_bs  = GenParticleTree("bs_");
+   gen_cs  = GenParticleTree("cs_");
+   gen_qs  = GenParticleTree("qs_");
+   gen_glus = GenParticleTree("glus_");
+   gen_ws  = GenParticleTree("ws_");
+   gen_zs  = GenParticleTree("zs_");
+   gen_phs = GenParticleTree("phs_");
+   gen_hs  = GenParticleTree("hs_");
+   gen_lsp = GenParticleTree("lsp_");
+   gen_stop = GenParticleTree("stop_");
+   
 }
 
 void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta){
@@ -129,19 +136,26 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   lep1.SetBranches(BabyTree);
   lep2.SetBranches(BabyTree);
   jets.SetBranches(BabyTree);
-  gen_els.SetBranches(BabyTree);
-  gen_mus.SetBranches(BabyTree);
-  //gen_leptau_els.SetBranches(BabyTree);
-  //gen_leptau_mus.SetBranches(BabyTree);
-  gen_taus.SetBranches(BabyTree);
-  gen_nus.SetBranches(BabyTree);
-  gen_bs.SetBranches(BabyTree);
-  gen_tops.SetBranches(BabyTree);
-  gen_qs.SetBranches(BabyTree);
-  gen_lsp.SetBranches(BabyTree);
-  gen_stop.SetBranches(BabyTree);
   Taus.SetBranches(BabyTree);
   Tracks.SetBranches(BabyTree);
+  gen_els.SetBranches(BabyTree);
+  gen_mus.SetBranches(BabyTree);
+  gen_taus.SetBranches(BabyTree);
+  gen_nuels.SetBranches(BabyTree);
+  gen_numus.SetBranches(BabyTree);
+  gen_nutaus.SetBranches(BabyTree);
+  gen_tops.SetBranches(BabyTree);
+  gen_bs.SetBranches(BabyTree);
+  gen_cs.SetBranches(BabyTree);
+  gen_qs.SetBranches(BabyTree);
+  gen_glus.SetBranches(BabyTree);
+  gen_ws.SetBranches(BabyTree);
+  gen_zs.SetBranches(BabyTree);
+  gen_phs.SetBranches(BabyTree);
+  gen_hs.SetBranches(BabyTree);
+  gen_lsp.SetBranches(BabyTree);
+  gen_stop.SetBranches(BabyTree);
+  
 }
 
 void babyMaker::InitBabyNtuple(){
@@ -150,19 +164,25 @@ void babyMaker::InitBabyNtuple(){
   lep1.Reset();
   lep2.Reset();
   jets.Reset();
-  gen_els.Reset();
-  gen_mus.Reset();
-  //gen_leptau_els.Reset();
-  //gen_leptau_mus.Reset();
-  gen_taus.Reset();
-  gen_nus.Reset();
-  gen_bs.Reset();
-  gen_tops.Reset();
-  gen_qs.Reset();
-  gen_lsp.Reset();
-  gen_stop.Reset();
   Taus.Reset();
   Tracks.Reset();
+  gen_els.Reset();
+  gen_mus.Reset();
+  gen_taus.Reset();
+  gen_nuels.Reset();
+  gen_numus.Reset();
+  gen_nutaus.Reset();
+  gen_tops.Reset();
+  gen_bs.Reset();
+  gen_cs.Reset(); 
+  gen_qs.Reset();
+  gen_glus.Reset();
+  gen_ws.Reset();
+  gen_zs.Reset();
+  gen_phs.Reset();
+  gen_lsp.Reset();
+  gen_stop.Reset();
+  
 } 
 
 
@@ -551,11 +571,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       //std::cout << "[babymaker::looper]: tau  vars" << std::endl;
       int vetotaus=0;
-          
+      double tau_pt  = 20.0;
+      double tau_eta = 2.4;  
+      
       Taus.tau_IDnames = taus_pf_IDnames();
-
+      
       for(unsigned int iTau = 0; iTau < taus_pf_p4().size(); iTau++){
-	Taus.FillCommon(iTau, 20, 2.4);
+	
+	if( taus_pf_p4().at(iTau).Pt() < tau_pt ) continue;
+	if( fabs(taus_pf_p4().at(iTau).Eta()) < tau_eta ) continue;
+	
+	Taus.FillCommon(iTau, tau_pt, tau_eta);
 	if(nVetoLeptons>0){
 	  if(isVetoTau(iTau, lep1.p4, lep1.charge)){
 	    Taus.tau_isVetoTau.push_back(true);
@@ -573,16 +599,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       // IsoTracks (Charged pfLeptons and pfChargedHadrons)
       //
-      //std::cout << "[babymaker::looper]: filling isotrack vars" << std::endl;
+      //std::cout << "[babymaker::laooper]: filling isotrack vars" << std::endl;
       int vetotracks = 0;
       int vetotracks_v2 = 0;
       int vetotracks_v3 = 0;
       for (unsigned int ipf = 0; ipf < pfcands_p4().size(); ipf++) {
+	
 	//some selections
 	if(pfcands_charge().at(ipf) == 0) continue;
 	if(pfcands_p4().at(ipf).pt() < 5) continue;
 	if(fabs(pfcands_dz().at(ipf)) > 0.1) continue;
-
+	
 	//remove everything that is within 0.1 of selected lead and subleading leptons
 	if(nVetoLeptons>0){
 	  if(ROOT::Math::VectorUtil::DeltaR(pfcands_p4().at(ipf), lep1.p4)<0.1) continue;
@@ -590,8 +617,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(nVetoLeptons>1){
           if(ROOT::Math::VectorUtil::DeltaR(pfcands_p4().at(ipf), lep2.p4)<0.1) continue;
 	}
+	
 	Tracks.FillCommon(ipf);
-
+	
 	// 8 TeV Track Isolation Configuration
 	if(nVetoLeptons>0){
 	  if(isVetoTrack(ipf, lep1.p4, lep1.charge)){
@@ -606,7 +634,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    vetotracks++;
 	  }else Tracks.isoTracks_isVetoTrack.push_back(false);
 	}
-
+	
 	// 13 TeV Track Isolation Configuration, pfLep and pfCH
 	if(nVetoLeptons>0){
 	  if(isVetoTrack_v2(ipf, lep1.p4, lep1.charge)){
@@ -621,7 +649,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    vetotracks_v2++;
 	  }else Tracks.isoTracks_isVetoTrack_v2.push_back(false);
 	}
-
+	
 	// 13 TeV Track Isolation Configuration, pfCH
 	if(nVetoLeptons>0){
 	  if(isVetoTrack_v3(ipf, lep1.p4, lep1.charge)){
@@ -653,84 +681,54 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       // Gen Information
       //
-
+      //std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
+      
       //ttbar counters using neutrinos:
       int n_nutaufromt=0;
       int n_nuelfromt=0;
       int n_numufromt=0;
-      //std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
+
       //gen particles
       if (!evt_isRealData()){
 	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
 	  //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)
      
-	  //if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
-	  //if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_leptau_els.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
+	  if( abs(genps_id().at(genx)) == pdg_el    ) gen_els.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_nue   ) gen_nuels.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_numu  ) gen_numus.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_nutau ) gen_nutaus.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_b     ) gen_bs.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_c     ) gen_cs.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_g &&
+	      genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_W     ) gen_ws.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_Z     ) gen_tops.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_ph &&
+	      genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
 
-	  //if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
-	  //if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_leptau_mus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
-
-	  //if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
-
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
-        
-	  if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
-
-	  if(abs(genps_id_mother().at(genx)) == pdg_Z && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_Z && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_Z && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
-        
-	  if(abs(genps_id_mother().at(genx)) == pdg_ph&& abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_ph&& abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_ph&& abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
-        
-	  if(abs(genps_id_mother().at(genx)) == pdg_h && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_h && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_h && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
-        
-	  if(abs(genps_id_mother().at(genx)) == pdg_t && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_t && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) == pdg_t && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
-
-	  // don't store leptons/neutrinos from u,d,s,c,b or proton, those seem to go crazy some times (especially electrons)
-	  //if(abs(genps_id_mother().at(genx)) >= pdg_t && abs(genps_id_mother().at(genx)) != pdg_p && abs(genps_id().at(genx)) == pdg_el && genps_status().at(genx) == 1) gen_els.FillCommon(genx);
-	  //if(abs(genps_id_mother().at(genx)) >= pdg_t && abs(genps_id_mother().at(genx)) != pdg_p && abs(genps_id().at(genx)) == pdg_mu && genps_status().at(genx) == 1) gen_mus.FillCommon(genx);
-	  //if(abs(genps_id_mother().at(genx)) >= pdg_t && abs(genps_id_mother().at(genx)) != pdg_p && abs(genps_id().at(genx)) == pdg_tau && genps_status().at(genx) == 2) gen_taus.FillCommon(genx);
-
-	  //if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-	  //if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-	  //if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-	
-	  //if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-	  //if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-	  //if(abs(genps_id_mother().at(genx)) == pdg_tau && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-	
-	  // don't store leptons/neutrinos from u,d,s,c,b or proton, those seem to go crazy some times (especially electrons)
-	  if(abs(genps_id_mother().at(genx)) >= pdg_t && abs(genps_id_mother().at(genx)) != pdg_p && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) >= pdg_t && abs(genps_id_mother().at(genx)) != pdg_p && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-	  if(abs(genps_id_mother().at(genx)) >= pdg_t && abs(genps_id_mother().at(genx)) != pdg_p && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1) gen_nus.FillCommon(genx);
-      
-	  if(abs(genps_id().at(genx)) == pdg_d && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
-	  if(abs(genps_id().at(genx)) == pdg_u && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
-	  if(abs(genps_id().at(genx)) == pdg_s && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
-	  if(abs(genps_id().at(genx)) == pdg_c && genps_status().at(genx) == 23) gen_qs.FillCommon(genx);
-       
-	  if(abs(genps_id().at(genx)) == pdg_b && genps_status().at(genx) == 23) gen_bs.FillCommon(genx);
-	  if(abs(genps_id().at(genx)) == pdg_t && genps_status().at(genx) == 52) gen_tops.FillCommon(genx);
-    
-	  if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) gen_lsp.FillCommon(genx);
+	  if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
 	  if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);
      
-	  if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) gen_stop.FillCommon(genx);
-	  if(abs(genps_id().at(genx)) == pdg_stop2 && genps_status().at(genx) == 62) gen_stop.FillCommon(genx);
+	  if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
+	  if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
+	 
 	  if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);
 	  if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);
+
+	  
+	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
+
+	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
+
+	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
+	  	  
 	}
       }
     
