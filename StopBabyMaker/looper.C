@@ -705,11 +705,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
 	  if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
 	  if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
 	  if( abs(genps_id().at(genx)) == pdg_g &&
 	      genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
 	  if( abs(genps_id().at(genx)) == pdg_W     ) gen_ws.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_Z     ) gen_tops.FillCommon(genx);
+	  if( abs(genps_id().at(genx)) == pdg_Z     ) gen_zs.FillCommon(genx);
 	  if( abs(genps_id().at(genx)) == pdg_ph &&
 	      genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
 
