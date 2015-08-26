@@ -582,13 +582,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if( fabs(taus_pf_p4().at(iTau).Eta()) < tau_eta ) continue;
 	
 	Taus.FillCommon(iTau, tau_pt, tau_eta);
-	if(nVetoLeptons>0){
-	  if(isVetoTau(iTau, lep1.p4, lep1.charge)){
-	    Taus.tau_isVetoTau.push_back(true);
-	    vetotaus++;
-	  }else Taus.tau_isVetoTau.push_back(false);
-	}
-	else Taus.tau_isVetoTau.push_back(false);
+	if(isVetoTau(iTau, lep1.p4, lep1.charge)){
+	  Taus.tau_isVetoTau.push_back(true);
+	  vetotaus++;
+	}else Taus.tau_isVetoTau.push_back(false);
       }
 
       if(vetotaus<1) StopEvt.PassTauVeto = true;
