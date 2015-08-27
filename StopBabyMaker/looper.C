@@ -579,7 +579,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       for(unsigned int iTau = 0; iTau < taus_pf_p4().size(); iTau++){
 	
 	if( taus_pf_p4().at(iTau).Pt() < tau_pt ) continue;
-	if( fabs(taus_pf_p4().at(iTau).Eta()) < tau_eta ) continue;
+	if( fabs(taus_pf_p4().at(iTau).Eta()) > tau_eta ) continue;
 	
 	Taus.FillCommon(iTau, tau_pt, tau_eta);
 	if(isVetoTau(iTau, lep1.p4, lep1.charge)){
