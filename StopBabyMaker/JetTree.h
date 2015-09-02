@@ -28,7 +28,7 @@ public:
     void SetBranches (TTree* tree);
     void SetAliases (TTree* tree);
     void FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx, unsigned int overlep2_idx);
-    void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id);
+    void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id, float bpt_cut);
     void GetJetSelections (std::string cone_size = "");
 
 protected:
@@ -123,6 +123,7 @@ public:
     vecLorentzVector ak4genjets_p4;    
  
 private:
+    float m_bpt_cut;
     float m_ak4_pt_cut;
     float m_ak8_pt_cut;
     float m_ak4_eta_cut;

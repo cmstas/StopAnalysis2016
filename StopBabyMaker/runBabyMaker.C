@@ -79,10 +79,11 @@ int main(int argc, char **argv){
   float vetoLep_mu_pt   = 5.0;
   float vetoLep_mu_eta  = 2.4;
 
-  int nJets             = 1;
+  int nJets             = 2;
   float jet_pt          = 30.0;
   float jet_eta         = 2.4;
-  
+  float bjet_pt         = 20.0;
+
   float jet_ak8_pt      = 100.0;
   float jet_ak8_eta     = 2.4;
 
@@ -103,7 +104,7 @@ int main(int argc, char **argv){
   //
   // Set Skim Variables
   //
-  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta );
+  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta, bjet_pt );
 
 
   //

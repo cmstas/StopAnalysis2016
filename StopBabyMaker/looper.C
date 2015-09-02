@@ -96,7 +96,7 @@ babyMaker::babyMaker(){
    
 }
 
-void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta){
+void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, float bjet_pt){
 
   skim_nvtx            = nvtx;
   skim_met             = met;
@@ -120,6 +120,7 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
   skim_nJets           = njets;
   skim_jet_pt          = jet_pt;
   skim_jet_eta         = jet_eta;
+  skim_bjet_pt         = bjet_pt;
 
   skim_jet_ak8_pt      = jet_ak8_pt;
   skim_jet_ak8_eta     = jet_ak8_eta;
@@ -333,7 +334,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         mylepton.id  = -11*els_charge().at(eidx);
         mylepton.idx = eidx;
         mylepton.p4  = els_p4().at(eidx);
-	int overlapping_jet = getOverlappingJetIndex(mylepton.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false);  //don't care about jid
+	int overlapping_jet = getOverlappingJetIndex(mylepton.p4, pfjets_p4(), 0.4, std::min(skim_bjet_pt,skim_jet_pt), skim_jet_eta, false);  //don't care about jid//HACK: lower to bjet_pt
 	if( overlapping_jet>=0) idx_alloverlapjets.push_back(overlapping_jet);  //overlap removal for all jets w.r.t. all leptons
 
 	if( ( PassElectronVetoSelections(eidx, skim_vetoLep_el_pt, skim_vetoLep_el_eta) ) &&
@@ -355,7 +356,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         mylepton.id  = -13*mus_charge().at(midx);
         mylepton.idx = midx;
         mylepton.p4  = mus_p4().at(midx);
-	int overlapping_jet = getOverlappingJetIndex(mylepton.p4, pfjets_p4() , 0.4, skim_jet_pt, skim_jet_eta,false);  //don't care about jid
+	int overlapping_jet = getOverlappingJetIndex(mylepton.p4, pfjets_p4() , 0.4, std::min(skim_bjet_pt,skim_jet_pt), skim_jet_eta,false);  //don't care about jid//HACK: lower to bjet_pt
 	if( overlapping_jet>=0) idx_alloverlapjets.push_back(overlapping_jet);  //overlap removal for all jets w.r.t. all leptons
 	
 	if( ( PassMuonVetoSelections(midx, skim_vetoLep_mu_pt, skim_vetoLep_mu_eta) ) &&
@@ -404,12 +405,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(pfjets_p4().size() > 0){
 	jet_overlep1_idx = -9999;
 	jet_overlep2_idx = -9999;
-	if(nVetoLeptons>0) jet_overlep1_idx = getOverlappingJetIndex(lep1.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false);  //don't care about jid
-	if(nVetoLeptons>1) jet_overlep2_idx = getOverlappingJetIndex(lep2.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false);  //don't care about jid
+	if(nVetoLeptons>0) jet_overlep1_idx = getOverlappingJetIndex(lep1.p4, pfjets_p4(), 0.4, std::min(skim_bjet_pt,skim_jet_pt), skim_jet_eta, false);  //don't care about jid//HACK: lower to bjet_pt
+	if(nVetoLeptons>1) jet_overlep2_idx = getOverlappingJetIndex(lep2.p4, pfjets_p4(), 0.4, std::min(skim_bjet_pt,skim_jet_pt), skim_jet_eta, false);  //don't care about jid//HACK: lower to bjet_pt
 	
 	// Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
-	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
-	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
+	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true, skim_bjet_pt); //save only jets passing jid
+	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true, skim_jet_ak8_pt); //save only jets passing jid//HACK
 	jets.FillCommon(idx_alloverlapjets, jet_overlep1_idx, jet_overlep2_idx);
       }
       
@@ -437,7 +438,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.ak4pfjets_rho = evt_fixgridfastjet_all_rho();
 
     
-      vector<int> jetIndexSortedCSV = JetUtil::JetIndexCSVsorted(jets.ak4pfjets_CSV, jets.ak4pfjets_p4, jets.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, true);
+      vector<int> jetIndexSortedCSV = JetUtil::JetIndexCSVsorted(jets.ak4pfjets_CSV, jets.ak4pfjets_p4, jets.ak4pfjets_loose_pfid, std::min(skim_jet_pt,skim_bjet_pt), skim_jet_eta, true);//HACK
       vector<LorentzVector> mybjets; vector<LorentzVector> myaddjets;
       for(unsigned int idx = 0; idx<jetIndexSortedCSV.size(); ++idx){
 	if(jets.ak4pfjets_passMEDbtag.at(jetIndexSortedCSV[idx])==true) mybjets.push_back(jets.ak4pfjets_p4.at(jetIndexSortedCSV[idx]) );

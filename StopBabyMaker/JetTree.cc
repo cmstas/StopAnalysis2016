@@ -41,7 +41,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
         //deal with the overlaps
         if(jindex == overlep1_idx){
 		ak4pfjet_overlep1_p4  = pfjets_p4().at(jindex);
-//pfjets_bDiscriminators() pfjets_bDiscriminatorNames()
+		//pfjets_bDiscriminators() pfjets_bDiscriminatorNames()
                 ak4pfjet_overlep1_CSV = getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex);
 		//ak4pfjet_overlep1_pu_id = pfjets_pileupJetId().at(jindex);
                 ak4pfjet_overlep1_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
@@ -76,13 +76,12 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
 	  }
 	}
 	if(skipthis) continue; //remove all overlaps from jet collection
-
         //Jet selections
-        if(pfjets_p4().at(jindex).pt() < m_ak4_pt_cut) continue;
+        if(pfjets_p4().at(jindex).pt() < std::min(m_ak4_pt_cut,m_bpt_cut)) continue;
+	if(pfjets_p4().at(jindex).pt() < m_ak4_pt_cut && getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex) < BTAG_MED) continue;//do not store soft jets that are not b-tagged
         if(fabs(pfjets_p4().at(jindex).eta()) > m_ak4_eta_cut) continue;
-	if(!isLoosePFJetV2(jindex)) ++nFailJets;
+	if(!isLoosePFJetV2(jindex) && pfjets_p4().at(jindex).pt() >= m_ak4_pt_cut) ++nFailJets;//for nFailJets only count "normal" jets
         if(m_ak4_passid && !isLoosePFJetV2(jindex)) continue;
-        nGoodJets++;
         ak4pfjets_p4.push_back(pfjets_p4().at(jindex));
         ak4pfjets_pt.push_back(pfjets_p4().at(jindex).pt());
         ak4pfjets_eta.push_back(pfjets_p4().at(jindex).eta());
@@ -113,12 +112,15 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
           ak4pfjets_mcmotherid.push_back(pfjets_mc_motherid().at(jindex));
 	}
 
-	//HTRatio
-	dPhiM = getdphi(evt_pfmetPhi(), pfjets_p4().at(jindex).phi() );
-	if ( dPhiM  < (TMath::Pi()/2) ) htssm = htssm + pfjets_p4().at(jindex).pt();
-        else htosm = htosm + pfjets_p4().at(jindex).pt();	
-
-        HT = HT + pfjets_p4().at(jindex).pt();
+	if(pfjets_p4().at(jindex).pt() >= m_ak4_pt_cut){//get this only for normal "jets"
+	  nGoodJets++;
+	  //HTRatio
+	  dPhiM = getdphi(evt_pfmetPhi(), pfjets_p4().at(jindex).phi() );
+	  if ( dPhiM  < (TMath::Pi()/2) ) htssm = htssm + pfjets_p4().at(jindex).pt();
+	  else htosm = htosm + pfjets_p4().at(jindex).pt();	
+	  
+	  HT = HT + pfjets_p4().at(jindex).pt();
+	}
 	
 	//medium btag
         if(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex) > BTAG_MED){
@@ -190,9 +192,9 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
     
 }
         
-void JetTree::SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id)
+void JetTree::SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id, float bpt_cut)
 {
-  if (cone_size == "ak4") { m_ak4_pt_cut = pt_cut; m_ak4_eta_cut = eta; m_ak4_passid = id; }
+  if (cone_size == "ak4") { m_ak4_pt_cut = pt_cut; m_ak4_eta_cut = eta; m_ak4_passid = id; m_bpt_cut = bpt_cut; }
   else if (cone_size == "ak8") { m_ak8_pt_cut = pt_cut; m_ak8_eta_cut = eta; m_ak8_passid = id; }
   else {std::cout << "Invalid cone size." << std::endl;}
 
