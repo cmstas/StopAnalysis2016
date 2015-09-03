@@ -16,20 +16,15 @@ Instructions (no quotes):
       is by design since the script will automatically resubmit failed
       jobs, and will skip (re)submission if the file exists already.
 
-  3.  Open batch.sh and modify the fields at the top to specify which 
-      babies should be produced (line 6).  Line 15 will also specify 
-      the directory on /hadoop/ where the output baby files will be
-      copied to.	  
+  3.  Edit batch.sh and condorFileTemplate following instructions printed in 
+      step 2. 
 	  b. If you want to load a different sample.dat file please modify
       l.64 and l.74.
-
-  4.  In condorFileTemplate, change line 12 to your email address for
-      notifications from the condor queue about the job ending/failing     
   
-  5   Now run . batch.sh, it will only submit jobs once so it is useful
+  4   Now run . batch.sh, it will only submit jobs once so it is useful
       for debugging. 
 
-  6.  ". makeBabies.sh" to submit.  Just let it run, it will quit when 
-       all babies exist.  It will also merge them for you at the end,
-	   b. run this command in a screen session.
+  5.  run this command in a screen session:
+      ". makeBabies.sh" to submit.  Let it run, it will quit when 
+       all babies exist.  It will also merge at the end,
 
