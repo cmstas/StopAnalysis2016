@@ -17,9 +17,7 @@ Instructions (no quotes):
       jobs, and will skip (re)submission if the file exists already.
 
   3.  Edit batch.sh and condorFileTemplate following instructions printed in 
-      step 2. 
-	  b. If you want to load a different sample.dat file please modify
-      l.64 and l.74.
+      step 2.
   
   4   Now run . batch.sh, it will only submit jobs once so it is useful
       for debugging. 
