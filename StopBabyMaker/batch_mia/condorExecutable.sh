@@ -43,10 +43,10 @@ THISDIR=`pwd`
 echo $THISDIR
 echo "LS to check that all files were transferred: "
 ls
-tar xzfv forCondor_stopBabyMaker_74x.tar.gz
+tar xzfv "$CONDOR_DIR_NAME.tar.gz"
 echo "LS to check that tarball was unpacked: "
 ls
-cd forCondor_stopBabyMaker_74x/
+cd $CONDOR_DIR_NAME
 echo "LS to check contents of unpacked stopbabymaker: "
 ls
 
