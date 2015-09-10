@@ -12,13 +12,28 @@ export COPYDIR=$4
 hostname
 
 #Environment
+#Show g++ version
+echo " " 
+echo "G++ INFORMATION" 
+g++ --version
+which g++
+
+CMSSW_VERSION=CMSSW_7_4_1_patch1
+
 export CMS_PATH=/cvmfs/cms.cern.ch
+echo "[wrapper] setting env"
 export SCRAM_ARCH=slc6_amd64_gcc491
 source /cvmfs/cms.cern.ch/cmsset_default.sh
+OLDDIR=`pwd`
+cd /cvmfs/cms.cern.ch/slc6_amd64_gcc491/cms/cmssw-patch/$CMSSW_VERSION/src
+#cmsenv
+eval `scramv1 runtime -sh`
+cd $OLDDIR
+
 
 #Set CMSSW environment
 
-#pushd /cvmfs/cms.cern.ch/slc6_amd64_gcc481/cms/cmssw/CMSSW_7_2_0/src/
+#pushd /cvmfs/cms.cern.ch/slc6_amd64_gcc481/cms/cmssw/CMSSW_7_4_1/src/
 #eval `scramv1 runtime -sh`
 #popd
 
@@ -28,45 +43,26 @@ THISDIR=`pwd`
 echo $THISDIR
 echo "LS to check that all files were transferred: "
 ls
-tar xzfv forCondor_stopBabyMaker_74x.tar.gz
+tar xzfv "$CONDOR_DIR_NAME.tar.gz"
 echo "LS to check that tarball was unpacked: "
 ls
-cd forCondor_stopBabyMaker_74x/CMSSW_7_4_1_patch1/src
-echo "LS to check contents of unpacked CMSSW: "
+cd $CONDOR_DIR_NAME
+echo "LS to check contents of unpacked stopbabymaker: "
 ls
 
-#Show g++ version
-echo " " 
-echo "G++ INFORMATION" 
-g++ --version
-which g++
-
-pushd /cvmfs/cms.cern.ch/slc6_amd64_gcc491/cms/cmssw/CMSSW_7_4_1/src/
-eval `scramv1 runtime -sh`
-popd
-
 # Make supporting libs
+echo "clean CORE"
 cd CORE/
+ls
 make clean
+echo "remaking CORE"
 make
 cd ../
 
-#cd Software/MiniFWLite/
-#make clean
-#make
-#cd ../../
-
-#cd Tools/
-#make clean
-#make
-#cd ../
-
-cd StopAnalysis/StopBabyMaker/stop_variables/
+cd StopBabyMaker/stop_variables/
 make clean
 make
 cd ../
-
-#cd /home/users/isuarez/ROOT6/babymaker_main/StopAnalysis/StopBabyMaker/
 make clean
 make
 

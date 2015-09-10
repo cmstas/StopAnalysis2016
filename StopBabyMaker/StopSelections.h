@@ -14,6 +14,7 @@ using namespace std;
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 typedef std::vector<LorentzVector> vecLorentzVector;
 
+   const int pdg_p = 2212;
    const int pdg_el = 11;
    const int pdg_nue = 12;
    const int pdg_mu = 13;
@@ -60,6 +61,8 @@ float  calculateMt(const LorentzVector p4, double met, double met_phi);
 int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid);
 int getOverlappingTrackIndex(LorentzVector& lep_, int pdgid_, vector<LorentzVector> tracks_, double dR);
 bool isVetoTrack(int ipf, LorentzVector lepp4_, int charge);
+bool isVetoTrack_v2(int ipf, LorentzVector lepp4_, int charge);
+bool isVetoTrack_v3(int ipf, LorentzVector lepp4_, int charge);
 bool isVetoTau(int ipf, LorentzVector lepp4_, int charge);
 float DPhi_W_lep(float MET, float MET_Phi, LorentzVector p4);
 //int leptonIsFromW(int idx, int id, bool alsoSusy);

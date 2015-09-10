@@ -21,6 +21,7 @@ void TauTree::FillCommon (int idx,float tau_pt_cut, float tau_eta_cut)
     tau_sigcand_p4.push_back(taus_pf_signalcands_p4().at(idx));
     tau_mass.push_back(taus_pf_mass().at(idx));
     tau_ID.push_back(taus_pf_IDs().at(idx));
+    tau_passID.push_back(passTauID("byMediumIsolationMVA3newDMwLT",idx));
     tau_charge.push_back(taus_pf_charge().at(idx));
     //tau_againstMuonTight.push_back();
     //tau_againstElectronLoose.push_back();
@@ -39,6 +40,7 @@ void TauTree::Reset()
     tau_sigcand_p4.clear();
     tau_mass.clear();
     tau_ID.clear();
+    tau_passID.clear();
     tau_charge.clear();
     ngoodtaus= -9999.;
     tau_againstMuonTight.clear();
@@ -56,6 +58,7 @@ void TauTree::SetBranches(TTree* tree)
     tree->Branch("tau_sigcand_p4",&tau_sigcand_p4);
     tree->Branch("tau_mass",&tau_mass);
     tree->Branch("tau_ID",&tau_ID);
+    tree->Branch("tau_passID",&tau_passID);
     tree->Branch("tau_charge",&tau_charge);
     tree->Branch("ngoodtaus",&ngoodtaus);
     tree->Branch("tau_againstMuonTight",&tau_againstMuonTight);

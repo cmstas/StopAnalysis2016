@@ -83,6 +83,22 @@ public:
 
     float pfmet;
     float pfmet_phi;
+    float calomet;
+    float calomet_phi;
+
+    float filt_cscbeamhalo;
+    float filt_ecallaser;
+    float filt_ecaltp;
+    float filt_eebadsc;
+    float filt_goodvtx;
+    float filt_hbhenoise;
+    float filt_hcallaser;
+    float filt_met;
+    float filt_trkfail;
+    float filt_trkPOG;
+    float filt_trkPOG_tmc;
+    float filt_trkPOG_tms;
+    float filt_eff;
 
     float dR_lep_leadb;
     float dR_lep2_leadb;    
@@ -128,6 +144,8 @@ public:
 
     //veto
     bool PassTrackVeto;
+    bool PassTrackVeto_v2;
+    bool PassTrackVeto_v3;
     bool PassTauVeto;
 
     float EA_all_rho;
@@ -140,9 +158,33 @@ public:
     int HLT_SingleMu; 
     int HLT_SingleEl;
     int HLT_MET170;
-    int HLT_ht350met120; 
     int HLT_MET120Btag;      
     int HLT_MET120Mu5;
+    //new
+    int HLT_HT350MET120;
+    int HLT_DiEl;
+    int HLT_DiMu;
+    int HLT_Mu8El17;
+    int HLT_Mu8El23;
+    int HLT_Mu17El12;
+    int HLT_Mu23El12;
+    int HLT_SingleElTight;
+    int HLT_SingleEl27;
+    int HLT_SingleEl27Tight;
+    int HLT_SingleElHT200;
+    int HLT_SingleMuNoEta;
+    int HLT_SingleMuNoIso;
+    int HLT_SingleMuNoIsoNoEta;
+    int HLT_Mu6HT200MET125;
+
+    int HLT_HT350MET100;
+    int HLT_SingleMu17 ;
+    int HLT_SingleMu20 ;
+    int HLT_SingleMu24 ;
+
+    int HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight;
+    int HLT_MET90_MHT90_IDTight;
+    int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;      
 
     float pu_weight;
     float lep_sf;

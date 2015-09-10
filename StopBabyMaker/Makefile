@@ -21,17 +21,21 @@ NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
+#COREPATH       = ../../CORE
 COREPATH       = $(HOME)/CORE
-FWLIBPATH      = $(HOME)/Software/MiniFWLite
+TOOLSPATH      = $(COREPATH)/Tools
+DORKYPATH      = $(TOOLSPATH)/dorky
+
 
 CXXFLAGS       += -I$(COREPATH)
+CXXFLAGS       += -I$(TOOLSPATH)
+CXXFLAGS       += -I$(DORKYPATH)
 
-FWLIB	       = $(FWLIBPATH)/libMiniFWLite.so 
 CORELIB        = $(COREPATH)/CMS3_CORE.so
 STOPVARLIB     = stop_variables/StopVariables.so
 
-runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o
-	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(FWLIB) $(STOPVARLIB)
+runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o LinkDef_out.so
+	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) LinkDef_out.so -Wl,-rpath,./
 
 runBabyMaker.o: runBabyMaker.C looper.h 
 	$(CXX) $(CXXFLAGS) -c runBabyMaker.C 
@@ -59,8 +63,15 @@ GenParticleTree.o: GenParticleTree.cc GenParticleTree.h
 
 StopSelections.o: StopSelections.cc StopSelections.h
 	$(CXX) $(CXXFLAGS) -c StopSelections.cc
+
+LinkDef_out.so: LinkDef.h
+	@rootcling -v -f LinkDef.cc -c -p Math/Vector4D.h LinkDef.h
+	$(CXX) $(CXXFLAGS) $(SOFLAGS) LinkDef.cc -o $@
+
 .PHONY: clean
 clean:  
 	rm -v -f \
 	runBabyMaker \
+	LinkDef.cc \
+	LinkDef_rdict.pcm \
 	*.o *.d *.so; echo "Done"

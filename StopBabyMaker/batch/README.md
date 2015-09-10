@@ -14,12 +14,12 @@ Instructions (no quotes):
 	   between directories will work correctly.  Also, if changing 
 	   the locations of CORE and Software, be sure to update the 
 	   paths in the StopBabyMaker Makefile, lines 24-25, by correctly 
-	   setting the variables: COREPATH, and FWLIBPATH (if root5)
+	   setting the variables: COREPATH, and FWLIBPATH(if root5)
 	   
 	   b. make sure the Makefile is correctly, usually l.24-25
-	   *   COREPATH       = ../../CORE
-       *   FWLIBPATH      = ../../Software/MiniFWLite
-	   
+	   *  COREPATH       = ../../CORE
+       *  #FWLIBPATH      = ../../Software/MiniFWLite
+
 	   c. Update CMSSW release at l.33/43 at condorExecutable.sh
       	   (check also l.16)
 
@@ -38,7 +38,8 @@ Instructions (no quotes):
       the directory on /hadoop/ where the output baby files will be
       copied to.
 	  
-	  b. If you want to load a different sample.dat file please modify l.64 and l.74.
+	  b. If you want to load a different sample.dat file please modify
+      l.64 and l.74.
 
   4.  In condorFileTemplate, change line 12 to your email address for
       notifications from the condor queue about the job ending/failing     

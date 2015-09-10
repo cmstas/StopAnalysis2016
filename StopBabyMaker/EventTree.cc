@@ -3,6 +3,8 @@
 #include "CMS3.h"
 #include "VertexSelections.h"
 #include "StopSelections.h"
+#include "MetSelections.h"
+
 using namespace tas; 
 EventTree::EventTree ()
 {
@@ -36,8 +38,26 @@ void EventTree::FillCommon (const std::string &root_file_name)
  
     pfmet = evt_pfmet();
     pfmet_phi = evt_pfmetPhi();
-     
+    calomet = evt_calomet();
+    calomet_phi = evt_calometPhi();
+
     is_data = evt_isRealData();
+
+///the recommended met filters//
+        filt_cscbeamhalo = filt_cscBeamHalo();
+        filt_eebadsc = filt_eeBadSc();
+        filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
+        filt_hbhenoise = hbheNoiseFilter();
+////////////// 
+        filt_ecallaser = filt_ecalLaser();
+        filt_ecaltp = filt_ecalTP();
+        filt_hcallaser = filt_hcalLaser();
+        filt_met = filt_metfilter();
+        filt_trkfail = filt_trackingFailure();
+        filt_trkPOG = filt_trkPOGFilters();
+        filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
+        filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
+        filt_eff = evt_filt_eff();
 
     if (!is_data)
     {
@@ -98,6 +118,8 @@ void EventTree::Reset ()
     firstVtx_posp4    = LorentzVector(0,0, 0,0);
     pfmet             = -9999.;
     pfmet_phi         = -9999.;
+    calomet           = -9999.;
+    calomet_phi       = -9999.;
     scale1fb          = -9999.;
     xsec              = -9999.;
     kfactor           = -9999.;
@@ -155,15 +177,39 @@ void EventTree::Reset ()
 
     genmet 	= -9999.;
     genmet_phi 	= -9999.;
-    PassTrackVeto = false;
-    PassTauVeto   = false;
+    PassTrackVeto    = false;
+    PassTrackVeto_v2 = false;
+    PassTrackVeto_v3 = false;
+    PassTauVeto      = false;
 
-    HLT_MET170      = -9999.;
-    HLT_ht350met120 = -9999.; 
-    HLT_SingleMu    = -9999.; 
-    HLT_SingleEl    = -9999.;
-    HLT_MET120Btag  = -9999.;      
-    HLT_MET120Mu5   = -9999.;      
+    HLT_MET170             = -9999.;
+    HLT_SingleMu           = -9999.; 
+    HLT_SingleEl           = -9999.;
+    HLT_MET120Btag         = -9999.;      
+    HLT_MET120Mu5          = -9999.;      
+    HLT_HT350MET120        = -9999.;
+    HLT_DiEl               = -9999.;
+    HLT_DiMu               = -9999.;
+    HLT_Mu8El17            = -9999.;
+    HLT_Mu8El23            = -9999.;
+    HLT_Mu17El12           = -9999.;
+    HLT_Mu23El12           = -9999.;
+    HLT_SingleEl27         = -9999.;
+    HLT_SingleEl27Tight    = -9999.;
+    HLT_SingleElTight      = -9999.;
+    HLT_SingleElHT200      = -9999.;
+    HLT_SingleMuNoEta      = -9999.;
+    HLT_SingleMuNoIso      = -9999.;
+    HLT_SingleMuNoIsoNoEta = -9999.;
+    HLT_Mu6HT200MET125     = -9999.;
+    HLT_HT350MET100	   = -9999.;
+    HLT_SingleMu17         = -9999.;
+    HLT_SingleMu20         = -9999.;
+    HLT_SingleMu24         = -9999.;
+    HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight = -9999.;
+    HLT_MET90_MHT90_IDTight                         = -9999.;
+    HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight    = -9999.; 
+
     
     EA_all_rho                  = -9999.;
     EA_allcalo_rho              = -9999.; 
@@ -176,6 +222,22 @@ void EventTree::Reset ()
     btag_sf          =  -9999;
     HLT_SingleMu_eff =  -9999;
     HLT_SingleEl_eff =  -9999;
+
+        filt_cscbeamhalo = false;
+        filt_ecallaser = false;
+        filt_ecaltp = false;
+        filt_eebadsc = false;
+        filt_goodvtx = false;
+        filt_hbhenoise = false;
+        filt_hcallaser = false;
+        filt_met = false;
+        filt_trkfail = false;
+        filt_trkPOG = false;
+        filt_trkPOG_tmc = false;
+        filt_trkPOG_tms = false;
+        filt_eff = -9999.;
+
+
 
 }
  
@@ -194,6 +256,21 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("pu_nvtxs", &pu_nvtxs);
     tree->Branch("pfmet", &pfmet);
     tree->Branch("pfmet_phi", &pfmet_phi);
+    tree->Branch("calomet", &calomet);
+    tree->Branch("calomet_phi", &calomet_phi);
+    tree->Branch("filt_cscbeamhalo", &filt_cscbeamhalo);
+    tree->Branch("filt_ecallaser", &filt_ecallaser);
+    tree->Branch("filt_ecaltp", &filt_ecaltp);
+    tree->Branch("filt_eebadsc", &filt_eebadsc);
+    tree->Branch("filt_goodvtx", &filt_goodvtx);
+    tree->Branch("filt_hbhenoise", &filt_hbhenoise);
+    tree->Branch("filt_hcallaser", &filt_hcallaser);
+    tree->Branch("filt_met", &filt_met);
+    tree->Branch("filt_trkfail", &filt_trkfail);
+    tree->Branch("filt_trkPOG", &filt_trkPOG);
+    tree->Branch("filt_trkPOG_tmc", &filt_trkPOG_tmc);
+    tree->Branch("filt_trkPOG_tms", &filt_trkPOG_tms);
+    tree->Branch("filt_eff", &filt_eff);
     tree->Branch("scale1fb", &scale1fb);
     tree->Branch("xsec", &xsec);
     tree->Branch("kfactor", &kfactor);
@@ -237,6 +314,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("genmet", &genmet);
     tree->Branch("genmet_phi", &genmet_phi);
     tree->Branch("PassTrackVeto",&PassTrackVeto);
+    tree->Branch("PassTrackVeto_v2",&PassTrackVeto_v2);
+    tree->Branch("PassTrackVeto_v3",&PassTrackVeto_v3);
     tree->Branch("PassTauVeto",&PassTauVeto);
     tree->Branch("EA_all_rho", &EA_all_rho);   
     tree->Branch("EA_allcalo_rho", &EA_allcalo_rho); 
@@ -264,9 +343,30 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_SingleEl", &HLT_SingleEl );
     tree->Branch("HLT_SingleMu", &HLT_SingleMu );
     tree->Branch("HLT_MET170", &HLT_MET170 );
-    tree->Branch("HLT_ht350met120", &HLT_ht350met120 );
     tree->Branch("HLT_MET120Btag", &HLT_MET120Btag );
     tree->Branch("HLT_MET120Mu5", &HLT_MET120Mu5 );
+    tree->Branch("HLT_HT350MET120", &HLT_HT350MET120 );
+    tree->Branch("HLT_DiEl", &HLT_DiEl );
+    tree->Branch("HLT_DiMu", &HLT_DiMu );
+    tree->Branch("HLT_Mu8El17", &HLT_Mu8El17 );
+    tree->Branch("HLT_Mu8El23", &HLT_Mu8El23 );
+    tree->Branch("HLT_Mu17El12", &HLT_Mu17El12 );
+    tree->Branch("HLT_Mu23El12", &HLT_Mu23El12 );
+    tree->Branch("HLT_SingleEl27", &HLT_SingleEl27 );
+    tree->Branch("HLT_SingleEl27Tight", &HLT_SingleEl27Tight );
+    tree->Branch("HLT_SingleElTight", &HLT_SingleElTight );
+    tree->Branch("HLT_SingleElHT200", &HLT_SingleElHT200 );
+    tree->Branch("HLT_SingleMuNoEta", &HLT_SingleMuNoEta );
+    tree->Branch("HLT_SingleMuNoIso", &HLT_SingleMuNoIso );
+    tree->Branch("HLT_SingleMuNoIsoNoEta", &HLT_SingleMuNoIsoNoEta );
+    tree->Branch("HLT_Mu6HT200MET100", &HLT_Mu6HT200MET125 );
+    tree->Branch("HLT_HT350MET100", &HLT_HT350MET100);
+    tree->Branch("HLT_SingleMu17", &HLT_SingleMu17);
+    tree->Branch("HLT_SingleMu20", &HLT_SingleMu20);
+    tree->Branch("HLT_SingleMu24", &HLT_SingleMu24);
+    tree->Branch("HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight", &HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight);
+    tree->Branch("HLT_MET90_MHT90_IDTight", &HLT_MET90_MHT90_IDTight);
+    tree->Branch("HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight", &HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight); 
     tree->Branch("pu_weight", &pu_weight); 
     tree->Branch("lep_sf", &lep_sf); 
     tree->Branch("btag_sf", &btag_sf); 

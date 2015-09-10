@@ -3,7 +3,7 @@
 echo "CONDOR FILES ASSEEEEEEEMMMMMMBBBBLLLLEEEE"
 
 START_DIR=`pwd`
-CONDOR_DIR_NAME=forCondor_stopBabyMaker
+CONDOR_DIR_NAME=forCondor_stopBabyMaker_74x
 # Check that CMSSW base is set
 if [ -z $CMSSW_BASE ]; then
     echo "CMSSW_BASE var not set, run cmsenv, exiting..."

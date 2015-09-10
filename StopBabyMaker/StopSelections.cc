@@ -50,6 +50,7 @@ bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
 }
 
 bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid){
+  if(jetIdx>=pfjets_p4().size()) return false;//safety requirement
   if(pfjets_p4().at(jetIdx).pt() < pt) return false;
   if(fabs(pfjets_p4().at(jetIdx).eta()) > eta) return false;
   if(passjid && !isLoosePFJetV2(jetIdx)) return false;
@@ -70,12 +71,66 @@ bool isVetoTrack(int ipf, LorentzVector lepp4_, int charge){
       return true;
 }
 
+bool isVetoTrack_v2(int ipf, LorentzVector lepp4_, int charge){
+      if(ROOT::Math::VectorUtil::DeltaR(pfcands_p4().at(ipf), lepp4_) < 0.4)  return false;
+      //if not electron or muon
+      if(abs(pfcands_particleId().at(ipf))!=11 && abs(pfcands_particleId().at(ipf))!=13){
+          if(pfcands_p4().at(ipf).pt() < 10.) return false;
+	  if(pfcands_p4().at(ipf).pt() > 60. ){
+	    if(TrackIso(ipf,0.3,0.1) > 6.0 ) return false;
+	  }
+	  else{
+	    if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt() > 0.1) return false;
+	  }
+          if(pfcands_charge().at(ipf) * charge > 0) return false;
+      }
+      else if(abs(pfcands_particleId().at(ipf))==11 ){
+	if(pfcands_p4().at(ipf).pt() < 5.) return false;
+	if(pfcands_p4().at(ipf).pt() > 60.0 ){
+	  if(TrackIso(ipf,0.3,0.1) > 6.0 ) return false;
+	}
+	else{
+	  if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt() > 0.1) return false;
+	}
+      }
+      else if(abs(pfcands_particleId().at(ipf))==13 ){
+	if(pfcands_p4().at(ipf).pt() < 5.) return false;
+	if(pfcands_p4().at(ipf).pt() > 30.0 ){
+	  if(TrackIso(ipf,0.3,0.1) > 6.0 ) return false;
+	}
+	else{
+	  if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt() > 0.2) return false;
+	}
+      }
+      return true;
+}
+
+bool isVetoTrack_v3(int ipf, LorentzVector lepp4_, int charge){
+      if(ROOT::Math::VectorUtil::DeltaR(pfcands_p4().at(ipf), lepp4_) < 0.4)  return false;
+      //if not electron or muon
+      if(abs(pfcands_particleId().at(ipf))!=11 && abs(pfcands_particleId().at(ipf))!=13){
+          if(pfcands_p4().at(ipf).pt() < 10.) return false;
+	  if(pfcands_p4().at(ipf).pt() > 60. ){
+	    if(TrackIso(ipf,0.3,0.1) > 6.0 ) return false;
+	  }
+	  else{
+	    if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt() > 0.1) return false;
+	  }
+          if(pfcands_charge().at(ipf) * charge > 0) return false;
+      }
+      else return false;
+      
+      return true;
+}
+
 bool isVetoTau(int ipf, LorentzVector lepp4_, int charge){
       if(taus_pf_p4().at(ipf).pt() < 20) return false;
       if(fabs(taus_pf_p4().at(ipf).eta()) > 2.4) return false;
+      if(passTauID("byMediumIsolationMVA3newDMwLT",ipf) < 1) return false;
+      if(abs(charge) >= 99 || lepp4_.E() < 0.000001) return true; //If the lepton is a dummy, bypass the Delta-R and charge cuts
       if(ROOT::Math::VectorUtil::DeltaR(taus_pf_p4().at(ipf), lepp4_) < 0.4)  return false;
       if(taus_pf_charge().at(ipf) * charge > 0) return false;
-      if(taus_pf_IDs().at(ipf).at(33) < 1) return false;
+      //if(taus_pf_IDs().at(ipf).at(33) < 1) return false;
       return true;
 }
 
