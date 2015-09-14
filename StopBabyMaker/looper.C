@@ -23,6 +23,7 @@
 #include "stop_variables/topness.cc"
 #include "stop_variables/MT2_implementations.cc"
 
+#include "PhotonSelections.h"
 #include "MuonSelections.h"//93991
 #include "IsolationTools.h"//93991
 
@@ -73,6 +74,7 @@ babyMaker::babyMaker(){
    StopEvt = EventTree();
    lep1 = LeptonTree("lep1_");
    lep2 = LeptonTree("lep2_");
+   ph = PhotonTree("ph_");
    jets = JetTree();
    Taus = TauTree();
    Tracks = IsoTracksTree();
@@ -135,6 +137,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   StopEvt.SetBranches(BabyTree);
   lep1.SetBranches(BabyTree);
   lep2.SetBranches(BabyTree);
+  ph.SetBranches(BabyTree);
   jets.SetBranches(BabyTree);
   Taus.SetBranches(BabyTree);
   Tracks.SetBranches(BabyTree);
@@ -164,6 +167,7 @@ void babyMaker::InitBabyNtuple(){
   lep1.Reset();
   lep2.Reset();
   jets.Reset();
+  ph.Reset();
   Taus.Reset();
   Tracks.Reset();
   gen_els.Reset();
@@ -398,6 +402,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       // Jet Selection
       //
+      ph.FillCommon();
 
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
       // Get the jets overlapping with the selected leptons

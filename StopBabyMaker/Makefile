@@ -21,7 +21,6 @@ NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
-#COREPATH       = ../../CORE
 COREPATH       = $(HOME)/CORE
 TOOLSPATH      = $(COREPATH)/Tools
 DORKYPATH      = $(TOOLSPATH)/dorky
@@ -34,13 +33,13 @@ CXXFLAGS       += -I$(DORKYPATH)
 CORELIB        = $(COREPATH)/CMS3_CORE.so
 STOPVARLIB     = stop_variables/StopVariables.so
 
-runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o LinkDef_out.so
-	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) LinkDef_out.so -Wl,-rpath,./
+runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o PhotonTree.o StopSelections.o LinkDef_out.so
+	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o PhotonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) LinkDef_out.so -Wl,-rpath,./
 
 runBabyMaker.o: runBabyMaker.C looper.h 
 	$(CXX) $(CXXFLAGS) -c runBabyMaker.C 
 
-looper.o: looper.C looper.h EventTree.h TauTree.h IsoTracksTree.h GenParticleTree.h LeptonTree.h StopSelections.h
+looper.o: looper.C looper.h EventTree.h TauTree.h IsoTracksTree.h GenParticleTree.h LeptonTree.h PhotonTree.h StopSelections.h
 	$(CXX) $(CXXFLAGS) -c looper.C
 
 EventTree.o: EventTree.cc EventTree.h StopSelections.h 
@@ -48,6 +47,9 @@ EventTree.o: EventTree.cc EventTree.h StopSelections.h
 
 LeptonTree.o: LeptonTree.cc LeptonTree.h StopSelections.h
 	$(CXX) $(CXXFLAGS) -c LeptonTree.cc 
+
+PhotonTree.o: PhotonTree.cc PhotonTree.h StopSelections.h
+	$(CXX) $(CXXFLAGS) -c PhotonTree.cc 
 
 JetTree.o: JetTree.cc JetTree.h StopSelections.h
 	$(CXX) $(CXXFLAGS) -c JetTree.cc

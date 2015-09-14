@@ -1,6 +1,7 @@
 #include "EventTree.h"
 #include "GenParticleTree.h"
 #include "LeptonTree.h"
+#include "PhotonTree.h"
 #include "JetTree.h"
 #include "TauTree.h"
 #include "IsoTracksTree.h"
@@ -75,6 +76,7 @@ class babyMaker {
     EventTree StopEvt;
     LeptonTree lep1;
     LeptonTree lep2;
+    PhotonTree ph;
     JetTree jets;
     TauTree Taus;
     IsoTracksTree Tracks;  
