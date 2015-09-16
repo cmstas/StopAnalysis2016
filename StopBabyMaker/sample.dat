@@ -1,3 +1,38 @@
+#####################################
+## Collection of 25ns Data samples ##
+#####################################
+##
+## Double EG ##
+SAMPLE
+Name data_double_eg_2015C_25ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015C_DoubleEG_MINIAOD_PromptReco-v1/merged/V07-04-08/
+
+## Double Mu ##
+SAMPLE
+Name data_double_mu_2015C_25ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015C_DoubleMuon_MINIAOD_PromptReco-v1/merged/V07-04-08/
+
+## Muon EG ##
+SAMPLE
+Name data_muon_eg_2015C_25ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015C_MuonEG_MINIAOD_PromptReco-v1/merged/V07-04-08/
+
+## Single Electron ##
+SAMPLE
+Name data_single_electron_2015C_25ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015C_SingleElectron_MINIAOD_PromptReco-v1/merged/V07-04-08/
+
+## Single Muon ##
+SAMPLE
+Name data_single_muon_2015C_25ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015C_SingleMuon_MINIAOD_PromptReco-v1/merged/V07-04-08/
+
+## MET ##
+SAMPLE
+Name data_met_2015C_25ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015C_MET_MINIAOD_PromptReco-v1/merged/V07-04-08/
+
+
 ##############################
 # Collection of 25ns samples #
 ##############################
