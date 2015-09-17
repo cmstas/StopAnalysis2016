@@ -7,6 +7,7 @@ NUMBER=$3
 
 #This stuff to get output back
 export COPYDIR=$4
+export CONDOR_DIR_NAME=$5
 
 #Show where you are
 hostname
@@ -43,7 +44,7 @@ THISDIR=`pwd`
 echo $THISDIR
 echo "LS to check that all files were transferred: "
 ls
-tar xzfv "$CONDOR_DIR_NAME.tar.gz"
+tar xzfv $CONDOR_DIR_NAME.tar.gz
 echo "LS to check that tarball was unpacked: "
 ls
 cd $CONDOR_DIR_NAME

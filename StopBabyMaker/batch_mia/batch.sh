@@ -26,7 +26,7 @@ if [ ! -e $HOME/ ]; then echo "Run . copy.sh first and check your condor submiss
 
 
 #Set directory with the location of the tarball with code
-tar_file=$HOME/"$CONDOR_DIR_NAME.tar.gz"
+tar_file=$HOME/$CONDOR_DIR_NAME.tar.gz
 
 #------HERE THERE BE DRAGONS---------
 
@@ -147,6 +147,7 @@ do
     sed -i "s,ARG2,$nEvents,g" condorFile
     sed -i "s,ARG3,$number,g" condorFile
     sed -i "s,ARG4,$copy_dir,g" condorFile
+    sed -i "s,ARG5,$CONDOR_DIR_NAME,g" condorFile
     sed -i "s,USER_PROXY,$pathToProxy,g" condorFile
     sed -i "s,TARFILE,$tar_file,g" condorFile
     condor_submit condorFile
