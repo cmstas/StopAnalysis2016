@@ -26,8 +26,8 @@ void PhotonTree::FillCommon ()
 {
    for(unsigned int idx = 0; idx < cms3.photons_p4().size(); idx++) {
     if (idx < 0) return;
-    if(cms3.photons_p4().at(idx).pt() < 20.0) continue;
-    if(fabs(cms3.photons_p4().at(idx).eta()) > 2.5) continue;
+    if(cms3.photons_p4().at(idx).pt() < m_ph_pt_cut) continue;
+    if(fabs(cms3.photons_p4().at(idx).eta()) > m_ph_eta_cut) continue;
     if ( !isLoosePhoton(idx,analysis_t::HAD,2) ) continue;
     //general stuff
     p4.push_back(cms3.photons_p4().at(idx));
@@ -44,6 +44,9 @@ void PhotonTree::FillCommon ()
     chiso.push_back(photons_recoChargedHadronIso().at(idx));
     nhiso.push_back(photons_recoNeutralHadronIso().at(idx));
     phiso.push_back(photons_recoPhotonIso().at(idx));
+    overlapJetId.push_back(-1.);//this is a dummy and gets filled in looper.C
+
+
     //mc stuff
     //Some work for truth-matching (should be integrated in CMS3 as for the leptons
     int bestMatch = -1;
@@ -101,6 +104,13 @@ int  PhotonTree::genbestMatch(int idx)
    return bestMatch;
 }
 
+void PhotonTree::SetPhotonSelection (float pt_cut,float eta)
+{
+  m_ph_pt_cut = pt_cut; m_ph_eta_cut = eta;
+   
+  return;
+}
+
 void PhotonTree::Reset()
 {
     sigmaIEtaEta_fill5x5.clear(); 
@@ -117,6 +127,8 @@ void PhotonTree::Reset()
     chiso.clear();     	   
     nhiso.clear();
     phiso.clear();
+
+    overlapJetId.clear();
 
     mcp4.clear();
     mcMatchId.clear();
@@ -135,6 +147,8 @@ void PhotonTree::SetBranches(TTree* tree)
     tree->Branch(Form("%sphiso"       , prefix_.c_str()) , &phiso);
     tree->Branch(Form("%sidCutBased"       , prefix_.c_str()) , &idCutBased);
 
+    tree->Branch(Form("%soverlapJetId"       , prefix_.c_str()) , &overlapJetId);
+    
     tree->Branch(Form("%sp4"      , prefix_.c_str()) , &p4      );
     tree->Branch(Form("%smcp4"    , prefix_.c_str()) , &mcp4    );
 

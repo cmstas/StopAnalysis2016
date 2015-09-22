@@ -104,6 +104,7 @@ void EventTree::Reset ()
     evt = 0;
 
     ngoodleps      =  -9999;
+    nlooseleps     =  -9999;
     nvetoleps      =  -9999;
     genlepsfromtop = -9999;
      
@@ -209,7 +210,10 @@ void EventTree::Reset ()
     HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight = -9999.;
     HLT_MET90_MHT90_IDTight                         = -9999.;
     HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight    = -9999.; 
-
+    HLT_Photon90_CaloIdL_PFHT500 = -9999.;
+    HLT_Photon165_R9Id90_HE10_IsoM = -9999.;
+    HLT_Photon175 = -9999.;
+    HLT_Photon165_HE10 = -9999.;
     
     EA_all_rho                  = -9999.;
     EA_allcalo_rho              = -9999.; 
@@ -223,19 +227,68 @@ void EventTree::Reset ()
     HLT_SingleMu_eff =  -9999;
     HLT_SingleEl_eff =  -9999;
 
-        filt_cscbeamhalo = false;
-        filt_ecallaser = false;
-        filt_ecaltp = false;
-        filt_eebadsc = false;
-        filt_goodvtx = false;
-        filt_hbhenoise = false;
-        filt_hcallaser = false;
-        filt_met = false;
-        filt_trkfail = false;
-        filt_trkPOG = false;
-        filt_trkPOG_tmc = false;
-        filt_trkPOG_tms = false;
-        filt_eff = -9999.;
+    filt_cscbeamhalo = false;
+    filt_ecallaser = false;
+    filt_ecaltp = false;
+    filt_eebadsc = false;
+    filt_goodvtx = false;
+    filt_hbhenoise = false;
+    filt_hcallaser = false;
+    filt_met = false;
+    filt_trkfail = false;
+    filt_trkPOG = false;
+    filt_trkPOG_tmc = false;
+    filt_trkPOG_tms = false;
+    filt_eff = -9999.;
+
+    nPhotons             = -9999;
+    ph_selectedidx       = -9999;
+    ph_ngoodjets         = -9999;
+    ph_ngoodbtags        = -9999;
+    ph_met               = -9999.;
+    ph_met_phi           = -9999.;
+    ph_HT                = -9999.;
+    ph_htssm             = -9999.;
+    ph_htosm             = -9999.;
+    ph_htratiom          = -9999.;
+    ph_mt_met_lep        = -9999.;
+    ph_dphi_Wlep         = -9999.;
+    ph_MT2W              = -9999.;
+    ph_topness           = -9999.;
+    ph_topnessMod        = -9999.;
+    ph_MT2_lb_b_mass     = -9999.;
+    ph_MT2_lb_b          = -9999.;
+    ph_MT2_lb_bqq_mass   = -9999.;
+    ph_MT2_lb_bqq        = -9999.;
+    ph_hadronic_top_chi2 = -9999.;
+    ph_mindphi_met_j1_j2 = -9999.;
+    ph_Mlb_lead_bdiscr   = -9999.;
+    ph_dR_lep_leadb      = -9999.;
+    ph_Mlb_closestb      = -9999.;
+    ph_Mjjj              = -9999.;
+
+    Zll_idl1              = -9999;
+    Zll_idl2              = -9999;
+    Zll_p4l1              = LorentzVector(0,0, 0,0);
+    Zll_p4l2              = LorentzVector(0,0, 0,0);
+    Zll_OS                = false;
+    Zll_SF                = false;
+    Zll_isZmass           = false;
+    Zll_M                 = -9999.;
+    Zll_p4                = LorentzVector(0,0, 0,0);
+    Zll_selLep            = -9999;
+    Zll_met               = -9999.;
+    Zll_met_phi           = -9999.;
+    Zll_mindphi_met_j1_j2 = -9999.;
+    Zll_mt_met_lep        = -9999.;
+    Zll_dphi_Wlep         = -9999.;
+    Zll_MT2W              = -9999.;
+    Zll_topness           = -9999.;
+    Zll_topnessMod        = -9999.;
+    Zll_MT2_lb_b_mass     = -9999.;
+    Zll_MT2_lb_b          = -9999.;
+    Zll_MT2_lb_bqq_mass   = -9999.;
+    Zll_MT2_lb_bqq        = -9999.;
 
 
 
@@ -276,6 +329,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("kfactor", &kfactor);
     tree->Branch("pu_ntrue", &pu_ntrue);    
     tree->Branch("ngoodleps",&ngoodleps);
+    tree->Branch("nlooseleps",&nlooseleps);
     tree->Branch("nvetoleps",&nvetoleps);
     tree->Branch("is_data", &is_data);
     tree->Branch("dataset", &dataset);
@@ -366,11 +420,64 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_SingleMu24", &HLT_SingleMu24);
     tree->Branch("HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight", &HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight);
     tree->Branch("HLT_MET90_MHT90_IDTight", &HLT_MET90_MHT90_IDTight);
-    tree->Branch("HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight", &HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight); 
+    tree->Branch("HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight", &HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight);
+    tree->Branch("HLT_Photon90_CaloIdL_PFHT500", &HLT_Photon90_CaloIdL_PFHT500);
+    tree->Branch("HLT_Photon165_R9Id90_HE10_IsoM", &HLT_Photon165_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon175", &HLT_Photon175);
+    tree->Branch("HLT_Photon165_HE10", &HLT_Photon165_HE10);
     tree->Branch("pu_weight", &pu_weight); 
     tree->Branch("lep_sf", &lep_sf); 
     tree->Branch("btag_sf", &btag_sf); 
     tree->Branch("HLT_SingleEl_eff", &HLT_SingleEl_eff); 
-    tree->Branch("HLT_SingleMu_eff", &HLT_SingleMu_eff); 
+    tree->Branch("HLT_SingleMu_eff", &HLT_SingleMu_eff);
 
+    tree->Branch("nPhotons",             &nPhotons);
+    tree->Branch("ph_selectedidx",       &ph_selectedidx);
+    tree->Branch("ph_ngoodjets",         &ph_ngoodjets);
+    tree->Branch("ph_ngoodbtags",        &ph_ngoodbtags);
+    tree->Branch("ph_met",               &ph_met);
+    tree->Branch("ph_met_phi",           &ph_met_phi);
+    tree->Branch("ph_HT",                &ph_HT);
+    tree->Branch("ph_htssm",             &ph_htssm);
+    tree->Branch("ph_htosm",             &ph_htosm);
+    tree->Branch("ph_htratiom",          &ph_htratiom);
+    tree->Branch("ph_mt_met_lep",        &ph_mt_met_lep);
+    tree->Branch("ph_dphi_Wlep",         &ph_dphi_Wlep);
+    tree->Branch("ph_MT2W",              &ph_MT2W);
+    tree->Branch("ph_topness",           &ph_topness);
+    tree->Branch("ph_topnessMod",        &ph_topnessMod);
+    tree->Branch("ph_MT2_lb_b_mass",     &ph_MT2_lb_b_mass);
+    tree->Branch("ph_MT2_lb_b",          &ph_MT2_lb_b);
+    tree->Branch("ph_MT2_lb_bqq_mass",   &ph_MT2_lb_bqq_mass);
+    tree->Branch("ph_MT2_lb_bqq",        &ph_MT2_lb_bqq);
+    tree->Branch("ph_hadronic_top_chi2", &ph_hadronic_top_chi2);
+    tree->Branch("ph_mindphi_met_j1_j2", &ph_mindphi_met_j1_j2);
+    tree->Branch("ph_Mlb_lead_bdiscr",   &ph_Mlb_lead_bdiscr);
+    tree->Branch("ph_dR_lep_leadb",      &ph_dR_lep_leadb);
+    tree->Branch("ph_Mlb_closestb",      &ph_Mlb_closestb);
+    tree->Branch("ph_Mjjj",              &ph_Mjjj);
+
+    tree->Branch("Zll_idl1", &Zll_idl1);
+    tree->Branch("Zll_idl2", &Zll_idl2);
+    tree->Branch("Zll_p4l1", &Zll_p4l1);
+    tree->Branch("Zll_p4l2", &Zll_p4l2);
+    tree->Branch("Zll_OS", &Zll_OS);
+    tree->Branch("Zll_SF", &Zll_SF);
+    tree->Branch("Zll_isZmass", &Zll_isZmass);
+    tree->Branch("Zll_M", &Zll_M);
+    tree->Branch("Zll_p4", &Zll_p4);
+    tree->Branch("Zll_selLep", &Zll_selLep);
+    tree->Branch("Zll_met", &Zll_met);
+    tree->Branch("Zll_met_phi", &Zll_met_phi);
+    tree->Branch("Zll_mindphi_met_j1_j2", &Zll_mindphi_met_j1_j2);
+    tree->Branch("Zll_mt_met_lep", &Zll_mt_met_lep);
+    tree->Branch("Zll_dphi_Wlep", &Zll_dphi_Wlep);
+    tree->Branch("Zll_MT2W", &Zll_MT2W);
+    tree->Branch("Zll_topness", &Zll_topness);
+    tree->Branch("Zll_topnessMod", &Zll_topnessMod);
+    tree->Branch("Zll_MT2_lb_b_mass", &Zll_MT2_lb_b_mass);
+    tree->Branch("Zll_MT2_lb_b", &Zll_MT2_lb_b);
+    tree->Branch("Zll_MT2_lb_bqq_mass", &Zll_MT2_lb_bqq_mass);
+    tree->Branch("Zll_MT2_lb_bqq", &Zll_MT2_lb_bqq);
+		 
 }

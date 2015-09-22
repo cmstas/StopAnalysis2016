@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <typeinfo>
+#include <cmath>
+#include <utility>
 
 #include "looper.h"
 
@@ -62,6 +64,13 @@ struct sortLepbypt{
   }
 };
 
+bool CompareIndexValueGreatest(const std::pair<double, int>& firstElem, const std::pair<double, int>& secondElem) {
+  return firstElem.first > secondElem.first;
+}
+bool CompareIndexValueSmallest(const std::pair<double, int>& firstElem, const std::pair<double, int>& secondElem) {
+  return firstElem.first < secondElem.first;
+}
+
 
 //===========//
 //           //
@@ -98,7 +107,7 @@ babyMaker::babyMaker(){
    
 }
 
-void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta){
+void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nphs, float phs_pt, float phs_eta){
 
   skim_nvtx            = nvtx;
   skim_met             = met;
@@ -125,6 +134,10 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
 
   skim_jet_ak8_pt      = jet_ak8_pt;
   skim_jet_ak8_eta     = jet_ak8_eta;
+
+  skim_nPhotons        = nphs;
+  skim_ph_pt           = phs_pt;
+  skim_ph_eta          = phs_eta;
 
 }
 
@@ -377,14 +390,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       sort(VetoLeps.begin(),VetoLeps.end(),sortLepbypt());       
       
       nGoodLeptons = GoodLeps.size();
-
+      int nLooseLeptons = GoodLeps.size() + LooseLeps.size();//use for Zll
+      nVetoLeptons = GoodLeps.size() + LooseLeps.size() + VetoLeps.size();
+      
       if(nGoodLeptons < skim_nGoodLep) continue;
       nEvents_pass_skim_nGoodLep++;
-      
-      nVetoLeptons = GoodLeps.size() + LooseLeps.size() + VetoLeps.size();
 
-      StopEvt.ngoodleps = nGoodLeptons; 
-      StopEvt.nvetoleps = nVetoLeptons; 
+
+
+      StopEvt.ngoodleps  = nGoodLeptons; 
+      StopEvt.nlooseleps = nLooseLeptons; 
+      StopEvt.nvetoleps  = nVetoLeptons; 
       
       //std::cout << "[babymaker::looper]: filling lepton variables" << std::endl;
       AllLeps.clear();
@@ -394,16 +410,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if( nVetoLeptons > 0 ) lep1.FillCommon( AllLeps.at(0).id, AllLeps.at(0).idx );
       if( nVetoLeptons > 1 ) lep2.FillCommon( AllLeps.at(1).id, AllLeps.at(1).idx );
 
-      //lep1.FillCommon(GoodLeps.at(0).id, GoodLeps.at(0).idx);      
-      //if( nGoodLeptons        >1) lep2.FillCommon(GoodLeps.at(1).id,  GoodLeps.at(1).idx);
-      //else if(LooseLeps.size()>0) lep2.FillCommon(LooseLeps.at(0).id, LooseLeps.at(0).idx);
-      //else if(VetoLeps.size() >0) lep2.FillCommon(VetoLeps.at(0).id,  VetoLeps.at(0).idx);
-    
-
       //
       // Jet Selection
       //
-      ph.FillCommon();
 
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
       // Get the jets overlapping with the selected leptons
@@ -422,22 +431,31 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(jets.ngoodjets < skim_nJets) continue;
       nEvents_pass_skim_nJets++;
 
+      //
+      // Photon Selection
+      //
+      ph.SetPhotonSelection(skim_ph_pt, skim_ph_eta);
+      ph.FillCommon();
+      StopEvt.nPhotons = ph.p4.size();
+      if(StopEvt.nPhotons < skim_nPhotons) continue;
+      int leadph = -1;//use this in case we have a wide photon selection (like loose id), but want to use specific photon
+      for(unsigned int i = 0; i<ph.p4.size(); ++i){
+	int overlapping_jet = getOverlappingJetIndex(ph.p4.at(i), jets.ak4pfjets_p4, 0.4, skim_jet_pt, skim_jet_eta,false);
+	ph.overlapJetId.at(i) = overlapping_jet;
+	if(leadph!=-1 && ph.p4.at(i).Pt()<ph.p4.at(leadph).Pt()) continue;
+	if(StopEvt.ngoodleps>0 && ROOT::Math::VectorUtil::DeltaR(ph.p4.at(i), lep1.p4)<0.2) continue;
+	if(StopEvt.ngoodleps>1 && ROOT::Math::VectorUtil::DeltaR(ph.p4.at(i), lep2.p4)<0.2) continue;
+	leadph = i;
+      }
+      StopEvt.ph_selectedidx = leadph;
 
       //
       // Event Variables
       //
-
-      //std::cout << "[babymaker::looper]: Calculating Event Variables" << std::endl;
-      // MT2W
-      //if(nVetoLeptons>0) StopEvt.MT2W = calculateMT2w(jets.ak4pfjets_p4, jets.ak4pfjets_passMEDbtag, lep1.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
-      //if(nVetoLeptons>1) StopEvt.MT2W_lep2 = calculateMT2w(jets.ak4pfjets_p4, jets.ak4pfjets_passMEDbtag, lep2.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
-
       // MET & Leptons
       if(nVetoLeptons>0) StopEvt.mt_met_lep = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>1) StopEvt.mt_met_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
-      
       if(nVetoLeptons>0) StopEvt.dphi_Wlep = DPhi_W_lep(StopEvt.pfmet, StopEvt.pfmet_phi, lep1.p4);
-
       if(pfjets_p4().size() > 0) StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
 
       StopEvt.ak4pfjets_rho = evt_fixgridfastjet_all_rho();
@@ -451,127 +469,252 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       }
 
       //looks like all the following variables need jets to be calculated. add protection for skim settings of njets<2
+      vector<float> dummy_sigma; dummy_sigma.clear();//move outside of if-clause to be able to copy for photon selection
+      for (size_t idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
+	dummy_sigma.push_back(0.1);
+      } 
       if(jets.ak4pfjets_p4.size()>1){
 
 	// DR(lep, leadB) with medium discriminator
 	if(nVetoLeptons>0) StopEvt.dR_lep_leadb = dRbetweenVectors(jets.ak4pfjets_leadMEDbjet_p4, lep1.p4);
 	if(nVetoLeptons>1) StopEvt.dR_lep2_leadb = dRbetweenVectors(jets.ak4pfjets_leadMEDbjet_p4, lep2.p4);
-	vector<float> dummy_sigma;
-	for (size_t idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
-	  dummy_sigma.push_back(0.1);
-	} 
-
 	// Hadronic Chi2
 	StopEvt.hadronic_top_chi2 = calculateChi2(jets.ak4pfjets_p4, dummy_sigma, jets.ak4pfjets_passMEDbtag);
-
 	// Jets & MET
 	StopEvt.mindphi_met_j1_j2 =  getMinDphi(StopEvt.pfmet_phi,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
-
 	// MT2W
 	if(nVetoLeptons>0) StopEvt.MT2W = CalcMT2W_(mybjets,myaddjets,lep1.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
 	if(nVetoLeptons>1) StopEvt.MT2W_lep2 = CalcMT2W_(mybjets,myaddjets,lep2.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
-
 	// Topness
 	if(nVetoLeptons>0) StopEvt.topness = CalcTopness_(0,StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,myaddjets);
 	if(nVetoLeptons>1) StopEvt.topness_lep2 = CalcTopness_(0,StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets);
 	
 	if(nVetoLeptons>0) StopEvt.topnessMod = CalcTopness_(1,StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,myaddjets);
 	if(nVetoLeptons>1) StopEvt.topnessMod_lep2 = CalcTopness_(1,StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets);
-
 	// MT2(lb,b)
 	if(nVetoLeptons>0) StopEvt.MT2_lb_b_mass = CalcMT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,myaddjets,0,true);
 	if(nVetoLeptons>0) StopEvt.MT2_lb_b = CalcMT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,myaddjets,0,false);
 	if(nVetoLeptons>1) StopEvt.MT2_lb_b_mass_lep2 = CalcMT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets,0,true);
 	if(nVetoLeptons>1) StopEvt.MT2_lb_b_lep2 = CalcMT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets,0,false);
-
 	// MT2(lb,bqq)
 	if(nVetoLeptons>0) StopEvt.MT2_lb_bqq_mass = CalcMT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,true);
 	if(nVetoLeptons>0) StopEvt.MT2_lb_bqq = CalcMT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,false);
 	if(nVetoLeptons>1) StopEvt.MT2_lb_bqq_mass_lep2 = CalcMT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,true);
 	if(nVetoLeptons>1) StopEvt.MT2_lb_bqq_lep2 = CalcMT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,false);
       
-	// Topness
-	//vector<LorentzVector > mybjets = JetUtil::BJetSelector(jets.ak4pfjets_p4,jets.ak4pfjets_CSV,MYBTAG,2,3,2);
-	//if(nVetoLeptons>0) StopEvt.topness=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,0);
-	//if(nVetoLeptons>1) StopEvt.Topness_lep2=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,0);
-	//if(nVetoLeptons>0) StopEvt.TopnessMod_lep1=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,1);
-	//if(nVetoLeptons>1) StopEvt.TopnessMod_lep2=Gettopness_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,1);
-	// MT2(lb,b)
-	//if(nVetoLeptons>0) StopEvt.MT2_lb_b_mass_lep1 = MT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,true ,0);
-	//if(nVetoLeptons>0) StopEvt.MT2_lb_b_lep1 = MT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,false ,0);
-	//if(nVetoLeptons>1) StopEvt.MT2_lb_b_mass_lep2 = MT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,true ,0);
-	//if(nVetoLeptons>1) StopEvt.MT2_lb_b_lep2 = MT2_lb_b_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,false ,0);
-	// MT2(lb,bqq)
-	//if(nVetoLeptons>0) StopEvt.MT2_lb_bqq_mass_lep1 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,jets.ak4pfjets_p4,true ,0);
-	//if(nVetoLeptons>0) StopEvt.MT2_lb_bqq_lep1 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,jets.ak4pfjets_p4,false ,0);
-	//if(nVetoLeptons>1) StopEvt.MT2_lb_bqq_mass_lep2 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,jets.ak4pfjets_p4,true ,0);
-	//if(nVetoLeptons>1) StopEvt.MT2_lb_bqq_lep2 = MT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,jets.ak4pfjets_p4,false ,0);
       }
 
+      vector<pair<float, int> > rankminDR; 
+      vector<pair<float, int> > rankmaxDPhi;
+      vector<pair<float, int> > rankminDR_lep2;
+      vector<pair<float, int> > rankmaxDPhi_lep2;
+      for (unsigned int idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
+	if(nVetoLeptons==0) continue;
+	pair<float, int> mypair;
+	mypair.second = idx;
+	mypair.first = getdphi(jets.ak4pfjets_p4.at(idx).Phi(),lep1.p4.Phi());
+	rankmaxDPhi.push_back(mypair);
+	mypair.first = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep1.p4);
+	rankminDR.push_back(mypair);
+	if(nVetoLeptons<=1) continue;
+	mypair.first = getdphi(jets.ak4pfjets_p4.at(idx).Phi(),lep2.p4.Phi());
+	rankmaxDPhi_lep2.push_back(mypair);
+	mypair.first = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep2.p4);
+	rankminDR_lep2.push_back(mypair);
+      }
+      sort(rankminDR.begin(),        rankminDR.end(),        CompareIndexValueSmallest);
+      sort(rankminDR_lep2.begin(),   rankminDR_lep2.end(),   CompareIndexValueSmallest);
+      sort(rankmaxDPhi.begin(),      rankmaxDPhi.end(),      CompareIndexValueGreatest);
+      sort(rankmaxDPhi_lep2.begin(), rankmaxDPhi_lep2.end(), CompareIndexValueGreatest);
+
       if(jets.ak4pfjets_p4.size()>0){
-
-	// Mlb + Mjjj
-	float minDR1 = 99.; float minDR2 = 99.; //minDR for closest b in Mlb
-	int jb1 = -1; int jb2 = -1; int jb3 = -1;//jet indices for Mjjj(lep1)
-	int jb21 = -1; int jb22 = -1; int jb23 = -1;//jet indices for Mjjj(lep2)
-	for (unsigned int idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
-	  float myDR = getdphi(jets.ak4pfjets_p4.at(idx).Phi(),lep1.p4.Phi());
-	  float myDR1 = -1; float myDR2 = -2; float myDR3 = -3;//is actually DPhi now
-	  if(nVetoLeptons>0){
-	    if(jb1>=0) myDR1 = getdphi(jets.ak4pfjets_p4.at(jb1).Phi(),lep1.p4.Phi());
-	    if(jb2>=0) myDR2 = getdphi(jets.ak4pfjets_p4.at(jb2).Phi(),lep1.p4.Phi());
-	    if(jb3>=0) myDR3 = getdphi(jets.ak4pfjets_p4.at(jb3).Phi(),lep1.p4.Phi());
-
-	    if(myDR>myDR1){ jb3 =jb2; jb2 = jb1; jb1 = idx; }
-	    else if(myDR>myDR2){ jb3 = jb2; jb2 = idx; }
-	    else if(myDR>myDR3){ jb3 = idx; }
-	  }
-	  if(nVetoLeptons>1){
-	    myDR = getdphi(jets.ak4pfjets_p4.at(idx).Phi(),lep2.p4.Phi());
-	    float myDR1 = -1; float myDR2 = -2; float myDR3 = -3;
-	    if(jb21>=0) myDR1 = getdphi(jets.ak4pfjets_p4.at(jb21).Phi(),lep2.p4.Phi());
-	    else if(jb22>=0) myDR2 = getdphi(jets.ak4pfjets_p4.at(jb22).Phi(),lep2.p4.Phi());
-	    else if(jb23>=0) myDR3 = getdphi(jets.ak4pfjets_p4.at(jb23).Phi(),lep2.p4.Phi());
-	    if(myDR>myDR1){ jb23 =jb22; jb22 = jb22; jb21 = idx; }
-	    else if(myDR>myDR2){ jb23 = jb22; jb22 = idx; }
-	    else if(myDR>myDR3){ jb23 = idx; }
-	  }
-
-	  //if(jets.ak4pfjets_CSV.at(idx)>maxCSV){
-          //maxCSV = jets.ak4pfjets_CSV.at(idx);
-          //if(nVetoLeptons>0) StopEvt.Mlb_lead_bdiscr = (jets.ak4pfjets_p4.at(idx)+lep1.p4).M();
-          //if(nVetoLeptons>1) StopEvt.Mlb_lead_bdiscr_lep2 = (jets.ak4pfjets_p4.at(idx)+lep2.p4).M();
-	  //}
-
-	  if(!(jets.ak4pfjets_passMEDbtag.at(idx)) ) continue;
-	  if(nVetoLeptons>0){
-	    myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep1.p4);
-	    if(myDR<minDR1) {
-	      StopEvt.Mlb_closestb = (jets.ak4pfjets_p4.at(idx)+lep1.p4).M();
-	      minDR1 =myDR;
-	    }
-	  }
-	  if(nVetoLeptons>1){
-	    myDR = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep2.p4);
-	    if(myDR<minDR2) {
-	      StopEvt.Mlb_closestb_lep2 = (jets.ak4pfjets_p4.at(idx)+lep2.p4).M();
-	      minDR2 = myDR;
-	    }
-	  }
+	for (unsigned int idx = 0; idx < rankminDR.size(); ++idx){
+	  if(nVetoLeptons==0) continue;
+	  if(!(jets.ak4pfjets_passMEDbtag.at(rankminDR[idx].second)) ) continue;
+	  StopEvt.Mlb_closestb = (jets.ak4pfjets_p4.at(rankminDR[idx].second)+lep1.p4).M();
+	  break;
 	}
+	for (unsigned int idx = 0; idx < rankminDR_lep2.size(); ++idx){
+	  if(nVetoLeptons<=1) continue;
+	  if(!(jets.ak4pfjets_passMEDbtag.at(rankminDR_lep2[idx].second)) ) continue;
+	  StopEvt.Mlb_closestb_lep2 = (jets.ak4pfjets_p4.at(rankminDR_lep2[idx].second)+lep2.p4).M();
+	  break;
+	}
+	
 	if(nVetoLeptons>0) StopEvt.Mlb_lead_bdiscr = (jets.ak4pfjets_p4.at(jetIndexSortedCSV[0])+lep1.p4).M();
 	if(nVetoLeptons>1) StopEvt.Mlb_lead_bdiscr_lep2 = (jets.ak4pfjets_p4.at(jetIndexSortedCSV[0])+lep2.p4).M();
-	if(jb3>=0) {//as sorted, jb1 and jb2 also >=0
-	  StopEvt.Mjjj = (jets.ak4pfjets_p4.at(jb1)+jets.ak4pfjets_p4.at(jb2)+jets.ak4pfjets_p4.at(jb3)).M();
+	if(rankmaxDPhi.size()>=3) {
+	  StopEvt.Mjjj = (jets.ak4pfjets_p4.at(rankmaxDPhi[0].second)+jets.ak4pfjets_p4.at(rankmaxDPhi[1].second)+jets.ak4pfjets_p4.at(rankmaxDPhi[2].second)).M();
 	}
-	if(jb23>=0) {//as sorted, jb21 and jb22 also >=0
-	  StopEvt.Mjjj_lep2 = (jets.ak4pfjets_p4.at(jb21)+jets.ak4pfjets_p4.at(jb22)+jets.ak4pfjets_p4.at(jb23)).M();
+	if(rankmaxDPhi_lep2.size()>=3) {
+	  StopEvt.Mjjj_lep2 = (jets.ak4pfjets_p4.at(rankmaxDPhi_lep2[0].second)+jets.ak4pfjets_p4.at(rankmaxDPhi_lep2[1].second)+jets.ak4pfjets_p4.at(rankmaxDPhi_lep2[2].second)).M();
+	  //StopEvt.Mjjj_lep2 = (jets.ak4pfjets_p4.at(jb21)+jets.ak4pfjets_p4.at(jb22)+jets.ak4pfjets_p4.at(jb23)).M();
 	}
-    
+	
       } // end if >0 jets      
 
-
-
+      //
+      // Zll Event Variables
+      //
+      //first find a Zll
+      //fill only for 2 or three lepton events//Zl2 will have always idx 1(2) for 2l(3l) events
+      //if four lepton events test only leading three leptons
+      //Zll must be always OS, then prefer OF, then prefer Zmass
+      //Zll needs to go before ph, as we recalculate myaddjets, mybjets
+      if(nLooseLeptons>=2){
+	int Zl1 = -1;
+	if(nLooseLeptons==2 && AllLeps[0].id*AllLeps[1].id<0) Zl1 = 0;
+	else if(nLooseLeptons>=3){
+	  if(     nGoodLeptons==1 && AllLeps[1].id*AllLeps[2].id<0) Zl1 = 1;//0 is taken by selection lepton
+	  else if(nGoodLeptons>=2){//selection lepton can be either 0(lep1) or 1(lep2)
+	    if(     (AllLeps[0].id*AllLeps[2].id)<0 && (AllLeps[1].id*AllLeps[2].id)>0) Zl1 = 0;
+	    else if((AllLeps[0].id*AllLeps[2].id)>0 && (AllLeps[1].id*AllLeps[2].id)<0) Zl1 = 1;
+	    else if((AllLeps[0].id*AllLeps[2].id)<0 && (AllLeps[1].id*AllLeps[2].id)<0){
+	      if(      (abs(AllLeps[0].id)==abs(AllLeps[2].id)) && !(abs(AllLeps[1].id)==abs(AllLeps[2].id))) Zl1 = 0;
+	      else if(!(abs(AllLeps[0].id)==abs(AllLeps[2].id)) &&  (abs(AllLeps[1].id)==abs(AllLeps[2].id))) Zl1 = 1;
+	      else {//Z will be SF/OF for either combination, decide on Zmass
+		if(fabs((AllLeps[0].p4+AllLeps[2].p4).M()-91.)>fabs((AllLeps[1].p4+AllLeps[2].p4).M()-91.)) Zl1 = 1; 
+		else Zl1 = 0; 
+	      }
+	    }
+	  }
+	}//end of Zl1 selection
+	if(Zl1>=0){//found a Zll candidate
+	  int Zl2 = -1; 
+	  if(nLooseLeptons==2) Zl2 = 1; 
+	  else Zl2 = 2;
+	  StopEvt.Zll_idl1 = AllLeps[Zl1].id;
+	  StopEvt.Zll_idl2 = AllLeps[Zl2].id;
+	  StopEvt.Zll_p4l1 = AllLeps[Zl1].p4;
+	  StopEvt.Zll_p4l2 = AllLeps[Zl2].p4;
+	  StopEvt.Zll_OS = (AllLeps[Zl1].id*AllLeps[Zl2].id<0);
+	  StopEvt.Zll_SF = (abs(AllLeps[Zl1].id)==abs(AllLeps[Zl2].id));
+	  StopEvt.Zll_isZmass = (fabs((AllLeps[Zl1].p4+AllLeps[Zl2].p4).M()-91.)<15);
+	  StopEvt.Zll_M = (AllLeps[Zl1].p4+AllLeps[Zl2].p4).M();
+	  StopEvt.Zll_p4 = (AllLeps[Zl1].p4+AllLeps[Zl2].p4);
+	  if(nLooseLeptons==2) StopEvt.Zll_selLep = 1;//selection lepton (not Zll) is lep1
+	  else if(Zl1==0) StopEvt.Zll_selLep = 2;//selection lepton (not Zll) is lep2
+	  else StopEvt.Zll_selLep = 1;//selection lepton (not Zll) is lep1
+	  //Zll_selLep decides if one has to use Mlb_closestb or Mlb_closestb_lep2 for variables without MET.
+	  //it also decides if we recalculate mt_met_lep using lep1 or lep2, etc.
+	  double Zllmetpx = ( StopEvt.pfmet * cos(StopEvt.pfmet_phi) ) + ( StopEvt.Zll_p4.Px() );
+	  double Zllmetpy = ( StopEvt.pfmet * sin(StopEvt.pfmet_phi) ) + ( StopEvt.Zll_p4.Py() );
+	  StopEvt.Zll_met     = sqrt(pow(Zllmetpx,2)+pow(Zllmetpy,2) );
+	  StopEvt.Zll_met_phi = atan2(Zllmetpy,Zllmetpx);
+	  if(jets.ak4pfjets_p4.size()>1) StopEvt.Zll_mindphi_met_j1_j2 =  getMinDphi(StopEvt.Zll_met_phi,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
+	  if(StopEvt.Zll_selLep == 1){
+	    StopEvt.Zll_mt_met_lep = calculateMt(lep1.p4, StopEvt.Zll_met, StopEvt.Zll_met_phi);
+	    StopEvt.Zll_dphi_Wlep = DPhi_W_lep(StopEvt.Zll_met, StopEvt.Zll_met_phi, lep1.p4);
+	    if(jets.ak4pfjets_p4.size()>1){
+	      StopEvt.Zll_MT2W = CalcMT2W_(mybjets,myaddjets,lep1.p4,StopEvt.Zll_met, StopEvt.Zll_met_phi);
+	      StopEvt.Zll_topness = CalcTopness_(0,StopEvt.Zll_met, StopEvt.Zll_met_phi,lep1.p4,mybjets,myaddjets);	
+	      StopEvt.Zll_topnessMod = CalcTopness_(1,StopEvt.Zll_met, StopEvt.Zll_met_phi,lep1.p4,mybjets,myaddjets);
+	      StopEvt.Zll_MT2_lb_b_mass = CalcMT2_lb_b_(StopEvt.Zll_met, StopEvt.Zll_met_phi,lep1.p4,mybjets,myaddjets,0,true);
+	      StopEvt.Zll_MT2_lb_b = CalcMT2_lb_b_(StopEvt.Zll_met, StopEvt.Zll_met_phi,lep1.p4,mybjets,myaddjets,0,false);
+	      StopEvt.Zll_MT2_lb_bqq_mass = CalcMT2_lb_bqq_(StopEvt.Zll_met, StopEvt.Zll_met_phi,lep1.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,true);
+	      StopEvt.Zll_MT2_lb_bqq = CalcMT2_lb_bqq_(StopEvt.Zll_met, StopEvt.Zll_met_phi,lep1.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,false);
+	    }
+	  } else {
+	    StopEvt.Zll_mt_met_lep = calculateMt(lep2.p4, StopEvt.Zll_met, StopEvt.Zll_met_phi);
+	    StopEvt.Zll_dphi_Wlep = DPhi_W_lep(StopEvt.Zll_met, StopEvt.Zll_met_phi, lep2.p4);
+	    if(jets.ak4pfjets_p4.size()>1){
+	      StopEvt.Zll_MT2W = CalcMT2W_(mybjets,myaddjets,lep2.p4,StopEvt.Zll_met, StopEvt.Zll_met_phi);
+	      StopEvt.Zll_topness = CalcTopness_(0,StopEvt.Zll_met, StopEvt.Zll_met_phi,lep2.p4,mybjets,myaddjets);	
+	      StopEvt.Zll_topnessMod = CalcTopness_(1,StopEvt.Zll_met, StopEvt.Zll_met_phi,lep2.p4,mybjets,myaddjets);
+	      StopEvt.Zll_MT2_lb_b_mass = CalcMT2_lb_b_(StopEvt.Zll_met, StopEvt.Zll_met_phi,lep2.p4,mybjets,myaddjets,0,true);
+	      StopEvt.Zll_MT2_lb_b = CalcMT2_lb_b_(StopEvt.Zll_met, StopEvt.Zll_met_phi,lep2.p4,mybjets,myaddjets,0,false);
+	      StopEvt.Zll_MT2_lb_bqq_mass = CalcMT2_lb_bqq_(StopEvt.Zll_met, StopEvt.Zll_met_phi,lep2.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,true);
+	      StopEvt.Zll_MT2_lb_bqq = CalcMT2_lb_bqq_(StopEvt.Zll_met, StopEvt.Zll_met_phi,lep2.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,false);
+	    }
+	  }
+	}//end of Zll filling
+      }//end of Zll
+		
+      //
+      // Photon Event Variables
+      //
+      if(StopEvt.ph_selectedidx>=0){
+	int oljind = ph.overlapJetId.at(StopEvt.ph_selectedidx);
+	double phmetpx = ( StopEvt.pfmet * cos(StopEvt.pfmet_phi) ) + ( ph.p4.at(StopEvt.ph_selectedidx).Px() );
+	double phmetpy = ( StopEvt.pfmet * sin(StopEvt.pfmet_phi) ) + ( ph.p4.at(StopEvt.ph_selectedidx).Py() );
+	StopEvt.ph_met     = sqrt(pow(phmetpx,2)+pow(phmetpy,2) );
+	StopEvt.ph_met_phi = atan2(phmetpy,phmetpx);
+	StopEvt.ph_ngoodjets = jets.ngoodjets;
+	StopEvt.ph_ngoodbtags = jets.ngoodbtags;
+	if(oljind>=0){
+	  StopEvt.ph_ngoodjets = jets.ngoodjets-1;
+	  if(jets.ak4pfjets_passMEDbtag.at(oljind)==true) StopEvt.ph_ngoodbtags = jets.ngoodbtags-1;
+	}
+	vector<LorentzVector> jetsp4_phcleaned; jetsp4_phcleaned.clear();//used
+	vector<float>         jetsCSV_phcleaned; jetsCSV_phcleaned.clear();
+	vector<bool>          jetsbtag_phcleaned; jetsbtag_phcleaned.clear();
+	vector<float>         dummy_sigma_phcleaned; dummy_sigma_phcleaned.clear();//used
+	int leadbidx = -1;
+	float htph(0), htssmph(0), htosmph(0);
+	for (unsigned int idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
+	  if((int)idx==oljind) continue;
+	  jetsp4_phcleaned.push_back(jets.ak4pfjets_p4.at(idx));
+	  jetsCSV_phcleaned.push_back(jets.ak4pfjets_CSV.at(idx));
+	  jetsbtag_phcleaned.push_back(jets.ak4pfjets_passMEDbtag.at(idx));
+	  dummy_sigma_phcleaned.push_back(dummy_sigma.at(idx));
+	  htph += jets.ak4pfjets_pt.at(idx);
+	  float dPhiM = getdphi(StopEvt.ph_met_phi, jets.ak4pfjets_phi.at(idx) );
+	  if ( dPhiM  < (TMath::Pi()/2) ) htssmph += jets.ak4pfjets_pt.at(idx);
+	  else                            htosmph += jets.ak4pfjets_pt.at(idx);
+	  if(leadbidx==-1 && jets.ak4pfjets_passMEDbtag.at(idx)) leadbidx = idx;//leading bjet photon cleaned
+	}
+	StopEvt.ph_HT = htph;
+	StopEvt.ph_htssm = htssmph;
+	StopEvt.ph_htosm = htosmph;
+	StopEvt.ph_htratiom   = StopEvt.ph_htssm / (StopEvt.ph_htosm + StopEvt.ph_htssm);
+	mybjets.clear(); myaddjets.clear();
+	for(unsigned int idx = 0; idx<jetIndexSortedCSV.size(); ++idx){
+	  if(jetIndexSortedCSV[idx]==oljind) continue;
+	  if(jets.ak4pfjets_passMEDbtag.at(jetIndexSortedCSV[idx])==true) mybjets.push_back(jets.ak4pfjets_p4.at(jetIndexSortedCSV[idx]) );
+	  else if(mybjets.size()<=1 && (mybjets.size()+myaddjets.size())<3) myaddjets.push_back(jets.ak4pfjets_p4.at(jetIndexSortedCSV[idx]) );
+	}
+	if(nVetoLeptons>0) {
+	  StopEvt.ph_mt_met_lep = calculateMt(lep1.p4, StopEvt.ph_met, StopEvt.ph_met_phi);
+	  StopEvt.ph_dphi_Wlep = DPhi_W_lep(StopEvt.ph_met, StopEvt.ph_met_phi, lep1.p4);
+	}
+	if(jetsp4_phcleaned.size()>1){
+	  if(nVetoLeptons>0) {
+	    StopEvt.ph_MT2W = CalcMT2W_(mybjets,myaddjets,lep1.p4,StopEvt.ph_met, StopEvt.ph_met_phi);
+	    StopEvt.ph_topness = CalcTopness_(0,StopEvt.ph_met, StopEvt.ph_met_phi,lep1.p4,mybjets,myaddjets);	
+	    StopEvt.ph_topnessMod = CalcTopness_(1,StopEvt.ph_met, StopEvt.ph_met_phi,lep1.p4,mybjets,myaddjets);
+	    StopEvt.ph_MT2_lb_b_mass = CalcMT2_lb_b_(StopEvt.ph_met, StopEvt.ph_met_phi,lep1.p4,mybjets,myaddjets,0,true);
+	    StopEvt.ph_MT2_lb_b = CalcMT2_lb_b_(StopEvt.ph_met, StopEvt.ph_met_phi,lep1.p4,mybjets,myaddjets,0,false);
+	    StopEvt.ph_MT2_lb_bqq_mass = CalcMT2_lb_bqq_(StopEvt.ph_met, StopEvt.ph_met_phi,lep1.p4,mybjets,myaddjets,jetsp4_phcleaned,0,true);
+	    StopEvt.ph_MT2_lb_bqq = CalcMT2_lb_bqq_(StopEvt.ph_met, StopEvt.ph_met_phi,lep1.p4,mybjets,myaddjets,jetsp4_phcleaned,0,false);
+	  }
+	  StopEvt.ph_hadronic_top_chi2 = calculateChi2(jetsp4_phcleaned, dummy_sigma_phcleaned, jetsbtag_phcleaned);
+	  StopEvt.ph_mindphi_met_j1_j2 =  getMinDphi(StopEvt.ph_met_phi,jetsp4_phcleaned.at(0),jetsp4_phcleaned.at(1));
+	}//at least two jets
+	if(jetsp4_phcleaned.size()>0){
+	  if(nVetoLeptons>0) {
+	    StopEvt.ph_Mlb_lead_bdiscr = (jets.ak4pfjets_p4.at(jetIndexSortedCSV[0])+lep1.p4).M();
+	    if(oljind==jetIndexSortedCSV[0]) StopEvt.ph_Mlb_lead_bdiscr = (jets.ak4pfjets_p4.at(jetIndexSortedCSV[1])+lep1.p4).M();//exists as index=0 doesn't count for jetsp4_phcleaned.size()
+	    if(leadbidx>=0) StopEvt.ph_dR_lep_leadb = dRbetweenVectors(jets.ak4pfjets_p4.at(leadbidx), lep1.p4);
+	    for (unsigned int idx = 0; idx < rankminDR.size(); ++idx){
+	      if(rankminDR[idx].second==oljind) continue;
+	      if(nVetoLeptons==0) continue;
+	      if(!(jets.ak4pfjets_passMEDbtag.at(rankminDR[idx].second)) ) continue;
+	      StopEvt.ph_Mlb_closestb = (jets.ak4pfjets_p4.at(rankminDR[idx].second)+lep1.p4).M();
+	      break;
+	    }
+	    LorentzVector threejetsum; threejetsum.SetPxPyPzE(0.,0.,0.,0.);
+	    int threejetcounter = 0;
+	    for (unsigned int idx = 0; idx < rankmaxDPhi.size(); ++idx){
+	      if(rankmaxDPhi[idx].second==oljind) continue;
+	      threejetsum = threejetsum + jets.ak4pfjets_p4.at(rankmaxDPhi[idx].second);
+	      ++threejetcounter;
+	      if(threejetcounter>=3) break;
+	    }
+	    if(threejetcounter==3) StopEvt.ph_Mjjj = threejetsum.M();
+	  }//at least one lepton
+	}//at least one jet
+      }//end of photon additions
+     
       //
       // Tau Selection
       //
@@ -780,7 +923,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.HLT_SingleMuNoIsoNoEta = passHLTTriggerPattern("HLT_Mu50_v");
       StopEvt.HLT_Mu6HT200MET125 = passHLTTriggerPattern("HLT_Mu6_PFHT200_PFMET125_NoiseCleaned_v");
       StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu24_eta2p1_v") || passHLTTriggerPattern("HLT_IsoTkMu24_eta2p1_v");
-      
+
+      StopEvt.HLT_Photon90_CaloIdL_PFHT500 = passHLTTriggerPattern("HLT_Photon90_CaloIdL_PFHT500_v");
+      StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon165_R9Id90_HE10_IsoM_v");
+      StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
+      StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
+
 
       //
       // Fill Tree

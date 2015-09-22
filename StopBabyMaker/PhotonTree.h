@@ -28,6 +28,7 @@ public:
     void SetAliases (TTree* tree) const;
     void FillCommon ();
     int  genbestMatch(int idx);
+    void SetPhotonSelection (float pt_cut,float eta);
 protected:
 
     std::string prefix_;
@@ -51,6 +52,8 @@ public:
     vecd nhiso;
     vecd phiso;
 
+    veci overlapJetId;
+
     //
     // photon gen info
     //
@@ -59,6 +62,12 @@ public:
     veci mcMatchId;
     vecd genIso04; 
     vecd drMinParton;
+
+private:
+
+    float m_ph_pt_cut;
+    float m_ph_eta_cut;
+    
 };
 
 #endif

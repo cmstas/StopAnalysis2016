@@ -55,6 +55,7 @@ public:
     int genlepsfromtop;
 
     int ngoodleps;
+    int nlooseleps;   
     int nvetoleps;   
  
     float MT2W;
@@ -184,13 +185,69 @@ public:
 
     int HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight;
     int HLT_MET90_MHT90_IDTight;
-    int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;      
+    int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;
+
+    int HLT_Photon90_CaloIdL_PFHT500;
+    int HLT_Photon165_R9Id90_HE10_IsoM;
+    int HLT_Photon175;
+    int HLT_Photon165_HE10;
 
     float pu_weight;
     float lep_sf;
     float btag_sf;
     float HLT_SingleMu_eff;
     float HLT_SingleEl_eff;
+
+    //photon addition
+    int nPhotons;
+    int ph_selectedidx;//not necessarily first photon
+    int ph_ngoodjets;
+    int ph_ngoodbtags;
+    float ph_met;
+    float ph_met_phi;
+    float ph_HT;
+    float ph_htssm;
+    float ph_htosm;
+    float ph_htratiom;
+    float ph_mt_met_lep;
+    float ph_dphi_Wlep;
+    float ph_MT2W;
+    float ph_topness;
+    float ph_topnessMod;
+    float ph_MT2_lb_b_mass;
+    float ph_MT2_lb_b;
+    float ph_MT2_lb_bqq_mass;
+    float ph_MT2_lb_bqq;
+    float ph_hadronic_top_chi2;
+    float ph_mindphi_met_j1_j2;
+    float ph_Mlb_lead_bdiscr;
+    float ph_dR_lep_leadb;
+    float ph_Mlb_closestb;
+    float ph_Mjjj;
+
+    int   Zll_idl1;
+    int   Zll_idl2;
+    LorentzVector  Zll_p4l1;
+    LorentzVector  Zll_p4l2;
+    bool  Zll_OS;
+    bool  Zll_SF;
+    bool  Zll_isZmass;
+    float Zll_M;
+    LorentzVector  Zll_p4;
+    int   Zll_selLep;
+    float Zll_met;
+    float Zll_met_phi;
+    float Zll_mindphi_met_j1_j2;
+    float Zll_mt_met_lep;
+    float Zll_dphi_Wlep;
+    float Zll_MT2W;
+    float Zll_topness;
+    float Zll_topnessMod;
+    float Zll_MT2_lb_b_mass;
+    float Zll_MT2_lb_b;
+    float Zll_MT2_lb_bqq_mass;
+    float Zll_MT2_lb_bqq;
+
     
 };
  
