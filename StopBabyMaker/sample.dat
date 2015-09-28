@@ -17,6 +17,10 @@ SAMPLE
 Name data_muon_eg_2015C_25ns
 Path /hadoop/cms/store/group/snt/run2_data/Run2015C_MuonEG_MINIAOD_PromptReco-v1/merged/V07-04-08/
 
+SAMPLE
+Name data_muon_eg_2015D_25ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_PromptReco-v3/merged/V07-04-09/
+
 ## Single Electron ##
 SAMPLE
 Name data_single_electron_2015C_25ns
@@ -39,8 +43,25 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015C_MET_MINIAOD_PromptReco-v1/me
 
 ## signal ##
 SAMPLE
+Name T2tt_2J_mStop_425_mLSP_325_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/SMS-T2tt_2J_mStop-425_mLSP-325_Tune4C_13TeV-madgraph-tauola_namin-step3-fb89f44b0d6970d718ed21d513cd1c9d/V07-04-08/
+
+SAMPLE
+Name T2tt_2J_mStop_500_mLSP_325_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/SMS-T2tt_2J_mStop-500_mLSP-325_Tune4C_13TeV-madgraph-tauola_namin-step3-fb89f44b0d6970d718ed21d513cd1c9d/V07-04-08/
+
+SAMPLE
+Name T2tt_2J_mStop_650_mLSP_325_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/SMS-T2tt_2J_mStop-650_mLSP-325_Tune4C_13TeV-madgraph-tauola_namin-step3-fb89f44b0d6970d718ed21d513cd1c9d/V07-04-08/
+
+SAMPLE
+Name T2tt_2J_mStop_850_mLSP_100_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/SMS-T2tt_2J_mStop-850_mLSP-100_Tune4C_13TeV-madgraph-tauola_namin-step3-fb89f44b0d6970d718ed21d513cd1c9d/V07-04-08/
+
+SAMPLE
 Name T6bbWW_mStop425_mCh400_mLSP50
 Path /hadoop/cms/store/user/rcoelhol/T6bbWW_mStop425_mCh400_mLSP50/crab_T6bbWW_mStop425_mCh400_mLSP50_rcoelhol-T6bbWW_mStop425_mCh400_mLSP50_MINIAODSIM-6ba8269c843a1d8c287850c1a83e8873/CMS3_V07-04-06/merged/
+
 
 ## ttbar ###
 SAMPLE
@@ -48,8 +69,32 @@ Name ttbar_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-08/
 
 SAMPLE
+Name ttbar_singleLeptFromT_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-07/
+
+SAMPLE
+Name ttbar_singleLeptFromT_madgraph_pythia8_25ns_ext1
+Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1/V07-04-08/
+
+SAMPLE
+Name ttbar_singleLeptFromTbar_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-08/
+
+SAMPLE
+Name ttbar_diLept_madgraph_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-07/
+
+SAMPLE
+Name ttbar_diLept_madgraph_pythia8_25ns_ext1
+Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1/V07-04-07/
+
+SAMPLE
 Name ttbar_powheg_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+
+SAMPLE
+Name ttbar_powheg_pythia8_25ns_ext3
+Path /hadoop/cms/store/group/snt/run2_25ns/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext3-v1/V07-04-08/
 
 SAMPLE
 Name ttbar_powheg_pythia6_25ns
@@ -207,6 +252,10 @@ Path /hadoop/cms/store/group/snt/run2_25ns/ZZTo4L_13TeV_powheg_pythia8_RunIISpri
 
 ## ttV ##
 SAMPLE
+Name TTWJetsToQQ_amcnlo_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-08/
+
+SAMPLE
 Name TTWJetsToLNu_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-08/
 
@@ -218,6 +267,10 @@ SAMPLE
 Name TTZToLLNuNu_M-10_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-08/
 
+SAMPLE
+Name TTGJets_amcnlo_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-08/
+
 
 ## tZq ##
 SAMPLE
@@ -227,6 +280,10 @@ Path /hadoop/cms/store/group/snt/run2_25ns/tZq_ll_4f_13TeV-amcatnlo-pythia8_Tune
 SAMPLE
 Name tZq_nunu_4f_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns/tZq_nunu_4f_13TeV-amcatnlo-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-08/
+
+SAMPLE
+Name tGJets_amcnlo_pythia8_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-08/
 
 
 

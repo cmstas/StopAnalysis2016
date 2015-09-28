@@ -61,7 +61,7 @@ int main(int argc, char **argv){
   //
   int nVtx              = 1;
 
-  float met             = 30.0;
+  float met             = 0.0;
 
   int nGoodLeptons      = 1;
   float goodLep_el_pt   = 20.0;

@@ -258,7 +258,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // Set JSON file
   //
   //const char* json_file = "json_files/Cert_246908-251883_13TeV_PromptReco_Collisions15_JSON_v2_snt.txt";
-  const char* json_file = "json_files/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2_snt.txt";
+  const char* json_file = "json_files/Cert_246908-256869_13TeV_PromptReco_Collisions15_25ns_JSON_snt.txt";
   set_goodrun_file(json_file);
 
   //
@@ -896,9 +896,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.HLT_HT350MET100 = passHLTTriggerPattern("HLT_PFHT350_PFMET100_NoiseCleaned_v");
       StopEvt.HLT_MET120Btag = passHLTTriggerPattern("HLT_PFMET120_NoiseCleaned_BTagCSV07_v") || passHLTTriggerPattern("HLT_PFMET120_NoiseCleaned_BTagCSV072_v");
       StopEvt.HLT_MET120Mu5 = passHLTTriggerPattern("HLT_PFMET120_NoiseCleaned_Mu5_v");
-      StopEvt.HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight = passHLTTriggerPattern("HLT_MonoCentralPFJet80_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight");
-      StopEvt.HLT_MET90_MHT90_IDTight = passHLTTriggerPattern("HLT_PFMET90_PFMHT90_IDTight");
-      StopEvt.HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight = passHLTTriggerPattern("HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight");     
+      StopEvt.HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight = passHLTTriggerPattern("HLT_MonoCentralPFJet80_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight") || passHLTTriggerPattern("HLT_MonoCentralPFJet80_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight");
+      StopEvt.HLT_MET90_MHT90_IDTight = passHLTTriggerPattern("HLT_PFMET90_PFMHT90_IDTight") || passHLTTriggerPattern("HLT_PFMET90_PFMHT90_IDLoose");
+      StopEvt.HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight = passHLTTriggerPattern("HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight") || passHLTTriggerPattern("HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight");     
 
       StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
       StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
