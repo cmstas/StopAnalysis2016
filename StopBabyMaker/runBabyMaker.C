@@ -119,7 +119,7 @@ int main(int argc, char **argv){
   int file=-1;
   if(argc>3) file = atoi(argv[3]);
 
-  char* dirpath = ".";  
+  char* dirpath = "/nfs-7/userdata/mliu/ttz/scale_unc/";  
   if(argc>4) dirpath = argv[4];
 
   const char* filename = (file == -1 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));

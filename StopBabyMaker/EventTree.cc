@@ -66,6 +66,8 @@ void EventTree::FillCommon (const std::string &root_file_name)
         kfactor  = evt_kfactor();
         pu_nvtxs = puInfo_nPUvertices().at(6);
         pu_ntrue = puInfo_trueNumInteractions().at(0);
+        genweights = cms3.genweights();
+        genweightsID = cms3.genweightsID();
 
         if(signal){
           sparms_values = sparm_values();
@@ -162,7 +164,9 @@ void EventTree::Reset ()
     filename = "";
     cms3tag  = "";
 
-    sparms_comment.clear();
+    genweights.clear();
+    genweightsID.clear();
+
     sparms_names.clear();
     sparms_filterEfficiency	= -9999.;
     sparms_pdfScale		= -9999.;
@@ -290,8 +294,6 @@ void EventTree::Reset ()
     Zll_MT2_lb_bqq_mass   = -9999.;
     Zll_MT2_lb_bqq        = -9999.;
 
-
-
 }
  
 void EventTree::SetBranches (TTree* tree)
@@ -352,7 +354,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("dphi_Wlep", &dphi_Wlep);
     tree->Branch("MET_over_sqrtHT", &MET_over_sqrtHT);
     tree->Branch("ak4pfjets_rho", &ak4pfjets_rho);
-    tree->Branch("sparms_comment", &sparms_comment);
+    tree->Branch("genweightsID", &genweightsID);
+    tree->Branch("genweights", &genweights);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_filterEfficiency", &sparms_filterEfficiency);
     tree->Branch("sparms_pdfScale", &sparms_pdfScale);

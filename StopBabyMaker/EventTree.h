@@ -123,6 +123,8 @@ public:
     float kfactor;
     float pu_ntrue;
     int   pu_nvtxs;
+    vecd  genweights;
+    vecs  genweightsID;
 
     //sparms
     vecs  sparms_comment;
