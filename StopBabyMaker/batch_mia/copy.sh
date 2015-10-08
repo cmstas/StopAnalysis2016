@@ -28,7 +28,7 @@ fi
 
 echo ""
 echo "  Creating tarball to transfer to condor node..."
-cd $HOME
+cd $PWD
 if [ -d $CONDOR_DIR_NAME ]; then
     rm -rf $CONDOR_DIR_NAME
 fi
@@ -63,16 +63,6 @@ fi
 #Shit for Lorentz Vectors, etc.
 #sed -i "/struct val_err_t { float value; float error; };/i #include\ \"Math/Vector4D.h\" \n#include\ \"Math/LorentzVector.h\" \n\n\#ifdef\ __MAKECINT__\n\#pragma\ link\ C++\ class\ ROOT::Math::PxPyPzE4D<float>+;\n\#pragma\ link\ C++\ class\ ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float>\ >+;\n\#pragma\ link\ C++\ typedef ROOT::Math::XYZTVectorF;\n\#endif" fakeratelooper.h
 
-echo "***************************** :) *********************************************"
-echo "  Condor preparation complete! Now edit some more scripts for condor!"
-echo "-----------------------------------------------------------------------"
-echo "  Things batch.sh needs to know:"
-echo "  * sampleList_in"
-echo "  * copy_dir"
-echo "-----------------------------------------------------------------------"
-echo "  Things condorFileTemplate needs to know:"
-echo "  * notify_user"
-echo "-----------------------------------------------------------------------"
-echo "  done? now submit jobs with . batch.sh to test your jobs! "
-echo "  Condor log files will be availble in ./logs, and you can debug with them "
+echo "***************************** :) ***********************************************************"
+echo "  Condor preparation complete! Edit writeAllConfig.sh to generate condor submission files"
 echo "***************************** :) the end of test job :) *********************************************"
