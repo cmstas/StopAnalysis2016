@@ -840,42 +840,49 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if (!evt_isRealData()){
 	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
 	  //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)
+
+	  if( genps_isHardProcess().at(genx) ||
+	      genps_fromHardProcessDecayed().at(genx) ||
+	      genps_fromHardProcessFinalState().at(genx) ||
+	      genps_isMostlyLikePythia6Status3().at(genx) ||
+	      genps_status().at(genx)==1 ){
      
-	  if( abs(genps_id().at(genx)) == pdg_el    ) gen_els.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_nue   ) gen_nuels.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_numu  ) gen_numus.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_nutau ) gen_nutaus.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_b     ) gen_bs.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_c     ) gen_cs.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_g &&
-	      genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_W     ) gen_ws.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_Z     ) gen_zs.FillCommon(genx);
-	  if( abs(genps_id().at(genx)) == pdg_ph &&
-	      genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_el    ) gen_els.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_nue   ) gen_nuels.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_numu  ) gen_numus.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_nutau ) gen_nutaus.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_b     ) gen_bs.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_c     ) gen_cs.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_g &&
+		genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_W     ) gen_ws.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_Z     ) gen_zs.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_ph &&
+		genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
+	    
+	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
+	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);
+	    
+	    if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
+	    if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
+	    
+	    if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);
+	    if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);
+	    
+	    
+	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
+	    
+	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
+	    
+	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
 
-	  if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
-	  if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);
-     
-	  if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
-	  if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
-	 
-	  if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);
-	  if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);
-
-	  
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
-
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
-
-	  if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
-	  	  
+	  }	  
 	}
       }
     
