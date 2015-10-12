@@ -1,19 +1,19 @@
 #include "Riostream.h"
 #include "TFile.h"
 
-int checkForZombies(char *fileName){
+int checkForZombies(const char *rootFileName, const char *notZombieFileName){
 
-  TFile *file = new TFile(fileName, "read");
-  bool isZombie = (bool)file->IsZombie();
+  TFile *rootFile = new TFile(rootFileName, "read");
+  bool isZombie = (bool)rootFile->IsZombie();
 
   ofstream zombieFiles;
-  zombieFiles.open("listOfZombies.txt");
-  if(isZombie){
-    zombieFiles << fileName << endl;
+  zombieFiles.open(notZombieFileName, std::ofstream::app);
+  if(!isZombie){
+    zombieFiles << rootFileName << endl;
   }
   
   zombieFiles.close();
-  file->Close();
+  rootFile->Close();
 
   return isZombie;
 }
