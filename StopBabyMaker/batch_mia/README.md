@@ -9,10 +9,16 @@ Instructions (no quotes):
       forCondor_stopBabyMaker.tar.gz
   3.  Edit writeAllConfig.sh following example.
   4   Now run ./submitAll.sh
-  5. check for failed jobs and resubmit:
-     ./checkAndResubmitAll.sh  cfg_dir
-  6. merge: edit mergeHadoopFiles.sh
-     add lines:
-     run sample_name 
+  5.  validate ntuples:
+      git clone git@github.com:cmstas/NtupleTools.git
+      cd NtupleTools/condorMergingTools/libC
+      make
+      cd ../../../ 
+      ./NtupleTools/condorMergingTools/libC/sweepRoot -b -o "t" /hadoop/cms/store/user/mliu/dilepbabies/${analysis_version}*/*root
+  6.  check for failed jobs and resubmit:
+      ./checkAndResubmitAll.sh  cfg_dir
+  7.  merge: edit mergeHadoopFiles.sh
+      add lines:
+      run sample_name 
  
-
+   
