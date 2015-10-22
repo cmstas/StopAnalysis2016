@@ -18,8 +18,12 @@ Name data_muon_eg_2015C_25ns
 Path /hadoop/cms/store/group/snt/run2_data/Run2015C_MuonEG_MINIAOD_PromptReco-v1/merged/V07-04-08/
 
 SAMPLE
-Name data_muon_eg_2015D_25ns
+Name data_muon_eg_2015D_promptRecoV3_25ns
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_PromptReco-v3/merged/V07-04-09/
+
+SAMPLE
+Name data_muon_eg_2015D_promptRecoV4_25ns
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_PromptReco-v4/merged/V07-04-11/
 
 ## Single Electron ##
 SAMPLE
