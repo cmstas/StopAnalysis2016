@@ -4,50 +4,27 @@ echo "************************************"
 echo "Assemble CONDOR FILES for submission"
 echo "************************************"
 
-# Check that CMSSW base,babymaker location and core location is set
-if [ -z $CMSSW_BASE ]; then
-    echo "CMSSW_BASE var not set, run cmsenv, exiting..."
-    return 1;
-fi
-if [ -z $MAKER_NAME ]; then
-    echo "MAKER_NAME not set, don't know which babymaker to use :(, exiting..."
-    echo "Please set it in setup.sh and do source setup.sh!"
-    return 1;
-fi
-if [ -z $MAKER_PATH ]; then
-    echo "MAKER_PATH not set, don't know which babymaker to use :(, exiting..."
-    echo "Please set it in setup.sh and do source setup.sh!"
-    return 1;
-fi
-if [ -z $MAKER_DIR ]; then
-    echo "MAKER_DIR not set, don't know which babymaker to use :(, exiting..."
-    echo "Please set it in setup.sh and do source setup.sh!"
-    return 1;
-fi
-if [ -z $CORE_NAME ]; then
-    echo "CORE_NAME not set, don't know which CORE to use :(, exiting..."
-    echo "Please set it in setup.sh and do source setup.sh!"
-    return 1;
-fi
-if [ -z $CORE_PATH ]; then
-    echo "CORE_PATH not set, don't know which CORE to use :(, exiting..."
-    echo "Please set it in setup.sh and do source setup.sh!"
-    return 1;
-fi
-if [ -z $CORE_DIR ]; then
-    echo "CORE_DIR not set, don't know which CORE to use :(, exiting..."
-    echo "Please set it in setup.sh and do source setup.sh!"
-    return 1;
-fi
-if [ -z $CONDOR_DIR_NAME ]; then
-    echo "Do not know what name to use for your tarball :(, exiting..."
-    echo "Please set it in setup.sh! and do source setup.sh"
+
+#
+# Check that condor submission envionment is setup
+#
+if [ -z $CONDOR_ENV_READY ]; then
+    echo ""
+    echo "Condor_ENV_READY not set :(, exiting..."
+    echo "do source setup.sh!"
+    echo ""
     return 1;
 fi
 
+
+#
+# Create tarball for condor jobs
+#
 echo ""
-echo "  Creating tarball to transfer to condor node..."
-cd $HOME
+echo "  Copying files for tarball to transfer to condor node..."
+echo ""
+
+cd $SCRATCH_DIR
 if [ -d $CONDOR_DIR_NAME ]; then
     rm -rf $CONDOR_DIR_NAME
 fi
@@ -72,6 +49,12 @@ cp -r $MAKER_DIR/stop_variables/ $CONDOR_DIR_NAME/$MAKER_NAME/
 cp -r $MAKER_DIR/json_files/ $CONDOR_DIR_NAME/$MAKER_NAME/
 
 
+#
+# Compile code in advance
+#
+echo ""
+echo "  All files copied, compiling code..."
+echo ""
 
 cd $CONDOR_DIR_NAME/$CORE_NAME/
 make clean
@@ -86,32 +69,53 @@ cd ../
 make clean
 make
 
-cd $HOME
+cd $SCRATCH_DIR
 
+#
+# Finally make the tarball
+#
+
+echo ""
+echo "  Compiling code complete, creating tarball..."
+echo ""
 tar czf $CONDOR_DIR_NAME.tar.gz $CONDOR_DIR_NAME/
+
 
 cd $START_DIR
 
+
+#
+# Make logfile directory 
+#
+echo ""
 echo "  Tarball complete, creating dir for logfiles"
-#Make dir for logs
-if [ ! -d logs ] 
+echo ""
+if [ ! -d $SCRATCH_DIR/logs ] 
 then
-  mkdir logs
+  mkdir $SCRATCH_DIR/logs
 fi
 
-#Shit for Lorentz Vectors, etc.
+
+#
+# Shit for Lorentz Vectors, etc.
+#
 #sed -i "/struct val_err_t { float value; float error; };/i #include\ \"Math/Vector4D.h\" \n#include\ \"Math/LorentzVector.h\" \n\n\#ifdef\ __MAKECINT__\n\#pragma\ link\ C++\ class\ ROOT::Math::PxPyPzE4D<float>+;\n\#pragma\ link\ C++\ class\ ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float>\ >+;\n\#pragma\ link\ C++\ typedef ROOT::Math::XYZTVectorF;\n\#endif" fakeratelooper.h
 
+
+#
+# Final instructions for user
+#
+echo ""
 echo "***************************** :) *********************************************"
 echo "  Condor preparation complete! Now edit some more scripts for condor!"
 echo "-----------------------------------------------------------------------"
 echo "  Things batch.sh needs to know:"
 echo "  * sampleList_in"
-echo "  * copy_dir"
 echo "-----------------------------------------------------------------------"
 echo "  Things condorFileTemplate needs to know:"
 echo "  * notify_user"
 echo "-----------------------------------------------------------------------"
 echo "  done? now submit jobs with . batch.sh to test your jobs! "
-echo "  Condor log files will be availble in ./logs, and you can debug with them "
+echo "  Condor log files will be availble in $SCRATCH_DIR/logs, and you can debug with them "
 echo "***************************** :) the end of test job :) *********************************************"
+echo ""

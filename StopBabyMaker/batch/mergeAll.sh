@@ -3,7 +3,7 @@
 path2=$1
 samples=$2
 samples=`echo $samples | tr ',' ' '`
-maxBabiesPerMerge=200
+maxBabiesPerMerge=2000
 
 # loop over samples
 for sname in $samples
