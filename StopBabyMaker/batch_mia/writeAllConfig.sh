@@ -5,9 +5,9 @@
 #
 
 # compile files
-cd ..
-make -j25
-cd -
+#cd ..
+#make -j25
+#cd -
 
 # copy compiled files
 #cp -r ../*.so ../jetCorrections ../processBaby ../json_270715_golden.txt job_input/ 

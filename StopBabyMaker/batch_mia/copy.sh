@@ -57,10 +57,10 @@ cd $START_DIR
 
 echo "  Tarball complete, creating dir for logfiles"
 #Make dir for logs
-if [ ! -d logs ] 
-then
-  mkdir logs
-fi
+#if [ ! -d logs ] 
+#then
+#  mkdir logs
+#fi
 
 #Shit for Lorentz Vectors, etc.
 #sed -i "/struct val_err_t { float value; float error; };/i #include\ \"Math/Vector4D.h\" \n#include\ \"Math/LorentzVector.h\" \n\n\#ifdef\ __MAKECINT__\n\#pragma\ link\ C++\ class\ ROOT::Math::PxPyPzE4D<float>+;\n\#pragma\ link\ C++\ class\ ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float>\ >+;\n\#pragma\ link\ C++\ typedef ROOT::Math::XYZTVectorF;\n\#endif" fakeratelooper.h
