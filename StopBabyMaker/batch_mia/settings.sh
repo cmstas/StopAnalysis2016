@@ -1,20 +1,18 @@
 #! /bin/bash
 
-# export analysis_version="V00-00-17"
-export analysis_version="V00-00-02"
+export analysis_version="V00-00-01"
 echo "Analysis version = $analysis_version"
 localdirectory=`pwd`
 
 BABYMAKER_DIR_NAME=$PWD/../
-#CORE_DIR=$PWD/../../../CORE
-#CONDOR_DIR_NAME=forCondor_stopBabyMaker_74x
-#BABYMAKER_DIR_NAME=
 CORE_DIR=$HOME/CORE
+
 CONDOR_DIR_NAME=forCondor_stopBabyMaker
 START_DIR=`pwd`
 TAG=${analysis_version}
-export HADOOPDIR=/hadoop/cms/store/user/mliu/dilepbabies
-export OUTPUTDIR=/nfs-6/userdata/mliu/ZMETbabies/$TAG # where do you want to put your merged files?
+
+export HADOOPDIR=/hadoop/cms/store/user/mliu/onelepbabies/
+export OUTPUTDIR=/nfs-6/userdata/mliu/onelepbabies/$TAG # where do you want to put your merged files?
 
 if [ -z $CMSSW_BASE ]; then
     echo "CMSSW_BASE var not set, run cmsenv, exiting..."

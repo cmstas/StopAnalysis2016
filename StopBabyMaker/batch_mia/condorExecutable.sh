@@ -7,7 +7,8 @@ NUMBER=$3
 
 #This stuff to get output back
 export COPYDIR=$4
-export CONDOR_DIR_NAME=$5
+echo $THISDIR
+CONDOR_DIR_NAME=forCondor_stopBabyMaker
 
 #Show where you are
 hostname
@@ -41,7 +42,6 @@ cd $OLDDIR
 #Untar the zip dir
 echo "This this the current dir: "
 THISDIR=`pwd`
-echo $THISDIR
 echo "LS to check that all files were transferred: "
 ls
 tar xzfv $CONDOR_DIR_NAME.tar.gz
@@ -52,13 +52,13 @@ echo "LS to check contents of unpacked stopbabymaker: "
 ls
 
 # Make supporting libs
-echo "clean CORE"
-cd CORE/
-ls
-make clean
-echo "remaking CORE"
-make
-cd ../
+#echo "clean CORE"
+#cd CORE/
+#ls
+#make clean
+#echo "remaking CORE"
+#make
+#cd ../
 
 cd StopBabyMaker/stop_variables/
 make clean
@@ -66,7 +66,7 @@ make
 cd ../
 make clean
 make
-
+#cd StopBabyMaker/
 # Run babyMaker
 ./runBabyMaker "$NAME" $NEVENTS $NUMBER "./"
 ls -l `pwd`/${NAME}_${NUMBER}.root

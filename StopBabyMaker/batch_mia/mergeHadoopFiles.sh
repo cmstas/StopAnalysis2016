@@ -4,7 +4,7 @@ function run () {
     nohup nice -n 19 root -b -q mergeHadoopFiles.C\(\"${HADOOPDIR}/${TAG}_$1/\",\"${OUTPUTDIR}/$1.root\"\) >& merge_logs_${TAG}/log_merge_$1.txt &
 }
 
-source setup.sh 
+source settings.sh 
 
 mkdir -p $OUTPUTDIR
 chmod -R a+wrx $OUTPUTDIR
@@ -13,7 +13,11 @@ if [ ! -d "merge_logs_${TAG}" ]; then
   mkdir merge_logs_${TAG}
 fi
 
-run WJetsToLNu_amcnlo_pythia8_25ns 
+run data_single_electron_2015C_25ns
+run data_single_muon_2015C_25ns
+run data_single_electron_2015D_25ns
+run data_single_muon_2015D_25ns  
+#run WJetsToLNu_amcnlo_pythia8_25ns 
 #run data_50ns_sm
 #run data_50ns_ee
 #run data_50ns_ph

@@ -50,7 +50,7 @@ cd ${DIR}
 DATADIR=$1
 COPYDIRBASE=$2
 SAMPLENAME=$3
-COPYDIR=/hadoop/cms/store/user/${USERNAME}/dilepbabies/${COPYDIRBASE}
+COPYDIR=/hadoop/cms/store/user/${USERNAME}/onelepbabies/${COPYDIRBASE}
 echo "[writeConfig] running on dataset ${DATADIR}"
 echo "[writeConfig] copying output to ${COPYDIR}"
 
