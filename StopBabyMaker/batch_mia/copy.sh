@@ -39,6 +39,8 @@ mkdir $CONDOR_DIR_NAME/CORE/
 cp -r $BABYMAKER_DIR_NAME/*.cc $CONDOR_DIR_NAME/StopBabyMaker/
 cp -r $BABYMAKER_DIR_NAME/*.h $CONDOR_DIR_NAME/StopBabyMaker/
 cp -r $BABYMAKER_DIR_NAME/Makefile $CONDOR_DIR_NAME/StopBabyMaker/
+cp -r $BABYMAKER_DIR_NAME/*.o $CONDOR_DIR_NAME/StopBabyMaker/
+cp -r $BABYMAKER_DIR_NAME/runBabyMaker $CONDOR_DIR_NAME/StopBabyMaker/
 
 #modify makefile so it knows where is the CORE on condor relative to the untarred directory location.
 sed -i '/^COREPATH/d' $CONDOR_DIR_NAME/StopBabyMaker/Makefile
