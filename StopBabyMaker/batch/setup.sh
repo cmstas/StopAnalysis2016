@@ -20,6 +20,7 @@ SCRATCH_DIR=${SCRATCH_PATH}${SCRATCH_NAME}
 
 CONDOR_DIR_NAME=forCondor_stopBabyMaker_74x
 
+USER_EMAIL=jgwood@physics.ucsd.edu
 
 #
 # Input Sanitation
@@ -96,6 +97,11 @@ if [ ! -d $SCRATCH_DIR ]; then
 fi
 if [ -z $CONDOR_DIR_NAME ]; then
     echo "CONDOR_DIR_NAME not set, don't know what name to use for your tarball :(, exiting..."
+    echo "Please set it in setup.sh! and do source setup.sh"
+    return 1;
+fi
+if [ -z $USER_EMAIL ]; then
+    echo "USER_EMAIL not set, don't know where to send email notifications for condor jobs completing :(, exiting..."
     echo "Please set it in setup.sh! and do source setup.sh"
     return 1;
 fi

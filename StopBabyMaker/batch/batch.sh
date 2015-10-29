@@ -189,6 +189,7 @@ do
     sed -i "s,ARG5,$CONDOR_DIR_NAME,g" condorFile
     sed -i "s,ARG6,$MAKER_NAME,g" condorFile
     sed -i "s,ARG7,$SCRATCH_DIR,g" condorFile
+    sed -i "s,ARG8,$USER_EMAIL,g" condorFile
     sed -i "s,USER_PROXY,$pathToProxy,g" condorFile
     sed -i "s,TARFILE,$tar_file,g" condorFile
     condor_submit condorFile

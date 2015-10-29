@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "************************************"
-echo "Assemble CONDOR FILES for submission"
-echo "************************************"
+echo "****************************"
+echo "CONDOR FILES ASSEMBLE!!!"
+echo "****************************"
 
 
 #
@@ -106,16 +106,16 @@ fi
 # Final instructions for user
 #
 echo ""
-echo "***************************** :) *********************************************"
-echo "  Condor preparation complete! Now edit some more scripts for condor!"
-echo "-----------------------------------------------------------------------"
+echo "****************************************************************"
+echo "  Condor preparation almost comlete, just edit the following:"
+echo "-------------------------------------------------------------"
 echo "  Things batch.sh needs to know:"
 echo "  * sampleList_in"
-echo "-----------------------------------------------------------------------"
-echo "  Things condorFileTemplate needs to know:"
-echo "  * notify_user"
-echo "-----------------------------------------------------------------------"
+echo "--------------------------------------------------------------"
 echo "  done? now submit jobs with . batch.sh to test your jobs! "
-echo "  Condor log files will be availble in $SCRATCH_DIR/logs, and you can debug with them "
-echo "***************************** :) the end of test job :) *********************************************"
+echo "  Condor log files will be availble in: "
+echo "    $SCRATCH_DIR/logs "
+echo "--------------------------------------------------------------"
+echo "  jobs work? monitor and merge with . makeBabies.sh! "
+echo "****************************************************************"
 echo ""
