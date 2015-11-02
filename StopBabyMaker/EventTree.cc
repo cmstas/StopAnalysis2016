@@ -43,22 +43,24 @@ void EventTree::FillCommon (const std::string &root_file_name)
 
     is_data = evt_isRealData();
 
-///the recommended met filters//
-        filt_cscbeamhalo = filt_cscBeamHalo();
-        filt_eebadsc = filt_eeBadSc();
-        filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
-        filt_hbhenoise = hbheNoiseFilter();
-////////////// 
-        filt_ecallaser = filt_ecalLaser();
-        filt_ecaltp = filt_ecalTP();
-        filt_hcallaser = filt_hcalLaser();
-        filt_met = filt_metfilter();
-        filt_trkfail = filt_trackingFailure();
-        filt_trkPOG = filt_trkPOGFilters();
-        filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
-        filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
-        filt_eff = evt_filt_eff();
-
+    ///the recommended met filters//
+    filt_cscbeamhalo = filt_cscBeamHalo();
+    filt_eebadsc = filt_eeBadSc();
+    filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
+    filt_hbhenoise = hbheNoiseFilter_25ns();
+    filt_hbhenoise_25ns = hbheNoiseFilter_25ns();
+    filt_hbhenoise_50ns = hbheNoiseFilter();
+    ////////////// 
+    filt_ecallaser = filt_ecalLaser();
+    filt_ecaltp = filt_ecalTP();
+    filt_hcallaser = filt_hcalLaser();
+    filt_met = filt_metfilter();
+    filt_trkfail = filt_trackingFailure();
+    filt_trkPOG = filt_trkPOGFilters();
+    filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
+    filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
+    filt_eff = evt_filt_eff();
+    
     if (!is_data)
     {
         scale1fb = evt_scale1fb();
@@ -237,6 +239,8 @@ void EventTree::Reset ()
     filt_eebadsc = false;
     filt_goodvtx = false;
     filt_hbhenoise = false;
+    filt_hbhenoise_25ns = false;
+    filt_hbhenoise_50ns = false;
     filt_hcallaser = false;
     filt_met = false;
     filt_trkfail = false;
@@ -319,6 +323,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("filt_eebadsc", &filt_eebadsc);
     tree->Branch("filt_goodvtx", &filt_goodvtx);
     tree->Branch("filt_hbhenoise", &filt_hbhenoise);
+    tree->Branch("filt_hbhenoise_25ns", &filt_hbhenoise_25ns);
+    tree->Branch("filt_hbhenoise_50ns", &filt_hbhenoise_50ns);
     tree->Branch("filt_hcallaser", &filt_hcallaser);
     tree->Branch("filt_met", &filt_met);
     tree->Branch("filt_trkfail", &filt_trkfail);

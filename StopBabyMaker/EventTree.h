@@ -93,6 +93,8 @@ public:
     float filt_eebadsc;
     float filt_goodvtx;
     float filt_hbhenoise;
+    float filt_hbhenoise_25ns;
+    float filt_hbhenoise_50ns;
     float filt_hcallaser;
     float filt_met;
     float filt_trkfail;
