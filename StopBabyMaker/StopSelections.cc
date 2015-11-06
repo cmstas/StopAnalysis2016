@@ -23,7 +23,7 @@ int numberOfGoodVertices() {
 bool PassElectronVetoSelections(unsigned int elIdx,float pt, float eta){
   if(els_p4().at(elIdx).pt() < pt) return false;
   if(fabs(els_p4().at(elIdx).eta()) > eta) return false;
-  if(!electronID(elIdx, STOP_veto_v2)) return false;  //pass veto, mini-isolation applied at 0.2
+  if(!electronID(elIdx, STOP_veto_v3)) return false;  //pass veto, mini-isolation applied at 0.2
   return true;
 }
 
@@ -37,22 +37,43 @@ bool PassMuonVetoSelections(unsigned int muIdx,float pt, float eta){
 bool PassElectronPreSelections(unsigned int elIdx,float pt, float eta){
   if(els_p4().at(elIdx).pt() < pt) return false;
   if(fabs(els_p4().at(elIdx).eta()) > eta) return false;
-  if(!electronID(elIdx, STOP_medium_v2)) return false;  //mini-isolation applied at 0.1
+  if(!electronID(elIdx, STOP_medium_v3)) return false;  //mini-isolation applied at 0.1
   return true;
 }
 
 bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   if(mus_p4().at(muIdx).pt() < pt) return false;
   if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
-  if(!muonID(muIdx, STOP_loose_v1)) return false;  //pass loose
-  if(!muonID(muIdx, STOP_medium_v2)) return false;  //mini-isolation applied at 0.1
+  if(!muonID(muIdx, STOP_tight_v2)) return false;  //mini-isolation applied at 0.1
   return true;
 }
 
-bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid){
+bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr=false){
+//apply JEC
+        LorentzVector pfjet_p4_cor = cms3.pfjets_p4().at(jetIdx);
+          // get uncorrected jet p4 to use as input for corrections
+        LorentzVector pfjet_p4_uncor = pfjets_p4().at(jetIdx) * cms3.pfjets_undoJEC().at(jetIdx);
+
+          // get L1FastL2L3Residual total correction
+          corrector->setRho   ( cms3.evt_fixgridfastjet_all_rho() );
+          corrector->setJetA  ( cms3.pfjets_area().at(jetIdx)       );
+          corrector->setJetPt ( pfjet_p4_uncor.pt()               );
+          corrector->setJetEta( pfjet_p4_uncor.eta()              );
+          double corr = corrector->getCorrection();
+
+          // check for negative correction
+          if (corr < 0. && fabs(pfjet_p4_uncor.eta()) < 4.7) {
+            std::cout << "ScanChain::Looper: WARNING: negative jet correction: " << corr
+                      << ", raw jet pt: " << pfjet_p4_uncor.pt() << ", eta: " << pfjet_p4_uncor.eta() << std::endl;
+          }
+
+          // apply new JEC to p4
+          if(applynewcorr) pfjet_p4_cor = pfjet_p4_uncor * corr;
+          else pfjet_p4_cor = pfjets_p4().at(jetIdx);
+
   if(jetIdx>=pfjets_p4().size()) return false;//safety requirement
-  if(pfjets_p4().at(jetIdx).pt() < pt) return false;
-  if(fabs(pfjets_p4().at(jetIdx).eta()) > eta) return false;
+  if(pfjet_p4_cor.pt() < pt) return false;
+  if(fabs(pfjet_p4_cor.eta()) > eta) return false;
   if(passjid && !isLoosePFJetV2(jetIdx)) return false;
   return true;
 }
@@ -135,7 +156,7 @@ bool isVetoTau(int ipf, LorentzVector lepp4_, int charge){
 }
 
 //overlap removal
-int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid){
+int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr=false){
   float DR_lep_jet1 = 0.;
   float DR_lep_jet2 = 0.;
   int closestjet_idx = 0;
@@ -143,7 +164,7 @@ int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, dou
   if(jets_.size()==0) return -999;
   
 	for(unsigned int iJet=1; iJet<jets_.size(); iJet++){
-	  if(!PassJetPreSelections(iJet,pt,eta,passjid)) continue;
+	  if(!PassJetPreSelections(iJet,pt,eta,passjid,corrector,applynewcorr)) continue;
 	  //if(jets_.at(iJet).Pt()<pt) continue;
 	  //if(TMath::Abs(jets_.at(iJet).Eta())>eta) continue;
 	  DR_lep_jet1 = ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_);

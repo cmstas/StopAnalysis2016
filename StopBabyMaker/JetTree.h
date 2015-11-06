@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include "Math/LorentzVector.h"
+#include "JetCorrector.h"
+#include "Tools/jetcorr/FactorizedJetCorrector.h"
+
  
 // forward declarations
 class TTree;
@@ -27,16 +30,17 @@ public:
     void Reset ();
     void SetBranches (TTree* tree);
     void SetAliases (TTree* tree);
-    void FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx, unsigned int overlep2_idx);
+    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr);
+
+//FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx, unsigned int overlep2_idx);
     void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id);
     void GetJetSelections (std::string cone_size = "");
-
 protected:
 
     std::string prefix_;
 
 public:
-    // branch objects
+   // branch objects
  
     // ak4 PF jets
     int ngoodjets;
