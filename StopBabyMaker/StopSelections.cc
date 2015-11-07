@@ -30,7 +30,7 @@ bool PassElectronVetoSelections(unsigned int elIdx,float pt, float eta){
 bool PassMuonVetoSelections(unsigned int muIdx,float pt, float eta){
   if(mus_p4().at(muIdx).pt() < pt) return false;
   if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
-  if(!muonID(muIdx, STOP_loose_v2)) return false;  //pass loose, mini-isolation applied at 0.2
+  if(!muonID(muIdx, STOP_loose_v3)) return false;  //pass loose, mini-isolation applied at 0.2
   return true;
 }
 
