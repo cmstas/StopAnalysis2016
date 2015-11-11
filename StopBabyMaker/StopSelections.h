@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <utility>
 #include <assert.h>
+#include "JetCorrector.h"
+#include "jetcorr/FactorizedJetCorrector.h"
 
 using namespace std;
 
@@ -51,14 +53,14 @@ bool PassMuonPreSelections(unsigned int muIdx, float pt, float eta);
 bool PassElectronPreSelections(unsigned int elIdx, float pt, float eta);
 bool PassMuonVetoSelections(unsigned int muIdx, float pt, float eta);
 bool PassElectronVetoSelections(unsigned int elIdx, float pt, float eta);
-bool PassJetPreSelections(unsigned int jetIdx, float pt, float eta, bool passjid);
+bool PassJetPreSelections(unsigned int jetIdx, float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr);
 vector<pair <int, LorentzVector> > sort_pt( vector<LorentzVector> p4_, float pt_);
 vector< LorentzVector> getsortedp4(vector<pair <int, LorentzVector> > index_);
 float getMinDphi(float metPhi, LorentzVector& vec1, LorentzVector& vec2 );
 float getdphi( float phi1 , float phi2 );
 float dRbetweenVectors(LorentzVector& vec1, LorentzVector& vec2 );
 float  calculateMt(const LorentzVector p4, double met, double met_phi);
-int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid);
+int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr);
 int getOverlappingTrackIndex(LorentzVector& lep_, int pdgid_, vector<LorentzVector> tracks_, double dR);
 bool isVetoTrack(int ipf, LorentzVector lepp4_, int charge);
 bool isVetoTrack_v2(int ipf, LorentzVector lepp4_, int charge);

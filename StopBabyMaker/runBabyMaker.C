@@ -61,7 +61,7 @@ int main(int argc, char **argv){
   //
   int nVtx              = 1;
 
-  float met             = 0.0;
+  float met             = 50;
 
   int nGoodLeptons      = 1;
   float goodLep_el_pt   = 20.0;
@@ -79,10 +79,16 @@ int main(int argc, char **argv){
   float vetoLep_mu_pt   = 5.0;
   float vetoLep_mu_eta  = 2.4;
 
-  int nJets             = 1;
+  int nJets             = 2;
   float jet_pt          = 30.0;
   float jet_eta         = 2.4;
-  
+
+  int nBJets            = 0; 
+
+  bool applyJECfromFile = true;
+
+  bool apply2ndlepVeto =  false;
+
   float jet_ak8_pt      = 100.0;
   float jet_ak8_eta     = 2.4;
 
@@ -107,7 +113,7 @@ int main(int argc, char **argv){
   //
   // Set Skim Variables
   //
-  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta, nphs, phs_pt, phs_eta );
+  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, apply2ndlepVeto,nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta, nBJets,  nphs, phs_pt, phs_eta, applyJECfromFile );
 
 
   //
@@ -119,9 +125,10 @@ int main(int argc, char **argv){
   int file=-1;
   if(argc>3) file = atoi(argv[3]);
 
-  char* dirpath = "/nfs-7/userdata/mliu/ttz/scale_unc/";  
+  char* dirpath = ".";
   if(argc>4) dirpath = argv[4];
 
+//const char* filename = (file == -1 ? "*postprocess.root" : Form("%spostprocess.root"));
   const char* filename = (file == -1 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
   cout << filename << endl;
   

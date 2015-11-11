@@ -14,6 +14,19 @@ EventTree::EventTree (const std::string &prefix)
     : prefix_(prefix)
 {
 }
+
+void EventTree::SetMetFilterEvents(){
+    cout<<"Loading bad event files ..."<<endl;
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_DoubleEG_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_DoubleMuon_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_HTMHT_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_JetHT_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_MET_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_SingleElectron_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_SingleMuon_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_SinglePhoton_csc2015.txt");
+    cout<<" ... finished!"<<endl;
+}
  
 void EventTree::FillCommon (const std::string &root_file_name)
 {
@@ -36,31 +49,34 @@ void EventTree::FillCommon (const std::string &root_file_name)
     firstVtx_posZ   = vtxs_position()[0].Z();
     firstVtx_posp4  = vtxs_position()[0];
  
-    pfmet = evt_pfmet();
-    pfmet_phi = evt_pfmetPhi();
+//    pfmet = evt_pfmet();
+ //   pfmet_phi = evt_pfmetPhi();
     calomet = evt_calomet();
     calomet_phi = evt_calometPhi();
 
     is_data = evt_isRealData();
 
-    ///the recommended met filters//
-    filt_cscbeamhalo = filt_cscBeamHalo();
-    filt_eebadsc = filt_eeBadSc();
-    filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
-    filt_hbhenoise = hbheNoiseFilter_25ns();
-    filt_hbhenoise_25ns = hbheNoiseFilter_25ns();
-    filt_hbhenoise_50ns = hbheNoiseFilter();
-    ////////////// 
-    filt_ecallaser = filt_ecalLaser();
-    filt_ecaltp = filt_ecalTP();
-    filt_hcallaser = filt_hcalLaser();
-    filt_met = filt_metfilter();
-    filt_trkfail = filt_trackingFailure();
-    filt_trkPOG = filt_trkPOGFilters();
-    filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
-    filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
-    filt_eff = evt_filt_eff();
-    
+///the recommended met filters//
+        filt_cscbeamhalo = filt_cscBeamHalo();
+        filt_eebadsc = filt_eeBadSc();
+        filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
+        filt_hbhenoise = hbheNoiseFilter_25ns();
+
+//////////////
+  if (evt_isRealData()) {
+    filt_badevents = !(metFilterTxt.eventFails(evt_run(), evt_lumiBlock(), evt_event()));
+  }else filt_badevents = true;
+////////////// 
+        filt_ecallaser = filt_ecalLaser();
+        filt_ecaltp = filt_ecalTP();
+        filt_hcallaser = filt_hcalLaser();
+        filt_met = filt_metfilter();
+        filt_trkfail = filt_trackingFailure();
+        filt_trkPOG = filt_trkPOGFilters();
+        filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
+        filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
+        filt_eff = evt_filt_eff();
+
     if (!is_data)
     {
         scale1fb = evt_scale1fb();
@@ -201,6 +217,7 @@ void EventTree::Reset ()
     HLT_Mu8El23            = -9999.;
     HLT_Mu17El12           = -9999.;
     HLT_Mu23El12           = -9999.;
+    HLT_SingleEl23         = -9999.;
     HLT_SingleEl27         = -9999.;
     HLT_SingleEl27Tight    = -9999.;
     HLT_SingleElTight      = -9999.;
@@ -238,9 +255,8 @@ void EventTree::Reset ()
     filt_ecaltp = false;
     filt_eebadsc = false;
     filt_goodvtx = false;
+    filt_badevents =false;
     filt_hbhenoise = false;
-    filt_hbhenoise_25ns = false;
-    filt_hbhenoise_50ns = false;
     filt_hcallaser = false;
     filt_met = false;
     filt_trkfail = false;
@@ -322,9 +338,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("filt_ecaltp", &filt_ecaltp);
     tree->Branch("filt_eebadsc", &filt_eebadsc);
     tree->Branch("filt_goodvtx", &filt_goodvtx);
+    tree->Branch("filt_badevents", &filt_badevents); 
     tree->Branch("filt_hbhenoise", &filt_hbhenoise);
-    tree->Branch("filt_hbhenoise_25ns", &filt_hbhenoise_25ns);
-    tree->Branch("filt_hbhenoise_50ns", &filt_hbhenoise_50ns);
     tree->Branch("filt_hcallaser", &filt_hcallaser);
     tree->Branch("filt_met", &filt_met);
     tree->Branch("filt_trkfail", &filt_trkfail);
@@ -415,6 +430,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_Mu8El23", &HLT_Mu8El23 );
     tree->Branch("HLT_Mu17El12", &HLT_Mu17El12 );
     tree->Branch("HLT_Mu23El12", &HLT_Mu23El12 );
+    tree->Branch("HLT_SingleEl23", &HLT_SingleEl23);
     tree->Branch("HLT_SingleEl27", &HLT_SingleEl27 );
     tree->Branch("HLT_SingleEl27Tight", &HLT_SingleEl27Tight );
     tree->Branch("HLT_SingleElTight", &HLT_SingleElTight );

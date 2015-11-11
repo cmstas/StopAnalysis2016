@@ -14,8 +14,8 @@ JetTree::JetTree (const std::string &prefix)
 {
 }
 
-
-void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999)
+void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999, bool applynewcorr=false)
+//void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999)
 {
     
     // fill info for ak4pfjets
@@ -33,34 +33,71 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
     float htssm = 0.;
     float htosm = 0.;
     float htratiom = 0.;
-    vector<pair <int, LorentzVector> > sortedJets_pt =  sort_pt(pfjets_p4(), JET_PT);
+
+//apply JEC
+    LorentzVector pfjet_p4_cor;
+    LorentzVector pfjet_p4_uncor;
+    vector<float> newjecorr;
+    newjecorr.clear();
+    vector<pair <int, LorentzVector> > sortedJets_pt;
+
+      vector<LorentzVector> p4sCorrJets; // store corrected p4 for ALL jets, so indices match CMS3 ntuple
+      vector<LorentzVector> p4sUCorrJets;
+      p4sCorrJets.clear();
+      p4sUCorrJets.clear();
+      for(unsigned int iJet = 0; iJet < cms3.pfjets_p4().size(); iJet++){
+        LorentzVector pfjet_p4_cor = cms3.pfjets_p4().at(iJet);
+          // get uncorrected jet p4 to use as input for corrections
+        LorentzVector pfjet_p4_uncor = pfjets_p4().at(iJet) * cms3.pfjets_undoJEC().at(iJet);
+
+          // get L1FastL2L3Residual total correction
+          corrector->setRho   ( cms3.evt_fixgridfastjet_all_rho() );
+          corrector->setJetA  ( cms3.pfjets_area().at(iJet)       );
+          corrector->setJetPt ( pfjet_p4_uncor.pt()               );
+          corrector->setJetEta( pfjet_p4_uncor.eta()              );
+          double corr = corrector->getCorrection();
+
+          // check for negative correction
+          if (corr < 0. && fabs(pfjet_p4_uncor.eta()) < 4.7) {
+            std::cout << "ScanChain::Looper: WARNING: negative jet correction: " << corr
+                      << ", raw jet pt: " << pfjet_p4_uncor.pt() << ", eta: " << pfjet_p4_uncor.eta() << std::endl;
+          }
+
+          // apply new JEC to p4
+          pfjet_p4_cor = pfjet_p4_uncor * corr;
+          newjecorr.push_back(corr);
+          if(applynewcorr) p4sCorrJets.push_back(pfjet_p4_cor);
+          else p4sCorrJets.push_back(pfjets_p4().at(iJet));
+          p4sUCorrJets.push_back(pfjet_p4_uncor);
+      }
+      sortedJets_pt =  sort_pt(p4sCorrJets,JET_PT);
 
     for (size_t idx = 0; idx < pfjets_p4().size(); ++idx)
     {
         jindex = sortedJets_pt.at(idx).first;
         //deal with the overlaps
         if(jindex == overlep1_idx){
-		ak4pfjet_overlep1_p4  = pfjets_p4().at(jindex);
+		ak4pfjet_overlep1_p4  = p4sCorrJets.at(jindex);
 //pfjets_bDiscriminators() pfjets_bDiscriminatorNames()
                 ak4pfjet_overlep1_CSV = getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex);
 		//ak4pfjet_overlep1_pu_id = pfjets_pileupJetId().at(jindex);
-                ak4pfjet_overlep1_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
-                ak4pfjet_overlep1_nhf = pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
-                ak4pfjet_overlep1_cef = pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
-                ak4pfjet_overlep1_nef = pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
-                ak4pfjet_overlep1_muf = pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep1_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
+                ak4pfjet_overlep1_nhf = pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
+                ak4pfjet_overlep1_cef = pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
+                ak4pfjet_overlep1_nef = pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
+                ak4pfjet_overlep1_muf = pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
                 ak4pfjet_overlep1_cm  = pfjets_chargedMultiplicity().at(jindex);
                 ak4pfjet_overlep1_nm  = cms3.pfjets_neutralMultiplicity().at(jindex);
 	}
         if(jindex == overlep2_idx){
-                ak4pfjet_overlep2_p4  = pfjets_p4().at(jindex);
+                ak4pfjet_overlep2_p4  = p4sCorrJets.at(jindex);
                 ak4pfjet_overlep2_CSV = getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex);
                 //ak4pfjet_overlep2_pu_id = pfjets_pileupJetId().at(jindex);
-                ak4pfjet_overlep2_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
-                ak4pfjet_overlep2_nhf = pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
-                ak4pfjet_overlep2_cef = pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
-                ak4pfjet_overlep2_nef = pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
-                ak4pfjet_overlep2_muf = pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy());
+                ak4pfjet_overlep2_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
+                ak4pfjet_overlep2_nhf = pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
+                ak4pfjet_overlep2_cef = pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
+                ak4pfjet_overlep2_nef = pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
+                ak4pfjet_overlep2_muf = pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
                 ak4pfjet_overlep2_cm  = pfjets_chargedMultiplicity().at(jindex);
                 ak4pfjet_overlep2_nm  = cms3.pfjets_neutralMultiplicity().at(jindex);
         }
@@ -78,18 +115,18 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
 	if(skipthis) continue; //remove all overlaps from jet collection
 
         //Jet selections
-        if(pfjets_p4().at(jindex).pt() < m_ak4_pt_cut) continue;
-        if(fabs(pfjets_p4().at(jindex).eta()) > m_ak4_eta_cut) continue;
+        if(p4sCorrJets.at(jindex).pt() < m_ak4_pt_cut) continue;
+        if(fabs(p4sCorrJets.at(jindex).eta()) > m_ak4_eta_cut) continue;
 	if(!isLoosePFJetV2(jindex)) ++nFailJets;
         if(m_ak4_passid && !isLoosePFJetV2(jindex)) continue;
         nGoodJets++;
-        ak4pfjets_p4.push_back(pfjets_p4().at(jindex));
-        ak4pfjets_pt.push_back(pfjets_p4().at(jindex).pt());
-        ak4pfjets_eta.push_back(pfjets_p4().at(jindex).eta());
-        ak4pfjets_phi.push_back(pfjets_p4().at(jindex).phi());
-        ak4pfjets_mass.push_back(pfjets_p4().at(jindex).mass());
+        ak4pfjets_p4.push_back(p4sCorrJets.at(jindex));
+        ak4pfjets_pt.push_back(p4sCorrJets.at(jindex).pt());
+        ak4pfjets_eta.push_back(p4sCorrJets.at(jindex).eta());
+        ak4pfjets_phi.push_back(p4sCorrJets.at(jindex).phi());
+        ak4pfjets_mass.push_back(p4sCorrJets.at(jindex).mass());
 
-        dphi_ak4pfjet_met.push_back(getdphi(pfjets_p4().at(jindex).phi(), evt_pfmetPhi()));
+        dphi_ak4pfjet_met.push_back(getdphi(p4sCorrJets.at(jindex).phi(), evt_pfmetPhi()));
         ak4pfjets_CSV.push_back(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex));
         ak4pfjets_puid.push_back(loosePileupJetId(jindex));
         ak4pfjets_parton_flavor.push_back(pfjets_partonFlavour().at(jindex));
@@ -98,11 +135,11 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
         ak4pfjets_medium_pfid.push_back(isMediumPFJet(jindex));
         ak4pfjets_tight_pfid.push_back(isTightPFJet(jindex));
 
-        ak4pfjets_chf.push_back(pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
-        ak4pfjets_nhf.push_back(pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
-        ak4pfjets_cef.push_back(pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
-        ak4pfjets_nef.push_back(pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
-	ak4pfjets_muf.push_back(pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*pfjets_p4()[jindex].energy()) );
+        ak4pfjets_chf.push_back(pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
+        ak4pfjets_nhf.push_back(pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
+        ak4pfjets_cef.push_back(pfjets_chargedEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
+        ak4pfjets_nef.push_back(pfjets_neutralEmE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
+	ak4pfjets_muf.push_back(pfjets_muonE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
         ak4pfjets_cm.push_back(pfjets_chargedMultiplicity().at(jindex));
         ak4pfjets_nm.push_back(cms3.pfjets_neutralMultiplicity().at(jindex));
 	
@@ -114,21 +151,21 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
 	}
 
 	//HTRatio
-	dPhiM = getdphi(evt_pfmetPhi(), pfjets_p4().at(jindex).phi() );
-	if ( dPhiM  < (TMath::Pi()/2) ) htssm = htssm + pfjets_p4().at(jindex).pt();
-        else htosm = htosm + pfjets_p4().at(jindex).pt();	
+	dPhiM = getdphi(evt_pfmetPhi(), p4sCorrJets.at(jindex).phi() );
+	if ( dPhiM  < (TMath::Pi()/2) ) htssm = htssm + p4sCorrJets.at(jindex).pt();
+        else htosm = htosm + p4sCorrJets.at(jindex).pt();	
 
-        HT = HT + pfjets_p4().at(jindex).pt();
+        HT = HT + p4sCorrJets.at(jindex).pt();
 	
 	//medium btag
         if(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex) > BTAG_MED){
              ak4pfjets_passMEDbtag.push_back(true);
              nbtags_med++;
              if(nbtags_med == 1){
-                ak4pfjets_leadMEDbjet_pt = pfjets_p4().at(jindex).pt();  //plot leading bjet pT
-                ak4pfjets_leadMEDbjet_p4 = pfjets_p4().at(jindex);
+                ak4pfjets_leadMEDbjet_pt = p4sCorrJets.at(jindex).pt();  //plot leading bjet pT
+                ak4pfjets_leadMEDbjet_p4 = p4sCorrJets.at(jindex);
              }
-             ak4pfjets_MEDbjet_pt.push_back(pfjets_p4().at(jindex).pt());
+             ak4pfjets_MEDbjet_pt.push_back(p4sCorrJets.at(jindex).pt());
         }else{ 
              ak4pfjets_passMEDbtag.push_back(false);
         }
@@ -138,7 +175,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned 
 	}
    }
 
-    ak4pfjets_leadbtag_p4 = pfjets_p4().at(leadbtag_idx);//highest CSV jet
+    ak4pfjets_leadbtag_p4 = p4sCorrJets.at(leadbtag_idx);//highest CSV jet
 
    ngoodjets = nGoodJets;
    nfailjets = nFailJets;

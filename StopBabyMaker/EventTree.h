@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Math/LorentzVector.h"
+#include "Tools/badEventFilter.h"
  
 // forward declarations
 class TTree;
@@ -28,10 +29,10 @@ public:
     void SetBranches (TTree* tree);
     void SetAliases (TTree* tree) const;
     void FillCommon (const std::string &root_file_name = "");
- 
+    void SetMetFilterEvents(); 
 private:
     std::string prefix_;
- 
+      eventFilter metFilterTxt; 
 public:
     // branch objects
     unsigned int run;
@@ -92,9 +93,8 @@ public:
     float filt_ecaltp;
     float filt_eebadsc;
     float filt_goodvtx;
+    float filt_badevents;
     float filt_hbhenoise;
-    float filt_hbhenoise_25ns;
-    float filt_hbhenoise_50ns;
     float filt_hcallaser;
     float filt_met;
     float filt_trkfail;
@@ -174,6 +174,7 @@ public:
     int HLT_Mu17El12;
     int HLT_Mu23El12;
     int HLT_SingleElTight;
+    int HLT_SingleEl23;
     int HLT_SingleEl27;
     int HLT_SingleEl27Tight;
     int HLT_SingleElHT200;
