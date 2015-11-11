@@ -168,6 +168,7 @@ public:
     //new
     int HLT_HT350MET120;
     int HLT_DiEl;
+    int HLT_DiEl_17_12;
     int HLT_DiMu;
     int HLT_Mu8El17;
     int HLT_Mu8El23;

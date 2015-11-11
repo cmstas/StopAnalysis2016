@@ -256,19 +256,22 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   TIter fileIter(listOfFiles);
   TFile *currentFile = 0;
   bool applyJECunc = false;
+
   //
   // JEC files
   //
   bool isDataFromFileName;
-    string filestr(output_name);
-    cout<<"output name "<< output_name;
-    if (filestr.find("data") != std::string::npos) {
-      isDataFromFileName = true;
-      cout << "running on DATA, based on file name" << output_name<<endl;
-    } else {
-      isDataFromFileName = false;
-      cout << "running on MC, based on file name" << output_name<<endl;
-    }
+  string filestr(output_name);
+  cout<<"output name "<< output_name;
+  if (filestr.find("data") != std::string::npos) {
+    isDataFromFileName = true;
+    cout << ", running on DATA, based on file name: " << output_name<<endl;
+  } 
+  else {
+    isDataFromFileName = false;
+    cout << ", running on MC, based on file name: " << output_name<<endl;
+  }
+  
   //
   // Make Baby Ntuple  
   //
@@ -278,50 +281,52 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // Initialize Baby Ntuple Branches
   //
   InitBabyNtuple();
+  
   //
   // Set JSON file
   //
   const char* json_file = "json_files/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON.txt";
   set_goodrun_file_json(json_file);
+  
   //
   // JEC files
   //
   std::vector<std::string> jetcorr_filenames_pfL1FastJetL2L3;
   FactorizedJetCorrector *jet_corrector_pfL1FastJetL2L3(0);
   JetCorrectionUncertainty* jetcorr_uncertainty(0);
- // if (applyJECfromFile) {
-    jetcorr_filenames_pfL1FastJetL2L3.clear();
-    std::string jetcorr_uncertainty_filename;
+  jetcorr_filenames_pfL1FastJetL2L3.clear();
+  std::string jetcorr_uncertainty_filename;
 
-    // files for RunIISpring15 MC
-      if (isDataFromFileName) {
-        jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
-        jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt");
-        jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
-        jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
-      } else {
-        jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
-        jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
-        jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
-        jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
-      }
+  // files for RunIISpring15 MC
+  if (isDataFromFileName) {
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
+  } 
+  else {
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
+    jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
+  }
 
-    cout << "applying JEC from the following files:" << endl;
-    for (unsigned int ifile = 0; ifile < jetcorr_filenames_pfL1FastJetL2L3.size(); ++ifile) {
-      cout << "   " << jetcorr_filenames_pfL1FastJetL2L3.at(ifile) << endl;
-    }
+  cout << "applying JEC from the following files:" << endl;
+  for (unsigned int ifile = 0; ifile < jetcorr_filenames_pfL1FastJetL2L3.size(); ++ifile) {
+    cout << "   " << jetcorr_filenames_pfL1FastJetL2L3.at(ifile) << endl;
+  }
 
-    jet_corrector_pfL1FastJetL2L3  = makeJetCorrector(jetcorr_filenames_pfL1FastJetL2L3);
+  jet_corrector_pfL1FastJetL2L3  = makeJetCorrector(jetcorr_filenames_pfL1FastJetL2L3);
+  
+  if (!isDataFromFileName && applyJECunc != 0) {
+    cout << "applying JEC uncertainties with weight " << applyJECunc << " from file: " << endl
+	 << "   " << jetcorr_uncertainty_filename << endl;
+    jetcorr_uncertainty = new JetCorrectionUncertainty(jetcorr_uncertainty_filename);
+  }
 
-    if (!isDataFromFileName && applyJECunc != 0) {
-      cout << "applying JEC uncertainties with weight " << applyJECunc << " from file: " << endl
-           << "   " << jetcorr_uncertainty_filename << endl;
-      jetcorr_uncertainty = new JetCorrectionUncertainty(jetcorr_uncertainty_filename);
-    }
-
-  // if applyJECfromFile
-
-  //get bad events from txt files
+  //
+  // Get bad events from txt files
+  //
   StopEvt.SetMetFilterEvents();
 
   //
@@ -388,13 +393,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       //save met here because of JEC
       if(applyJECfromFile){
-           pair<float,float> newmet = getT1CHSMET(jet_corrector_pfL1FastJetL2L3);
-           StopEvt.pfmet = newmet.first;
-           StopEvt.pfmet_phi = newmet.second;
-      }else{
-          StopEvt.pfmet = evt_pfmet();
-          StopEvt.pfmet_phi = evt_pfmetPhi();
+	pair<float,float> newmet = getT1CHSMET(jet_corrector_pfL1FastJetL2L3);
+	StopEvt.pfmet = newmet.first;
+	StopEvt.pfmet_phi = newmet.second;
       }
+      else{
+	StopEvt.pfmet = evt_pfmet();
+	StopEvt.pfmet_phi = evt_pfmetPhi();
+      }
+
       // 
       // met Cut
       //
@@ -468,8 +475,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(nGoodLeptons < skim_nGoodLep) continue;
       nEvents_pass_skim_nGoodLep++;
 
-
-
       StopEvt.ngoodleps  = nGoodLeptons; 
       StopEvt.nlooseleps = nLooseLeptons; 
       StopEvt.nvetoleps  = nVetoLeptons; 
@@ -485,7 +490,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       // Jet Selection
       //
-
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
       // Get the jets overlapping with the selected leptons
       if(pfjets_p4().size() > 0){
@@ -498,13 +502,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
         jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile);
-//	jets.FillCommon(idx_alloverlapjets, jet_overlep1_idx, jet_overlep2_idx);
+	//jets.FillCommon(idx_alloverlapjets, jet_overlep1_idx, jet_overlep2_idx);
       }
       
       if(jets.ngoodjets < skim_nJets) continue;
       nEvents_pass_skim_nJets++;
       if(jets.ngoodbtags < skim_nBJets) continue;
       nEvents_pass_skim_nBJets++;
+
       //
       // Photon Selection
       //
@@ -526,6 +531,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       // Event Variables
       //
+
       // MET & Leptons
       if(nVetoLeptons>0) StopEvt.mt_met_lep = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>1) StopEvt.mt_met_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
@@ -533,7 +539,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(jets.ak4pfjets_p4.size()> 0) StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
 
       StopEvt.ak4pfjets_rho = evt_fixgridfastjet_all_rho();
-
     
       vector<int> jetIndexSortedCSV = JetUtil::JetIndexCSVsorted(jets.ak4pfjets_CSV, jets.ak4pfjets_p4, jets.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, true);
       vector<LorentzVector> mybjets; vector<LorentzVector> myaddjets;
@@ -542,8 +547,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	else if(mybjets.size()<=1 && (mybjets.size()+myaddjets.size())<3) myaddjets.push_back(jets.ak4pfjets_p4.at(jetIndexSortedCSV[idx]) );
       }
 
-      //looks like all the following variables need jets to be calculated. add protection for skim settings of njets<2
-      vector<float> dummy_sigma; dummy_sigma.clear();//move outside of if-clause to be able to copy for photon selection
+      // looks like all the following variables need jets to be calculated. 
+      //   add protection for skim settings of njets<2
+      vector<float> dummy_sigma; dummy_sigma.clear(); //move outside of if-clause to be able to copy for photon selection
       for (size_t idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
 	dummy_sigma.push_back(0.1);
       } 
@@ -630,11 +636,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       // Zll Event Variables
       //
-      //first find a Zll
-      //fill only for 2 or three lepton events//Zl2 will have always idx 1(2) for 2l(3l) events
-      //if four lepton events test only leading three leptons
-      //Zll must be always OS, then prefer OF, then prefer Zmass
-      //Zll needs to go before ph, as we recalculate myaddjets, mybjets
+      //  first find a Zll
+      //  fill only for 2 or three lepton events//Zl2 will have always idx 1(2) for 2l(3l) events
+      //  if four lepton events test only leading three leptons
+      //  Zll must be always OS, then prefer OF, then prefer Zmass
+      //  Zll needs to go before ph, as we recalculate myaddjets, mybjets
       if(nLooseLeptons>=2){
 	int Zl1 = -1;
 	if(nLooseLeptons==2 && AllLeps[0].id*AllLeps[1].id<0) Zl1 = 0;
@@ -815,7 +821,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       else StopEvt.PassTauVeto = false;
       Taus.ngoodtaus = vetotaus;
 
-
       //
       // IsoTracks (Charged pfLeptons and pfChargedHadrons)
       //
@@ -903,6 +908,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
             if(!StopEvt.PassTauVeto) continue;
       }
       nEvents_pass_skim_2ndlepVeto++;
+
       //
       // Gen Information
       //
@@ -967,12 +973,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       gen_els.gen_nfromt = n_nuelfromt;
       gen_mus.gen_nfromt = n_numufromt;
       gen_taus.gen_nfromt = n_nutaufromt;
-
       
       //
       // Trigger Information
       //
-
       //std::cout << "[babymaker::looper]: filling HLT vars" << std::endl;
 
       //StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_eta2p1_IterTrk02_v") || passHLTTriggerPattern("HLT_IsoTkMu20_eta2p1_IterTrk02_v");   
@@ -987,6 +991,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight = passHLTTriggerPattern("HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight") || passHLTTriggerPattern("HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight");     
 
       StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
+      StopEvt.HLT_DiEl_17_12 = passHLTTriggerPattern("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ");
       StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
       StopEvt.HLT_Mu8El17 = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v");
       StopEvt.HLT_Mu8El23 = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v");
@@ -1015,7 +1020,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
       StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
 
-
       //
       // Fill Tree
       //
@@ -1024,7 +1028,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     
     }//close event loop
     
-
     //
     // Close input file
     //
