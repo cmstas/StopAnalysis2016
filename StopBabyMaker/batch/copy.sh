@@ -39,14 +39,14 @@ cp -r $MAKER_DIR/Makefile $CONDOR_DIR_NAME/$MAKER_NAME/
 #modify makefile so it knows where is the CORE on condor relative to the untarred directory location.
 sed -i '/^COREPATH/d' $CONDOR_DIR_NAME/$MAKER_NAME/Makefile
 sed -i '1i COREPATH = ../CORE/' $CONDOR_DIR_NAME/$MAKER_NAME/Makefile
+
 cp -r $MAKER_DIR/*.dat $CONDOR_DIR_NAME/$MAKER_NAME/
 cp -r $MAKER_DIR/*.C $CONDOR_DIR_NAME/$MAKER_NAME/
+cp -r $MAKER_DIR/stop_variables/ $CONDOR_DIR_NAME/$MAKER_NAME/
+cp -r $MAKER_DIR/json_files/ $CONDOR_DIR_NAME/$MAKER_NAME/
+cp -r $MAKER_DIR/jecfiles/ $CONDOR_DIR_NAME/$MAKER_NAME/
 
 cp -r $CORE_DIR/* $CONDOR_DIR_NAME/$CORE_NAME/
-
-cp -r $MAKER_DIR/stop_variables/ $CONDOR_DIR_NAME/$MAKER_NAME/
-
-cp -r $MAKER_DIR/json_files/ $CONDOR_DIR_NAME/$MAKER_NAME/
 
 
 #
