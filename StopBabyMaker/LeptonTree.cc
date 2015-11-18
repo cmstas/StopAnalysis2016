@@ -76,17 +76,17 @@ void LeptonTree::FillCommon (int id, int idx)
         ip3derr = els_ip3derr().at(idx);
 
 	//ID
-        is_eleid_loose  = electronID(idx, STOP_loose_v1);
-        is_eleid_medium	= electronID(idx, STOP_medium_v1);
-        is_eleid_tight  = electronID(idx, STOP_tight_v1);
+        is_eleid_loose  = electronID(idx, STOP_loose_v3);
+        is_eleid_medium	= electronID(idx, STOP_medium_v3);
+        is_eleid_tight  = electronID(idx, STOP_tight_v3);
         
         //Phys14 IDs
         is_phys14_loose_noIso  = isLooseElectronPOGphys14noIso_v2(idx);
         is_phys14_medium_noIso = isMediumElectronPOGphys14noIso_v2(idx);
         is_phys14_tight_noIso  = isTightElectronPOGphys14noIso_v2(idx);
 
-        passMediumID = electronID(idx, STOP_medium_v2);
-        passVeto     = electronID(idx, STOP_veto_v2);
+        passMediumID = electronID(idx, STOP_medium_v3);
+        passVeto     = electronID(idx, STOP_veto_v3);
 
         eoverpin        = els_eOverPIn().at(idx); 
 
@@ -138,12 +138,12 @@ void LeptonTree::FillCommon (int id, int idx)
 
         is_pfmu    = ((mus_type().at(idx) & (1<<5)) != 0);
         if (vtxidx >= 0) {
-   	    is_muoid_loose  = muonID(idx, STOP_loose_v1); 
-            is_muoid_medium = muonID(idx, STOP_medium_v1);
-            is_muoid_tight  = muonID(idx, STOP_tight_v1);
+   	    is_muoid_loose  = muonID(idx, STOP_loose_v3); 
+            is_muoid_medium = muonID(idx, STOP_medium_v3);
+            is_muoid_tight  = muonID(idx, STOP_tight_v2);
         }
-        passMediumID = muonID(idx, STOP_medium_v2);
-	passVeto = muonID(idx, STOP_loose_v2);
+        passMediumID = muonID(idx, STOP_medium_v3);
+	passVeto = muonID(idx, STOP_loose_v3);
         //iso variables
         chiso     = mus_isoR04_pf_ChargedHadronPt().at(idx);
         nhiso     = mus_isoR04_pf_NeutralHadronEt().at(idx);

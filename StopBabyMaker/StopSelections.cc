@@ -131,6 +131,7 @@ bool isVetoTrack_v3(int ipf, LorentzVector lepp4_, int charge){
       //if not electron or muon
       if(abs(pfcands_particleId().at(ipf))!=11 && abs(pfcands_particleId().at(ipf))!=13){
           if(pfcands_p4().at(ipf).pt() < 10.) return false;
+		  if(fabs(pfcands_p4().at(ipf).eta()) > 2.4 ) return false;
 	  if(pfcands_p4().at(ipf).pt() > 60. ){
 	    if(TrackIso(ipf,0.3,0.1) > 6.0 ) return false;
 	  }
