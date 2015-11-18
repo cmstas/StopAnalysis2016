@@ -55,6 +55,14 @@ public:
 
     int genlepsfromtop;
 
+    int genLepsHardProcess;
+    int genNusHardProcess;
+    
+    int is0lep;
+    int is1lep;
+    int is2lep;
+    int isZtoNuNu;
+
     int ngoodleps;
     int nlooseleps;   
     int nvetoleps;   

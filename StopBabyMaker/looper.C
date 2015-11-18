@@ -93,26 +93,25 @@ babyMaker::babyMaker(){
    jets = JetTree();
    Taus = TauTree();
    Tracks = IsoTracksTree();
-//   gen_els = GenParticleTree("els_");
-//   gen_mus = GenParticleTree("mus_");
-//   gen_taus = GenParticleTree("taus_");
+   //gen_els = GenParticleTree("els_");
+   //gen_mus = GenParticleTree("mus_");
+   //gen_taus = GenParticleTree("taus_");
    gen_leps = GenParticleTree("leps_");
-//   gen_nuels = GenParticleTree("nuels_");
-//   gen_numus = GenParticleTree("numus_");
-//   gen_nutaus = GenParticleTree("nutaus_");
+   //gen_nuels = GenParticleTree("nuels_");
+   //gen_numus = GenParticleTree("numus_");
+   //gen_nutaus = GenParticleTree("nutaus_");
    gen_nus = GenParticleTree("nus_");
    gen_tops = GenParticleTree("ts_");
-//   gen_bs  = GenParticleTree("bs_");
-//   gen_cs  = GenParticleTree("cs_");
+   //gen_bs  = GenParticleTree("bs_");
+   //gen_cs  = GenParticleTree("cs_");
    gen_qs  = GenParticleTree("qs_");
-//   gen_glus = GenParticleTree("glus_");
+   //gen_glus = GenParticleTree("glus_");
    gen_bosons = GenParticleTree("bosons_");
-//   gen_ws  = GenParticleTree("ws_");
-//   gen_zs  = GenParticleTree("zs_");
-//   gen_phs = GenParticleTree("phs_");
-//   gen_hs  = GenParticleTree("hs_");
-   gen_lsp = GenParticleTree("lsp_");
-   gen_stop = GenParticleTree("stop_");
+   //gen_ws  = GenParticleTree("ws_");
+   //gen_zs  = GenParticleTree("zs_");
+   //gen_phs = GenParticleTree("phs_");
+   //gen_hs  = GenParticleTree("hs_");
+   gen_susy = GenParticleTree("susy_");
 }
 
 void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC){
@@ -168,25 +167,24 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   Tracks.SetBranches(BabyTree);
   //gen_els.SetBranches(BabyTree);
   //gen_mus.SetBranches(BabyTree);
- // gen_taus.SetBranches(BabyTree);
+  //gen_taus.SetBranches(BabyTree);
   gen_leps.SetBranches(BabyTree);
-//  gen_nuels.SetBranches(BabyTree);
-//  gen_numus.SetBranches(BabyTree);
-//  gen_nutaus.SetBranches(BabyTree);
+  //gen_nuels.SetBranches(BabyTree);
+  //gen_numus.SetBranches(BabyTree);
+  //gen_nutaus.SetBranches(BabyTree);
   gen_nus.SetBranches(BabyTree);
   gen_tops.SetBranches(BabyTree);
-//  gen_bs.SetBranches(BabyTree);
-//  gen_cs.SetBranches(BabyTree);
+  //gen_bs.SetBranches(BabyTree);
+  //gen_cs.SetBranches(BabyTree);
   gen_qs.SetBranches(BabyTree);
-//  gen_glus.SetBranches(BabyTree);
+  //gen_glus.SetBranches(BabyTree);
   //gen_ws.SetBranches(BabyTree);
- // gen_zs.SetBranches(BabyTree);
+  //gen_zs.SetBranches(BabyTree);
   //gen_phs.SetBranches(BabyTree);
   //gen_hs.SetBranches(BabyTree);
   gen_bosons.SetBranches(BabyTree);
-  gen_lsp.SetBranches(BabyTree);
-  gen_stop.SetBranches(BabyTree);
-  
+  gen_susy.SetBranches(BabyTree);
+    
 }
 
 void babyMaker::InitBabyNtuple(){
@@ -198,30 +196,29 @@ void babyMaker::InitBabyNtuple(){
   ph.Reset();
   Taus.Reset();
   Tracks.Reset();
-/*  gen_els.Reset();
-  gen_mus.Reset();
-  gen_taus.Reset();
-  gen_nuels.Reset();
-  gen_numus.Reset();
-  gen_nutaus.Reset();
-  gen_tops.Reset();
-  gen_bs.Reset();
-  gen_cs.Reset(); 
-  gen_qs.Reset();
-  gen_glus.Reset();
-  gen_ws.Reset();
-  gen_zs.Reset();
-  gen_phs.Reset();
-  gen_lsp.Reset();
-  gen_stop.Reset();
-  */
+  //gen_els.Reset();
+  //gen_mus.Reset();
+  //gen_taus.Reset();
+  //gen_nuels.Reset();
+  //gen_numus.Reset();
+  //gen_nutaus.Reset();
+  //gen_tops.Reset();
+  //gen_bs.Reset();
+  //gen_cs.Reset(); 
+  //gen_qs.Reset();
+  //gen_glus.Reset();
+  //gen_ws.Reset();
+  //gen_zs.Reset();
+  //gen_phs.Reset();
+  //gen_lsp.Reset();
+  //gen_stop.Reset();
+  
   gen_leps.Reset();
   gen_nus.Reset();
   gen_tops.Reset();
   gen_qs.Reset();
   gen_bosons.Reset();
-  gen_lsp.Reset();
-  gen_stop.Reset();  
+  gen_susy.Reset();
 } 
 
 
@@ -931,6 +928,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       int n_nuelfromt=0;
       int n_numufromt=0;
 
+      int nLepsHardProcess=0;
+      int nNusHardProcess=0;
+
+      bool ee0lep=false;
+      bool ee1lep=false;
+      bool ge2lep=false;
+      bool zToNuNu=false;
+
       //gen particles
       if (!evt_isRealData()){
 	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
@@ -939,34 +944,37 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if( genps_isHardProcess().at(genx) ||
 	      genps_fromHardProcessDecayed().at(genx) ||
 	      genps_fromHardProcessFinalState().at(genx) ||
-//	      genps_isMostlyLikePythia6Status3().at(genx) ||
+	      //genps_isMostlyLikePythia6Status3().at(genx) ||
 	      genps_status().at(genx)==1 ){
      
 	    if( abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau) gen_leps.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_nue   ) gen_nuels.FillCommon(genx);            
+	    //if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_nue   ) gen_nuels.FillCommon(genx);            
 	    if( abs(genps_id().at(genx)) == pdg_numu || abs(genps_id().at(genx)) == pdg_nue || abs(genps_id().at(genx)) == pdg_nutau ) gen_nus.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_nutau ) gen_nutaus.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_nutau ) gen_nutaus.FillCommon(genx);
 	    if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
 	    if( abs(genps_id().at(genx)) == pdg_b || abs(genps_id().at(genx)) == pdg_c || abs(genps_id().at(genx)) == pdg_s || abs(genps_id().at(genx)) == pdg_d ||abs(genps_id().at(genx)) == pdg_u   ) gen_qs.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_c     ) gen_cs.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_c     ) gen_cs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
 	    //if( abs(genps_id().at(genx)) == pdg_g &&
-	//	genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
+	    //    genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
 	    if( abs(genps_id().at(genx)) == pdg_W || abs(genps_id().at(genx)) == pdg_Z ||(abs(genps_id().at(genx)) == pdg_ph &&
                 genps_p4().at(genx).Pt()>5.0)  || abs(genps_id().at(genx)) == pdg_h  ) gen_bosons.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_Z     ) gen_zs.FillCommon(genx);
-//	    if( abs(genps_id().at(genx)) == pdg_ph &&
-//		genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_Z     ) gen_zs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_ph &&
+	    //	  genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
 	    
-	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
+	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
+	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_susy.FillCommon(genx);
 	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);
 	    
-	    if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
-	    if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
+	    //if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
+	    //if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
+	    if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_susy.FillCommon(genx);
+	    if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_susy.FillCommon(genx);
 	    
 	    if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);
 	    if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);
@@ -978,6 +986,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    
 	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
 
+
+	    if( abs(genps_id().at(genx))==pdg_el  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
+	    if( abs(genps_id().at(genx))==pdg_mu  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
+	    if( abs(genps_id().at(genx))==pdg_tau && genps_fromHardProcessDecayed().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
+	    
+	    if( abs(genps_id().at(genx))==pdg_nue   && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
+	    if( abs(genps_id().at(genx))==pdg_numu  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
+	    if( abs(genps_id().at(genx))==pdg_nutau && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
+
 	  }	  
 	}
       }
@@ -987,7 +1004,52 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //gen_els.gen_nfromt = n_nuelfromt;
       //gen_mus.gen_nfromt = n_numufromt;
       //gen_taus.gen_nfromt = n_nutaufromt;
+ 
+      StopEvt.genLepsHardProcess = nLepsHardProcess;
+      StopEvt.genNusHardProcess  = nNusHardProcess;
+
+      if(nLepsHardProcess==0) ee0lep=true;
+      if(nLepsHardProcess==1) ee1lep=true;
+      if(nLepsHardProcess>=2) ge2lep=true;
       
+      TString thisFile = chain->GetFile()->GetName();
+      if( thisFile.Contains("DYJets") ||
+	  thisFile.Contains("ZJets")  ||
+	  thisFile.Contains("ZZ")        ){
+	if(nNusHardProcess>=2) zToNuNu=true;
+      }
+      if( thisFile.Contains("WZ")  ||
+	  thisFile.Contains("TTZ") ||
+	  thisFile.Contains("tZq")    ){
+	if(nNusHardProcess-nLepsHardProcess>=2) zToNuNu=true;
+      }
+
+      if( zToNuNu ){
+	StopEvt.isZtoNuNu = 1;
+	StopEvt.is0lep    = 0;
+	StopEvt.is1lep    = 0;
+	StopEvt.is2lep    = 0;
+      }
+      else if( ee0lep ){
+	StopEvt.isZtoNuNu = 0;
+	StopEvt.is0lep    = 1;
+	StopEvt.is1lep    = 0;
+	StopEvt.is2lep    = 0;
+      }
+      else if( ee1lep ){
+	StopEvt.isZtoNuNu = 0;
+	StopEvt.is0lep    = 0;
+	StopEvt.is1lep    = 1;
+	StopEvt.is2lep    = 0;
+      }
+      else if( ge2lep ){
+	StopEvt.isZtoNuNu = 0;
+	StopEvt.is0lep    = 0;
+	StopEvt.is1lep    = 0;
+	StopEvt.is2lep    = 1;
+      }
+
+
       //
       // Trigger Information
       //

@@ -49,66 +49,68 @@ void EventTree::FillCommon (const std::string &root_file_name)
     firstVtx_posZ   = vtxs_position()[0].Z();
     firstVtx_posp4  = vtxs_position()[0];
  
-//    pfmet = evt_pfmet();
- //   pfmet_phi = evt_pfmetPhi();
+    //pfmet = evt_pfmet();
+    //pfmet_phi = evt_pfmetPhi();
     calomet = evt_calomet();
     calomet_phi = evt_calometPhi();
 
     is_data = evt_isRealData();
 
-///the recommended met filters//
-        filt_cscbeamhalo = filt_cscBeamHalo();
-        filt_eebadsc = filt_eeBadSc();
-        filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
-        filt_hbhenoise = hbheNoiseFilter_25ns();
+    // the recommended met filters //
+    filt_cscbeamhalo = filt_cscBeamHalo();
+    filt_eebadsc = filt_eeBadSc();
+    filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
+    filt_hbhenoise = hbheNoiseFilter_25ns();
 
-//////////////
-  if (evt_isRealData()) {
-    filt_badevents = !(metFilterTxt.eventFails(evt_run(), evt_lumiBlock(), evt_event()));
-  }else filt_badevents = true;
-////////////// 
-        filt_ecallaser = filt_ecalLaser();
-        filt_ecaltp = filt_ecalTP();
-        filt_hcallaser = filt_hcalLaser();
-        filt_met = filt_metfilter();
-        filt_trkfail = filt_trackingFailure();
-        filt_trkPOG = filt_trkPOGFilters();
-        filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
-        filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
-        filt_eff = evt_filt_eff();
-
+    //////////////
+    if (evt_isRealData()) {
+      filt_badevents = !(metFilterTxt.eventFails(evt_run(), evt_lumiBlock(), evt_event()));
+    }
+    else filt_badevents = true;
+    ////////////// 
+    
+    filt_ecallaser = filt_ecalLaser();
+    filt_ecaltp = filt_ecalTP();
+    filt_hcallaser = filt_hcalLaser();
+    filt_met = filt_metfilter();
+    filt_trkfail = filt_trackingFailure();
+    filt_trkPOG = filt_trkPOGFilters();
+    filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
+    filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
+    filt_eff = evt_filt_eff();
+    
     if (!is_data)
     {
-        scale1fb = evt_scale1fb();
-        xsec     = evt_xsec_incl();
-        kfactor  = evt_kfactor();
-        pu_nvtxs = puInfo_nPUvertices().at(6);
-        pu_ntrue = puInfo_trueNumInteractions().at(0);
-        genweights = cms3.genweights();
-        genweightsID = cms3.genweightsID();
+      scale1fb = evt_scale1fb();
+      xsec     = evt_xsec_incl();
+      kfactor  = evt_kfactor();
+      pu_nvtxs = puInfo_nPUvertices().at(6);
+      pu_ntrue = puInfo_trueNumInteractions().at(0);
+      genweights = cms3.genweights();
+      genweightsID = cms3.genweightsID();
 
-        if(signal){
-          sparms_values = sparm_values();
-          for ( auto name : sparm_names() )
-            sparms_names.push_back(name.Data());
-
-          sparms_filterEfficiency = sparm_filterEfficiency();
-          sparms_pdfScale         = sparm_pdfScale();
-          sparms_pdfWeight1       = sparm_pdfWeight1();
-          sparms_pdfWeight2       = sparm_pdfWeight2();
-          sparms_weight           = sparm_weight();
-          sparms_xsec             = sparm_xsec();
-          sparms_subProcessId     = sparm_subProcessId();
-        }
-        genmet = gen_met();
-        genmet_phi = gen_metPhi();
-
+      if(signal){
+	sparms_values = sparm_values();
+	for ( auto name : sparm_names() )
+	  sparms_names.push_back(name.Data());
+	
+	sparms_filterEfficiency = sparm_filterEfficiency();
+	sparms_pdfScale         = sparm_pdfScale();
+	sparms_pdfWeight1       = sparm_pdfWeight1();
+	sparms_pdfWeight2       = sparm_pdfWeight2();
+	sparms_weight           = sparm_weight();
+	sparms_xsec             = sparm_xsec();
+	sparms_subProcessId     = sparm_subProcessId();
+      }
+      genmet = gen_met();
+      genmet_phi = gen_metPhi();
+      
     }
     dataset = evt_dataset().at(0).Data();
     filename = root_file_name;
     cms3tag = evt_CMS3tag().at(0).Data();
-
-
+    
+    
     //EA rho
     EA_all_rho                  = evt_fixgrid_all_rho();
     EA_allcalo_rho              = evt_fixgridfastjet_allcalo_rho();
@@ -116,7 +118,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
     EA_centralchargedpileup_rho = evt_fixgridfastjet_centralchargedpileup_rho();
     EA_centralneutral_rho       = evt_fixgridfastjet_centralneutral_rho(); 
 }
- 
+
 void EventTree::Reset ()
 {
     run = 0;
@@ -127,7 +129,15 @@ void EventTree::Reset ()
     nlooseleps     =  -9999;
     nvetoleps      =  -9999;
     genlepsfromtop = -9999;
-     
+
+    genLepsHardProcess = -9999;
+    genNusHardProcess  = -9999;
+    
+    is0lep    = -9999;
+    is1lep    = -9999;
+    is2lep    = -9999;
+    isZtoNuNu = -9999;
+
     nvtxs 	=  -9999;
     pu_nvtxs 	=  -9999;
 
@@ -365,6 +375,12 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("nEvents_1goodlep", &nEvents_1goodlep);
     tree->Branch("nEvents_2goodjets", &nEvents_2goodjets);
     tree->Branch("genlepsfromtop", &genlepsfromtop);
+    tree->Branch("genLepsHardProcess", &genLepsHardProcess);
+    tree->Branch("genNusHardProcess", &genNusHardProcess);
+    tree->Branch("is0lep", &is0lep);
+    tree->Branch("is1lep", &is1lep);
+    tree->Branch("is2lep", &is2lep);
+    tree->Branch("isZtoNuNu", &isZtoNuNu);
     tree->Branch("MT2W",&MT2W);
     tree->Branch("MT2W_lep2",&MT2W_lep2);
     tree->Branch("mindphi_met_j1_j2", &mindphi_met_j1_j2);
