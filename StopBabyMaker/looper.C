@@ -941,12 +941,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
 	  //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)
 
+	  // Only keep first and last particles in a sequence
+	  if( genps_id().at(genx)==genps_id_simplemother().at(genx) && !genps_isLastCopy().at(genx) ) continue;
+
 	  if( genps_isHardProcess().at(genx) ||
 	      genps_fromHardProcessDecayed().at(genx) ||
 	      genps_fromHardProcessFinalState().at(genx) ||
 	      //genps_isMostlyLikePythia6Status3().at(genx) ||
 	      genps_status().at(genx)==1 ){
-     
+     	    
 	    if( abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau) gen_leps.FillCommon(genx);
 	    //if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
 	    //if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
@@ -998,7 +1001,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }	  
 	}
       }
-    
+
+      // Gen lepton counting and event classification
       StopEvt.genlepsfromtop = n_nuelfromt+n_numufromt+n_nutaufromt;
       gen_leps.gen_nfromt = n_nuelfromt+ n_numufromt + n_nutaufromt;
       //gen_els.gen_nfromt = n_nuelfromt;
@@ -1024,31 +1028,104 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(nNusHardProcess-nLepsHardProcess>=2) zToNuNu=true;
       }
 
-      if( zToNuNu ){
-	StopEvt.isZtoNuNu = 1;
-	StopEvt.is0lep    = 0;
-	StopEvt.is1lep    = 0;
-	StopEvt.is2lep    = 0;
+      if( zToNuNu )    { StopEvt.isZtoNuNu=1; StopEvt.is0lep=0; StopEvt.is1lep=0; StopEvt.is2lep=0; }
+      else if( ee0lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=1;	StopEvt.is1lep=0; StopEvt.is2lep=0; }
+      else if( ee1lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=0; StopEvt.is1lep=1; StopEvt.is2lep=0; }
+      else if( ge2lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=0; StopEvt.is1lep=0; StopEvt.is2lep=1; }
+
+      if( (ee1lep) && ((StopEvt.genLepsHardProcess-StopEvt.genlepsfromtop)>0) )  StopEvt.is1lepFromW=1;
+      else StopEvt.is1lepFromW=0;
+
+      if( (ee1lep) && ((StopEvt.genLepsHardProcess-StopEvt.genlepsfromtop)==0) ) StopEvt.is1lepFromTop=1;
+      else StopEvt.is1lepFromTop=0;      
+
+      
+      // Check that we have the gen leptons matched to reco leptons
+      double match_dr = 0.01;
+      
+      int lep1_match_idx = -99;
+      int lep2_match_idx = -99;
+
+      double min_dr_lep1 = 999.9;
+      int min_dr_lep1_idx = -99;
+
+      double min_dr_lep2 = 999.9;
+      int min_dr_lep2_idx = -99;
+
+      if(nVetoLeptons>0){
+	for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
+	  if( abs(gen_leps.id.at(iGen))==abs(lep1.pdgid) ){
+	    double temp_dr = ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep1.p4);
+	    if(temp_dr<match_dr){
+	      lep1_match_idx=gen_leps.genpsidx.at(iGen);
+	      break;
+	    }
+	    else if(temp_dr<min_dr_lep1){
+	      min_dr_lep1=temp_dr;
+	      min_dr_lep1_idx=gen_leps.genpsidx.at(iGen);
+	    }
+	  }
+	}
       }
-      else if( ee0lep ){
-	StopEvt.isZtoNuNu = 0;
-	StopEvt.is0lep    = 1;
-	StopEvt.is1lep    = 0;
-	StopEvt.is2lep    = 0;
-      }
-      else if( ee1lep ){
-	StopEvt.isZtoNuNu = 0;
-	StopEvt.is0lep    = 0;
-	StopEvt.is1lep    = 1;
-	StopEvt.is2lep    = 0;
-      }
-      else if( ge2lep ){
-	StopEvt.isZtoNuNu = 0;
-	StopEvt.is0lep    = 0;
-	StopEvt.is1lep    = 0;
-	StopEvt.is2lep    = 1;
+      if(nVetoLeptons>1){
+	for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
+	  if( lep1_match_idx == iGen ) continue;
+	  if( abs(gen_leps.id.at(iGen))==abs(lep2.pdgid) ){
+	    double temp_dr = ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep2.p4);
+	    if(temp_dr<match_dr){
+	      lep2_match_idx=gen_leps.genpsidx.at(iGen);
+	      break;
+	    }
+	    else if(temp_dr<min_dr_lep2){
+	      min_dr_lep2=temp_dr;
+	      min_dr_lep2_idx=gen_leps.genpsidx.at(iGen);
+	    }
+	  }
+	}
       }
 
+      // If lep1 isn't matched to a lepton already stored, then try to find another match
+      if( (nVetoLeptons>0 && lep1_match_idx<0) ){
+	for(unsigned int genx = 0; genx < genps_p4().size(); genx++){
+	  if(!genps_isLastCopy().at(genx) ) continue;
+	  if( abs(genps_id().at(genx))==abs(lep1.pdgid) ){
+	    double temp_dr = ROOT::Math::VectorUtil::DeltaR(genps_p4().at(genx), lep1.p4);
+	    if(temp_dr<match_dr){
+	      lep1_match_idx=genx;
+	      gen_leps.FillCommon(genx);
+	      break;
+	    }
+	    else if(temp_dr<min_dr_lep1){
+	      min_dr_lep1=temp_dr;
+	      min_dr_lep1_idx=genx;
+	    }
+	  }
+	}
+	// if lep1 is still unmatched, fill with closest match, if possible
+	if( lep1_match_idx<0 && min_dr_lep1_idx>0 ) gen_leps.FillCommon(min_dr_lep1_idx);
+      }
+
+      // If lep2 isn't matched to a lepton already stored, then try to find another match
+      if( (nVetoLeptons>1 && lep2_match_idx<0) ){
+	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
+	  if(!genps_isLastCopy().at(genx) ) continue;
+	  if( abs(genps_id().at(genx))==abs(lep2.pdgid) ){
+	    double temp_dr = ROOT::Math::VectorUtil::DeltaR(genps_p4().at(genx), lep2.p4);
+	    if(temp_dr<match_dr){
+	      lep2_match_idx=genx;
+	      gen_leps.FillCommon(genx);
+	      break;
+	    }
+	    else if(temp_dr<min_dr_lep2){
+	      min_dr_lep2=temp_dr;
+	      min_dr_lep2_idx=genx;
+	    }
+	  }
+	}
+	// if lep2 is still unmatched, fill with closest match, if possible
+	if( lep2_match_idx<0 && min_dr_lep2_idx>0 ) gen_leps.FillCommon(min_dr_lep2_idx);
+      }
+      
 
       //
       // Trigger Information

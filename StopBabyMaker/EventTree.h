@@ -63,6 +63,9 @@ public:
     int is2lep;
     int isZtoNuNu;
 
+    int is1lepFromW;
+    int is1lepFromTop;
+
     int ngoodleps;
     int nlooseleps;   
     int nvetoleps;   

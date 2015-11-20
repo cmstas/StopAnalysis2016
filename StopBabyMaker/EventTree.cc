@@ -138,6 +138,9 @@ void EventTree::Reset ()
     is2lep    = -9999;
     isZtoNuNu = -9999;
 
+    is1lepFromW   = -9999;
+    is1lepFromTop = -9999;
+
     nvtxs 	=  -9999;
     pu_nvtxs 	=  -9999;
 
@@ -381,6 +384,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("is1lep", &is1lep);
     tree->Branch("is2lep", &is2lep);
     tree->Branch("isZtoNuNu", &isZtoNuNu);
+    tree->Branch("is1lepFromW", &is1lepFromW);
+    tree->Branch("is1lepFromTop", &is1lepFromTop);
     tree->Branch("MT2W",&MT2W);
     tree->Branch("MT2W_lep2",&MT2W_lep2);
     tree->Branch("mindphi_met_j1_j2", &mindphi_met_j1_j2);
