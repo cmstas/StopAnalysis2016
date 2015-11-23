@@ -76,9 +76,9 @@ void LeptonTree::FillCommon (int id, int idx)
         ip3derr = els_ip3derr().at(idx);
 
 	//ID
-        is_eleid_loose  = electronID(idx, STOP_loose_v3);
-        is_eleid_medium	= electronID(idx, STOP_medium_v3);
-        is_eleid_tight  = electronID(idx, STOP_tight_v3);
+        is_eleid_loose  = isLooseElectronPOGspring15noIso_v1(idx);
+        is_eleid_medium	= isMediumElectronPOGspring15noIso_v1(idx);
+        is_eleid_tight  = isTightElectronPOGspring15noIso_v1(idx);
         
         //Phys14 IDs
         is_phys14_loose_noIso  = isLooseElectronPOGphys14noIso_v2(idx);
@@ -116,7 +116,7 @@ void LeptonTree::FillCommon (int id, int idx)
        //miniRelIsoEA = elMiniRelIso(idx, true, 0., false, true);
        //MiniIso      = elMiniRelIso(idx, true, 0., true, false);//copy of miniRelIsoDB - change to precomputed for 74X
        miniRelIsoDB = elMiniRelIsoCMS3_DB(idx);
-       miniRelIsoEA = elMiniRelIsoCMS3_EA(idx);
+       miniRelIsoEA = elMiniRelIsoCMS3_EA(idx,1);
        MiniIso      = elMiniRelIsoCMS3_DB(idx);
 
     } // end electron block
@@ -138,11 +138,11 @@ void LeptonTree::FillCommon (int id, int idx)
 
         is_pfmu    = ((mus_type().at(idx) & (1<<5)) != 0);
         if (vtxidx >= 0) {
-   	    is_muoid_loose  = muonID(idx, STOP_loose_v3); 
-            is_muoid_medium = muonID(idx, STOP_medium_v3);
-            is_muoid_tight  = muonID(idx, STOP_tight_v2);
+   	    is_muoid_loose  = isLooseMuonPOG(idx); //muonID(idx, STOP_loose_v1); 
+            is_muoid_medium = isMediumMuonPOG(idx); //muonID(idx, STOP_medium_v1);
+            is_muoid_tight  = isTightMuonPOG(idx); //muonID(idx, STOP_tight_v1);
         }
-        passMediumID = muonID(idx, STOP_medium_v3);
+        passMediumID = muonID(idx, STOP_tight_v2);
 	passVeto = muonID(idx, STOP_loose_v3);
         //iso variables
         chiso     = mus_isoR04_pf_ChargedHadronPt().at(idx);
@@ -160,7 +160,7 @@ void LeptonTree::FillCommon (int id, int idx)
 	//miniRelIsoEA = muMiniRelIso(idx, true, 0.5, false, true);
 	//MiniIso      = muMiniRelIso(idx, true, 0.5, true, false);//copy of miniRelIsoDB - change to precomputed for 74X
 	miniRelIsoDB = muMiniRelIsoCMS3_DB(idx);
-	miniRelIsoEA = muMiniRelIsoCMS3_EA(idx);
+	miniRelIsoEA = muMiniRelIsoCMS3_EA(idx,1);
 	MiniIso      = muMiniRelIsoCMS3_DB(idx);
 
     } // end muon block

@@ -16,15 +16,36 @@ EventTree::EventTree (const std::string &prefix)
 }
 
 void EventTree::SetMetFilterEvents(){
+
     cout<<"Loading bad event files ..."<<endl;
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_DoubleEG_csc2015.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_DoubleMuon_csc2015.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_HTMHT_csc2015.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_JetHT_csc2015.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_MET_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_MuonEG_csc2015.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_SingleElectron_csc2015.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_SingleMuon_csc2015.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_SinglePhoton_csc2015.txt");
+    // new lists: supposed to include above but do not always
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/DoubleEG_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/DoubleMuon_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/HTMHT_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/JetHT_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/MET_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/MuonEG_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/SingleElectron_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/SingleMuon_csc2015.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/SinglePhoton_csc2015.txt");
+    // not all samples have events which failed the ecal SC filter
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/DoubleEG_ecalscn1043093.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/HTMHT_ecalscn1043093.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/JetHT_ecalscn1043093.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/MET_ecalscn1043093.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/SinglePhoton_ecalscn1043093.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/SingleElectron_ecalscn1043093.txt");
+    metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/SingleMuon_ecalscn1043093.txt");
+
     cout<<" ... finished!"<<endl;
 }
  
@@ -104,7 +125,18 @@ void EventTree::FillCommon (const std::string &root_file_name)
       }
       genmet = gen_met();
       genmet_phi = gen_metPhi();
-      
+     
+       //calculate genht
+         float _genht=0;
+         for (size_t gidx = 0; gidx < genps_p4().size(); gidx++){
+           bool is_b_a_jet = true; //madgraph parameter called maxjetflavor that sets up to which id is the parton counted in this thing.  for 5f PDF (like the one used in WJets sample production), this is set to 5...therefore is_b_a_jet set to true
+           if (genps_status().at(gidx) != 23) continue;
+           int id = abs(genps_id().at(gidx));
+           if ((id >= 1 && id<=4) || (id == 5 && is_b_a_jet) || (id == 21)) _genht += genps_p4().at(gidx).pt();
+         }
+         genht = _genht;
+
+ 
     }
     dataset = evt_dataset().at(0).Data();
     filename = root_file_name;
@@ -213,6 +245,7 @@ void EventTree::Reset ()
 
     genmet 	= -9999.;
     genmet_phi 	= -9999.;
+    genht = -9999.;
     PassTrackVeto    = false;
     PassTrackVeto_v2 = false;
     PassTrackVeto_v3 = false;
@@ -413,6 +446,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("mass_stop", &mass_stop);
     tree->Branch("genmet", &genmet);
     tree->Branch("genmet_phi", &genmet_phi);
+    tree->Branch("genht", &genht);
     tree->Branch("PassTrackVeto",&PassTrackVeto);
     tree->Branch("PassTrackVeto_v2",&PassTrackVeto_v2);
     tree->Branch("PassTrackVeto_v3",&PassTrackVeto_v3);

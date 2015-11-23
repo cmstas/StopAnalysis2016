@@ -157,6 +157,7 @@ public:
     //gen met
     float genmet;
     float genmet_phi;
+    float genht;
 
     //veto
     bool PassTrackVeto;
