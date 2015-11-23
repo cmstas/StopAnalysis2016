@@ -139,7 +139,7 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
   skim_jet_pt          = jet_pt;
   skim_jet_eta         = jet_eta;
 
-  skim_nBJets		= nbjets;
+  skim_nBJets          = nbjets;
 
   skim_jet_ak8_pt      = jet_ak8_pt;
   skim_jet_ak8_eta     = jet_ak8_eta;
@@ -148,7 +148,7 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
   skim_ph_pt           = phs_pt;
   skim_ph_eta          = phs_eta;
   skim_2ndlepveto      = apply2ndlepveto; 
-  applyJECfromFile = applyJEC;
+  applyJECfromFile     = applyJEC;
 
 }
 
@@ -842,6 +842,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	//some selections
 	if(pfcands_charge().at(ipf) == 0) continue;
 	if(pfcands_p4().at(ipf).pt() < 5) continue;
+	if(fabs(pfcands_p4().at(ipf).eta()) > 2.4 ) continue;
 	if(fabs(pfcands_dz().at(ipf)) > 0.1) continue;
 	
 	//remove everything that is within 0.1 of selected lead and subleading leptons
@@ -1051,81 +1052,85 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       double min_dr_lep2 = 999.9;
       int min_dr_lep2_idx = -99;
-
-      if(nVetoLeptons>0){
-	for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
-	  if( abs(gen_leps.id.at(iGen))==abs(lep1.pdgid) ){
-	    double temp_dr = ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep1.p4);
-	    if(temp_dr<match_dr){
-	      lep1_match_idx=gen_leps.genpsidx.at(iGen);
-	      break;
-	    }
-	    else if(temp_dr<min_dr_lep1){
-	      min_dr_lep1=temp_dr;
-	      min_dr_lep1_idx=gen_leps.genpsidx.at(iGen);
-	    }
-	  }
-	}
-      }
-      if(nVetoLeptons>1){
-	for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
-	  if( lep1_match_idx == iGen ) continue;
-	  if( abs(gen_leps.id.at(iGen))==abs(lep2.pdgid) ){
-	    double temp_dr = ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep2.p4);
-	    if(temp_dr<match_dr){
-	      lep2_match_idx=gen_leps.genpsidx.at(iGen);
-	      break;
-	    }
-	    else if(temp_dr<min_dr_lep2){
-	      min_dr_lep2=temp_dr;
-	      min_dr_lep2_idx=gen_leps.genpsidx.at(iGen);
-	    }
-	  }
-	}
-      }
-
-      // If lep1 isn't matched to a lepton already stored, then try to find another match
-      if( (nVetoLeptons>0 && lep1_match_idx<0) ){
-	for(unsigned int genx = 0; genx < genps_p4().size(); genx++){
-	  if(!genps_isLastCopy().at(genx) ) continue;
-	  if( abs(genps_id().at(genx))==abs(lep1.pdgid) ){
-	    double temp_dr = ROOT::Math::VectorUtil::DeltaR(genps_p4().at(genx), lep1.p4);
-	    if(temp_dr<match_dr){
-	      lep1_match_idx=genx;
-	      gen_leps.FillCommon(genx);
-	      break;
-	    }
-	    else if(temp_dr<min_dr_lep1){
-	      min_dr_lep1=temp_dr;
-	      min_dr_lep1_idx=genx;
-	    }
-	  }
-	}
-	// if lep1 is still unmatched, fill with closest match, if possible
-	if( lep1_match_idx<0 && min_dr_lep1_idx>0 ) gen_leps.FillCommon(min_dr_lep1_idx);
-      }
-
-      // If lep2 isn't matched to a lepton already stored, then try to find another match
-      if( (nVetoLeptons>1 && lep2_match_idx<0) ){
-	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
-	  if(!genps_isLastCopy().at(genx) ) continue;
-	  if( abs(genps_id().at(genx))==abs(lep2.pdgid) ){
-	    double temp_dr = ROOT::Math::VectorUtil::DeltaR(genps_p4().at(genx), lep2.p4);
-	    if(temp_dr<match_dr){
-	      lep2_match_idx=genx;
-	      gen_leps.FillCommon(genx);
-	      break;
-	    }
-	    else if(temp_dr<min_dr_lep2){
-	      min_dr_lep2=temp_dr;
-	      min_dr_lep2_idx=genx;
-	    }
-	  }
-	}
-	// if lep2 is still unmatched, fill with closest match, if possible
-	if( lep2_match_idx<0 && min_dr_lep2_idx>0 ) gen_leps.FillCommon(min_dr_lep2_idx);
-      }
       
+      if (!evt_isRealData()){
+
+	if(nVetoLeptons>0){
+	  for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
+	    if( abs(gen_leps.id.at(iGen))==abs(lep1.pdgid) ){
+	      double temp_dr = ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep1.p4);
+	      if(temp_dr<match_dr){
+		lep1_match_idx=gen_leps.genpsidx.at(iGen);
+		break;
+	      }
+	      else if(temp_dr<min_dr_lep1){
+		min_dr_lep1=temp_dr;
+		min_dr_lep1_idx=gen_leps.genpsidx.at(iGen);
+	      }
+	    }
+	  }
+	}
+	if(nVetoLeptons>1){
+	  for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
+	    if( lep1_match_idx == iGen ) continue;
+	    if( abs(gen_leps.id.at(iGen))==abs(lep2.pdgid) ){
+	      double temp_dr = ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep2.p4);
+	      if(temp_dr<match_dr){
+		lep2_match_idx=gen_leps.genpsidx.at(iGen);
+		break;
+	      }
+	      else if(temp_dr<min_dr_lep2){
+		min_dr_lep2=temp_dr;
+		min_dr_lep2_idx=gen_leps.genpsidx.at(iGen);
+	      }
+	    }
+	  }
+	}
+	
+	// If lep1 isn't matched to a lepton already stored, then try to find another match
+	if( (nVetoLeptons>0 && lep1_match_idx<0) ){
+	  for(unsigned int genx = 0; genx < genps_p4().size(); genx++){
+	    if(!genps_isLastCopy().at(genx) ) continue;
+	    if( abs(genps_id().at(genx))==abs(lep1.pdgid) ){
+	      double temp_dr = ROOT::Math::VectorUtil::DeltaR(genps_p4().at(genx), lep1.p4);
+	      if(temp_dr<match_dr){
+		lep1_match_idx=genx;
+		gen_leps.FillCommon(genx);
+		break;
+	      }
+	      else if(temp_dr<min_dr_lep1){
+		min_dr_lep1=temp_dr;
+		min_dr_lep1_idx=genx;
+	      }
+	    }
+	  }
+	  // if lep1 is still unmatched, fill with closest match, if possible
+	  if( lep1_match_idx<0 && min_dr_lep1_idx>0 ) gen_leps.FillCommon(min_dr_lep1_idx);
+	}
+	
+	// If lep2 isn't matched to a lepton already stored, then try to find another match
+	if( (nVetoLeptons>1 && lep2_match_idx<0) ){
+	  for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
+	    if(!genps_isLastCopy().at(genx) ) continue;
+	    if( abs(genps_id().at(genx))==abs(lep2.pdgid) ){
+	      double temp_dr = ROOT::Math::VectorUtil::DeltaR(genps_p4().at(genx), lep2.p4);
+	      if(temp_dr<match_dr){
+		lep2_match_idx=genx;
+		gen_leps.FillCommon(genx);
+		break;
+	      }
+	      else if(temp_dr<min_dr_lep2){
+		min_dr_lep2=temp_dr;
+		min_dr_lep2_idx=genx;
+	      }
+	    }
+	  }
+	  // if lep2 is still unmatched, fill with closest match, if possible
+	  if( lep2_match_idx<0 && min_dr_lep2_idx>0 ) gen_leps.FillCommon(min_dr_lep2_idx);
+	}
+
+      } // end if not data      
+
 
       //
       // Trigger Information
