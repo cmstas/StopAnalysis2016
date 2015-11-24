@@ -9,7 +9,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_DoubleEG_MINIAOD_05Oct2
 
 SAMPLE
 Name data_double_eg_2015D_promptRecoV3_25ns
-Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleEG_MINIAOD_PromptReco-v3/merged/V07-04-11/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleEG_MINIAOD_PromptReco-v3/merged/V07-04-09/
 
 SAMPLE
 Name data_double_eg_2015D_05Oct2015_v1_25ns
@@ -26,7 +26,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_DoubleMuon_MINIAOD_05Oc
 
 SAMPLE
 Name data_double_mu_2015D_promptRecoV3_25ns
-Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleMuon_MINIAOD_PromptReco-v3/merged/V07-04-11/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleMuon_MINIAOD_PromptReco-v3/merged/V07-04-09/
 
 SAMPLE
 Name data_double_mu_2015D_05Oct2015_v1_25ns
@@ -43,7 +43,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_MuonEG_MINIAOD_05Oct201
 
 SAMPLE
 Name data_muon_eg_2015D_promptRecoV3_25ns
-Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_PromptReco-v3/merged/V07-04-11/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_PromptReco-v3/merged/V07-04-09/
 
 SAMPLE
 Name data_muon_eg_2015D_05Oct2015_v1_25ns
@@ -64,7 +64,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_SingleElectron_MINIAOD_
 
 SAMPLE
 Name data_single_electron_2015D_promptRecoV3_25ns
-Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleElectron_MINIAOD_PromptReco-v3/merged/V07-04-11/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleElectron_MINIAOD_PromptReco-v3/merged/V07-04-09/
 
 SAMPLE
 Name data_single_electron_2015D_05Oct2015_v1_25ns
@@ -81,7 +81,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_SingleMuon_MINIAOD_05Oc
 
 SAMPLE
 Name data_single_muon_2015D_promptRecoV3_25ns
-Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleMuon_MINIAOD_PromptReco-v3/merged/V07-04-11/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleMuon_MINIAOD_PromptReco-v3/merged/V07-04-09/
 
 SAMPLE
 Name data_single_muon_2015D_05Oct2015_v1_25ns
@@ -98,7 +98,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_MET_MINIAOD_05Oct2015-v
 
 SAMPLE
 Name data_met_2015D_promptRecoV3_25ns
-Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MET_MINIAOD_PromptReco-v3/merged/V07-04-11/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MET_MINIAOD_PromptReco-v3/merged/V07-04-09/
 
 SAMPLE
 Name data_met_2015D_05Oct2015_v1_25ns
@@ -141,7 +141,7 @@ Path /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTJets_TuneCUETP8M1_13TeV-m
 
 SAMPLE
 Name ttbar_singleLeptFromT_madgraph_pythia8_25ns
-Path /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/07-04-11/
+Path /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
 
 SAMPLE
 Name ttbar_singleLeptFromT_madgraph_pythia8_ext1_25ns
