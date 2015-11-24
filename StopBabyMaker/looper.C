@@ -336,7 +336,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Get bad events from txt files
   //
-  StopEvt.SetMetFilterEvents();
+  //StopEvt.SetMetFilterEvents();
 
   //
   // File Loop

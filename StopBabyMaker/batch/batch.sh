@@ -9,7 +9,7 @@ sampleList_ALL=`echo $sampleList_in_ALL | tr ',' ' ' `
 #
 
 ## Custom ##
-#sampleList_in=""
+#sampleList_in="data_muon_eg_2015C_25ns"
 
 ## ALL ##
 sampleList_in="ALL"

@@ -84,10 +84,10 @@ void EventTree::FillCommon (const std::string &root_file_name)
     filt_hbhenoise = hbheNoiseFilter_25ns();
 
     //////////////
-    if (evt_isRealData()) {
-      filt_badevents = !(metFilterTxt.eventFails(evt_run(), evt_lumiBlock(), evt_event()));
-    }
-    else filt_badevents = true;
+    //if (evt_isRealData()) {
+    //filt_badevents = !(metFilterTxt.eventFails(evt_run(), evt_lumiBlock(), evt_event()));
+    //}
+    //else filt_badevents = true;
     ////////////// 
     
     filt_ecallaser = filt_ecalLaser();
