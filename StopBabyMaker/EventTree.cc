@@ -276,6 +276,7 @@ void EventTree::Reset ()
     HLT_Mu6HT200MET125     = -9999.;
     HLT_HT350MET100	   = -9999.;
     HLT_SingleMu17         = -9999.;
+    HLT_SingleMu18         = -9999.;
     HLT_SingleMu20         = -9999.;
     HLT_SingleMu24         = -9999.;
     HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight = -9999.;
@@ -506,6 +507,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_Mu6HT200MET100", &HLT_Mu6HT200MET125 );
     tree->Branch("HLT_HT350MET100", &HLT_HT350MET100);
     tree->Branch("HLT_SingleMu17", &HLT_SingleMu17);
+    tree->Branch("HLT_SingleMu18", &HLT_SingleMu18);
     tree->Branch("HLT_SingleMu20", &HLT_SingleMu20);
     tree->Branch("HLT_SingleMu24", &HLT_SingleMu24);
     tree->Branch("HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight", &HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight);

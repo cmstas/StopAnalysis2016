@@ -198,6 +198,7 @@ public:
 
     int HLT_HT350MET100;
     int HLT_SingleMu17 ;
+    int HLT_SingleMu18 ;
     int HLT_SingleMu20 ;
     int HLT_SingleMu24 ;
 
