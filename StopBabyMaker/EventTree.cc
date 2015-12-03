@@ -17,6 +17,7 @@ EventTree::EventTree (const std::string &prefix)
 
 void EventTree::SetMetFilterEvents(){
 
+    //BE AWARE THAT THOSE FILES DON'T DO ANYTHING IF YOU USE BATCH SUBMISSION - NEED TO APPLY THEM ON LOOPER LEVEL
     cout<<"Loading bad event files ..."<<endl;
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_DoubleEG_csc2015.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/eventlist_DoubleMuon_csc2015.txt");
@@ -281,6 +282,13 @@ void EventTree::Reset ()
     HLT_MET90_MHT90_IDTight                         = -9999.;
     HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight    = -9999.; 
     HLT_Photon90_CaloIdL_PFHT500 = -9999.;
+    HLT_Photon22_R9Id90_HE10_IsoM = -9999.;
+    HLT_Photon30_R9Id90_HE10_IsoM = -9999.;
+    HLT_Photon36_R9Id90_HE10_IsoM = -9999.;
+    HLT_Photon50_R9Id90_HE10_IsoM = -9999.;
+    HLT_Photon75_R9Id90_HE10_IsoM = -9999.;
+    HLT_Photon90_R9Id90_HE10_IsoM = -9999.;
+    HLT_Photon120_R9Id90_HE10_IsoM = -9999.;
     HLT_Photon165_R9Id90_HE10_IsoM = -9999.;
     HLT_Photon175 = -9999.;
     HLT_Photon165_HE10 = -9999.;
@@ -504,6 +512,13 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_MET90_MHT90_IDTight", &HLT_MET90_MHT90_IDTight);
     tree->Branch("HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight", &HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight);
     tree->Branch("HLT_Photon90_CaloIdL_PFHT500", &HLT_Photon90_CaloIdL_PFHT500);
+    tree->Branch("HLT_Photon22_R9Id90_HE10_IsoM", &HLT_Photon22_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon30_R9Id90_HE10_IsoM", &HLT_Photon30_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon36_R9Id90_HE10_IsoM", &HLT_Photon36_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon50_R9Id90_HE10_IsoM", &HLT_Photon50_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon75_R9Id90_HE10_IsoM", &HLT_Photon75_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon90_R9Id90_HE10_IsoM", &HLT_Photon90_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon120_R9Id90_HE10_IsoM", &HLT_Photon120_R9Id90_HE10_IsoM);
     tree->Branch("HLT_Photon165_R9Id90_HE10_IsoM", &HLT_Photon165_R9Id90_HE10_IsoM);
     tree->Branch("HLT_Photon175", &HLT_Photon175);
     tree->Branch("HLT_Photon165_HE10", &HLT_Photon165_HE10);

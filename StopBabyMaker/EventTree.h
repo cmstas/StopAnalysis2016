@@ -206,6 +206,13 @@ public:
     int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;
 
     int HLT_Photon90_CaloIdL_PFHT500;
+    int HLT_Photon22_R9Id90_HE10_IsoM;
+    int HLT_Photon30_R9Id90_HE10_IsoM;
+    int HLT_Photon36_R9Id90_HE10_IsoM;
+    int HLT_Photon50_R9Id90_HE10_IsoM;
+    int HLT_Photon75_R9Id90_HE10_IsoM; 
+    int HLT_Photon90_R9Id90_HE10_IsoM; 
+    int HLT_Photon120_R9Id90_HE10_IsoM;
     int HLT_Photon165_R9Id90_HE10_IsoM;
     int HLT_Photon175;
     int HLT_Photon165_HE10;

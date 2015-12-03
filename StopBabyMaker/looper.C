@@ -949,6 +949,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	      genps_fromHardProcessDecayed().at(genx) ||
 	      genps_fromHardProcessFinalState().at(genx) ||
 	      //genps_isMostlyLikePythia6Status3().at(genx) ||
+	      genps_isLastCopy().at(genx) ||
 	      genps_status().at(genx)==1 ){
      	    
 	    if( abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau) gen_leps.FillCommon(genx);
@@ -1139,7 +1140,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       //StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_eta2p1_IterTrk02_v") || passHLTTriggerPattern("HLT_IsoTkMu20_eta2p1_IterTrk02_v");   
       //StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v");   
-      StopEvt.HLT_MET170 = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v"); 
+      //StopEvt.HLT_MET170 = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v");
+      StopEvt.HLT_MET170 = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_v");//just to be safe
       StopEvt.HLT_HT350MET120  = passHLTTriggerPattern("HLT_PFHT350_PFMET120_NoiseCleaned_v");
       StopEvt.HLT_HT350MET100 = passHLTTriggerPattern("HLT_PFHT350_PFMET100_NoiseCleaned_v");
       StopEvt.HLT_MET120Btag = passHLTTriggerPattern("HLT_PFMET120_NoiseCleaned_BTagCSV07_v") || passHLTTriggerPattern("HLT_PFMET120_NoiseCleaned_BTagCSV072_v");
@@ -1157,6 +1159,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.HLT_Mu23El12 = passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v");
 
       //notation in RunIISpring15MC is WP85/WP75, for data will have WPLoose and WPTight
+      StopEvt.HLT_SingleEl23 = passHLTTriggerPattern("HLT_Ele23_WPLoose_Gsf_v");
       StopEvt.HLT_SingleEl27 = passHLTTriggerPattern("HLT_Ele27_eta2p1_WP75_Gsf_v")||passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v")||passHLTTriggerPattern("Ele27_eta2p1_WPLoose_Gsf_v");//precsaled for 14e33
       StopEvt.HLT_SingleEl27Tight = passHLTTriggerPattern("HLT_Ele27_eta2p1_WP75_Gsf_v")||passHLTTriggerPattern("Ele27_eta2p1_WPTight_Gsf_v");//precsaled for 14e33
       StopEvt.HLT_SingleElTight = passHLTTriggerPattern("HLT_Ele32_eta2p1_WP75_Gsf_v")||passHLTTriggerPattern("Ele32_eta2p1_WPTight_Gsf_v");
@@ -1174,7 +1177,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu24_eta2p1_v") || passHLTTriggerPattern("HLT_IsoTkMu24_eta2p1_v");
 
       StopEvt.HLT_Photon90_CaloIdL_PFHT500 = passHLTTriggerPattern("HLT_Photon90_CaloIdL_PFHT500_v");
-      StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon165_R9Id90_HE10_IsoM_v");
+      StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"));
+      StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
       StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
       StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
 
