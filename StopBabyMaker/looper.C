@@ -155,7 +155,7 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
 
 void babyMaker::MakeBabyNtuple(const char* output_name){
 
-  histFile = new TFile(Form("%s/hist_%s", babypath, output_name), "RECREATE");
+  //histFile = new TFile(Form("%s/hist_%s", babypath, output_name), "RECREATE");
   BabyFile = new TFile(Form("%s/%s", babypath, output_name), "RECREATE");
   BabyTree = new TTree("t", "Stop2015 Baby Ntuple");
 
@@ -1270,9 +1270,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   BabyFile->cd();
    // save counter histogram
   BabyTree->Write();
-  BabyFile->Close();
-  histFile->cd();
   counterhist->Write();
+  BabyFile->Close();
+  //histFile->cd();
 
   //
   // Benchmarking
@@ -1285,6 +1285,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   cout << endl;
   cout << "Wrote babies into file " << BabyFile->GetName() << endl;
+//  cout << "Wrote hists into file " << histFile->GetName() << endl;
   cout << "-----------------------------" << endl;
   cout << "Events Processed                     " << nEvents_processed << endl;
   cout << "Events with " << skim_nvtx << " Good Vertex            " << nEvents_pass_skim_nVtx << endl;
