@@ -227,7 +227,8 @@ void EventTree::Reset ()
     dataset  = "";
     filename = "";
     cms3tag  = "";
-
+    pdf_up_weight = -9999.;
+    pdf_down_weight = -9999.;
     genweights.clear();
     genweightsID.clear();
 
@@ -439,6 +440,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("dphi_Wlep", &dphi_Wlep);
     tree->Branch("MET_over_sqrtHT", &MET_over_sqrtHT);
     tree->Branch("ak4pfjets_rho", &ak4pfjets_rho);
+    tree->Branch("pdf_up_weight", &pdf_up_weight);
+    tree->Branch("pdf_down_weight", &pdf_down_weight);
     tree->Branch("genweightsID", &genweightsID);
     tree->Branch("genweights", &genweights);
     tree->Branch("sparms_names", &sparms_names);

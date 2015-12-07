@@ -283,7 +283,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     cout << ", running on MC, based on file name: " << output_name<<endl;
   }
   
-  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 10, 0.5,10.5);
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 13, 0.5,13.5);
   counterhist->Sumw2();
   counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
   counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -294,13 +294,22 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(7,"muR=0.5 muF=1");
   counterhist->GetXaxis()->SetBinLabel(8,"muR=0.5 muF=2");
   counterhist->GetXaxis()->SetBinLabel(9,"muR=0.5 muF=0.5");
+  counterhist->GetXaxis()->SetBinLabel(10,"pdf_up");
+  counterhist->GetXaxis()->SetBinLabel(11,"pdf_down");
+  counterhist->GetXaxis()->SetBinLabel(12,"pdf_alphas_var_1");
+  counterhist->GetXaxis()->SetBinLabel(13,"pdf_alphas_var_2");
+
+  //
   //
   // Make Baby Ntuple  
   //
+
   MakeBabyNtuple( Form("%s.root", output_name) );
+
   //
   // Initialize Baby Ntuple Branches
   //
+
   InitBabyNtuple();
   
   //
@@ -391,7 +400,26 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       // calculate sum of weights and save them in a hisogram.
       //      
-      if(!evt_isRealData()){
+      float pdf_weight_up = 1;
+      float pdf_weight_down = 1;
+      float sum_of_weights= 0;
+      float average_of_weights= 0;
+
+    if(!evt_isRealData()){
+       //error on pdf replicas 
+      for(int ipdf=9;ipdf<109;ipdf++){
+        average_of_weights += cms3.genweights().at(ipdf);        
+       }// average of weights
+       average_of_weights =  average_of_weights/100;
+
+      for(int ipdf=9;ipdf<109;ipdf++){
+        sum_of_weights += (cms3.genweights().at(ipdf)- average_of_weights)*(cms3.genweights().at(ipdf)-average_of_weights);          
+       }//std of weights.
+     
+          pdf_weight_up = (cms3.genweights().at(9)+sqrt(sum_of_weights/100)); 
+          pdf_weight_down = (cms3.genweights().at(9)-sqrt(sum_of_weights/100)); 
+          StopEvt.pdf_up_weight = pdf_weight_up;
+          StopEvt.pdf_down_weight = pdf_weight_down;
           counterhist->Fill(1,genweights()[0]);  
           counterhist->Fill(2,genweights()[1]);  
           counterhist->Fill(3,genweights()[2]);  
@@ -401,6 +429,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
           counterhist->Fill(7,genweights()[6]);  
           counterhist->Fill(8,genweights()[7]);  
           counterhist->Fill(9,genweights()[8]);  
+          counterhist->Fill(10,pdf_weight_up);  
+          counterhist->Fill(11,pdf_weight_down);  
+          counterhist->Fill(12,genweights()[109]); // α_s variation. 
+          counterhist->Fill(13,genweights()[110]); // α_s variation. 
+
      }
       //
       // If data, check against good run list
@@ -1240,7 +1273,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   BabyFile->Close();
   histFile->cd();
   counterhist->Write();
-
 
   //
   // Benchmarking
