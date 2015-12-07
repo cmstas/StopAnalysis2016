@@ -1,7 +1,6 @@
 #include "JetTree.h"
 #include "CMS3.h"
 #include "JetSelections.h"
-#include "StopSelections.h"
 
 using namespace tas;
  
@@ -14,7 +13,7 @@ JetTree::JetTree (const std::string &prefix)
 {
 }
 
-void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999, bool applynewcorr=false)
+void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999, bool applynewcorr=false,JetCorrectionUncertainty* jetcorr_uncertainty=0, int JES_type=0)
 //void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999)
 {
     
@@ -63,8 +62,17 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
                       << ", raw jet pt: " << pfjet_p4_uncor.pt() << ", eta: " << pfjet_p4_uncor.eta() << std::endl;
           }
 
+          // include protections here on jet kinematics to prevent rare warnings/crashes
+          double var = 1.;
+          if (!evt_isRealData() && JES_type != 0 && pfjet_p4_uncor.pt()*corr > 0. && fabs(pfjet_p4_uncor.eta()) < 5.4) {
+            jetcorr_uncertainty->setJetEta(pfjet_p4_uncor.eta());
+            jetcorr_uncertainty->setJetPt(pfjet_p4_uncor.pt() * corr); // must use CORRECTED pt
+            double unc = jetcorr_uncertainty->getUncertainty(true);
+            var = (1. + JES_type * unc);
+          }
+
           // apply new JEC to p4
-          pfjet_p4_cor = pfjet_p4_uncor * corr;
+          pfjet_p4_cor = pfjet_p4_uncor * corr*var;
           newjecorr.push_back(corr);
           if(applynewcorr) p4sCorrJets.push_back(pfjet_p4_cor);
           else p4sCorrJets.push_back(pfjets_p4().at(iJet));

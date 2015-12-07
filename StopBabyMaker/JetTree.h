@@ -5,8 +5,7 @@
 #include <vector>
 #include "Math/LorentzVector.h"
 #include "JetCorrector.h"
-#include "Tools/jetcorr/FactorizedJetCorrector.h"
-
+#include "StopSelections.h"
  
 // forward declarations
 class TTree;
@@ -30,7 +29,7 @@ public:
     void Reset ();
     void SetBranches (TTree* tree);
     void SetAliases (TTree* tree);
-    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr);
+    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type);
 
 //FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx, unsigned int overlep2_idx);
     void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id);

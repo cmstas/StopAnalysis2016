@@ -25,10 +25,6 @@
 #include "stop_variables/topness.cc"
 #include "stop_variables/MT2_implementations.cc"
 #include "JetCorrector.h"
-#include "Tools/jetcorr/FactorizedJetCorrector.h"
-#include "Tools/jetcorr/Utilities.icc"
-#include "Tools/jetcorr/JetCorrectionUncertainty.icc"
-#include "Tools/jetcorr/SimpleJetCorrectionUncertainty.icc"
 
 #include "PhotonSelections.h"
 #include "MuonSelections.h"//93991
@@ -37,6 +33,7 @@
 
 #include "goodrun.h"
 #include "dorky.cc"
+
 
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 
@@ -114,7 +111,7 @@ babyMaker::babyMaker(){
    gen_susy = GenParticleTree("susy_");
 }
 
-void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC){
+void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down){
 
   skim_nvtx            = nvtx;
   skim_met             = met;
@@ -149,7 +146,7 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
   skim_ph_eta          = phs_eta;
   skim_2ndlepveto      = apply2ndlepveto; 
   applyJECfromFile     = applyJEC;
-
+  JES_type 	       = JES_type_central_up_down;
 }
 
 
@@ -267,6 +264,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   TIter fileIter(listOfFiles);
   TFile *currentFile = 0;
   bool applyJECunc = false;
+  if(JES_type != 0) applyJECunc = true; 
 
   //
   // JEC files
@@ -428,7 +426,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       //save met here because of JEC
       if(applyJECfromFile){
-	pair<float,float> newmet = getT1CHSMET(jet_corrector_pfL1FastJetL2L3);
+        pair<float,float> newmet;
+        if(!evt_isRealData() && applyJECunc){
+            if(JES_type > 0)  newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,true);
+            else newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,false);
+        }else newmet = getT1CHSMET(jet_corrector_pfL1FastJetL2L3);
 	StopEvt.pfmet = newmet.first;
 	StopEvt.pfmet_phi = newmet.second;
       }
@@ -465,7 +467,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         mylepton.id  = -11*els_charge().at(eidx);
         mylepton.idx = eidx;
         mylepton.p4  = els_p4().at(eidx);
-	int overlapping_jet = getOverlappingJetIndex(mylepton.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile);  //don't care about jid
+	int overlapping_jet = getOverlappingJetIndex(mylepton.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile,jetcorr_uncertainty,JES_type);  //don't care about jid
 	if( overlapping_jet>=0) idx_alloverlapjets.push_back(overlapping_jet);  //overlap removal for all jets w.r.t. all leptons
 
 	if( ( PassElectronVetoSelections(eidx, skim_vetoLep_el_pt, skim_vetoLep_el_eta) ) &&
@@ -487,7 +489,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         mylepton.id  = -13*mus_charge().at(midx);
         mylepton.idx = midx;
         mylepton.p4  = mus_p4().at(midx);
-	int overlapping_jet = getOverlappingJetIndex(mylepton.p4, pfjets_p4() , 0.4, skim_jet_pt, skim_jet_eta,false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile);  //don't care about jid
+	int overlapping_jet = getOverlappingJetIndex(mylepton.p4, pfjets_p4() , 0.4, skim_jet_pt, skim_jet_eta,false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile,jetcorr_uncertainty,JES_type);  //don't care about jid
 	if( overlapping_jet>=0) idx_alloverlapjets.push_back(overlapping_jet);  //overlap removal for all jets w.r.t. all leptons
 	
 	if( ( PassMuonVetoSelections(midx, skim_vetoLep_mu_pt, skim_vetoLep_mu_eta) ) &&
@@ -530,13 +532,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(pfjets_p4().size() > 0){
 	jet_overlep1_idx = -9999;
 	jet_overlep2_idx = -9999;
-	if(nVetoLeptons>0) jet_overlep1_idx = getOverlappingJetIndex(lep1.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile);  //don't care about jid
-	if(nVetoLeptons>1) jet_overlep2_idx = getOverlappingJetIndex(lep2.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile);  //don't care about jid
+	if(nVetoLeptons>0) jet_overlep1_idx = getOverlappingJetIndex(lep1.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile,jetcorr_uncertainty,JES_type);  //don't care about jid
+	if(nVetoLeptons>1) jet_overlep2_idx = getOverlappingJetIndex(lep2.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile,jetcorr_uncertainty,JES_type);  //don't care about jid
 	
 	// Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
 	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile);
+        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type);
 	//jets.FillCommon(idx_alloverlapjets, jet_overlep1_idx, jet_overlep2_idx);
       }
       
@@ -554,7 +556,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(StopEvt.nPhotons < skim_nPhotons) continue;
       int leadph = -1;//use this in case we have a wide photon selection (like loose id), but want to use specific photon
       for(unsigned int i = 0; i<ph.p4.size(); ++i){
-	int overlapping_jet = getOverlappingJetIndex(ph.p4.at(i), jets.ak4pfjets_p4, 0.4, skim_jet_pt, skim_jet_eta,false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile);
+	int overlapping_jet = getOverlappingJetIndex(ph.p4.at(i), jets.ak4pfjets_p4, 0.4, skim_jet_pt, skim_jet_eta,false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile,jetcorr_uncertainty,JES_type);
 	ph.overlapJetId.at(i) = overlapping_jet;
 	if(leadph!=-1 && ph.p4.at(i).Pt()<ph.p4.at(leadph).Pt()) continue;
 	if(StopEvt.ngoodleps>0 && ROOT::Math::VectorUtil::DeltaR(ph.p4.at(i), lep1.p4)<0.2) continue;

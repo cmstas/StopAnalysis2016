@@ -4,7 +4,6 @@
 #include "CMS3.h"
 #include "ElectronSelections.h"
 #include "MuonSelections.h"
-#include "JetSelections.h"
 #include "VertexSelections.h"
 #include "IsoTrackVeto.h"
 #include "IsolationTools.h"
@@ -48,7 +47,7 @@ bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   return true;
 }
 
-bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr=false){
+bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type){
 //apply JEC
         LorentzVector pfjet_p4_cor = cms3.pfjets_p4().at(jetIdx);
           // get uncorrected jet p4 to use as input for corrections
@@ -66,9 +65,17 @@ bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,
             std::cout << "ScanChain::Looper: WARNING: negative jet correction: " << corr
                       << ", raw jet pt: " << pfjet_p4_uncor.pt() << ", eta: " << pfjet_p4_uncor.eta() << std::endl;
           }
+	  // include protections here on jet kinematics to prevent rare warnings/crashes
+	  double var = 1.;
+	  if (!evt_isRealData() && JES_type != 0 && pfjet_p4_uncor.pt()*corr > 0. && fabs(pfjet_p4_uncor.eta()) < 5.4) {
+	    jetcorr_uncertainty->setJetEta(pfjet_p4_uncor.eta());
+	    jetcorr_uncertainty->setJetPt(pfjet_p4_uncor.pt() * corr); // must use CORRECTED pt
+	    double unc = jetcorr_uncertainty->getUncertainty(true);
+	    var = (1. + JES_type * unc);
+	  }
 
           // apply new JEC to p4
-          if(applynewcorr) pfjet_p4_cor = pfjet_p4_uncor * corr;
+          if(applynewcorr) pfjet_p4_cor = pfjet_p4_uncor * corr*var;
           else pfjet_p4_cor = pfjets_p4().at(jetIdx);
 
   if(jetIdx>=pfjets_p4().size()) return false;//safety requirement
@@ -156,7 +163,7 @@ bool isVetoTau(int ipf, LorentzVector lepp4_, int charge){
 }
 
 //overlap removal
-int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr=false){
+int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type){
   float DR_lep_jet1 = 0.;
   float DR_lep_jet2 = 0.;
   int closestjet_idx = 0;
@@ -164,7 +171,7 @@ int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, dou
   if(jets_.size()==0) return -999;
   
 	for(unsigned int iJet=1; iJet<jets_.size(); iJet++){
-	  if(!PassJetPreSelections(iJet,pt,eta,passjid,corrector,applynewcorr)) continue;
+	  if(!PassJetPreSelections(iJet,pt,eta,passjid,corrector,applynewcorr,jetcorr_uncertainty,JES_type)) continue;
 	  //if(jets_.at(iJet).Pt()<pt) continue;
 	  //if(TMath::Abs(jets_.at(iJet).Eta())>eta) continue;
 	  DR_lep_jet1 = ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_);
