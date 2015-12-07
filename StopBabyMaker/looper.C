@@ -155,6 +155,7 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
 
 void babyMaker::MakeBabyNtuple(const char* output_name){
 
+  histFile = new TFile(Form("%s/hist_%s", babypath, output_name), "RECREATE");
   BabyFile = new TFile(Form("%s/%s", babypath, output_name), "RECREATE");
   BabyTree = new TTree("t", "Stop2015 Baby Ntuple");
 
@@ -256,10 +257,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   unsigned int nEventsToDo = chain->GetEntries();
   unsigned int jet_overlep1_idx = -9999;
   unsigned int jet_overlep2_idx = -9999;
+
   //unsigned int track_overlep1_idx = -9999;
   //unsigned int track_overlep2_idx = -9999;
   
-  
+ 
   if( nEvents >= 0 ) nEventsToDo = nEvents;
   TObjArray *listOfFiles = chain->GetListOfFiles();
   TIter fileIter(listOfFiles);
@@ -281,11 +283,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     cout << ", running on MC, based on file name: " << output_name<<endl;
   }
   
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 10, 0.5,10.5);
+  counterhist->Sumw2();
+  counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
+  counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
+  counterhist->GetXaxis()->SetBinLabel(3,"muR=1 muF=0.5");
+  counterhist->GetXaxis()->SetBinLabel(4,"muR=2 muF=1");
+  counterhist->GetXaxis()->SetBinLabel(5,"muR=2 muF=2");
+  counterhist->GetXaxis()->SetBinLabel(6,"muR=2 muF=0.5");
+  counterhist->GetXaxis()->SetBinLabel(7,"muR=0.5 muF=1");
+  counterhist->GetXaxis()->SetBinLabel(8,"muR=0.5 muF=2");
+  counterhist->GetXaxis()->SetBinLabel(9,"muR=0.5 muF=0.5");
   //
   // Make Baby Ntuple  
   //
   MakeBabyNtuple( Form("%s.root", output_name) );
-
   //
   // Initialize Baby Ntuple Branches
   //
@@ -376,6 +388,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       InitBabyNtuple();
 
+      //
+      // calculate sum of weights and save them in a hisogram.
+      //      
+      if(!evt_isRealData()){
+          counterhist->Fill(1,genweights()[0]);  
+          counterhist->Fill(2,genweights()[1]);  
+          counterhist->Fill(3,genweights()[2]);  
+          counterhist->Fill(4,genweights()[3]);  
+          counterhist->Fill(5,genweights()[4]);  
+          counterhist->Fill(6,genweights()[5]);  
+          counterhist->Fill(7,genweights()[6]);  
+          counterhist->Fill(8,genweights()[7]);  
+          counterhist->Fill(9,genweights()[8]);  
+     }
       //
       // If data, check against good run list
       //
@@ -1196,7 +1222,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
     
     }//close event loop
-    
     //
     // Close input file
     //
@@ -1210,8 +1235,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // Write and Close baby file
   //
   BabyFile->cd();
+   // save counter histogram
   BabyTree->Write();
   BabyFile->Close();
+  histFile->cd();
+  counterhist->Write();
 
 
   //
