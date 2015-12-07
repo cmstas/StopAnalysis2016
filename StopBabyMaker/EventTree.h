@@ -136,6 +136,8 @@ public:
     float kfactor;
     float pu_ntrue;
     int   pu_nvtxs;
+    float pdf_up_weight;
+    float pdf_down_weight;
     vecd  genweights;
     vecs  genweightsID;
 
