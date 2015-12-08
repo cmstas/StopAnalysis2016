@@ -138,6 +138,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
         ak4pfjets_CSV.push_back(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex));
         ak4pfjets_puid.push_back(loosePileupJetId(jindex));
         ak4pfjets_parton_flavor.push_back(pfjets_partonFlavour().at(jindex));
+	ak4pfjets_hadron_flavor.push_back(pfjets_hadronFlavour().at(jindex));
         ak4pfjets_loose_puid.push_back(loosePileupJetId(jindex));
         ak4pfjets_loose_pfid.push_back(isLoosePFJetV2(jindex));
         ak4pfjets_medium_pfid.push_back(isMediumPFJet(jindex));
@@ -268,6 +269,7 @@ void JetTree::Reset ()
     ak4pfjets_CSV.clear();
     ak4pfjets_puid.clear();
     ak4pfjets_parton_flavor.clear();
+    ak4pfjets_hadron_flavor.clear();
     ak4pfjets_loose_puid.clear();
     ak4pfjets_loose_pfid.clear();
     ak4pfjets_medium_pfid.clear();
@@ -365,6 +367,7 @@ void JetTree::SetBranches (TTree* tree)
     tree->Branch(Form("%sak4pfjets_CSV", prefix_.c_str()) , &ak4pfjets_CSV);
     tree->Branch(Form("%sak4pfjets_puid", prefix_.c_str()) , &ak4pfjets_puid);
     tree->Branch(Form("%sak4pfjets_parton_flavor", prefix_.c_str()) , &ak4pfjets_parton_flavor);
+    tree->Branch(Form("%sak4pfjets_hadron_flavor", prefix_.c_str()) , &ak4pfjets_hadron_flavor);
     tree->Branch(Form("%sak4pfjets_loose_puid", prefix_.c_str()) , &ak4pfjets_loose_puid);
     tree->Branch(Form("%sak4pfjets_loose_pfid", prefix_.c_str()) , &ak4pfjets_loose_pfid);
     tree->Branch(Form("%sak4pfjets_medium_pfid", prefix_.c_str()) , &ak4pfjets_medium_pfid);

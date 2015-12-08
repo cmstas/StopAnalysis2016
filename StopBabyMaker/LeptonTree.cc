@@ -117,7 +117,7 @@ void LeptonTree::FillCommon (int id, int idx)
        //MiniIso      = elMiniRelIso(idx, true, 0., true, false);//copy of miniRelIsoDB - change to precomputed for 74X
        miniRelIsoDB = elMiniRelIsoCMS3_DB(idx);
        miniRelIsoEA = elMiniRelIsoCMS3_EA(idx,1);
-       MiniIso      = elMiniRelIsoCMS3_DB(idx);
+       MiniIso      = elMiniRelIsoCMS3_EA(idx,1);
 
     } // end electron block
 
@@ -161,7 +161,7 @@ void LeptonTree::FillCommon (int id, int idx)
 	//MiniIso      = muMiniRelIso(idx, true, 0.5, true, false);//copy of miniRelIsoDB - change to precomputed for 74X
 	miniRelIsoDB = muMiniRelIsoCMS3_DB(idx);
 	miniRelIsoEA = muMiniRelIsoCMS3_EA(idx,1);
-	MiniIso      = muMiniRelIsoCMS3_DB(idx);
+	MiniIso      = muMiniRelIsoCMS3_EA(idx,1);
 
     } // end muon block
 }

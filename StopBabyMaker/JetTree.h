@@ -65,6 +65,7 @@ public:
     vecd ak4pfjets_CSV;
     vecd ak4pfjets_puid;
     veci ak4pfjets_parton_flavor;
+    veci ak4pfjets_hadron_flavor;
     vecb ak4pfjets_loose_puid;
     vecb ak4pfjets_loose_pfid;
     vecb ak4pfjets_medium_pfid;
