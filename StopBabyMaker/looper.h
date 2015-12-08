@@ -11,6 +11,8 @@
 #include "TF1.h"
 #include "TH1F.h"
 #include "TH1D.h"
+#include "TH2F.h"
+#include "TH3D.h"
 #include "Math/VectorUtil.h"
 #include "TChain.h"
 #include "Math/LorentzVector.h"

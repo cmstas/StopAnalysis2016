@@ -270,15 +270,35 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // JEC files
   //
   bool isDataFromFileName;
+  bool isSignalFromFileName;
   string filestr(output_name);
   cout<<"output name "<< output_name;
   if (filestr.find("data") != std::string::npos) {
     isDataFromFileName = true;
+    isSignalFromFileName = false;
     cout << ", running on DATA, based on file name: " << output_name<<endl;
   } 
+  else if((filestr.find("SMS") != std::string::npos) || (filestr.find("Signal") != std::string::npos)){
+    isDataFromFileName = false;
+    isSignalFromFileName = true;
+    cout << ", running on SIGNAL, based on file name: " << output_name<<endl;
+  }
   else {
     isDataFromFileName = false;
+    isSignalFromFileName = false;
     cout << ", running on MC, based on file name: " << output_name<<endl;
+  }
+
+  TFile *fxsec;
+  TH1D *hxsec;
+  if(isSignalFromFileName){
+    //fxsec = TFile::Open("xsec_stop_13TeV.root");
+    fxsec = new TFile("xsec_stop_13TeV.root","READ");
+    if(fxsec->IsZombie()) {
+      std::cout << "Somehow xsec_stop_13TeV.root is corrupted. Exit..." << std::endl;
+      exit(0);
+    }
+    hxsec = (TH1D*)fxsec->Get("stop");
   }
   
   TH1D* counterhist = new TH1D( "h_counter", "h_counter", 13, 0.5,13.5);
@@ -297,6 +317,27 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(12,"pdf_alphas_var_1");
   counterhist->GetXaxis()->SetBinLabel(13,"pdf_alphas_var_2");
 
+  TH3D* counterhistSig;
+  TH2F* histNEvts;//count #evts per signal point
+  if(isSignalFromFileName){//create histos only for signals
+    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 41,-1,1024, 31,-1,774, 13, 0.5,13.5);//16500 bins!
+    counterhistSig->Sumw2();
+    counterhistSig->GetZaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
+    counterhistSig->GetZaxis()->SetBinLabel(2,"muR=1 muF=2");
+    counterhistSig->GetZaxis()->SetBinLabel(3,"muR=1 muF=0.5");
+    counterhistSig->GetZaxis()->SetBinLabel(4,"muR=2 muF=1");
+    counterhistSig->GetZaxis()->SetBinLabel(5,"muR=2 muF=2");
+    counterhistSig->GetZaxis()->SetBinLabel(6,"muR=2 muF=0.5");
+    counterhistSig->GetZaxis()->SetBinLabel(7,"muR=0.5 muF=1");
+    counterhistSig->GetZaxis()->SetBinLabel(8,"muR=0.5 muF=2");
+    counterhistSig->GetZaxis()->SetBinLabel(9,"muR=0.5 muF=0.5");
+    counterhistSig->GetZaxis()->SetBinLabel(10,"pdf_up");
+    counterhistSig->GetZaxis()->SetBinLabel(11,"pdf_down");
+    counterhistSig->GetZaxis()->SetBinLabel(12,"pdf_alphas_var_1");
+    counterhistSig->GetZaxis()->SetBinLabel(13,"pdf_alphas_var_2");
+    histNEvts = new TH2F( "histNEvts", "h_histNEvts", 41,-1,1024, 31,-1,774);//x=mStop, y=mLSP
+    histNEvts->Sumw2();
+  }
   //
   //
   // Make Baby Ntuple  
@@ -451,6 +492,55 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.FillCommon(file->GetName()); 
       //std::cout << "[babymaker::looper]: filling event vars completed" << std::endl; 
       //dumpDocLines();
+
+      //This must come before any continue affecting signal scans
+      if(isSignalFromFileName){
+	//get stop and lsp mass from sparms
+	for(unsigned int nsparm = 0; nsparm<sparm_names().size(); ++nsparm){
+	  //if(sparm_names().at(nsparm).Contains("mGluino")) StopEvt.mass_stop = sparm_values().at(nsparm);//dummy for testing as only T1's exist
+	  if(sparm_names().at(nsparm).Contains("mStop")) StopEvt.mass_stop = sparm_values().at(nsparm);
+	  if(sparm_names().at(nsparm).Contains("mCharg")) StopEvt.mass_chargino = sparm_values().at(nsparm);
+	  if(sparm_names().at(nsparm).Contains("mLSP")) StopEvt.mass_lsp = sparm_values().at(nsparm);
+	}
+	//std::cout << "Got signal mass point mStop " << StopEvt.mass_stop << " mLSP " << StopEvt.mass_lsp << std::endl;
+	if(genps_weight()>0) histNEvts->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1);
+	else if(genps_weight()<0) histNEvts->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,-1);
+	StopEvt.xsec = hxsec->GetBinContent(hxsec->FindBin(StopEvt.mass_stop));
+	StopEvt.xsec_uncert = hxsec->GetBinError(hxsec->FindBin(StopEvt.mass_stop));
+	//note to get correct scale1fb you need to use in your looper xsec/nevt, where nevt you get via
+	//histNEvts->GetBinContent(histNEvts->FindBin(StopEvt.mass_stop,StopEvt.mass_lsp));
+	
+	//copy from Mia's code
+	float SMSpdf_weight_up = 1;
+	float SMSpdf_weight_down = 1;
+	float SMSsum_of_weights= 0;
+	float SMSaverage_of_weights= 0;
+	//error on pdf replicas 
+	for(int ipdf=9;ipdf<109;ipdf++){
+	  SMSaverage_of_weights += cms3.genweights().at(ipdf);        
+	}// average of weights
+	SMSaverage_of_weights =  average_of_weights/100.;
+	for(int ipdf=9;ipdf<109;ipdf++){
+	  SMSsum_of_weights += pow(cms3.genweights().at(ipdf)- SMSaverage_of_weights,2);          
+	}//std of weights.
+	SMSpdf_weight_up = (cms3.genweights().at(9)+sqrt(SMSsum_of_weights/100.)); 
+	SMSpdf_weight_down = (cms3.genweights().at(9)-sqrt(SMSsum_of_weights/100.)); 
+	StopEvt.pdf_up_weight = SMSpdf_weight_up;//overwrite here, although it should not matter
+	StopEvt.pdf_down_weight = SMSpdf_weight_down;//overwrite here, although it should not matter
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1,genweights()[0]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,2,genweights()[1]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,3,genweights()[2]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,4,genweights()[3]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,5,genweights()[4]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,6,genweights()[5]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,7,genweights()[6]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,8,genweights()[7]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,9,genweights()[8]);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,10,SMSpdf_weight_up);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,11,SMSpdf_weight_down);  
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,12,genweights()[109]); // α_s variation. 
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,13,genweights()[110]); // α_s variation. 
+      }// is signal
       
       //
       // nVertex Cut
@@ -1037,23 +1127,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    
 	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
 	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_susy.FillCommon(genx);
-	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);
+	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);//use sparm
 	    
 	    //if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
 	    //if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
 	    if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_susy.FillCommon(genx);
 	    if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_susy.FillCommon(genx);
 	    
-	    if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);
-	    if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);
-	    
+	    //if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);//use sparm
+	    //if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);//use sparm	    
 	    
 	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
 	    
 	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
 	    
 	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
-
 
 	    if( abs(genps_id().at(genx))==pdg_el  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
 	    if( abs(genps_id().at(genx))==pdg_mu  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
@@ -1267,7 +1355,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
   }//close file loop
 
-
   //
   // Write and Close baby file
   //
@@ -1275,9 +1362,22 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
    // save counter histogram
   BabyTree->Write();
   counterhist->Write();
+  if(isSignalFromFileName){
+    counterhistSig->Write();
+    histNEvts->Write();
+  }
   BabyFile->Close();
   //histFile->cd();
 
+  //
+  // Some clean up
+  //
+  if(isSignalFromFileName) {
+    fxsec->Close();
+    delete fxsec;
+  }
+
+  
   //
   // Benchmarking
   //

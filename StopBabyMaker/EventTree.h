@@ -133,6 +133,7 @@ public:
     //gen info//
     float scale1fb;
     float xsec;
+    float xsec_uncert;//fill it for signal
     float kfactor;
     float pu_ntrue;
     int   pu_nvtxs;

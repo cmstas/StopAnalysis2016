@@ -56,8 +56,12 @@ void EventTree::FillCommon (const std::string &root_file_name)
 
     std::string filestr (root_file_name);
     string signalstr ("mStop");
+    string lspstr ("mLSP");//add those for testing purpose
+    string smsstr ("SMS");//add those for testing purpose
 
     if (filestr.find(signalstr) != string::npos) signal = true;
+    if (filestr.find(lspstr)    != string::npos) signal = true;
+    if (filestr.find(smsstr)    != string::npos) signal = true;
     //std::cout << "run "<<evt_run()<<" lumiblock "<<evt_lumiBlock() <<" event "<<evt_event()<<" nvtxs "<<numberOfGoodVertices()<<" pfmet "<<evt_pfmet()<<" pfmetphi "<< evt_pfmetPhi()<< std::endl;
     run = evt_run();
     ls  = evt_lumiBlock();
@@ -79,11 +83,22 @@ void EventTree::FillCommon (const std::string &root_file_name)
     is_data = evt_isRealData();
 
     // the recommended met filters //
-    filt_cscbeamhalo = filt_cscBeamHalo();
-    filt_eebadsc = filt_eeBadSc();
-    filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
+    if(!signal){
+      filt_cscbeamhalo = filt_cscBeamHalo();
+      filt_eebadsc = filt_eeBadSc();
+      filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
+      filt_ecallaser = filt_ecalLaser();
+      filt_ecaltp = filt_ecalTP();
+      filt_hcallaser = filt_hcalLaser();
+      filt_met = filt_metfilter();
+      filt_trkfail = filt_trackingFailure();
+      filt_trkPOG = filt_trkPOGFilters();
+      filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
+      filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
+    }
     filt_hbhenoise = hbheNoiseFilter_25ns();
-
+    filt_eff = evt_filt_eff();
+    
     //////////////
     //if (evt_isRealData()) {
     //filt_badevents = !(metFilterTxt.eventFails(evt_run(), evt_lumiBlock(), evt_event()));
@@ -91,15 +106,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
     //else filt_badevents = true;
     ////////////// 
     
-    filt_ecallaser = filt_ecalLaser();
-    filt_ecaltp = filt_ecalTP();
-    filt_hcallaser = filt_hcalLaser();
-    filt_met = filt_metfilter();
-    filt_trkfail = filt_trackingFailure();
-    filt_trkPOG = filt_trkPOGFilters();
-    filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
-    filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
-    filt_eff = evt_filt_eff();
+
     
     if (!is_data)
     {
@@ -189,6 +196,7 @@ void EventTree::Reset ()
     calomet_phi       = -9999.;
     scale1fb          = -9999.;
     xsec              = -9999.;
+    xsec_uncert       = -9999.;
     kfactor           = -9999.;
     pu_ntrue          = -9999.;
     dR_lep_leadb      = -9999.;
@@ -406,6 +414,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("filt_eff", &filt_eff);
     tree->Branch("scale1fb", &scale1fb);
     tree->Branch("xsec", &xsec);
+    tree->Branch("xsec_uncert", &xsec_uncert);
     tree->Branch("kfactor", &kfactor);
     tree->Branch("pu_ntrue", &pu_ntrue);    
     tree->Branch("ngoodleps",&ngoodleps);
