@@ -331,12 +331,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt");
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
+    jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
   } 
   else {
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
-    jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
+    //jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
+    jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt";
   }
 
   cout << "applying JEC from the following files:" << endl;
