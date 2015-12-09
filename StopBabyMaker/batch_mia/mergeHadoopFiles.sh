@@ -12,68 +12,47 @@ chmod -R a+wrx $OUTPUTDIR
 if [ ! -d "merge_logs_${TAG}" ]; then
   mkdir merge_logs_${TAG}
 fi
-
-run data_single_electron_2015C_25ns
-run data_single_muon_2015C_25ns
-run data_single_electron_2015D_25ns
-run data_single_muon_2015D_25ns  
-#run WJetsToLNu_amcnlo_pythia8_25ns 
-#run data_50ns_sm
-#run data_50ns_ee
-#run data_50ns_ph
-#run data_50ns_mm
-#run data_50ns_em
-
-#run wz_50ns_incl
-#run tt2lnu_50ns_php8
-#run dyjetsll_50ns_m1050nlo
-#run dyjetsll_50ns_m50nlo
-
-# run dyjetsll_50ns_m1050nlo
-# run dyjetsll_50ns_m50nlo
-
-
-# #
-# # TTBAR
-# #
-
-# run ttall_msdecays
-
-# # # #
-# # # # DY+JETS
-# # # #
-
-# run dyjetsll_m50inc
-# run dyjetsll_ht100to200
-# run dyjetsll_ht200to400
-# run dyjetsll_ht400to600
-# run dyjetsll_ht600toinf
-# # # run dyjetsmm_ptz180
-
-# # #
-# # # SINGLE TOP
-# # #
-
-# # run t_bars
-# # run t_bart
-# # run t_tops
-# # run t_topt
-# run t_toptw
-# run t_bartw
-
-
-# #
-# # GAMMA + JETS
-# #
-
-# # run gjet_pt40_doubleEM
-# run gjet_ht100to200
-# run gjet_ht200to400
-# run gjet_ht400to600
-# run gjet_ht600toinf
-
-# # #
-# # # ALTERNATIVE TTBAR
+run  tbar_tch_4f_powheg_pythia8_25ns
+run  t_tch_4f_powheg_pythia8_25ns
+run  t_sch_4f_amcnlo_pythia8_25ns
+run  t_tbarW_5f_powheg_pythia8_25ns
+run  t_tW_5f_powheg_pythia8_25ns
+run  TTZToLLNuNu_M-10_amcnlo_pythia8_25ns
+run  data_double_eg_2015C_25ns
+run  data_double_eg_2015D_05Oct2015_v1_25ns
+run  data_double_eg_2015D_promptRecoV4_25ns
+run  data_double_mu_2015C_25ns
+run  data_double_mu_2015D_05Oct2015_v1_25ns
+run  data_double_mu_2015D_promptRecoV4_25ns
+run  data_muon_eg_2015C_25ns
+run  data_muon_eg_2015D_05Oct2015_v1_25ns
+run  data_muon_eg_2015D_05Oct2015_v2_25ns
+run  data_muon_eg_2015D_promptRecoV4_25ns
+run  data_single_electron_2015C_25ns
+run  data_single_electron_2015D_05Oct2015_v1_25ns
+run  data_single_electron_2015D_promptRecoV4_25ns
+run  data_single_muon_2015C_25ns
+run  data_single_muon_2015D_05Oct2015_v1_25ns
+run  data_single_muon_2015D_promptRecoV4_25ns
+run  data_met_2015C_25ns
+run  data_met_2015D_05Oct2015_v1_25ns
+run  data_met_2015D_promptRecoV4_25ns
+run  ttbar_powheg_pythia8_25ns
+run  ttbar_powheg_pythia8_ext3_25ns
+run  DYJetsToLL_m50_amcnlo_pythia8_50ns
+run  WJetsToLNu_madgraph_pythia8_25ns
+run  WJetsToLNu_HT100To200_madgraph_pythia8_25ns
+run  WJetsToLNu_HT200To400_madgraph_pythia8_25ns
+run  WJetsToLNu_HT400To600_madgraph_pythia8_25ns
+run  WJetsToLNu_HT600To800_madgraph_pythia8_25ns
+run  WJetsToLNu_HT800To1200_madgraph_pythia8_25ns
+run  WJetsToLNu_HT1200To2500_madgraph_pythia8_25ns
+run  WJetsToLNu_HT2500ToInf_madgraph_pythia8_25ns
+run  WJetsToLNu_HT600ToInf_madgraph_pythia8_25ns
+run  DYJetsToLL_M-50_HT-100to200
+run  DYJetsToLL_M-50_HT-200to400
+run  DYJetsToLL_M-50_HT-400to600
+run  DYJetsToLL_M-50_HT-600toInf
 # # #
 
 # # #
