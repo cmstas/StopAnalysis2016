@@ -87,7 +87,9 @@ int main(int argc, char **argv){
 
   bool applyJECfromFile = true;
   int JES_central_up_down = 1;  //0 cetranl, 1 up, -1 down;
-
+  bool applyBtagSFs = true; 
+  bool applyLeptonSFs = false;
+  bool isFastsim = false;
   bool apply2ndlepVeto =  false;
 
   float jet_ak8_pt      = 100.0;
@@ -96,7 +98,7 @@ int main(int argc, char **argv){
   int   nphs            = 0;
   float phs_pt          = 20.0;
   float phs_eta         = 2.4;
-
+  
   // Input sanitation
   if( !( goodLep_mu_pt>looseLep_mu_pt && looseLep_mu_pt>vetoLep_mu_pt) ){
     cout << "   Problem with muon pT hierachy for good, loose, and veto pT!" << endl;
@@ -114,8 +116,7 @@ int main(int argc, char **argv){
   //
   // Set Skim Variables
   //
-  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, apply2ndlepVeto,nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta, nBJets,  nphs, phs_pt, phs_eta, applyJECfromFile, JES_central_up_down);
-
+  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, apply2ndlepVeto,nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta, nBJets,  nphs, phs_pt, phs_eta, applyJECfromFile, JES_central_up_down, applyLeptonSFs,applyBtagSFs, isFastsim);
 
   //
   // Use arguments to set run parameters
