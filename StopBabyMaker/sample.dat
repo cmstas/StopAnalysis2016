@@ -3,6 +3,10 @@
 #####################################
 ##
 ## Double EG ##
+SAMPLE 
+Name test
+Path /nfs-7/userdata/mliu/onelepbabies/merged_ntuple_1.root
+
 SAMPLE
 Name data_double_eg_2015C_25ns
 Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_DoubleEG_MINIAOD_05Oct2015-v1/merged/V07-04-11/

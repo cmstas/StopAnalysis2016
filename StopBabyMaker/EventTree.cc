@@ -239,6 +239,11 @@ void EventTree::Reset ()
     pdf_down_weight = -9999.;
     genweights.clear();
     genweightsID.clear();
+    weight_btagsf = -9999;
+    weight_btagsf_heavy_UP = -9999;
+    weight_btagsf_light_UP = -9999;
+    weight_btagsf_heavy_DN = -9999;
+    weight_btagsf_light_DN = -9999;
 
     sparms_names.clear();
     sparms_filterEfficiency	= -9999.;
@@ -453,6 +458,11 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("pdf_down_weight", &pdf_down_weight);
     tree->Branch("genweightsID", &genweightsID);
     tree->Branch("genweights", &genweights);
+    tree->Branch("weight_btagsf", &weight_btagsf);
+    tree->Branch("weight_btagsf_heavy_UP", &weight_btagsf_heavy_UP);
+    tree->Branch("weight_btagsf_light_UP", &weight_btagsf_light_UP);
+    tree->Branch("weight_btagsf_heavy_DN", &weight_btagsf_heavy_DN);
+    tree->Branch("weight_btagsf_light_DN", &weight_btagsf_light_DN);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_filterEfficiency", &sparms_filterEfficiency);
     tree->Branch("sparms_pdfScale", &sparms_pdfScale);

@@ -1,6 +1,7 @@
 #include "JetTree.h"
 #include "CMS3.h"
 #include "JetSelections.h"
+#include "btagsf/BTagCalibrationStandalone.h"
 
 using namespace tas;
  
@@ -13,8 +14,56 @@ JetTree::JetTree (const std::string &prefix)
 {
 }
 
-void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999, bool applynewcorr=false,JetCorrectionUncertainty* jetcorr_uncertainty=0, int JES_type=0)
-//void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx = -9999, unsigned int overlep2_idx = -9999)
+void JetTree::InitBtagSFTool(BTagCalibration* calib_,TH2D* h_btag_eff_b_, TH2D* h_btag_eff_c_, TH2D* h_btag_eff_udsg_, bool isFastsim_) {
+    isFastsim = isFastsim_;
+    calib = calib_;
+    reader_heavy = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "central"); // central
+    reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");  // sys up
+    reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");  // sys down
+    reader_light = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central");  // central
+    reader_light_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
+    reader_light_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
+    h_btag_eff_b = h_btag_eff_b_;
+    h_btag_eff_c = h_btag_eff_c_;
+    h_btag_eff_udsg = h_btag_eff_udsg_;
+    //cout<<h_btag_eff_b->GetTitle()<<endl;  
+    //std::cout << "loaded fullsim btag SFs" << std::endl;
+}
+
+float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFastsim){
+    if(!h_btag_eff_b || !h_btag_eff_c || !h_btag_eff_udsg) {
+      std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists" << std::endl;
+      return 1.;
+    }
+
+//    if(isFastsim && (!h_btag_eff_b_fastsim || !h_btag_eff_c_fastsim || !h_btag_eff_udsg_fastsim)) {
+//      std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists" << std::endl;
+//      return 1.;
+    //}
+    // only use pt bins up to 400 GeV for charm and udsg
+    float pt_cutoff = std::max(20.,std::min(399.,double(pt)));
+    TH2D* h(0);
+    if (abs(mcFlavour) == 5) {
+      //h = isFastsim ? h_btag_eff_b_fastsim : h_btag_eff_b;
+      h = h_btag_eff_b;
+      // use pt bins up to 600 GeV for b
+      pt_cutoff = std::max(20.,std::min(599.,double(pt)));
+    }
+    else if (abs(mcFlavour) == 4) {
+      //h = isFastsim ? h_btag_eff_c_fastsim : h_btag_eff_c;
+      h = h_btag_eff_c;
+    }
+    else {
+      //h = isFastsim ? h_btag_eff_udsg_fastsim : h_btag_eff_udsg;
+      h = h_btag_eff_udsg;
+    }
+    
+    int binx = h->GetXaxis()->FindBin(pt_cutoff);
+    int biny = h->GetYaxis()->FindBin(fabs(eta));
+    return h->GetBinContent(binx,biny);
+}
+
+void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_err_heavy_UP, float & btagprob_err_heavy_DN,float & btagprob_err_light_UP, float & btagprob_err_light_DN ,unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs)
 {
     
     // fill info for ak4pfjets
@@ -33,7 +82,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
     float htosm = 0.;
     float htratiom = 0.;
 
-//apply JEC
+    //apply JEC
     LorentzVector pfjet_p4_cor;
     LorentzVector pfjet_p4_uncor;
     vector<float> newjecorr;
@@ -86,7 +135,6 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
         //deal with the overlaps
         if(jindex == overlep1_idx){
 		ak4pfjet_overlep1_p4  = p4sCorrJets.at(jindex);
-//pfjets_bDiscriminators() pfjets_bDiscriminatorNames()
                 ak4pfjet_overlep1_CSV = getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex);
 		//ak4pfjet_overlep1_pu_id = pfjets_pileupJetId().at(jindex);
                 ak4pfjet_overlep1_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
@@ -174,10 +222,76 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
                 ak4pfjets_leadMEDbjet_pt = p4sCorrJets.at(jindex).pt();  //plot leading bjet pT
                 ak4pfjets_leadMEDbjet_p4 = p4sCorrJets.at(jindex);
              }
-             ak4pfjets_MEDbjet_pt.push_back(p4sCorrJets.at(jindex).pt());
-        }else{ 
+                ak4pfjets_MEDbjet_pt.push_back(p4sCorrJets.at(jindex).pt());
+               bool isFastsim = false; 
+              // btag SF - not final yet
+              if (!evt_isRealData()&&applyBtagSFs) {
+                float eff = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), isFastsim);
+		BTagEntry::JetFlavor flavor = BTagEntry::FLAV_UDSG;
+
+		if (abs(pfjets_hadronFlavour().at(jindex)) == 5) flavor = BTagEntry::FLAV_B;
+		else if (abs(pfjets_hadronFlavour().at(jindex)) == 4) flavor = BTagEntry::FLAV_C;
+
+	        float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].eta())));
+	        float eta_cutoff = std::min(2.39,fabs(double(p4sCorrJets[jindex].eta())));
+		float weight_cent(1.), weight_UP(1.), weight_DN(1.);
+
+//                cout<<"read uncertainty from btagsf reader:"<<endl;
+		if (flavor == BTagEntry::FLAV_UDSG) {
+		  weight_cent = reader_light->eval(flavor, eta_cutoff, pt_cutoff);
+		  weight_UP = reader_light_UP->eval(flavor, eta_cutoff, pt_cutoff);
+		  weight_DN = reader_light_DN->eval(flavor, eta_cutoff, pt_cutoff);
+		} else {
+		  weight_cent = reader_heavy->eval(flavor, eta_cutoff, pt_cutoff);
+		  weight_UP = reader_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
+		  weight_DN = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
+		}
+  //              cout<<"got uncertainty from btagsf reader:"<<endl;
+                btagprob_data *= weight_cent * eff;
+                btagprob_mc *= eff;
+                float abserr_UP = weight_UP - weight_cent;
+                float abserr_DN = weight_cent - weight_DN;
+		if (flavor == BTagEntry::FLAV_UDSG) {
+                  btagprob_err_light_UP += abserr_UP/weight_cent;
+                  btagprob_err_light_DN += abserr_DN/weight_cent;
+		} else {
+                  btagprob_err_heavy_UP += abserr_UP/weight_cent;
+                  btagprob_err_heavy_DN += abserr_DN/weight_cent;
+                }
+               }
+             }else{ 
              ak4pfjets_passMEDbtag.push_back(false);
-        }
+             if (!evt_isRealData()&&applyBtagSFs) { // fail med btag -- needed for SF event weights
+              float eff = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), isFastsim);
+	      BTagEntry::JetFlavor flavor = BTagEntry::FLAV_UDSG;
+	      if (abs(pfjets_hadronFlavour().at(jindex)) == 5) flavor = BTagEntry::FLAV_B;
+	      else if (abs(pfjets_hadronFlavour().at(jindex)) == 4) flavor = BTagEntry::FLAV_C;
+	      float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].eta())));
+	      float eta_cutoff = std::min(2.39,fabs(double(p4sCorrJets[jindex].eta())));
+	      float weight_cent(1.), weight_UP(1.), weight_DN(1.);
+	      if (flavor == BTagEntry::FLAV_UDSG) {
+		weight_cent = reader_light->eval(flavor, eta_cutoff, pt_cutoff);
+		weight_UP = reader_light_UP->eval(flavor, eta_cutoff, pt_cutoff);
+		weight_DN = reader_light_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	      } else {
+		weight_cent = reader_heavy->eval(flavor, eta_cutoff, pt_cutoff);
+		weight_UP = reader_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
+		weight_DN = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	      }
+
+              btagprob_data *= (1. - weight_cent * eff);
+              btagprob_mc *= (1. - eff);
+              float abserr_UP = weight_UP - weight_cent;
+              float abserr_DN = weight_cent - weight_DN;
+	      if (flavor == BTagEntry::FLAV_UDSG) {
+                btagprob_err_light_UP += (-eff * abserr_UP)/(1 - eff * weight_cent);
+                btagprob_err_light_DN += (-eff * abserr_DN)/(1 - eff * weight_cent);
+              } else {
+                btagprob_err_heavy_UP += (-eff * abserr_UP)/(1 - eff * weight_cent);
+                btagprob_err_heavy_DN += (-eff * abserr_DN)/(1 - eff * weight_cent);
+              }
+           }
+         }
 	if(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex)> btagdisc){
 	  btagdisc = getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex);
 	  leadbtag_idx = jindex;

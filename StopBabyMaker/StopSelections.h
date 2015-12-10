@@ -13,6 +13,7 @@
 #include "JetSelections.h"
 #include "jetcorr/FactorizedJetCorrector.h"
 #include "jetcorr/JetCorrectionUncertainty.h"
+#include "btagsf/BTagCalibrationStandalone.h"
 
 /*
 #ifndef JETCORR_INCL

@@ -77,7 +77,11 @@ class babyMaker {
     int skim_nBJets;
     bool skim_2ndlepveto;
 
-    void setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down);
+    bool skim_applyBtagSFs;
+    bool skim_applyLeptonSFs; 
+    bool skim_isFastsim;
+
+    void setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down, bool applyLeptonSFs ,bool applyBtagSFs, bool isFastsim);
 
 
   protected:
@@ -114,6 +118,29 @@ class babyMaker {
     //GenParticleTree gen_phs;
     //GenParticleTree gen_hs;
     GenParticleTree gen_susy;
+    
+  // for btag SFs
+  BTagCalibration* calib;
+  BTagCalibrationReader* reader_heavy;
+  BTagCalibrationReader* reader_heavy_UP;
+  BTagCalibrationReader* reader_heavy_DN;
+  BTagCalibrationReader* reader_light;
+  BTagCalibrationReader* reader_light_UP;
+  BTagCalibrationReader* reader_light_DN;
+
+  TH2D* h_btag_eff_b;
+  TH2D* h_btag_eff_c;
+  TH2D* h_btag_eff_udsg;
+  
+  BTagCalibration* calib_fastsim;
+  BTagCalibrationReader* reader_fastsim;
+  BTagCalibrationReader* reader_fastsim_UP;
+  BTagCalibrationReader* reader_fastsim_DN;
+
+  TH2D* h_btag_eff_b_fastsim;
+  TH2D* h_btag_eff_c_fastsim;
+  TH2D* h_btag_eff_udsg_fastsim;
+  
 };
 
 struct val_err_t { float value; float error; };

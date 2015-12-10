@@ -141,7 +141,11 @@ public:
     float pdf_down_weight;
     vecd  genweights;
     vecs  genweightsID;
-
+    float weight_btagsf;
+    float weight_btagsf_heavy_UP;
+    float weight_btagsf_light_UP;
+    float weight_btagsf_heavy_DN;
+    float weight_btagsf_light_DN; 
     //sparms
     vecs  sparms_comment;
     vecs  sparms_names;

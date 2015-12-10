@@ -25,6 +25,7 @@
 #include "stop_variables/topness.cc"
 #include "stop_variables/MT2_implementations.cc"
 #include "JetCorrector.h"
+#include "btagsf/BTagCalibrationStandalone.h"
 
 #include "PhotonSelections.h"
 #include "MuonSelections.h"//93991
@@ -111,7 +112,7 @@ babyMaker::babyMaker(){
    gen_susy = GenParticleTree("susy_");
 }
 
-void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down){
+void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down,   bool applyLeptonSFs, bool applyBtagSFs, bool isFastsim){
 
   skim_nvtx            = nvtx;
   skim_met             = met;
@@ -147,6 +148,9 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
   skim_2ndlepveto      = apply2ndlepveto; 
   applyJECfromFile     = applyJEC;
   JES_type 	       = JES_type_central_up_down;
+  skim_applyLeptonSFs  = applyLeptonSFs;
+  skim_applyBtagSFs    = applyBtagSFs;
+  skim_isFastsim       = isFastsim;
 }
 
 
@@ -252,8 +256,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   unsigned int nEvents_pass_skim_nBJets=0;
   unsigned int nEvents_pass_skim_2ndlepVeto=0;
   unsigned int nEventsToDo = chain->GetEntries();
-  unsigned int jet_overlep1_idx = -9999;
+  unsigned int jet_overlep1_idx = -9999;  
   unsigned int jet_overlep2_idx = -9999;
+
+  float btagprob_data = 1.;
+  float btagprob_mc = 1.;
+  float btagprob_err_heavy_UP = 0.;
+  float btagprob_err_heavy_DN = 0.;
+  float btagprob_err_light_UP = 0.;
+  float btagprob_err_light_DN = 0.;
 
   //unsigned int track_overlep1_idx = -9999;
   //unsigned int track_overlep2_idx = -9999;
@@ -399,6 +410,40 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // Get bad events from txt files
   //
   //StopEvt.SetMetFilterEvents();
+  // btagging scale factor//
+  //
+  if (skim_applyBtagSFs) {
+    calib = new BTagCalibration("csvv2", "btagsf/CSVv2.csv"); // 25s version of SFs
+    //reader_heavy = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "central"); // central
+    //reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");  // sys up
+    //reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");  // sys down
+    //reader_light = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central");  // central
+   // reader_light_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
+   // reader_light_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
+
+    // get btag efficiencies
+    TFile* f_btag_eff = new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
+    TH2D* h_btag_eff_b_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_b");
+    TH2D* h_btag_eff_c_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_c");
+    TH2D* h_btag_eff_udsg_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
+
+    BabyFile->cd();
+    h_btag_eff_b = (TH2D*) h_btag_eff_b_temp->Clone("h_btag_eff_b");
+    h_btag_eff_c = (TH2D*) h_btag_eff_c_temp->Clone("h_btag_eff_c");
+    h_btag_eff_udsg = (TH2D*) h_btag_eff_udsg_temp->Clone("h_btag_eff_udsg");
+    f_btag_eff->Close(); 
+ }    
+   jets.InitBtagSFTool(calib,h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim); 
+  // Lepton Scale Factors
+  // if (skim_applyLeptonSFs) {
+  //  setElSFfile("lepsf/kinematicBinSFele.root");
+  //  setMuSFfile("lepsf/TnP_MuonID_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root","lepsf/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
+  //  if (skim_isFastsim) {
+  //    setElSFfile_fastsim("lepsf/sf_el_vetoCB_mini01.root");
+  //    setMuSFfile_fastsim("lepsf/sf_mu_looseID_mini02.root");
+   // }
+  //}
+
 
   //
   // File Loop
@@ -663,10 +708,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	// Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
 	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type);
-	//jets.FillCommon(idx_alloverlapjets, jet_overlep1_idx, jet_overlep2_idx);
+        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_err_heavy_UP, btagprob_err_heavy_DN, btagprob_err_light_UP,btagprob_err_light_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs);
       }
-      
+
+      // SAVE B TAGGING SF 
+     if (!evt_isRealData() && skim_applyBtagSFs) {
+        StopEvt.weight_btagsf = btagprob_data / btagprob_mc;
+        StopEvt.weight_btagsf_heavy_UP = StopEvt.weight_btagsf + btagprob_err_heavy_UP*StopEvt.weight_btagsf;
+        StopEvt.weight_btagsf_light_UP = StopEvt.weight_btagsf + btagprob_err_light_UP*StopEvt.weight_btagsf;
+        StopEvt.weight_btagsf_heavy_DN = StopEvt.weight_btagsf - btagprob_err_heavy_DN*StopEvt.weight_btagsf;
+        StopEvt.weight_btagsf_light_DN = StopEvt.weight_btagsf - btagprob_err_light_DN*StopEvt.weight_btagsf;
+      } 
       if(jets.ngoodjets < skim_nJets) continue;
       nEvents_pass_skim_nJets++;
       if(jets.ngoodbtags < skim_nBJets) continue;
@@ -1368,7 +1420,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   }
   BabyFile->Close();
   //histFile->cd();
-
+  
   //
   // Some clean up
   //
@@ -1376,6 +1428,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     fxsec->Close();
     delete fxsec;
   }
+    if (skim_applyBtagSFs) {
+      //delete calib;
+     // delete reader_heavy;
+    //  delete reader_heavy_UP;
+    //  delete reader_heavy_DN;
+    //  delete reader_light;
+    //  delete reader_light_UP;
+    //  delete reader_light_DN;
+//      if (isFastsim) {
+//	delete calib_fastsim;
+//	delete reader_fastsim;
+//	delete reader_fastsim_UP;
+//	delete reader_fastsim_DN;
+ //     }
+    }
 
   
   //
