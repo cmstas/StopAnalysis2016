@@ -492,16 +492,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       float average_of_weights= 0;
 
     if(!evt_isRealData()){
-       //error on pdf replicas 
-      for(int ipdf=9;ipdf<109;ipdf++){
-        average_of_weights += cms3.genweights().at(ipdf);        
-       }// average of weights
-       average_of_weights =  average_of_weights/100;
+       //error on pdf replicas
+      if(genweights().size()>109){ 
+        for(int ipdf=9;ipdf<109;ipdf++){
+           average_of_weights += cms3.genweights().at(ipdf);        
+           }// average of weights
+         average_of_weights =  average_of_weights/100;
+ 
+        for(int ipdf=9;ipdf<109;ipdf++){
+           sum_of_weights += (cms3.genweights().at(ipdf)- average_of_weights)*(cms3.genweights().at(ipdf)-average_of_weights);          
+          }//std of weights.     
 
-      for(int ipdf=9;ipdf<109;ipdf++){
-        sum_of_weights += (cms3.genweights().at(ipdf)- average_of_weights)*(cms3.genweights().at(ipdf)-average_of_weights);          
-       }//std of weights.
-     
           pdf_weight_up = (average_of_weights+sqrt(sum_of_weights/100)); 
           pdf_weight_down = (average_of_weights-sqrt(sum_of_weights/100)); 
           StopEvt.pdf_up_weight = pdf_weight_up;
@@ -519,11 +520,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
           counterhist->Fill(11,pdf_weight_down);  
           counterhist->Fill(12,genweights()[109]); // α_s variation. 
           counterhist->Fill(13,genweights()[110]); // α_s variation. 
-
-     }
-      //
-      // If data, check against good run list
-      //
+        }
+      }
+      //////////////////////////////////////////
+      // If data, check against good run list//
+      /////////////////////////////////////////
       if( evt_isRealData() && !goodrun(evt_run(), evt_lumiBlock()) ) continue;
       if( evt_isRealData() ) {
 	DorkyEventIdentifier id(evt_run(), evt_event(), evt_lumiBlock());
