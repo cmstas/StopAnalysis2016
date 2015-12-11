@@ -21,7 +21,8 @@ void TauTree::FillCommon (int idx,float tau_pt_cut, float tau_eta_cut)
     tau_sigcand_p4.push_back(taus_pf_signalcands_p4().at(idx));
     tau_mass.push_back(taus_pf_mass().at(idx));
     tau_ID.push_back(taus_pf_IDs().at(idx));
-    tau_passID.push_back(passTauID("byMediumIsolationMVA3newDMwLT",idx));
+    tau_passID.push_back(passTauID("decayModeFinding",idx) &&
+						 passTauID("byMediumCombinedIsolationDeltaBetaCorr3Hits",idx) );
     tau_charge.push_back(taus_pf_charge().at(idx));
     //tau_againstMuonTight.push_back();
     //tau_againstElectronLoose.push_back();
