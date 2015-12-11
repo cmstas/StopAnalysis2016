@@ -259,14 +259,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   unsigned int jet_overlep1_idx = -9999;  
   unsigned int jet_overlep2_idx = -9999;
 
-  float btagprob_data = 1.;
-  float btagprob_mc = 1.;
-  float btagprob_err_heavy_UP = 0.;
-  float btagprob_err_heavy_DN = 0.;
-  float btagprob_err_light_UP = 0.;
-  float btagprob_err_light_DN = 0.;
-
-  //unsigned int track_overlep1_idx = -9999;
+ //unsigned int track_overlep1_idx = -9999;
   //unsigned int track_overlep2_idx = -9999;
   
  
@@ -312,7 +305,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     hxsec = (TH1D*)fxsec->Get("stop");
   }
   
-  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 13, 0.5,13.5);
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 18, 0.5,18.5);
   counterhist->Sumw2();
   counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
   counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -327,6 +320,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(11,"pdf_down");
   counterhist->GetXaxis()->SetBinLabel(12,"pdf_alphas_var_1");
   counterhist->GetXaxis()->SetBinLabel(13,"pdf_alphas_var_2");
+  counterhist->GetXaxis()->SetBinLabel(14,"weight_btagsf");
+  counterhist->GetXaxis()->SetBinLabel(15,"weight_btagsf_heavy_UP");
+  counterhist->GetXaxis()->SetBinLabel(16,"weight_btagsf_light_UP");
+  counterhist->GetXaxis()->SetBinLabel(17,"weight_btagsf_heavy_DN");
+  counterhist->GetXaxis()->SetBinLabel(18,"weight_btagsf_light_DN");
 
   TH3D* counterhistSig;
   TH2F* histNEvts;//count #evts per signal point
@@ -413,7 +411,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // btagging scale factor//
   //
   if (skim_applyBtagSFs) {
-    calib = new BTagCalibration("csvv2", "btagsf/CSVv2.csv"); // 25s version of SFs
     //reader_heavy = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "central"); // central
     //reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");  // sys up
     //reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");  // sys down
@@ -433,7 +430,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     h_btag_eff_udsg = (TH2D*) h_btag_eff_udsg_temp->Clone("h_btag_eff_udsg");
     f_btag_eff->Close(); 
  }    
-   jets.InitBtagSFTool(calib,h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim); 
+   jets.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim); 
   // Lepton Scale Factors
   // if (skim_applyLeptonSFs) {
   //  setElSFfile("lepsf/kinematicBinSFele.root");
@@ -697,7 +694,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       //
       // Jet Selection
-      //
+       float btagprob_data = 1.;
+       float btagprob_mc = 1.;
+       float btagprob_err_heavy_UP = 0.;
+       float btagprob_err_heavy_DN = 0.;
+       float btagprob_err_light_UP = 0.;
+       float btagprob_err_light_DN = 0.;
+
+ 
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
       // Get the jets overlapping with the selected leptons
       if(pfjets_p4().size() > 0){
@@ -725,6 +729,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(jets.ngoodbtags < skim_nBJets) continue;
       nEvents_pass_skim_nBJets++;
 
+      // save the sum of weights for normalization offline to n-babies.
+      if(!evt_isRealData() && skim_applyBtagSFs) {
+        counterhist->Fill(14,StopEvt.weight_btagsf);
+        counterhist->Fill(15,StopEvt.weight_btagsf_heavy_UP);
+        counterhist->Fill(16,StopEvt.weight_btagsf_light_UP);
+        counterhist->Fill(17,StopEvt.weight_btagsf_heavy_DN);
+        counterhist->Fill(18,StopEvt.weight_btagsf_light_DN);
+       }
       //
       // Photon Selection
       //
@@ -1430,19 +1442,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     delete fxsec;
   }
     if (skim_applyBtagSFs) {
-      //delete calib;
-     // delete reader_heavy;
-    //  delete reader_heavy_UP;
-    //  delete reader_heavy_DN;
-    //  delete reader_light;
-    //  delete reader_light_UP;
-    //  delete reader_light_DN;
-//      if (isFastsim) {
-//	delete calib_fastsim;
-//	delete reader_fastsim;
-//	delete reader_fastsim_UP;
-//	delete reader_fastsim_DN;
- //     }
+       jets.deleteBtagSFTool();
     }
 
   

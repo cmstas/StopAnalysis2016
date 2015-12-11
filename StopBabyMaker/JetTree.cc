@@ -14,9 +14,10 @@ JetTree::JetTree (const std::string &prefix)
 {
 }
 
-void JetTree::InitBtagSFTool(BTagCalibration* calib_,TH2D* h_btag_eff_b_, TH2D* h_btag_eff_c_, TH2D* h_btag_eff_udsg_, bool isFastsim_) {
+void JetTree::InitBtagSFTool(TH2D* h_btag_eff_b_, TH2D* h_btag_eff_c_, TH2D* h_btag_eff_udsg_, bool isFastsim_) {
     isFastsim = isFastsim_;
-    calib = calib_;
+    //calib = calib_;
+    calib = new BTagCalibration("csvv2", "btagsf/CSVv2.csv"); // 25s version of SFs
     reader_heavy = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "central"); // central
     reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");  // sys up
     reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");  // sys down
@@ -26,8 +27,8 @@ void JetTree::InitBtagSFTool(BTagCalibration* calib_,TH2D* h_btag_eff_b_, TH2D* 
     h_btag_eff_b = h_btag_eff_b_;
     h_btag_eff_c = h_btag_eff_c_;
     h_btag_eff_udsg = h_btag_eff_udsg_;
-    //cout<<h_btag_eff_b->GetTitle()<<endl;  
-    //std::cout << "loaded fullsim btag SFs" << std::endl;
+    std::cout << "loaded fullsim btag SFs" << std::endl;
+    return;
 }
 
 float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFastsim){
@@ -35,7 +36,6 @@ float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFas
       std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists" << std::endl;
       return 1.;
     }
-
 //    if(isFastsim && (!h_btag_eff_b_fastsim || !h_btag_eff_c_fastsim || !h_btag_eff_udsg_fastsim)) {
 //      std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists" << std::endl;
 //      return 1.;
@@ -258,6 +258,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
                   btagprob_err_heavy_UP += abserr_UP/weight_cent;
                   btagprob_err_heavy_DN += abserr_DN/weight_cent;
                 }
+//                cout<<"btagprob_err_heavy_UP"<<btagprob_err_heavy_UP<<endl;
                }
              }else{ 
              ak4pfjets_passMEDbtag.push_back(false);
@@ -369,7 +370,18 @@ void JetTree::GetJetSelections (std::string cone_size)
         std::cout << "ak8 jet pt > " << m_ak8_pt_cut << std::endl;
     }
 }
- 
+void JetTree::deleteBtagSFTool()
+{
+   
+    delete calib;
+    delete reader_heavy;
+    delete reader_heavy_UP;
+     delete reader_heavy_DN;
+      delete reader_light;
+      delete reader_light_UP;
+      delete reader_light_DN;
+   return;
+} 
 void JetTree::Reset ()
 {
     ak4pfjets_p4.clear();

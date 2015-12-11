@@ -239,6 +239,7 @@ void EventTree::Reset ()
     pdf_down_weight = -9999.;
     genweights.clear();
     genweightsID.clear();
+
     weight_btagsf = -9999;
     weight_btagsf_heavy_UP = -9999;
     weight_btagsf_light_UP = -9999;
