@@ -245,6 +245,13 @@ void EventTree::Reset ()
     weight_btagsf_light_UP = -9999;
     weight_btagsf_heavy_DN = -9999;
     weight_btagsf_light_DN = -9999;
+    weight_ISR     = -9999;
+    weight_ISRup   = -9999;
+    weight_ISRdown = -9999;
+    weight_PU      = -9999;
+    weight_PUup    = -9999;
+    weight_PUdown  = -9999;
+    hardgenpt      = -9999.;
 
     sparms_names.clear();
     sparms_filterEfficiency	= -9999.;
@@ -315,7 +322,7 @@ void EventTree::Reset ()
     EA_centralchargedpileup_rho = -9999.; 
     EA_centralneutral_rho       = -9999.;
 
-    pu_weight        =  -9999;
+    //pu_weight        =  -9999;
     lep_sf           =  -9999;
     btag_sf          =  -9999;
     HLT_SingleMu_eff =  -9999;
@@ -464,6 +471,13 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("weight_btagsf_light_UP", &weight_btagsf_light_UP);
     tree->Branch("weight_btagsf_heavy_DN", &weight_btagsf_heavy_DN);
     tree->Branch("weight_btagsf_light_DN", &weight_btagsf_light_DN);
+    tree->Branch("weight_ISR", &weight_ISR);
+    tree->Branch("weight_ISRup", &weight_ISRup);
+    tree->Branch("weight_ISRdown", &weight_ISRdown);
+    tree->Branch("weight_PU", &weight_PU);
+    tree->Branch("weight_PUup", &weight_PUup);
+    tree->Branch("weight_PUdown", &weight_PUdown);
+    tree->Branch("hardgenpt", &hardgenpt);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_filterEfficiency", &sparms_filterEfficiency);
     tree->Branch("sparms_pdfScale", &sparms_pdfScale);
@@ -547,7 +561,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_Photon165_R9Id90_HE10_IsoM", &HLT_Photon165_R9Id90_HE10_IsoM);
     tree->Branch("HLT_Photon175", &HLT_Photon175);
     tree->Branch("HLT_Photon165_HE10", &HLT_Photon165_HE10);
-    tree->Branch("pu_weight", &pu_weight); 
+    //tree->Branch("pu_weight", &pu_weight); 
     tree->Branch("lep_sf", &lep_sf); 
     tree->Branch("btag_sf", &btag_sf); 
     tree->Branch("HLT_SingleEl_eff", &HLT_SingleEl_eff); 

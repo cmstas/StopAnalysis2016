@@ -304,8 +304,22 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     }
     hxsec = (TH1D*)fxsec->Get("stop");
   }
+  TFile *pileupfile;
+  TH1D *hPU;
+  TH1D *hPUup;
+  TH1D *hPUdown;
+  if(!isDataFromFileName){
+    pileupfile = new TFile("puWeights_2015data_2p2fbinv.root","READ");
+    if(pileupfile->IsZombie()) {
+      std::cout << "Somehow puWeights_2015data_2p2fbinv.root is corrupted. Exit..." << std::endl;
+      exit(0);
+    }
+    hPU     = (TH1D*)pileupfile->Get("puWeight");
+    hPUup   = (TH1D*)pileupfile->Get("puWeightUp");
+    hPUdown = (TH1D*)pileupfile->Get("puWeightDown");
+  }
   
-  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 18, 0.5,18.5);
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 22, 0.5,22.5);
   counterhist->Sumw2();
   counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
   counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -325,11 +339,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(16,"weight_btagsf_light_UP");
   counterhist->GetXaxis()->SetBinLabel(17,"weight_btagsf_heavy_DN");
   counterhist->GetXaxis()->SetBinLabel(18,"weight_btagsf_light_DN");
+  counterhist->GetXaxis()->SetBinLabel(19,"weight_ISR_nominal");
+  counterhist->GetXaxis()->SetBinLabel(20,"weight_ISR_up");
+  counterhist->GetXaxis()->SetBinLabel(21,"weight_ISR_down");
+  counterhist->GetXaxis()->SetBinLabel(22,"NEvents");
 
   TH3D* counterhistSig;
   TH2F* histNEvts;//count #evts per signal point
   if(isSignalFromFileName){//create histos only for signals
-    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 41,-1,1024, 31,-1,774, 13, 0.5,13.5);//16500 bins!
+    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 21, 0.5,21.5);//15000 bins!
     counterhistSig->Sumw2();
     counterhistSig->GetZaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
     counterhistSig->GetZaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -344,7 +362,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     counterhistSig->GetZaxis()->SetBinLabel(11,"pdf_down");
     counterhistSig->GetZaxis()->SetBinLabel(12,"pdf_alphas_var_1");
     counterhistSig->GetZaxis()->SetBinLabel(13,"pdf_alphas_var_2");
-    histNEvts = new TH2F( "histNEvts", "h_histNEvts", 41,-1,1024, 31,-1,774);//x=mStop, y=mLSP
+    counterhistSig->GetZaxis()->SetBinLabel(14,"weight_btagsf");
+    counterhistSig->GetZaxis()->SetBinLabel(15,"weight_btagsf_heavy_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(16,"weight_btagsf_light_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(17,"weight_btagsf_heavy_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(18,"weight_btagsf_light_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(19,"weight_ISR_nominal");
+    counterhistSig->GetZaxis()->SetBinLabel(20,"weight_ISR_up");
+    counterhistSig->GetZaxis()->SetBinLabel(21,"weight_ISR_down");
+    histNEvts = new TH2F( "histNEvts", "h_histNEvts", 37,99,1024, 19,-1,474);//x=mStop, y=mLSP
     histNEvts->Sumw2();
   }
   //
@@ -489,6 +515,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       float average_of_weights= 0;
 
     if(!evt_isRealData()){
+      counterhist->Fill(22,1.);  
        //error on pdf replicas
       if(genweights().size()>109){ 
         for(int ipdf=9;ipdf<109;ipdf++){
@@ -535,6 +562,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.FillCommon(file->GetName()); 
       //std::cout << "[babymaker::looper]: filling event vars completed" << std::endl; 
       //dumpDocLines();
+      if(!StopEvt.is_data){
+	StopEvt.weight_PU     = hPU    ->GetBinContent(hPU    ->FindBin(StopEvt.pu_ntrue));
+	StopEvt.weight_PUup   = hPUup  ->GetBinContent(hPUup  ->FindBin(StopEvt.pu_ntrue));
+	StopEvt.weight_PUdown = hPUdown->GetBinContent(hPUdown->FindBin(StopEvt.pu_ntrue));
+      }
 
       //This must come before any continue affecting signal scans
       if(isSignalFromFileName){
@@ -584,6 +616,195 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,12,genweights()[109]); // α_s variation. 
 	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,13,genweights()[110]); // α_s variation. 
       }// is signal
+
+      //
+      // Gen Information - now goes first
+      //
+      //std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
+      
+      //ttbar counters using neutrinos:
+      int n_nutaufromt=0;
+      int n_nuelfromt=0;
+      int n_numufromt=0;
+
+      int nLepsHardProcess=0;
+      int nNusHardProcess=0;
+
+      bool ee0lep=false;
+      bool ee1lep=false;
+      bool ge2lep=false;
+      bool zToNuNu=false;
+
+      TString thisFile = chain->GetFile()->GetName();
+      bool isstopevent = false;
+      bool istopevent = false;
+      bool isWevent = false;
+      bool isZevent = false;
+
+      if(thisFile.Contains("DYJets") || thisFile.Contains("ZJets") ||
+	 thisFile.Contains("ZZ") || thisFile.Contains("WZ") ||
+	 thisFile.Contains("TTZ") || thisFile.Contains("tZq") )
+	isZevent = true;
+      if(thisFile.Contains("WJets") ||
+	 thisFile.Contains("WW") || thisFile.Contains("WZ") ||
+	 thisFile.Contains("TTW") )
+	isWevent = true;
+      if(thisFile.Contains("TTJets") || thisFile.Contains("TTTo2L2Nu") || thisFile.Contains("TT_") ||
+	 thisFile.Contains("ST_") || thisFile.Contains("tZq") ||
+	 thisFile.Contains("TTW") || thisFile.Contains("TTZ") )
+	istopevent = true;
+      if(isSignalFromFileName ||
+	 thisFile.Contains("T2tt") || thisFile.Contains("T2tb") || thisFile.Contains("T2bW") )
+	isstopevent = true;
+
+      //gen particles
+      if (!evt_isRealData()){
+	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
+	  //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)
+
+	  // Only keep first and last particles in a sequence
+	  if( genps_id().at(genx)==genps_id_simplemother().at(genx) && !genps_isLastCopy().at(genx) ) continue;
+
+	  if( genps_isHardProcess().at(genx) ||
+	      genps_fromHardProcessDecayed().at(genx) ||
+	      genps_fromHardProcessFinalState().at(genx) ||
+	      //genps_isMostlyLikePythia6Status3().at(genx) ||
+	      genps_isLastCopy().at(genx) ||
+	      genps_status().at(genx)==1 ){
+     	    
+	    if( abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau) gen_leps.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_nue   ) gen_nuels.FillCommon(genx);            
+	    if( abs(genps_id().at(genx)) == pdg_numu || abs(genps_id().at(genx)) == pdg_nue || abs(genps_id().at(genx)) == pdg_nutau ) gen_nus.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_nutau ) gen_nutaus.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_b || abs(genps_id().at(genx)) == pdg_c || abs(genps_id().at(genx)) == pdg_s || abs(genps_id().at(genx)) == pdg_d ||abs(genps_id().at(genx)) == pdg_u   ) gen_qs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_c     ) gen_cs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_g &&
+	    //    genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_W || abs(genps_id().at(genx)) == pdg_Z ||(abs(genps_id().at(genx)) == pdg_ph &&
+                genps_p4().at(genx).Pt()>5.0)  || abs(genps_id().at(genx)) == pdg_h  ) gen_bosons.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_Z     ) gen_zs.FillCommon(genx);
+	    //if( abs(genps_id().at(genx)) == pdg_ph &&
+	    //	  genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
+	    
+	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
+	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_susy.FillCommon(genx);
+	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);//use sparm
+	    
+	    //if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
+	    //if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
+	    if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_susy.FillCommon(genx);
+	    if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_susy.FillCommon(genx);
+	    
+	    //if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);//use sparm
+	    //if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);//use sparm	    
+	    
+	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
+	    
+	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
+	    
+	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
+
+	    if( abs(genps_id().at(genx))==pdg_el  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
+	    if( abs(genps_id().at(genx))==pdg_mu  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
+	    if( abs(genps_id().at(genx))==pdg_tau && genps_fromHardProcessDecayed().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
+	    
+	    if( abs(genps_id().at(genx))==pdg_nue   && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
+	    if( abs(genps_id().at(genx))==pdg_numu  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
+	    if( abs(genps_id().at(genx))==pdg_nutau && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
+
+	  }	  
+	}
+	//use babies genparticles
+	LorentzVector hardsystem;
+	hardsystem.SetPxPyPzE(0.,0.,0.,0.);
+	if(isstopevent){
+	  for(unsigned int genx = 0; genx < gen_susy.id.size() ; genx++){
+	    if(abs(gen_susy.id.at(genx))==pdg_stop1 && gen_susy.isLastCopy.at(genx)) hardsystem += gen_susy.p4.at(genx);
+	  }
+	}
+	if(istopevent){
+	  for(unsigned int genx = 0; genx < gen_tops.id.size() ; genx++){
+	    if(abs(gen_tops.id.at(genx))==pdg_t && gen_tops.isLastCopy.at(genx)) hardsystem += gen_tops.p4.at(genx);
+	  }
+	}
+	if(isWevent){
+	  for(unsigned int genx = 0; genx < gen_bosons.id.size() ; genx++){
+	    if(abs(gen_bosons.id.at(genx))==pdg_W && abs(gen_bosons.id.at(genx))!=pdg_t && gen_bosons.isLastCopy.at(genx)) hardsystem +=+ gen_bosons.p4.at(genx);
+	  }
+	}
+	if(isZevent){
+	  for(unsigned int genx = 0; genx < gen_bosons.id.size() ; genx++){
+	    if(abs(gen_bosons.id.at(genx))==pdg_Z && abs(gen_bosons.id.at(genx))!=pdg_t && gen_bosons.isLastCopy.at(genx)) hardsystem += gen_bosons.p4.at(genx);
+	  }
+	}
+	StopEvt.hardgenpt = hardsystem.Pt();
+	StopEvt.weight_ISR = 1.;
+	//caution - hardcoded
+	//note - these weights don't contain the renormalization
+	if(StopEvt.hardgenpt>600.) {
+	  StopEvt.weight_ISRup = 1.3;
+	  StopEvt.weight_ISRdown = 0.7;
+	} else if(StopEvt.hardgenpt>400.) {
+	  StopEvt.weight_ISRup = 1.15;
+	  StopEvt.weight_ISRdown = 0.85;
+	} else {
+	  StopEvt.weight_ISRup = 1.;
+	  StopEvt.weight_ISRdown = 1.;
+	}
+	counterhist->Fill(19,StopEvt.weight_ISR);
+	counterhist->Fill(20,StopEvt.weight_ISRup);
+	counterhist->Fill(21,StopEvt.weight_ISRdown);
+	if(isSignalFromFileName){
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,19,StopEvt.weight_ISR);
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,20,StopEvt.weight_ISRup);
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,21,StopEvt.weight_ISRdown);
+	}
+      }//no data
+
+      // Gen lepton counting and event classification
+      StopEvt.genlepsfromtop = n_nuelfromt+n_numufromt+n_nutaufromt;
+      gen_leps.gen_nfromt = n_nuelfromt+ n_numufromt + n_nutaufromt;
+      //gen_els.gen_nfromt = n_nuelfromt;
+      //gen_mus.gen_nfromt = n_numufromt;
+      //gen_taus.gen_nfromt = n_nutaufromt;
+ 
+      StopEvt.genLepsHardProcess = nLepsHardProcess;
+      StopEvt.genNusHardProcess  = nNusHardProcess;
+
+      if(nLepsHardProcess==0) ee0lep=true;
+      if(nLepsHardProcess==1) ee1lep=true;
+      if(nLepsHardProcess>=2) ge2lep=true;
+      
+      if( thisFile.Contains("DYJets") ||
+	  thisFile.Contains("ZJets")  ||
+	  thisFile.Contains("ZZ")        ){
+	if(nNusHardProcess>=2) zToNuNu=true;
+      }
+      if( thisFile.Contains("WZ")  ||
+	  thisFile.Contains("TTZ") ||
+	  thisFile.Contains("tZq")    ){
+	if(nNusHardProcess-nLepsHardProcess>=2) zToNuNu=true;
+      }
+
+      if( zToNuNu )    { StopEvt.isZtoNuNu=1; StopEvt.is0lep=0; StopEvt.is1lep=0; StopEvt.is2lep=0; }
+      else if( ee0lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=1;	StopEvt.is1lep=0; StopEvt.is2lep=0; }
+      else if( ee1lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=0; StopEvt.is1lep=1; StopEvt.is2lep=0; }
+      else if( ge2lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=0; StopEvt.is1lep=0; StopEvt.is2lep=1; }
+
+      if( (ee1lep) && ((StopEvt.genLepsHardProcess-StopEvt.genlepsfromtop)>0) )  StopEvt.is1lepFromW=1;
+      else StopEvt.is1lepFromW=0;
+
+      if( (ee1lep) && ((StopEvt.genLepsHardProcess-StopEvt.genlepsfromtop)==0) ) StopEvt.is1lepFromTop=1;
+      else StopEvt.is1lepFromTop=0;      
+
+
+
       
       //
       // nVertex Cut
@@ -723,20 +944,29 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         StopEvt.weight_btagsf_light_UP = StopEvt.weight_btagsf + btagprob_err_light_UP*StopEvt.weight_btagsf;
         StopEvt.weight_btagsf_heavy_DN = StopEvt.weight_btagsf - btagprob_err_heavy_DN*StopEvt.weight_btagsf;
         StopEvt.weight_btagsf_light_DN = StopEvt.weight_btagsf - btagprob_err_light_DN*StopEvt.weight_btagsf;
-      } 
+      }
+     // save the sum of weights for normalization offline to n-babies.
+     // comment: this has to go before the skim_nBJets - else you create a bias
+     if(!evt_isRealData() && skim_applyBtagSFs) {
+       counterhist->Fill(14,StopEvt.weight_btagsf);
+       counterhist->Fill(15,StopEvt.weight_btagsf_heavy_UP);
+       counterhist->Fill(16,StopEvt.weight_btagsf_light_UP);
+       counterhist->Fill(17,StopEvt.weight_btagsf_heavy_DN);
+       counterhist->Fill(18,StopEvt.weight_btagsf_light_DN);
+     }
+     if(isSignalFromFileName && !evt_isRealData() && skim_applyBtagSFs){
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,14,StopEvt.weight_btagsf);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,15,StopEvt.weight_btagsf_heavy_UP);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,16,StopEvt.weight_btagsf_light_UP);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,17,StopEvt.weight_btagsf_heavy_DN);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,18,StopEvt.weight_btagsf_light_DN);
+     }
       if(jets.ngoodjets < skim_nJets) continue;
       nEvents_pass_skim_nJets++;
       if(jets.ngoodbtags < skim_nBJets) continue;
       nEvents_pass_skim_nBJets++;
 
-      // save the sum of weights for normalization offline to n-babies.
-      if(!evt_isRealData() && skim_applyBtagSFs) {
-        counterhist->Fill(14,StopEvt.weight_btagsf);
-        counterhist->Fill(15,StopEvt.weight_btagsf_heavy_UP);
-        counterhist->Fill(16,StopEvt.weight_btagsf_light_UP);
-        counterhist->Fill(17,StopEvt.weight_btagsf_heavy_DN);
-        counterhist->Fill(18,StopEvt.weight_btagsf_light_DN);
-       }
+
       //
       // Photon Selection
       //
@@ -1137,127 +1367,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       }
       nEvents_pass_skim_2ndlepVeto++;
 
-      //
-      // Gen Information
-      //
-      //std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
-      
-      //ttbar counters using neutrinos:
-      int n_nutaufromt=0;
-      int n_nuelfromt=0;
-      int n_numufromt=0;
 
-      int nLepsHardProcess=0;
-      int nNusHardProcess=0;
 
-      bool ee0lep=false;
-      bool ee1lep=false;
-      bool ge2lep=false;
-      bool zToNuNu=false;
-
-      //gen particles
-      if (!evt_isRealData()){
-	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
-	  //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)
-
-	  // Only keep first and last particles in a sequence
-	  if( genps_id().at(genx)==genps_id_simplemother().at(genx) && !genps_isLastCopy().at(genx) ) continue;
-
-	  if( genps_isHardProcess().at(genx) ||
-	      genps_fromHardProcessDecayed().at(genx) ||
-	      genps_fromHardProcessFinalState().at(genx) ||
-	      //genps_isMostlyLikePythia6Status3().at(genx) ||
-	      genps_isLastCopy().at(genx) ||
-	      genps_status().at(genx)==1 ){
-     	    
-	    if( abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau) gen_leps.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_nue   ) gen_nuels.FillCommon(genx);            
-	    if( abs(genps_id().at(genx)) == pdg_numu || abs(genps_id().at(genx)) == pdg_nue || abs(genps_id().at(genx)) == pdg_nutau ) gen_nus.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_nutau ) gen_nutaus.FillCommon(genx);
-	    if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
-	    if( abs(genps_id().at(genx)) == pdg_b || abs(genps_id().at(genx)) == pdg_c || abs(genps_id().at(genx)) == pdg_s || abs(genps_id().at(genx)) == pdg_d ||abs(genps_id().at(genx)) == pdg_u   ) gen_qs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_c     ) gen_cs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_g &&
-	    //    genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
-	    if( abs(genps_id().at(genx)) == pdg_W || abs(genps_id().at(genx)) == pdg_Z ||(abs(genps_id().at(genx)) == pdg_ph &&
-                genps_p4().at(genx).Pt()>5.0)  || abs(genps_id().at(genx)) == pdg_h  ) gen_bosons.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_Z     ) gen_zs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_ph &&
-	    //	  genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
-	    
-	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
-	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_susy.FillCommon(genx);
-	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);//use sparm
-	    
-	    //if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
-	    //if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
-	    if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_susy.FillCommon(genx);
-	    if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_susy.FillCommon(genx);
-	    
-	    //if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);//use sparm
-	    //if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);//use sparm	    
-	    
-	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
-	    
-	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
-	    
-	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nutau && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_nutaufromt++;
-
-	    if( abs(genps_id().at(genx))==pdg_el  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
-	    if( abs(genps_id().at(genx))==pdg_mu  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
-	    if( abs(genps_id().at(genx))==pdg_tau && genps_fromHardProcessDecayed().at(genx) && genps_isLastCopy().at(genx) ) nLepsHardProcess++;
-	    
-	    if( abs(genps_id().at(genx))==pdg_nue   && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
-	    if( abs(genps_id().at(genx))==pdg_numu  && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
-	    if( abs(genps_id().at(genx))==pdg_nutau && genps_fromHardProcessFinalState().at(genx) && genps_isLastCopy().at(genx) ) nNusHardProcess++;
-
-	  }	  
-	}
-      }
-
-      // Gen lepton counting and event classification
-      StopEvt.genlepsfromtop = n_nuelfromt+n_numufromt+n_nutaufromt;
-      gen_leps.gen_nfromt = n_nuelfromt+ n_numufromt + n_nutaufromt;
-      //gen_els.gen_nfromt = n_nuelfromt;
-      //gen_mus.gen_nfromt = n_numufromt;
-      //gen_taus.gen_nfromt = n_nutaufromt;
- 
-      StopEvt.genLepsHardProcess = nLepsHardProcess;
-      StopEvt.genNusHardProcess  = nNusHardProcess;
-
-      if(nLepsHardProcess==0) ee0lep=true;
-      if(nLepsHardProcess==1) ee1lep=true;
-      if(nLepsHardProcess>=2) ge2lep=true;
-      
-      TString thisFile = chain->GetFile()->GetName();
-      if( thisFile.Contains("DYJets") ||
-	  thisFile.Contains("ZJets")  ||
-	  thisFile.Contains("ZZ")        ){
-	if(nNusHardProcess>=2) zToNuNu=true;
-      }
-      if( thisFile.Contains("WZ")  ||
-	  thisFile.Contains("TTZ") ||
-	  thisFile.Contains("tZq")    ){
-	if(nNusHardProcess-nLepsHardProcess>=2) zToNuNu=true;
-      }
-
-      if( zToNuNu )    { StopEvt.isZtoNuNu=1; StopEvt.is0lep=0; StopEvt.is1lep=0; StopEvt.is2lep=0; }
-      else if( ee0lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=1;	StopEvt.is1lep=0; StopEvt.is2lep=0; }
-      else if( ee1lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=0; StopEvt.is1lep=1; StopEvt.is2lep=0; }
-      else if( ge2lep ){ StopEvt.isZtoNuNu=0; StopEvt.is0lep=0; StopEvt.is1lep=0; StopEvt.is2lep=1; }
-
-      if( (ee1lep) && ((StopEvt.genLepsHardProcess-StopEvt.genlepsfromtop)>0) )  StopEvt.is1lepFromW=1;
-      else StopEvt.is1lepFromW=0;
-
-      if( (ee1lep) && ((StopEvt.genLepsHardProcess-StopEvt.genlepsfromtop)==0) ) StopEvt.is1lepFromTop=1;
-      else StopEvt.is1lepFromTop=0;      
-
-      
+      //std::cout << "[babymaker::looper]: updating geninfo for recoleptons" << std::endl;
       // Check that we have the gen leptons matched to reco leptons
       double match_dr = 0.01;
       
@@ -1441,9 +1553,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     fxsec->Close();
     delete fxsec;
   }
-    if (skim_applyBtagSFs) {
-       jets.deleteBtagSFTool();
-    }
+  if(!isDataFromFileName){
+    pileupfile->Close();
+    delete pileupfile;
+  }
+  if (skim_applyBtagSFs) {
+    jets.deleteBtagSFTool();
+  }
 
   
   //
