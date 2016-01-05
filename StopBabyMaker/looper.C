@@ -408,7 +408,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
     jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
-  } 
+  } else if(isSignalFromFileName){
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Fastsim15_L1FastJet_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Fastsim15_L2Relative_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Fastsim15_L3Absolute_AK4PFchs.txt");
+    jetcorr_uncertainty_filename = "jecfiles/Fastsim15_Uncertainty_AK4PFchs.txt";
+  }  
   else {
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
@@ -445,7 +450,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
    // reader_light_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
 
     // get btag efficiencies
-    TFile* f_btag_eff = new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
+    TFile* f_btag_eff;
+    if(!skim_isFastsim) f_btag_eff = new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
+    else f_btag_eff = new TFile("btagsf/btageff__SMS-T1bbbb-T1qqqq_fastsim.root");
     TH2D* h_btag_eff_b_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_b");
     TH2D* h_btag_eff_c_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_c");
     TH2D* h_btag_eff_udsg_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
@@ -812,6 +819,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(StopEvt.nvtxs < skim_nvtx) continue;
       if(StopEvt.firstGoodVtxIdx!=0) continue; //really check that first vertex is good
       nEvents_pass_skim_nVtx++;
+      //keep those here - any event without vertex is BS
 
       //save met here because of JEC
       if(applyJECfromFile){
@@ -828,11 +836,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.pfmet_phi = evt_pfmetPhi();
       }
 
-      // 
-      // met Cut
-      //
-      if(StopEvt.pfmet < skim_met) continue;
-      nEvents_pass_skim_met++;
+
 
       //
       //Lepton Variables
@@ -898,9 +902,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       int nLooseLeptons = GoodLeps.size() + LooseLeps.size();//use for Zll
       nVetoLeptons = GoodLeps.size() + LooseLeps.size() + VetoLeps.size();
       
-      if(nGoodLeptons < skim_nGoodLep) continue;
-      nEvents_pass_skim_nGoodLep++;
-
       StopEvt.ngoodleps  = nGoodLeptons; 
       StopEvt.nlooseleps = nLooseLeptons; 
       StopEvt.nvetoleps  = nVetoLeptons; 
@@ -934,7 +935,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	// Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
 	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_err_heavy_UP, btagprob_err_heavy_DN, btagprob_err_light_UP,btagprob_err_light_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs);
+        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_err_heavy_UP, btagprob_err_heavy_DN, btagprob_err_light_UP,btagprob_err_light_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
       }
 
       // SAVE B TAGGING SF 
@@ -961,6 +962,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,17,StopEvt.weight_btagsf_heavy_DN);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,18,StopEvt.weight_btagsf_light_DN);
      }
+
+      // 
+      // met Cut
+      //
+      if(StopEvt.pfmet < skim_met) continue;
+      nEvents_pass_skim_met++;
+
+      if(nGoodLeptons < skim_nGoodLep) continue;
+      nEvents_pass_skim_nGoodLep++;
+
       if(jets.ngoodjets < skim_nJets) continue;
       nEvents_pass_skim_nJets++;
       if(jets.ngoodbtags < skim_nBJets) continue;

@@ -393,3 +393,48 @@ Path /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/GJets_HT-400To600_TuneCUETP
 SAMPLE
 Name GJets_HT600toInf_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+
+
+#############################################
+##                  SIGNALS                ##
+#############################################
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim/SMS-T2tt_mStop-200_mLSP-1to125_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_mcRun2_asymptotic_v2-v1/V07-04-12/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim/SMS-T2tt_mStop-225_mLSP-25to150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_mcRun2_asymptotic_v2-v1/V07-04-12/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim/SMS-T2tt_mStop-250_mLSP-1to175_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_mcRun2_asymptotic_v2-v1/V07-04-12/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim/SMS-T2tt_mStop-275_mLSP-75to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_mcRun2_asymptotic_v2-v1/V07-04-12/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim/SMS-T2tt_mStop-400to475_mLSP-1to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_mcRun2_asymptotic_v2-v1/V07-04-12/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim/SMS-T2tt_mStop-500-525-550_mLSP-1to425-325to450-1to475_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_mcRun2_asymptotic_v2-v1/V07-04-12/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim/SMS-T2tt_mStop-600-950_mLSP-1to450_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_mcRun2_asymptotic_v2-v1/V07-04-12/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim_v1/SMS-T2tt_mStop-100-125_mLSP-1to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15FSPremix-MCRUN2_74_V9-v1/V07-04-12_miniaodv1_FS/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim_v1/SMS-T2tt_mStop-150-175_mLSP-1to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15FSPremix-MCRUN2_74_V9-v1/V07-04-12_miniaodv1_FS/
+
+SAMPLE
+Name Signal_T2tt
+Path /hadoop/cms/store/group/snt/run2_fastsim_v1/SMS-T2tt_mStop-300to375_mLSP-1to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15FSPremix-MCRUN2_74_V9-v2/V07-04-12_miniaodv1_FS/

@@ -24,6 +24,10 @@ void JetTree::InitBtagSFTool(TH2D* h_btag_eff_b_, TH2D* h_btag_eff_c_, TH2D* h_b
     reader_light = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central");  // central
     reader_light_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
     reader_light_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
+    calib_fastsim = new BTagCalibration("CSV", "btagsf/CSV_13TEV_Combined_20_11_2015.csv"); // 25ns fastsim version of SFs
+    reader_fastsim = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_MEDIUM, "fastsim", "central"); // central
+    reader_fastsim_UP = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_MEDIUM, "fastsim", "up");  // sys up
+    reader_fastsim_DN = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_MEDIUM, "fastsim", "down");  // sys down
     h_btag_eff_b = h_btag_eff_b_;
     h_btag_eff_c = h_btag_eff_c_;
     h_btag_eff_udsg = h_btag_eff_udsg_;
@@ -36,6 +40,7 @@ float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFas
       std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists" << std::endl;
       return 1.;
     }
+    //have fastsim already done in looper
 //    if(isFastsim && (!h_btag_eff_b_fastsim || !h_btag_eff_c_fastsim || !h_btag_eff_udsg_fastsim)) {
 //      std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists" << std::endl;
 //      return 1.;
@@ -63,7 +68,7 @@ float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFas
     return h->GetBinContent(binx,biny);
 }
 
-void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_err_heavy_UP, float & btagprob_err_heavy_DN,float & btagprob_err_light_UP, float & btagprob_err_light_DN ,unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs)
+void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_err_heavy_UP, float & btagprob_err_heavy_DN,float & btagprob_err_light_UP, float & btagprob_err_light_DN ,unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim)
 {
     
     // fill info for ak4pfjets
@@ -246,6 +251,11 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 		  weight_UP = reader_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
 		  weight_DN = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
 		}
+		if (isFastsim) {
+		  weight_cent *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);
+		  weight_UP *= reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff);
+		  weight_DN *= reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff);
+		}
   //              cout<<"got uncertainty from btagsf reader:"<<endl;
                 btagprob_data *= weight_cent * eff;
                 btagprob_mc *= eff;
@@ -278,6 +288,11 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 		weight_cent = reader_heavy->eval(flavor, eta_cutoff, pt_cutoff);
 		weight_UP = reader_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
 		weight_DN = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	      }
+	      if (isFastsim) {
+		weight_cent *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);
+		weight_UP *= reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff);
+		weight_DN *= reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff);
 	      }
 
               btagprob_data *= (1. - weight_cent * eff);
