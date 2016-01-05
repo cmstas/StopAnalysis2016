@@ -145,7 +145,14 @@ public:
     float weight_btagsf_heavy_UP;
     float weight_btagsf_light_UP;
     float weight_btagsf_heavy_DN;
-    float weight_btagsf_light_DN; 
+    float weight_btagsf_light_DN;
+    float weight_ISR;
+    float weight_ISRup;
+    float weight_ISRdown;
+    float weight_PU;
+    float weight_PUup;
+    float weight_PUdown;
+    float hardgenpt;
     //sparms
     vecs  sparms_comment;
     vecs  sparms_names;
@@ -225,7 +232,7 @@ public:
     int HLT_Photon175;
     int HLT_Photon165_HE10;
 
-    float pu_weight;
+    //float pu_weight;
     float lep_sf;
     float btag_sf;
     float HLT_SingleMu_eff;
