@@ -827,7 +827,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         if(!evt_isRealData() && applyJECunc){
             if(JES_type > 0)  newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,true);
             else newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,false);
-        }else newmet = getT1CHSMET(jet_corrector_pfL1FastJetL2L3);
+        }
+	else newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3);
 	StopEvt.pfmet = newmet.first;
 	StopEvt.pfmet_phi = newmet.second;
       }
@@ -1035,8 +1036,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(nVetoLeptons>1) StopEvt.MT2W_lep2 = CalcMT2W_(mybjets,myaddjets,lep2.p4,StopEvt.pfmet, StopEvt.pfmet_phi);
 	// Topness
 	if(nVetoLeptons>0) StopEvt.topness = CalcTopness_(0,StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,myaddjets);
-	if(nVetoLeptons>1) StopEvt.topness_lep2 = CalcTopness_(0,StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets);
-	
+	if(nVetoLeptons>1) StopEvt.topness_lep2 = CalcTopness_(0,StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets);	
 	if(nVetoLeptons>0) StopEvt.topnessMod = CalcTopness_(1,StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,mybjets,myaddjets);
 	if(nVetoLeptons>1) StopEvt.topnessMod_lep2 = CalcTopness_(1,StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets);
 	// MT2(lb,b)

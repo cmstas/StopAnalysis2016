@@ -391,10 +391,14 @@ void JetTree::deleteBtagSFTool()
     delete calib;
     delete reader_heavy;
     delete reader_heavy_UP;
-     delete reader_heavy_DN;
-      delete reader_light;
-      delete reader_light_UP;
-      delete reader_light_DN;
+    delete reader_heavy_DN;
+    delete reader_light;
+    delete reader_light_UP;
+    delete reader_light_DN;
+    delete calib_fastsim;
+    delete reader_fastsim;
+    delete reader_fastsim_UP;
+    delete reader_fastsim_DN;
    return;
 } 
 void JetTree::Reset ()

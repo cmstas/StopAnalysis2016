@@ -65,9 +65,9 @@ int main(int argc, char **argv){
 
   int nGoodLeptons      = 1;
   float goodLep_el_pt   = 20.0;
-  float goodLep_el_eta  = 2.1;
+  float goodLep_el_eta  = 1.4442;
   float goodLep_mu_pt   = 20.0;
-  float goodLep_mu_eta  = 2.1;
+  float goodLep_mu_eta  = 2.4;
 
   float looseLep_el_pt  = 10.0;
   float looseLep_el_eta = 2.4;
