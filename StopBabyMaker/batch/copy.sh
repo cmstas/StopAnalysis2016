@@ -41,6 +41,7 @@ sed -i '/^COREPATH/d' $CONDOR_DIR_NAME/$MAKER_NAME/Makefile
 sed -i '1i COREPATH = ../CORE/' $CONDOR_DIR_NAME/$MAKER_NAME/Makefile
 
 cp -r $MAKER_DIR/xsec_stop_13TeV.root $CONDOR_DIR_NAME/$MAKER_NAME/
+cp -r $MAKER_DIR/puWeights_2015data_2p2fbinv.root $CONDOR_DIR_NAME/$MAKER_NAME/
 cp -r $MAKER_DIR/*.dat $CONDOR_DIR_NAME/$MAKER_NAME/
 cp -r $MAKER_DIR/*.C $CONDOR_DIR_NAME/$MAKER_NAME/
 cp -r $MAKER_DIR/stop_variables/ $CONDOR_DIR_NAME/$MAKER_NAME/
