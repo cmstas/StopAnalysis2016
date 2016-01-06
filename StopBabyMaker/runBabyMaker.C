@@ -146,9 +146,17 @@ int main(int argc, char **argv){
   TChain *sample = new TChain("Events");
 
   vector<TString> samplelist = load(argv[1], filename, input);//new
+  bool fileexists = true;
   for(unsigned int i = 0; i<samplelist.size(); ++i){
-    cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
-    sample->Add(samplelist[i].Data());
+    if(file>=0){
+      //check if file exists - works not for *
+      ifstream infile(samplelist[i].Data());
+      fileexists = infile.good();
+    }
+    if(fileexists){
+      cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
+      sample->Add(samplelist[i].Data());
+    }
   }
 
 

@@ -826,11 +826,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         pair<float,float> newmet;
         if(!evt_isRealData() && applyJECunc){
             if(JES_type > 0)  newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,true);
-            else newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,false);
+            else if(JES_type < 0)  newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,false);
+	    else cout << "This should not happen" << endl;
         }
 	else newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3);
 	StopEvt.pfmet = newmet.first;
 	StopEvt.pfmet_phi = newmet.second;
+	if(TMath::IsNaN(StopEvt.pfmet)||(!TMath::Finite(StopEvt.pfmet))||StopEvt.pfmet>14000.) continue;
       }
       else{
 	StopEvt.pfmet = evt_pfmet();
