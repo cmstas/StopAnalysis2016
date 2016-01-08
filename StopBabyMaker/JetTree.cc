@@ -179,7 +179,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
         if(p4sCorrJets.at(jindex).pt() < m_ak4_pt_cut) continue;
         if(fabs(p4sCorrJets.at(jindex).eta()) > m_ak4_eta_cut) continue;
 	if(!isLoosePFJetV2(jindex)) ++nFailJets;
-        if(m_ak4_passid && !isLoosePFJetV2(jindex)) continue;
+        if(!isFastsim && m_ak4_passid && !isLoosePFJetV2(jindex)) continue;
         nGoodJets++;
         ak4pfjets_p4.push_back(p4sCorrJets.at(jindex));
         ak4pfjets_pt.push_back(p4sCorrJets.at(jindex).pt());
@@ -334,7 +334,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
     {
         if(pfjets_p4().at(idx).pt() < m_ak8_pt_cut) continue;
         if(fabs(pfjets_p4().at(idx).eta()) > m_ak8_eta_cut) continue;
-        if(m_ak8_passid && !isLoosePFJetV2(idx)) continue;
+        if(!isFastsim && m_ak8_passid && !isLoosePFJetV2(idx)) continue;
 
         ak8pfjets_p4.push_back(ak8jets_p4().at(idx));
         ak8pfjets_tau1.push_back(ak8jets_nJettinessTau1().at(idx));

@@ -47,7 +47,7 @@ bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   return true;
 }
 
-bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type){
+bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool isFastsim){
 //apply JEC
         LorentzVector pfjet_p4_cor = cms3.pfjets_p4().at(jetIdx);
           // get uncorrected jet p4 to use as input for corrections
@@ -81,7 +81,7 @@ bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,
   if(jetIdx>=pfjets_p4().size()) return false;//safety requirement
   if(pfjet_p4_cor.pt() < pt) return false;
   if(fabs(pfjet_p4_cor.eta()) > eta) return false;
-  if(passjid && !isLoosePFJetV2(jetIdx)) return false;
+  if(!isFastsim && passjid && !isLoosePFJetV2(jetIdx)) return false;
   return true;
 }
 
@@ -164,7 +164,7 @@ bool isVetoTau(int ipf, LorentzVector lepp4_, int charge){
 }
 
 //overlap removal
-int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type){
+int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, double dR, float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool isFastsim){
   float DR_lep_jet1 = 0.;
   float DR_lep_jet2 = 0.;
   int closestjet_idx = 0;
@@ -172,7 +172,7 @@ int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, dou
   if(jets_.size()==0) return -999;
   
 	for(unsigned int iJet=1; iJet<jets_.size(); iJet++){
-	  if(!PassJetPreSelections(iJet,pt,eta,passjid,corrector,applynewcorr,jetcorr_uncertainty,JES_type)) continue;
+	  if(!PassJetPreSelections(iJet,pt,eta,passjid,corrector,applynewcorr,jetcorr_uncertainty,JES_type,isFastsim)) continue;
 	  //if(jets_.at(iJet).Pt()<pt) continue;
 	  //if(TMath::Abs(jets_.at(iJet).Eta())>eta) continue;
 	  DR_lep_jet1 = ROOT::Math::VectorUtil::DeltaR(jets_.at(closestjet_idx), lep_);
