@@ -534,8 +534,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
            sum_of_weights += (cms3.genweights().at(ipdf)- average_of_weights)*(cms3.genweights().at(ipdf)-average_of_weights);          
           }//std of weights.     
 
-          pdf_weight_up = (average_of_weights+sqrt(sum_of_weights/100)); 
-          pdf_weight_down = (average_of_weights-sqrt(sum_of_weights/100)); 
+          pdf_weight_up = (average_of_weights+sqrt(sum_of_weights/99)); 
+          pdf_weight_down = (average_of_weights-sqrt(sum_of_weights/99)); 
           StopEvt.pdf_up_weight = pdf_weight_up;
           StopEvt.pdf_down_weight = pdf_weight_down;
           counterhist->Fill(1,genweights()[0]);  
@@ -605,8 +605,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	for(int ipdf=9;ipdf<109;ipdf++){
 	  SMSsum_of_weights += pow(cms3.genweights().at(ipdf)- SMSaverage_of_weights,2);          
 	}//std of weights.
-	SMSpdf_weight_up = (average_of_weights+sqrt(SMSsum_of_weights/100.)); 
-	SMSpdf_weight_down = (average_of_weights-sqrt(SMSsum_of_weights/100.)); 
+	SMSpdf_weight_up = (average_of_weights+sqrt(SMSsum_of_weights/99.)); 
+	SMSpdf_weight_down = (average_of_weights-sqrt(SMSsum_of_weights/99.)); 
 	StopEvt.pdf_up_weight = SMSpdf_weight_up;//overwrite here, although it should not matter
 	StopEvt.pdf_down_weight = SMSpdf_weight_down;//overwrite here, although it should not matter
 	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1,genweights()[0]);  
