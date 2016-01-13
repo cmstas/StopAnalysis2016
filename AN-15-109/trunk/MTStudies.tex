@@ -1,0 +1,44 @@
+\section{MT Studies}
+\label{sec:MTstudies}
+The signal events in this analysis populate the tails of the M$_{T}(\MET,lep)$ distribution ($>120$).  A study was conducted to evaluate the modeling of the MT tails in simulation.  This study consisted of data MC comparisons in several W+Jets control regions with selections close to those in our signal region.
+\begin{itemize}
+\item nJets $\ge$ 2 (Jet pt>30 GeV, |$\eta$|<2.4, Loose PFId, remove overlaps)
+\item 0 btagged jets (with medium pfCombinedInclusiveSecondaryVertexV2BJetTags)
+\item 1 good lepton: pT>35 GeV, |$\eta$|<2.1, medium POG ID (no iso), miniRelIso<0.1, (for muons dz=0.1, and d0=0.02)
+\item 2nd reconstructed lepton veto: electron (Veto POG ID, pT>5 GeV, |$\eta$|<2.4, miniRelIso<0.2) or muon (loose POG ID, pT>5 GeV, |$\eta$|<2.4, d0<0.1 cm, dz<0.5 cm, miniRelIso<0.2)
+\item pfMET>50,100,150 GeV (type1 corrected)
+\item Pass unprescaled single-lepton triggers, also used for the analysis.
+In addition, noise filters were applied on data to remove events with fake \MET emerging from calorimeter noise or beam halo.  
+The tails of MT are sensitive to events with significant fake \MET.  To remove thse events, noise filters were applied on data to remove events with fake \MET emerging from calorimeter noise or beam halo.  The filters recommended by the JetMET POG:
+\begin{itemize}
+\item primary vertex filter
+\item CSC beam halo filter
+\item HBHE noise filter
+\item HBHE iso noise filter
+\item ee badSC noise filter
+\end{itemize}
+were applied to data for the MT studies and for the main analysis.  They were found to have a $<2\%$ impact on the yield.
+
+\begin{figure}[h]
+\includegraphics[width=0.95\textwidth]{Figures/bkg1lep/MT_MET50.png}
+\includegraphics[width=0.95\textwidth]{Figures/bkg1lep/MT_MET150.png}
+\caption{\label{fig:MTComissioning} MT distributions with 1.6 fb$^{-1}$ for muon, barrel electrons, and endcap electron events with MET$>50$ (top) and MET$>150$ (bottom)}
+\end{figure}
+
+The MT distributions for \MET$>50$ and \MET$\>100$ GeV are shown on Figure~\ref{fig:MTCommissioning}.  Good agreement between data and MC for events with muons and barrel electron was shown in both the MT bulk region(60$<$MT$<$120) and the MT tail (MT$>$120).  There is also good agreement between data and MC for events with endcap electrons in the bulk of the MT spectrum.  However, a large data excess of endcap electron events with large MT values was also observed.  As can be seen from these figures, the MT tail of the endcap electrons is greatly reduced by the higher \MET cut.  However, it does not completely disappear.  With the limited statistics available, it is not possible to determine if this excess persists after \MET$>250$ were the signal regions for this analysis begin.  The excess was found to be correlated to electron pT, Figure~\ref{fig:MTepT2D}.  Further studies on the isolation distributions of events with MT$>120$ suggested that this excess is from fake electrons, Figure~\ref{fig:minireliso}.
+
+\begin{figure}[h]
+\includegraphics[width=0.95\textwidth]{Figures/bkg1lep/MT_Elpt_data.pdf}
+\caption{\label{fig:MTepT2D} M$_{T}$(\MET,e) v. electron pT for endcap electron events shows a strong correlation betweeen MT and electron pT}
+\end{figure}
+\begin{figure}[h]
+\includegraphics[width=0.95\textwidth]{Figures/bkg1lep/EndcapEl_miniRelIsopdf}
+\caption{\label{fig:minireliso} MiniRelIso distribution for endcap electrons with MT$>120$ indicates that the excess in data is from fakes}
+\end{figure}
+\begin{figure}[h]
+\includegraphics[width=0.95\textwidth]{Figures/bkg1lep/MT_MET150_2p11.png}
+\caption{\label{fig:MTComissioning} MT distributions with 2.11 fb$^{-1}$ for muon, barrel electrons, and endcap electron events with MET$>150$ (bottom)}
+\end{figure}
+Applying tighter ID and isolation requirements was explored but it was determined that due to the poor modeling of these events, even a tight isolation cut would not make a significant difference.  Furthermore,  tighter isolation would significantly reduce signal acceptance.  Since the signal acceptance of the leptons tends to be central, removing events with endcap electrons from this analysis was a more suitable option.  
+
+These studies were done with 1.6 fb$^{-1}$ and again repeated for the full 2.11$fb^{-1}$.  The MT distributions for the full dataset was shown on Figure~\ref{fig:MTFinal}.   We will continue comissioning of the MT tails for the full 13 TeV dataset.

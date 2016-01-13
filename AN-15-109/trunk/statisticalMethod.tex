@@ -1,0 +1,25 @@
+\section{Statistical method for interpreting results}
+\label{sec:statisticalMethod}
+
+This section gives a description of the statistical methods used to interpret the results of section~\ref{sec:yields}.
+The results are interpreted using expected exclusion limits and significance for the available benchmark points.
+
+A binned likelihood fit is performed over analysis bins using the Higgs Combine tool~\cite{url:higgscombine}. 
+For signal regions with a nonzero signal yield, the yield will be modified such that it is set to 10e-5.
+A systematic uncertainty of 10\% is assumed for signal, based on the 8 TeV analysis, and is taken as correlated across all bins in the fit. 
+{\color{red} CHECK THIS!}
+
+The expected exclusion limits at the 95\% CL are calculated using asymptotic \CLs (with a-priori expected background)~\cite{Cowan:2010js}:
+{\small
+\begin{verbatim}
+combine -M Asymptotic datacard.txt --noFitAsimov -n stringForRootfileOutput
+\end{verbatim}
+}
+
+Expected significances are calculated using a profile likelihood scan (with a-priori expected background):
+{\footnotesize
+\begin{verbatim}
+combine -M ProfileLikelihood --significance datacard.txt -t 400 --expectSignal=1 -n stringForRootfileOutput
+\end{verbatim}
+}
+The string shows the command using 400 toys in the scan.
