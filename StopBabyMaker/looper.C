@@ -628,7 +628,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Gen Information - now goes first
       //
       //std::cout << "[babymaker::looper]: filling gen particles vars" << std::endl;
-      
+    
       //ttbar counters using neutrinos:
       int n_nutaufromt=0;
       int n_nuelfromt=0;
@@ -809,9 +809,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       if( (ee1lep) && ((StopEvt.genLepsHardProcess-StopEvt.genlepsfromtop)==0) ) StopEvt.is1lepFromTop=1;
       else StopEvt.is1lepFromTop=0;      
-
-
-
       
       //
       // nVertex Cut
@@ -838,8 +835,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.pfmet = evt_pfmet();
 	StopEvt.pfmet_phi = evt_pfmetPhi();
       }
-
-
 
       //
       //Lepton Variables
@@ -966,8 +961,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,18,StopEvt.weight_btagsf_light_DN);
      }
 
-      // 
-      // met Cut
+     // 
+     // met Cut
       //
       if(StopEvt.pfmet < skim_met) continue;
       nEvents_pass_skim_met++;
@@ -1010,15 +1005,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(jets.ak4pfjets_p4.size()> 0) StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
 
       StopEvt.ak4pfjets_rho = evt_fixgridfastjet_all_rho();
-    
-      vector<int> jetIndexSortedCSV = JetUtil::JetIndexCSVsorted(jets.ak4pfjets_CSV, jets.ak4pfjets_p4, jets.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, true);
+
+      vector<int> jetIndexSortedCSV;
+      if(skim_isFastsim) jetIndexSortedCSV = JetUtil::JetIndexCSVsorted(jets.ak4pfjets_CSV, jets.ak4pfjets_p4, jets.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, false);
+      else jetIndexSortedCSV = JetUtil::JetIndexCSVsorted(jets.ak4pfjets_CSV, jets.ak4pfjets_p4, jets.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, true);
       vector<LorentzVector> mybjets; vector<LorentzVector> myaddjets;
       for(unsigned int idx = 0; idx<jetIndexSortedCSV.size(); ++idx){
 	if(jets.ak4pfjets_passMEDbtag.at(jetIndexSortedCSV[idx])==true) mybjets.push_back(jets.ak4pfjets_p4.at(jetIndexSortedCSV[idx]) );
 	else if(mybjets.size()<=1 && (mybjets.size()+myaddjets.size())<3) myaddjets.push_back(jets.ak4pfjets_p4.at(jetIndexSortedCSV[idx]) );
       }
 
-      // looks like all the following variables need jets to be calculated. 
+     // looks like all the following variables need jets to be calculated. 
       //   add protection for skim settings of njets<2
       vector<float> dummy_sigma; dummy_sigma.clear(); //move outside of if-clause to be able to copy for photon selection
       for (size_t idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
@@ -1090,7 +1087,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  StopEvt.Mlb_closestb_lep2 = (jets.ak4pfjets_p4.at(rankminDR_lep2[idx].second)+lep2.p4).M();
 	  break;
 	}
-	
 	if(nVetoLeptons>0) StopEvt.Mlb_lead_bdiscr = (jets.ak4pfjets_p4.at(jetIndexSortedCSV[0])+lep1.p4).M();
 	if(nVetoLeptons>1) StopEvt.Mlb_lead_bdiscr_lep2 = (jets.ak4pfjets_p4.at(jetIndexSortedCSV[0])+lep2.p4).M();
 	if(rankmaxDPhi.size()>=3) {
@@ -1180,7 +1176,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	}//end of Zll filling
       }//end of Zll
 		
-      //
+     //
       // Photon Event Variables
       //
       if(StopEvt.ph_selectedidx>=0){
@@ -1264,7 +1260,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }//at least one lepton
 	}//at least one jet
       }//end of photon additions
-     
+    
       //
       // Tau Selection
       //
@@ -1361,7 +1357,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }else Tracks.isoTracks_isVetoTrack_v3.push_back(false);
 	}
 
-
       } // end loop over pfCands
 
       if(vetotracks<1) StopEvt.PassTrackVeto = true;
@@ -1379,8 +1374,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
             if(!StopEvt.PassTauVeto) continue;
       }
       nEvents_pass_skim_2ndlepVeto++;
-
-
 
       //std::cout << "[babymaker::looper]: updating geninfo for recoleptons" << std::endl;
       // Check that we have the gen leptons matched to reco leptons
@@ -1471,7 +1464,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if( lep2_match_idx<0 && min_dr_lep2_idx>0 ) gen_leps.FillCommon(min_dr_lep2_idx);
 	}
 
-      } // end if not data      
+     } // end if not data      
 
 
       //
@@ -1534,7 +1527,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Fill Tree
       //
       BabyTree->Fill();
-
     
     }//close event loop
     //
