@@ -293,6 +293,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     cout << ", running on MC, based on file name: " << output_name<<endl;
   }
 
+
   TFile *fxsec;
   TH1D *hxsec;
   if(isSignalFromFileName){
@@ -479,7 +480,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // File Loop
   //
   while ( (currentFile = (TFile*)fileIter.Next()) ) { 
-
     //
     // Get File Content
     //
@@ -487,7 +487,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     TFile *file = new TFile( currentFile->GetTitle() );
     TTree *tree = (TTree*)file->Get("Events");
     cms3.Init(tree);
+    TString thisfilename = file->GetName();
     cout << "file name is " << file->GetName() << endl;
+
+    bool isbadrawMET = false;
+    if(thisfilename.Contains("V07-04-12_miniaodv1_FS")){
+      cout << "This file seems to have a badrawMET, thus MET needs to be recalculated" << endl;
+      isbadrawMET = true;
+    }
 
     //
     // Loop over Events in current file
@@ -822,10 +829,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(applyJECfromFile){
         pair<float,float> newmet;
         if(!evt_isRealData() && applyJECunc){
-            if(JES_type > 0)  newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,true);
-            else if(JES_type < 0)  newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,false);
-	    else cout << "This should not happen" << endl;
+	  if(JES_type > 0)  newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,true,isbadrawMET);
+	  else if(JES_type < 0)  newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty,false,isbadrawMET);
+	  else cout << "This should not happen" << endl;
         }
+	else if(isbadrawMET) newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3,NULL,0,isbadrawMET);
 	else newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3);
 	StopEvt.pfmet = newmet.first;
 	StopEvt.pfmet_phi = newmet.second;
