@@ -528,8 +528,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       float sum_of_weights= 0;
       float average_of_weights= 0;
 
+    counterhist->Fill(22,1.);
     if(!evt_isRealData()){
-      counterhist->Fill(22,1.);  
        //error on pdf replicas
       if(genweights().size()>109){ 
         for(int ipdf=9;ipdf<109;ipdf++){
