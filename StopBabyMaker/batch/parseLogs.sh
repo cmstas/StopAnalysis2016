@@ -72,12 +72,14 @@ for file in `ls -1 $targetDir/*.stdout | sort`;do
 		if [ "$oldSample" != "null" ]; then
 			echo
 			echo $oldSample
-			printf $startLine" Events processed                   "$separator"  %8s %s\n"  $countProc $endLine
-			printf $startLine" Events with 1 Good Vertex          "$separator"  %8s %s\n"  $countVtx  $endLine
-			printf $startLine" Events with MET > 30 GeV           "$separator"  %8s %s\n"  $countMet  $endLine
-			printf $startLine" Events with at least 1 Good Lepton "$separator"  %8s %s\n"  $countLep  $endLine
-			printf $startLine" Events with at least 2 Good Jets   "$separator"  %8s %s\n"  $countJet  $endLine
-
+			printf $startLine" Events Processed                     "$separator"  %8s %s\n"  $countProc $endLine
+			printf $startLine" Events with 1 Good Vertex            "$separator"  %8s %s\n"  $countVtx  $endLine
+			printf $startLine" Events with MET > 50 GeV             "$separator"  %8s %s\n"  $countMet  $endLine
+			printf $startLine" Events with at least 1 Good Lepton   "$separator"  %8s %s\n"  $countLep  $endLine
+			printf $startLine" Events with at least 2 Good Jets     "$separator"  %8s %s\n"  $countJet  $endLine
+			echo 
+			echo "=============================================================================================="
+			echo
 		fi
 
 		oldSample=$sample
@@ -89,13 +91,21 @@ for file in `ls -1 $targetDir/*.stdout | sort`;do
 		countJet=0
 	fi
 
+	test=`awk '/Events Processed/ {print $3}' $file`
+	if [ -z $test ]; then
+	    echo "BAD FILE:  " 
+	    echo "  $file "
+	    echo ""
+	    continue
+	fi
+
 	# Grab the event counts from this file
 	#  and add them to the running tallies
-	countProc=$(( countProc + `awk '/Events Processed/ {print $3}' $file ` ))
-	countVtx=$(( countVtx + `awk '/Events with 1 Good Vertex/ {print $6}' $file ` ))
-	countMet=$(( countMet + `awk '/Events with MET > 30 GeV/ {print $7}' $file ` ))
-	countLep=$(( countLep + `awk '/Events with at least 1 Good Lepton/ {print $8}' $file ` ))
-	countJet=$(( countJet + `awk '/Events with at least 2 Good Jets/ {print $8}' $file ` ))	
+	countProc=$((countProc+`awk '/Events Processed/ {print $3}' $file`))
+	countVtx=$((countVtx+`awk '/Events with 1 Good Vertex/ {print $6}' $file`))
+	countMet=$((countMet+`awk '/Events with MET > 50 GeV/ {print $7}' $file`))
+	countLep=$((countLep+`awk '/Events with at least 1 Good Lepton/ {print $8}' $file`))
+	countJet=$((countJet+`awk '/Events with at least 2 Good Jets/ {print $8}' $file`))	
 	
 done
 
@@ -103,6 +113,6 @@ echo
 echo $sample
 printf $startLine" Events processed                   "$separator"  %8s %s\n"  $countProc $endLine
 printf $startLine" Events with 1 Good Vertex          "$separator"  %8s %s\n"  $countVtx  $endLine
-printf $startLine" Events with MET > 30 GeV           "$separator"  %8s %s\n"  $countMet  $endLine
+printf $startLine" Events with MET > 50 GeV           "$separator"  %8s %s\n"  $countMet  $endLine
 printf $startLine" Events with at least 1 Good Lepton "$separator"  %8s %s\n"  $countLep  $endLine
 printf $startLine" Events with at least 2 Good Jets   "$separator"  %8s %s\n"  $countJet  $endLine

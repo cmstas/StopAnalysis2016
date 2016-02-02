@@ -33,7 +33,7 @@ class babyMaker {
     // Constructor/destructor
     babyMaker ();
     babyMaker (const std::string &prefix);
-    virtual ~babyMaker (){}
+    virtual ~babyMaker (){ delete BabyFile; }
 
     void MakeBabyNtuple(const char* output_name);
     void InitBabyNtuple();

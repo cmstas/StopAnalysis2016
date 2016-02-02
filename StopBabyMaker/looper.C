@@ -484,11 +484,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     // Get File Content
     //
     if(nEvents_processed >= nEventsToDo) continue;
-    TFile *file = new TFile( currentFile->GetTitle() );
-    TTree *tree = (TTree*)file->Get("Events");
+    TFile file( currentFile->GetTitle() );
+    TTree *tree = (TTree*)file.Get("Events");
     cms3.Init(tree);
-    TString thisfilename = file->GetName();
-    cout << "file name is " << file->GetName() << endl;
+    TString thisfilename = file.GetName();
+    cout << "file name is " << file.GetName() << endl;
 
     bool isbadrawMET = false;
     if(thisfilename.Contains("V07-04-12_miniaodv1_FS")){
@@ -573,7 +573,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Fill Event Variables
       //
       //std::cout << "[babymaker::looper]: filling event vars" << std::endl;
-      StopEvt.FillCommon(file->GetName()); 
+      StopEvt.FillCommon(file.GetName()); 
       //std::cout << "[babymaker::looper]: filling event vars completed" << std::endl; 
       //dumpDocLines();
       if(!StopEvt.is_data){
@@ -1540,8 +1540,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     //
     // Close input file
     //
-    file->Close();
-    delete file;
+    file.Close();
+    //delete file;
 
   }//close file loop
 
@@ -1557,7 +1557,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     histNEvts->Write();
   }
   BabyFile->Close();
-  delete BabyFile;
+  //delete BabyFile;
   //histFile->cd();
   
   //
