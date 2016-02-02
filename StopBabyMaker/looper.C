@@ -1557,6 +1557,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     histNEvts->Write();
   }
   BabyFile->Close();
+  delete BabyFile;
   //histFile->cd();
   
   //
