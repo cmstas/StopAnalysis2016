@@ -106,6 +106,7 @@ public:
     float filt_goodvtx;
     float filt_badevents;
     float filt_hbhenoise;
+    float filt_hbheisonoise;
     float filt_hcallaser;
     float filt_met;
     float filt_trkfail;

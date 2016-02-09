@@ -97,6 +97,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
       filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
     }
     filt_hbhenoise = hbheNoiseFilter_25ns();
+    filt_hbheisonoise = hbheIsoNoiseFilter();
     filt_eff = evt_filt_eff();
     
     //////////////
@@ -335,6 +336,7 @@ void EventTree::Reset ()
     filt_goodvtx = false;
     filt_badevents =false;
     filt_hbhenoise = false;
+    filt_hbheisonoise = false;
     filt_hcallaser = false;
     filt_met = false;
     filt_trkfail = false;
@@ -418,6 +420,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("filt_goodvtx", &filt_goodvtx);
     tree->Branch("filt_badevents", &filt_badevents); 
     tree->Branch("filt_hbhenoise", &filt_hbhenoise);
+    tree->Branch("filt_hbheisonoise", &filt_hbheisonoise);
     tree->Branch("filt_hcallaser", &filt_hcallaser);
     tree->Branch("filt_met", &filt_met);
     tree->Branch("filt_trkfail", &filt_trkfail);
