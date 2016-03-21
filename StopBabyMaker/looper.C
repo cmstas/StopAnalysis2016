@@ -112,7 +112,7 @@ babyMaker::babyMaker(){
    gen_susy = GenParticleTree("susy_");
 }
 
-void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down,   bool applyLeptonSFs, bool applyBtagSFs, bool isFastsim){
+void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down,   bool applyLeptonSFs, bool applyVetoLeptonSFs, bool applyBtagSFs, bool isFastsim){
 
   skim_nvtx            = nvtx;
   skim_met             = met;
@@ -149,6 +149,7 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
   applyJECfromFile     = applyJEC;
   JES_type 	       = JES_type_central_up_down;
   skim_applyLeptonSFs  = applyLeptonSFs;
+  skim_applyVetoLeptonSFs  = applyVetoLeptonSFs;
   skim_applyBtagSFs    = applyBtagSFs;
   skim_isFastsim       = isFastsim;
 }
@@ -293,6 +294,114 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     cout << ", running on MC, based on file name: " << output_name<<endl;
   }
 
+  
+  //
+  // Open lepton SF histos
+  //
+  TFile *f_el_SF;
+  TFile *f_mu_SF_id;
+  TFile *f_mu_SF_iso;
+  TFile *f_mu_SF_veto_id;
+  TFile *f_mu_SF_veto_iso;
+
+  TFile *f_el_FS_ID;
+  TFile *f_el_FS_Iso;
+  TFile *f_mu_FS_ID;
+  TFile *f_mu_FS_Iso;
+
+  TFile *f_vetoLep_eff;
+  
+  TH2D *h_el_SF = NULL;
+  TH2D *h_mu_SF = NULL;
+  TH2D *h_el_SF_veto = NULL;
+  TH2D *h_mu_SF_veto = NULL;
+
+  TH2D *h_el_FS = NULL;
+  TH2D *h_mu_FS = NULL;
+
+  TH2D *h_el_vetoLepEff = NULL;
+  TH2D *h_mu_vetoLepEff = NULL;
+  
+  double matched_dr = 0.1;
+  
+  if( (skim_applyLeptonSFs || skim_applyVetoLeptonSFs) && !isDataFromFileName){
+    
+    f_el_SF       = new TFile("lepsf/kinematicBinSFele.root", "read");
+
+    f_mu_SF_id    = new TFile("lepsf/TnP_MuonID_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
+    f_mu_SF_iso   = new TFile("lepsf/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
+
+    f_mu_SF_veto_id  = new TFile("lepsf/TnP_MuonID_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
+    f_mu_SF_veto_iso = new TFile("lepsf/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
+
+    
+    f_el_FS_ID       = new TFile("lepsf/sf_el_mediumCB.root", "read");
+    f_el_FS_Iso      = new TFile("lepsf/sf_el_mini01.root", "read");
+
+    f_mu_FS_ID       = new TFile("lepsf/sf_mu_mediumID.root", "read");
+    f_mu_FS_Iso      = new TFile("lepsf/sf_mu_mini02.root", "read");
+    
+    f_vetoLep_eff = new TFile("lepsf/lepeff__ttbar_powheg_pythia8_25ns__SRcuts.root", "read");
+
+    
+    TH2D *h_el_SF_id_temp      = (TH2D*)f_el_SF->Get("CutBasedMedium");
+    TH2D *h_el_SF_iso_temp     = (TH2D*)f_el_SF->Get("MiniIso0p1_vs_AbsEta");
+    TH2D *h_el_SF_veto_id_temp  = (TH2D*)f_el_SF->Get("CutBasedVeto");
+    TH2D *h_el_SF_veto_iso_temp = (TH2D*)f_el_SF->Get("MiniIso0p4_vs_AbsEta");
+    
+    TH2D *h_mu_SF_id_temp      = (TH2D*)f_mu_SF_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_tag_IsoMu20_pass");
+    TH2D *h_mu_SF_iso_temp     = (TH2D*)f_mu_SF_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_PF_pass_&_tag_IsoMu20_pass");
+    
+    TH2D *h_mu_SF_veto_id_temp  = (TH2D*)f_mu_SF_veto_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_tag_IsoMu20_pass");
+    TH2D *h_mu_SF_veto_iso_temp = (TH2D*)f_mu_SF_veto_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_PF_pass_&_tag_IsoMu20_pass");
+    
+
+    TH2D *h_el_FS_ID_temp  = (TH2D*)f_el_FS_ID->Get("histo2D");
+    TH2D *h_el_FS_Iso_temp = (TH2D*)f_el_FS_Iso->Get("histo2D");
+    
+    TH2D *h_mu_FS_ID_temp  = (TH2D*)f_mu_FS_ID->Get("histo2D");
+    TH2D *h_mu_FS_Iso_temp = (TH2D*)f_mu_FS_Iso->Get("histo2D");
+    
+    
+    TH2D *h_el_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_rebin_Eff_el");
+    TH2D *h_mu_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_rebin_Eff_mu");
+    
+    //BabyFile->cd();
+    
+    TH2D *h_el_SF_id  = (TH2D*)h_el_SF_id_temp->Clone("h_el_SF_id");
+    TH2D *h_el_SF_iso = (TH2D*)h_el_SF_iso_temp->Clone("h_el_SF_iso");
+    TH2D *h_mu_SF_id  = (TH2D*)h_mu_SF_id_temp->Clone("h_mu_SF_id");
+    TH2D *h_mu_SF_iso = (TH2D*)h_mu_SF_iso_temp->Clone("h_mu_SF_iso");
+    
+    TH2D *h_el_SF_veto_id  = (TH2D*)h_el_SF_veto_id_temp->Clone("h_el_SF_veto_id");
+    TH2D *h_el_SF_veto_iso = (TH2D*)h_el_SF_veto_iso_temp->Clone("h_el_SF_veto_iso");
+    TH2D *h_mu_SF_veto_id  = (TH2D*)h_mu_SF_veto_id_temp->Clone("h_mu_SF_veto_id");
+    TH2D *h_mu_SF_veto_iso = (TH2D*)h_mu_SF_veto_iso_temp->Clone("h_mu_SF_veto_iso");
+    
+    h_el_FS          = (TH2D*)h_el_FS_ID_temp->Clone("h_el_FS");
+    h_el_FS->Multiply(h_el_FS_Iso_temp);
+
+    h_mu_FS          = (TH2D*)h_mu_FS_ID_temp->Clone("h_mu_FS");
+    h_mu_FS->Multiply(h_mu_FS_Iso_temp);
+
+
+    h_el_vetoLepEff = (TH2D*)h_el_vetoLepEff_temp->Clone("h_el_vetoLepEff");
+    h_mu_vetoLepEff = (TH2D*)h_mu_vetoLepEff_temp->Clone("h_mu_vetoLepEff");
+
+    h_el_SF = (TH2D*)h_el_SF_id->Clone("h_el_SF");
+    h_el_SF->Multiply(h_el_SF_iso);
+
+    h_el_SF_veto = (TH2D*)h_el_SF_veto_id->Clone("h_el_SF_veto");
+    h_el_SF_veto->Multiply(h_el_SF_veto_iso);
+
+    h_mu_SF = (TH2D*)h_mu_SF_id->Clone("h_mu_SF");
+    h_mu_SF->Multiply(h_mu_SF_iso);
+
+    h_mu_SF_veto = (TH2D*)h_mu_SF_veto_id->Clone("h_mu_SF_veto");
+    h_mu_SF_veto->Multiply(h_mu_SF_veto_iso);
+        
+  }
+  
 
   TFile *fxsec;
   TH1D *hxsec;
@@ -374,17 +483,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     histNEvts = new TH2F( "histNEvts", "h_histNEvts", 37,99,1024, 19,-1,474);//x=mStop, y=mLSP
     histNEvts->Sumw2();
   }
+
+
   //
   //
   // Make Baby Ntuple  
   //
-
   MakeBabyNtuple( Form("%s.root", output_name) );
 
   //
   // Initialize Baby Ntuple Branches
   //
-
   InitBabyNtuple();
   
   //
@@ -465,16 +574,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     f_btag_eff->Close(); 
  }    
    jets.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim); 
-  // Lepton Scale Factors
-  // if (skim_applyLeptonSFs) {
-  //  setElSFfile("lepsf/kinematicBinSFele.root");
-  //  setMuSFfile("lepsf/TnP_MuonID_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root","lepsf/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
-  //  if (skim_isFastsim) {
-  //    setElSFfile_fastsim("lepsf/sf_el_vetoCB_mini01.root");
-  //    setMuSFfile_fastsim("lepsf/sf_mu_looseID_mini02.root");
-   // }
-  //}
-
+   
 
   //
   // File Loop
@@ -919,6 +1019,162 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       AllLeps.insert( AllLeps.end(), VetoLeps.begin(),  VetoLeps.end() );
       if( nVetoLeptons > 0 ) lep1.FillCommon( AllLeps.at(0).id, AllLeps.at(0).idx );
       if( nVetoLeptons > 1 ) lep2.FillCommon( AllLeps.at(1).id, AllLeps.at(1).idx );
+
+
+      // Lepton SFs
+      float lepSF_pt_cutoff = 100.0;
+      float lepSF_pt_min    = 10.0;
+      
+      double lepSF    = 1.0;
+      double lepSF_Up = 1.0;
+      double lepSF_Dn = 1.0;
+      
+      double vetoLepSF    = 1.0;
+      double vetoLepSF_Up = 1.0;
+      double vetoLepSF_Dn = 1.0;
+
+
+      float lepSF_FS_pt_cutoff = 200.0;
+      float lepSF_FS_pt_min    = 10.0;
+
+      double lepSF_FS    = 1.0;
+      double lepSF_FS_Up = 1.0;
+      double lepSF_FS_Dn = 1.0;	
+      
+      // Lep1 SF
+      if(skim_applyLeptonSFs && !StopEvt.is_data && nVetoLeptons>0){
+	
+	if(lep1.is_el){
+	  int binX = h_el_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()) );
+	  int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
+	  lepSF    = h_el_SF->GetBinContent( binX, binY );
+	  lepSF_Up = lepSF + h_el_SF->GetBinError( binX, binY );
+	  lepSF_Dn = lepSF - h_el_SF->GetBinError( binX, binY );
+	  
+	  if(skim_isFastsim){
+	    int bin_FS  = h_el_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), fabs(lep1.p4.Eta()) );
+	    lepSF_FS    = h_el_FS->GetBinContent(bin_FS);
+	    lepSF_FS_Up = lepSF_FS + h_el_FS->GetBinError(bin_FS);
+	    lepSF_FS_Dn = lepSF_FS + h_el_FS->GetBinError(bin_FS);
+	  }
+	  
+	}
+	
+	if(lep1.is_mu){
+	  int binX = h_mu_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()) );
+	  int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
+	  lepSF    = h_mu_SF->GetBinContent( binX, binY );
+	  lepSF_Up = lepSF + h_mu_SF->GetBinError( binX, binY );
+	  lepSF_Dn = lepSF - h_mu_SF->GetBinError( binX, binY );
+	  
+	  if(skim_isFastsim){
+	    int bin_FS  = h_mu_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), fabs(lep1.p4.Eta()) );
+	    lepSF_FS    = h_mu_FS->GetBinContent(bin_FS);
+	    lepSF_FS_Up = lepSF_FS + h_mu_FS->GetBinError(bin_FS);
+	    lepSF_FS_Dn = lepSF_FS + h_mu_FS->GetBinError(bin_FS);
+	  }
+
+	}
+		    
+      }
+      
+      // Lep2 SF
+      if( skim_applyLeptonSFs && !StopEvt.is_data && nVetoLeptons>1 ){
+	
+	if(lep2.is_el){
+	  
+	  int binX = h_el_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
+	  int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	  lepSF    *= h_el_SF->GetBinContent( binX, binY );
+	  lepSF_Up *= ( lepSF + h_el_SF->GetBinError( binX, binY ) );
+	  lepSF_Dn *= ( lepSF - h_el_SF->GetBinError( binX, binY ) );
+	  
+	  if(skim_isFastsim){
+	    int bin_FS  = h_el_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), fabs(lep2.p4.Eta()) );
+	    lepSF_FS    *= h_el_FS->GetBinContent(bin_FS);
+	    lepSF_FS_Up *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
+	    lepSF_FS_Dn *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
+	  }
+
+	}
+	
+	if(lep2.is_mu){
+	  int binX = h_mu_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
+	  int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	  lepSF    *= h_mu_SF->GetBinContent( binX, binY );
+	  lepSF_Up *= ( lepSF + h_mu_SF->GetBinError( binX, binY ) );
+	  lepSF_Dn *= ( lepSF - h_mu_SF->GetBinError( binX, binY ) );
+	}
+	
+	if(skim_isFastsim){
+	  int bin_FS  = h_mu_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), fabs(lep2.p4.Eta()) );
+	  lepSF_FS    *= h_mu_FS->GetBinContent(bin_FS);
+	  lepSF_FS_Up *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
+	  lepSF_FS_Dn *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
+	}
+
+
+      }
+      
+      // If only 1 reco lepton, and is2lep event, then find lost gen lepton
+      if( skim_applyVetoLeptonSFs && !StopEvt.is_data && nVetoLeptons==1 && StopEvt.is2lep ){
+	
+	for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
+	  if( abs(gen_leps.id.at(iGen))!=11 && abs(gen_leps.id.at(iGen))!=13 ) continue;
+	  if( !gen_leps.fromHardProcessFinalState.at(iGen) ) continue;
+	  if( !gen_leps.isLastCopy.at(iGen) ) continue;
+	  if( ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep1.p4)<matched_dr ) continue;
+	  if( gen_leps.p4.at(iGen).Pt()<5 || fabs(gen_leps.p4.at(iGen).Eta())>2.4 ) continue;
+	  
+	  TH2D *h_vetoLep_eff = NULL;
+	  if( abs(gen_leps.id.at(iGen))==11 ) h_vetoLep_eff = h_el_vetoLepEff;
+	  if( abs(gen_leps.id.at(iGen))==13 ) h_vetoLep_eff = h_mu_vetoLepEff;
+	  
+	  int binX_eff = h_vetoLep_eff->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)gen_leps.p4.at(iGen).Pt()), lepSF_pt_min ) );
+	  int binY_eff = h_vetoLep_eff->GetYaxis()->FindBin( fabs(gen_leps.p4.at(iGen).Eta()) );
+	  double vetoEff = h_vetoLep_eff->GetBinContent( binX_eff, binY_eff );
+	  
+	  TH2D *h_lep_sf = NULL;
+	  if( abs(gen_leps.id.at(iGen))==11 ) h_lep_sf = h_el_SF_veto;
+	  if( abs(gen_leps.id.at(iGen))==13 ) h_lep_sf = h_mu_SF_veto;
+
+	  int binX_sf = h_lep_sf->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)gen_leps.p4.at(iGen).Pt()), lepSF_pt_min ) );
+	  int binY_sf = h_lep_sf->GetYaxis()->FindBin( fabs(gen_leps.p4.at(iGen).Eta()) );
+	  
+	  double vetoLepSF_temp    = h_lep_sf->GetBinContent( binX_sf, binY_sf );
+	  double vetoLepSF_temp_Up = vetoLepSF_temp + h_lep_sf->GetBinError( binX_sf, binY_sf );
+	  double vetoLepSF_temp_Dn = vetoLepSF_temp - h_lep_sf->GetBinError( binX_sf, binY_sf );
+	  
+	  
+	  if( vetoEff==1.0 ){
+	    vetoLepSF    = 1.0;
+	    vetoLepSF_Up = 1.0;
+	    vetoLepSF_Dn = 1.0;
+	  }
+	  else{
+	    vetoLepSF    = ( 1-(vetoEff*vetoLepSF_temp) )/( 1-vetoEff );
+	    vetoLepSF_Up = ( 1-(vetoEff*vetoLepSF_temp_Up) )/( 1-vetoEff );
+	    vetoLepSF_Dn = ( 1-(vetoEff*vetoLepSF_temp_Dn) )/( 1-vetoEff );	    
+	  }
+	  
+	  break; // break after finding 2nd hard gen lepton
+
+	} // end loop over gen leptons
+      
+      } // end if finding gen lost lepton for vetoEff SF
+      
+      StopEvt.weight_lepSF      = lepSF;
+      StopEvt.weight_lepSF_up   = lepSF_Up;
+      StopEvt.weight_lepSF_down = lepSF_Dn;
+
+      StopEvt.weight_vetoLepSF      = vetoLepSF;
+      StopEvt.weight_vetoLepSF_up   = vetoLepSF_Up;
+      StopEvt.weight_vetoLepSF_down = vetoLepSF_Dn;
+      
+      StopEvt.weight_lepSF_fastSim      = lepSF_FS;
+      StopEvt.weight_lepSF_fastSim_up   = lepSF_FS_Up;
+      StopEvt.weight_lepSF_fastSim_down = lepSF_FS_Dn;
+      
 
       //
       // Jet Selection
@@ -1385,8 +1641,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       //std::cout << "[babymaker::looper]: updating geninfo for recoleptons" << std::endl;
       // Check that we have the gen leptons matched to reco leptons
-      double match_dr = 0.01;
-      
       int lep1_match_idx = -99;
       int lep2_match_idx = -99;
 
@@ -1402,7 +1656,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
 	    if( abs(gen_leps.id.at(iGen))==abs(lep1.pdgid) ){
 	      double temp_dr = ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep1.p4);
-	      if(temp_dr<match_dr){
+	      if(temp_dr<matched_dr){
 		lep1_match_idx=gen_leps.genpsidx.at(iGen);
 		break;
 	      }
@@ -1410,15 +1664,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 		min_dr_lep1=temp_dr;
 		min_dr_lep1_idx=gen_leps.genpsidx.at(iGen);
 	      }
-	    }
-	  }
+	    } // end if lep1 id matches genLep id
+	  } // end loop over gen leps
 	}
 	if(nVetoLeptons>1){
 	  for(int iGen=0; iGen<(int)gen_leps.p4.size(); iGen++){
 	    if( lep1_match_idx == iGen ) continue;
 	    if( abs(gen_leps.id.at(iGen))==abs(lep2.pdgid) ){
 	      double temp_dr = ROOT::Math::VectorUtil::DeltaR(gen_leps.p4.at(iGen), lep2.p4);
-	      if(temp_dr<match_dr){
+	      if(temp_dr<matched_dr){
 		lep2_match_idx=gen_leps.genpsidx.at(iGen);
 		break;
 	      }
@@ -1436,7 +1690,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    if(!genps_isLastCopy().at(genx) ) continue;
 	    if( abs(genps_id().at(genx))==abs(lep1.pdgid) ){
 	      double temp_dr = ROOT::Math::VectorUtil::DeltaR(genps_p4().at(genx), lep1.p4);
-	      if(temp_dr<match_dr){
+	      if(temp_dr<matched_dr){
 		lep1_match_idx=genx;
 		gen_leps.FillCommon(genx);
 		break;
@@ -1457,7 +1711,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    if(!genps_isLastCopy().at(genx) ) continue;
 	    if( abs(genps_id().at(genx))==abs(lep2.pdgid) ){
 	      double temp_dr = ROOT::Math::VectorUtil::DeltaR(genps_p4().at(genx), lep2.p4);
-	      if(temp_dr<match_dr){
+	      if(temp_dr<matched_dr){
 		lep2_match_idx=genx;
 		gen_leps.FillCommon(genx);
 		break;
@@ -1472,8 +1726,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if( lep2_match_idx<0 && min_dr_lep2_idx>0 ) gen_leps.FillCommon(min_dr_lep2_idx);
 	}
 
-     } // end if not data      
+      } // end if not data      
 
+      
 
       //
       // Trigger Information
@@ -1573,6 +1828,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   }
   if (skim_applyBtagSFs) {
     jets.deleteBtagSFTool();
+  }
+
+  if( !isDataFromFileName && (skim_applyLeptonSFs || skim_applyVetoLeptonSFs) ){
+    f_el_SF->Close();
+    f_mu_SF_id->Close();
+    f_mu_SF_iso->Close();
+    f_mu_SF_veto_id->Close();
+    f_mu_SF_veto_iso->Close();
+    f_el_FS_ID->Close();
+    f_el_FS_Iso->Close();
+    f_mu_FS_ID->Close();
+    f_mu_FS_Iso->Close();
+    f_vetoLep_eff->Close();
   }
 
   

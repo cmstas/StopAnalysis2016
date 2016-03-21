@@ -147,6 +147,15 @@ public:
     float weight_btagsf_light_UP;
     float weight_btagsf_heavy_DN;
     float weight_btagsf_light_DN;
+    float weight_lepSF;
+    float weight_lepSF_up;
+    float weight_lepSF_down;
+    float weight_vetoLepSF;
+    float weight_vetoLepSF_up;
+    float weight_vetoLepSF_down;
+    float weight_lepSF_fastSim;
+    float weight_lepSF_fastSim_up;
+    float weight_lepSF_fastSim_down;
     float weight_ISR;
     float weight_ISRup;
     float weight_ISRdown;
