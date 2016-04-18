@@ -4,13 +4,13 @@
   gSystem->AddIncludePath(temp.c_str());
   temp = ".include "+COREpath;
   gROOT->ProcessLine(temp.c_str());
-  int type = 3; //1 Data, 2: MC, 3: Signal
-  int jes = -1;
-  int whichsignal = 2;//1 T2tt, 2 T2bW, 3 T2tb
+  int type = 2; //1 Data, 2: MC, 3: Signal
+  int jes = 0;
+  int whichsignal = 1;//1 T2tt, 2 T2bW, 3 T2tb
   
   unsigned int chainsize = 1;
-  if(type==2) chainsize = 5;
-  const int maxchainsize = 5;
+  if(type==2) chainsize = 6;
+  const int maxchainsize = 6;
   TChain *ch[maxchainsize];
   string dataset[maxchainsize];
   string chfile;
@@ -61,6 +61,23 @@
       dataset[4] = "NonZRare";
       chfile = babylocation+"WWTo2l2Nu_powheg_25ns.root";                         ch[4]->Add(chfile.c_str());
       chfile = babylocation+"TTWJetsToLNu_amcnlo_pythia8_25ns.root";              ch[4]->Add(chfile.c_str());
+      dataset[5] = "Rest";
+      chfile = babylocation+"t_tch_4f_powheg_pythia8_25ns.root";                  ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"tbar_tch_4f_powheg_pythia8_25ns.root";               ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"t_sch_4f_amcnlo_pythia8_25ns.root";                  ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"DYJetsToLL_m10To50_amcnlo_pythia8_25ns.root";        ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"DYJetsToLL_m50_amcnlo_pythia8_25ns.root";            ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"TTWJetsToQQ_amcnlo_pythia8_25ns.root";               ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"TTZToQQ_amcnlo_pythia8_25ns.root";                   ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"tZq_ll_4f_amcnlo_pythia8_25ns.root";                 ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"WWToLNuQQ_powheg_25ns.root";                         ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"WZTo3LNu_powheg_pythia8_25ns.root";                  ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"WZTo2L2Q_amcnlo_pythia8_25ns.root";                  ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"WZTo1LNu2Q_amcnlo_pythia8_25ns.root";                ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"ZZTo4L_powheg_pythia8_25ns.root";                    ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"ZZTo2L2Q_amcnlo_pythia8_25ns.root";                  ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"ZZTo2L2Nu_powheg_pythia8_25ns.root";                 ch[5]->Add(chfile.c_str());
+      chfile = babylocation+"ZZTo2Q2Nu_amcnlo_pythia8_25ns.root";                 ch[5]->Add(chfile.c_str());
     }
   }//type MC
   

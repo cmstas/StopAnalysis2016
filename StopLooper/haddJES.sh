@@ -31,6 +31,7 @@ then
 	echo "Target file ${SAMPLEALL} is newer than any of the input files - stop."
 	return 1
     fi
+    rm ${SAMPLEALL}
     hadd -f ${SAMPLEALL} ${SAMPLENOJES} ${SAMPLEJESUP} ${SAMPLEJESDN}
 else    
     echo "one of these does not exist ${SAMPLENOJES} ${SAMPLEJESUP} ${SAMPLEJESDN}"

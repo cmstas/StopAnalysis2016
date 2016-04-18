@@ -23,7 +23,6 @@
 #include "Utilities.hh"
 
 using namespace std;
-using namespace tas;
 
 
 int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, int nEvents = -1, string skimFilePrefix = "test") {
@@ -82,11 +81,17 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
   histonames2.push_back("nevtsum");
   histonames2.push_back("lepsum");
   histonames2.push_back("lepSFsum");
+
+  //in principle we don't need the lepton-binned samples - however if we want to know purities, etc it might be helpful - store in separate file
+  const unsigned int Nthissample = 8;
+  string thissample[Nthissample] = {samplename,samplename + "_1ltop",samplename + "_1lnottop",samplename + "_1lW",samplename + "_1lnotW",samplename + "_eq1l",samplename + "_ge2l",samplename + "_Znunu"};
+  string sampleext[Nthissample] = {"","1ltop","1lnottop","1lW","1lnotW","eq1l","ge2l","Znunu"};
+  bool passsample[Nthissample]={true,false,false,false,false,false,false,false};
   string T2tt = "T2tt";
   string T2tb = "T2tb";
   for(unsigned int i = 0; i<histonames.size(); ++i){
     string mysample = samplename;
-    for(unsigned int j = 0; j<3; ++j){
+    for(unsigned int j = 0; j<Nthissample+2; ++j){
       //add polarization or split mixed decay
       if(samplename.find(T2tt)!=string::npos){
 	if(j==1)      mysample = samplename + "_lefthanded";
@@ -97,7 +102,8 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
 	else if(j==1) mysample = samplename + "_mixed";
 	else if(j==2) mysample = samplename + "_bCharg";
       }
-      else if(j!=0) continue;
+      else if(j==1||j==2) continue;
+      if(j>=3) mysample = thissample[j-2];
       string mapname = histonames[i] + "_" + mysample;
       if(histos.count(mapname) == 0 ) histos[mapname] = new TH3D(mapname.c_str(), "", nST,STl,STu, nLSP,LSPl,LSPu, maxSR, 1.,1.+maxSR);
       //mStop 100-1000, mLSP 0-450, SR 1-12, 9200 bins, SR 0 is non-SR - in case it it needed!!
@@ -213,22 +219,36 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
       int CR0b = StF::CR0bIdentifier();
       if(SR<0&&CR2l<0&&CR0b<0) continue;
 
-      string thissample = samplename;
-      if(thissample.find(T2tb)!=string::npos){
+      thissample[0] = samplename;
+      if(samplename.find(T2tb)!=string::npos){
 	int T2tb_what = StF::whichT2tbdecay();
-	if(     T2tb_what==1) thissample = samplename + "_tLSP";
-	else if(T2tb_what==2) thissample = samplename + "_mixed";
-	else if(T2tb_what==3) thissample = samplename + "_bCharg";
+	if(     T2tb_what==1) thissample[0] = samplename + "_tLSP";
+	else if(T2tb_what==2) thissample[0] = samplename + "_mixed";
+	else if(T2tb_what==3) thissample[0] = samplename + "_bCharg";
 	else continue;
       }
       bool dopolarization = false;
-      if(thissample.find(T2tt)!=string::npos) dopolarization = true;
+      if(samplename.find(T2tt)!=string::npos) dopolarization = true;
       float weight_pol_L(1.), weight_pol_R(1.);
       if(dopolarization&&((mStop-mLSP)>172)) StF::PolarizationWeights(weight_pol_L,weight_pol_R);
-      string thissampleL = thissample + "_lefthanded";
-      string thissampleR = thissample + "_righthanded";
+      string thissampleL = samplename + "_lefthanded";
+      string thissampleR = samplename + "_righthanded";
       float weightL = weight * weight_pol_L;
       float weightR = weight * weight_pol_R;
+
+      //lepton splitting
+      if(tas::is1lep() && tas::is1lepFromTop() ) { passsample[1] =  true; passsample[2] = false; }//is1lep needed in case of Znunu events
+      else if(tas::is1lep() )                    { passsample[1] = false; passsample[2] =  true; }
+      else                                       { passsample[1] = false; passsample[2] = false; }
+      if(tas::is1lep() && tas::is1lepFromW()   ) { passsample[3] =  true; passsample[4] = false; }
+      else if(tas::is1lep() )                    { passsample[3] = false; passsample[4] =  true; }
+      else                                       { passsample[3] = false; passsample[4] = false; }
+      if(tas::is1lep() )    passsample[5] = true;
+      else                  passsample[5] = false;
+      if(tas::is2lep() )    passsample[6] = true;
+      else                  passsample[6] = false;
+      if(tas::isZtoNuNu() ) passsample[7] = true;
+      else                  passsample[7] = false;
       
       double ISRup = tas::weight_ISRup()/tas::weight_ISR()*ISRnorm/ISRnormup;
       double ISRdown = tas::weight_ISRdown()/tas::weight_ISR()*ISRnorm/ISRnormdown;
@@ -245,175 +265,85 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
       double muRFup = tas::genweights().at(4)/tas::genweights().at(0)*muRFnorm/muRFnormup;
       double muRFdown = tas::genweights().at(8)/tas::genweights().at(0)*muRFnorm/muRFnormdown;
 
-      if(abs(JES)!=1){
-	if(CR0b>0){
-	  if(CR0b==1){
-	    histos["CR0b_sigcontamination_"+thissample]->Fill(mStop,mLSP,1,weight*CR0b_1_1);
-	    histos["CR0b_sigcontamination_"+thissample]->Fill(mStop,mLSP,2,weight*CR0b_1_2);
-	  } else if(CR0b==2){
-	    histos["CR0b_sigcontamination_"+thissample]->Fill(mStop,mLSP,3,weight*CR0b_2_3);
-	    histos["CR0b_sigcontamination_"+thissample]->Fill(mStop,mLSP,4,weight*CR0b_2_4);
-	  } else if(CR0b==3){
-	    histos["CR0b_sigcontamination_"+thissample]->Fill(mStop,mLSP,7,weight*CR0b_3_7);
-	    histos["CR0b_sigcontamination_"+thissample]->Fill(mStop,mLSP,8,weight*CR0b_3_8);
-	    histos["CR0b_sigcontamination_"+thissample]->Fill(mStop,mLSP,9,weight*CR0b_3_9);
-	  }
-	  if(dopolarization){
+      for(unsigned int j = 0; j<Nthissample+2; ++j){
+	if(j<Nthissample &&   !passsample[j]) continue;//not that this is true for j==0 always
+	if(j>=Nthissample && !dopolarization) continue;
+	string thesample;
+	if(j<Nthissample)           thesample = thissample[j];
+	else if(j==Nthissample)     thesample = thissampleL;
+	else if(j==(Nthissample+1)) thesample = thissampleR;
+	else { cout << "How can this happen" << endl; continue; }
+	if(abs(JES)!=1){
+	  if(CR0b>0){
 	    if(CR0b==1){
-	      histos["CR0b_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,1,weightL*CR0b_1_1);
-	      histos["CR0b_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,2,weightL*CR0b_1_2);
+	      histos["CR0b_sigcontamination_"+thesample]->Fill(mStop,mLSP,1,weight*CR0b_1_1);
+	      histos["CR0b_sigcontamination_"+thesample]->Fill(mStop,mLSP,2,weight*CR0b_1_2);
 	    } else if(CR0b==2){
-	      histos["CR0b_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,3,weightL*CR0b_2_3);
-	      histos["CR0b_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,4,weightL*CR0b_2_4);
+	      histos["CR0b_sigcontamination_"+thesample]->Fill(mStop,mLSP,3,weight*CR0b_2_3);
+	      histos["CR0b_sigcontamination_"+thesample]->Fill(mStop,mLSP,4,weight*CR0b_2_4);
 	    } else if(CR0b==3){
-	      histos["CR0b_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,7,weightL*CR0b_3_7);
-	      histos["CR0b_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,8,weightL*CR0b_3_8);
-	      histos["CR0b_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,9,weightL*CR0b_3_9);
+	      histos["CR0b_sigcontamination_"+thesample]->Fill(mStop,mLSP,7,weight*CR0b_3_7);
+	      histos["CR0b_sigcontamination_"+thesample]->Fill(mStop,mLSP,8,weight*CR0b_3_8);
+	      histos["CR0b_sigcontamination_"+thesample]->Fill(mStop,mLSP,9,weight*CR0b_3_9);
 	    }
-	    if(CR0b==1){
-	      histos["CR0b_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,1,weightR*CR0b_1_1);
-	      histos["CR0b_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,2,weightR*CR0b_1_2);
-	    } else if(CR0b==2){
-	      histos["CR0b_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,3,weightR*CR0b_2_3);
-	      histos["CR0b_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,4,weightR*CR0b_2_4);
-	    } else if(CR0b==3){
-	      histos["CR0b_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,7,weightR*CR0b_3_7);
-	      histos["CR0b_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,8,weightR*CR0b_3_8);
-	      histos["CR0b_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,9,weightR*CR0b_3_9);
-	    }
-	  }
-	} else if(CR2l>0){
-	  if(CR2l==1){
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,1,weight*CR2l_1_1);
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,2,weight*CR2l_1_2);
-	  } else if(CR2l==2){
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,5,weight*CR2l_2_5);
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,6,weight*CR2l_2_6);
-	  } else if(CR2l==3){
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,7,weight*CR2l_3_7);
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,8,weight*CR2l_3_8);
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,9,weight*CR2l_3_9);
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,3,weight*CR2l_3_3);
-	    histos["CR2l_sigcontamination_"+thissample]->Fill(mStop,mLSP,4,weight*CR2l_3_4);
-	  }
-	  if(dopolarization){
+	  } else if(CR2l>0){
 	    if(CR2l==1){
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,1,weightL*CR2l_1_1);
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,2,weightL*CR2l_1_2);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,1,weight*CR2l_1_1);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,2,weight*CR2l_1_2);
 	    } else if(CR2l==2){
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,5,weightL*CR2l_2_5);
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,6,weightL*CR2l_2_6);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,5,weight*CR2l_2_5);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,6,weight*CR2l_2_6);
 	    } else if(CR2l==3){
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,7,weightL*CR2l_3_7);
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,8,weightL*CR2l_3_8);
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,9,weightL*CR2l_3_9);
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,3,weightL*CR2l_3_3);
-	      histos["CR2l_sigcontamination_"+thissampleL]->Fill(mStop,mLSP,4,weightL*CR2l_3_4);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,7,weight*CR2l_3_7);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,8,weight*CR2l_3_8);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,9,weight*CR2l_3_9);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,3,weight*CR2l_3_3);
+	      histos["CR2l_sigcontamination_"+thesample]->Fill(mStop,mLSP,4,weight*CR2l_3_4);
 	    }
-	    if(CR2l==1){
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,1,weightR*CR2l_1_1);
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,2,weightR*CR2l_1_2);
-	    } else if(CR2l==2){
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,5,weightR*CR2l_2_5);
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,6,weightR*CR2l_2_6);
-	    } else if(CR2l==3){
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,7,weightR*CR2l_3_7);
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,8,weightR*CR2l_3_8);
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,9,weightR*CR2l_3_9);
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,3,weightR*CR2l_3_3);
-	      histos["CR2l_sigcontamination_"+thissampleR]->Fill(mStop,mLSP,4,weightR*CR2l_3_4);
-	    }
-	  }
-	} else if(SR>0){
+	  } else if(SR>0){
 
-	  histos2["eventsum"]    ->Fill(mStop,mLSP,SR,1.);
-	  histos2["rawweightsum"]->Fill(mStop,mLSP,SR,rawweight);
-	  histos2["totweightsum"]->Fill(mStop,mLSP,SR,weight);
-	  histos2["ISRsum"]      ->Fill(mStop,mLSP,SR,ISRweight);
-	  histos2["BSFsum"]      ->Fill(mStop,mLSP,SR,BSFweight);
-	  //histos2["PUweightsum"] ->Fill(mStop,mLSP,SR,PUweight);
-	  histos2["xsecsum"]     ->Fill(mStop,mLSP,SR,xsection);
-	  histos2["nevtsum"]     ->Fill(mStop,mLSP,SR,nevts);
-	  //histos2["lepsum"]      ->Fill(mStop,mLSP,SR,lepSF);//lepSF not yet in babies
-	  //histos2["lepSFsum"]    ->Fill(mStop,mLSP,SR,lepSF_FS);
+	    histos2["eventsum"]    ->Fill(mStop,mLSP,SR,1.);
+	    histos2["rawweightsum"]->Fill(mStop,mLSP,SR,rawweight);
+	    histos2["totweightsum"]->Fill(mStop,mLSP,SR,weight);
+	    histos2["ISRsum"]      ->Fill(mStop,mLSP,SR,ISRweight);
+	    histos2["BSFsum"]      ->Fill(mStop,mLSP,SR,BSFweight);
+	    //histos2["PUweightsum"] ->Fill(mStop,mLSP,SR,PUweight);
+	    histos2["xsecsum"]     ->Fill(mStop,mLSP,SR,xsection);
+	    histos2["nevtsum"]     ->Fill(mStop,mLSP,SR,nevts);
+	    //histos2["lepsum"]      ->Fill(mStop,mLSP,SR,lepSF);//lepSF not yet in babies
+	    //histos2["lepSFsum"]    ->Fill(mStop,mLSP,SR,lepSF_FS);
 	
-	  //finally - do signal regions!
-	  histos["SR_yield_"       +thissample] ->Fill(mStop,mLSP,SR,weight);
-	  histos["SR_ISRup_"       +thissample] ->Fill(mStop,mLSP,SR,weight*ISRup);
-	  histos["SR_ISRdown_"     +thissample] ->Fill(mStop,mLSP,SR,weight*ISRdown);
-	  histos["SR_Xsecup_"      +thissample] ->Fill(mStop,mLSP,SR,weight*XSup);
-	  histos["SR_Xsecdown_"    +thissample] ->Fill(mStop,mLSP,SR,weight*XSdown);
-	  //histos["SR_PUup_"        +thissample] ->Fill(mStop,mLSP,SR,weight*PUup);
-	  //histos["SR_PUdown_"      +thissample] ->Fill(mStop,mLSP,SR,weight*PUdown);
-	  histos["SR_BHFup_"       +thissample] ->Fill(mStop,mLSP,SR,weight*BSFHup);
-	  histos["SR_BLFup_"       +thissample] ->Fill(mStop,mLSP,SR,weight*BSFLup);
-	  histos["SR_BHFdown_"     +thissample] ->Fill(mStop,mLSP,SR,weight*BSFHdown);
-	  histos["SR_BLFdown_"     +thissample] ->Fill(mStop,mLSP,SR,weight*BSFLdown);
-	  //histos["SR_LepEffup_"    +thissample] ->Fill(mStop,mLSP,SR,weight*lEffup);//lepSF not yet in babies
-	  //histos["SR_LepEffdown_"  +thissample] ->Fill(mStop,mLSP,SR,weight*lEffdown);
-	  //histos["SR_LepEffFSup_"  +thissample] ->Fill(mStop,mLSP,SR,weight*lEffFSup);
-	  //histos["SR_LepEffFSdown_"+thissample] ->Fill(mStop,mLSP,SR,weight*lEffFSdown);
-	  histos["SR_muRFup_"      +thissample] ->Fill(mStop,mLSP,SR,weight*muRFup);
-	  histos["SR_muRFdown_"    +thissample] ->Fill(mStop,mLSP,SR,weight*muRFdown);
-	  if(dopolarization){
-	    histos["SR_yield_"       +thissampleR] ->Fill(mStop,mLSP,SR,weightR);
-	    histos["SR_ISRup_"       +thissampleR] ->Fill(mStop,mLSP,SR,weightR*ISRup);
-	    histos["SR_ISRdown_"     +thissampleR] ->Fill(mStop,mLSP,SR,weightR*ISRdown);
-	    histos["SR_Xsecup_"      +thissampleR] ->Fill(mStop,mLSP,SR,weightR*XSup);
-	    histos["SR_Xsecdown_"    +thissampleR] ->Fill(mStop,mLSP,SR,weightR*XSdown);
-	    //histos["SR_PUup_"        +thissampleR] ->Fill(mStop,mLSP,SR,weightR*PUup);
-	    //histos["SR_PUdown_"      +thissampleR] ->Fill(mStop,mLSP,SR,weightR*PUdown);
-	    histos["SR_BHFup_"       +thissampleR] ->Fill(mStop,mLSP,SR,weightR*BSFHup);
-	    histos["SR_BLFup_"       +thissampleR] ->Fill(mStop,mLSP,SR,weightR*BSFLup);
-	    histos["SR_BHFdown_"     +thissampleR] ->Fill(mStop,mLSP,SR,weightR*BSFHdown);
-	    histos["SR_BLFdown_"     +thissampleR] ->Fill(mStop,mLSP,SR,weightR*BSFLdown);
-	    //histos["SR_LepEffup_"    +thissampleR] ->Fill(mStop,mLSP,SR,weightR*lEffup);//lepSF not yet in babies
-	    //histos["SR_LepEffdown_"  +thissampleR] ->Fill(mStop,mLSP,SR,weightR*lEffdown);
-	    //histos["SR_LepEffFSup_"  +thissampleR] ->Fill(mStop,mLSP,SR,weightR*lEffFSup);
-	    //histos["SR_LepEffFSdown_"+thissampleR] ->Fill(mStop,mLSP,SR,weightR*lEffFSdown);
-	    histos["SR_muRFup_"      +thissampleR] ->Fill(mStop,mLSP,SR,weightR*muRFup);
-	    histos["SR_muRFdown_"    +thissampleR] ->Fill(mStop,mLSP,SR,weightR*muRFdown);
-	  
-	    histos["SR_yield_"       +thissampleL] ->Fill(mStop,mLSP,SR,weightL);
-	    histos["SR_ISRup_"       +thissampleL] ->Fill(mStop,mLSP,SR,weightL*ISRup);
-	    histos["SR_ISRdown_"     +thissampleL] ->Fill(mStop,mLSP,SR,weightL*ISRdown);
-	    histos["SR_Xsecup_"      +thissampleL] ->Fill(mStop,mLSP,SR,weightL*XSup);
-	    histos["SR_Xsecdown_"    +thissampleL] ->Fill(mStop,mLSP,SR,weightL*XSdown);
-	    //histos["SR_PUup_"        +thissampleL] ->Fill(mStop,mLSP,SR,weightL*PUup);
-	    //histos["SR_PUdown_"      +thissampleL] ->Fill(mStop,mLSP,SR,weightL*PUdown);
-	    histos["SR_BHFup_"       +thissampleL] ->Fill(mStop,mLSP,SR,weightL*BSFHup);
-	    histos["SR_BLFup_"       +thissampleL] ->Fill(mStop,mLSP,SR,weightL*BSFLup);
-	    histos["SR_BHFdown_"     +thissampleL] ->Fill(mStop,mLSP,SR,weightL*BSFHdown);
-	    histos["SR_BLFdown_"     +thissampleL] ->Fill(mStop,mLSP,SR,weightL*BSFLdown);
-	    //histos["SR_LepEffup_"    +thissampleL] ->Fill(mStop,mLSP,SR,weightL*lEffup);//lepSF not yet in babies
-	    //histos["SR_LepEffdown_"  +thissampleL] ->Fill(mStop,mLSP,SR,weightL*lEffdown);
-	    //histos["SR_LepEffFSup_"  +thissampleL] ->Fill(mStop,mLSP,SR,weightL*lEffFSup);
-	    //histos["SR_LepEffFSdown_"+thissampleL] ->Fill(mStop,mLSP,SR,weightL*lEffFSdown);
-	    histos["SR_muRFup_"      +thissampleL] ->Fill(mStop,mLSP,SR,weightL*muRFup);
-	    histos["SR_muRFdown_"    +thissampleL] ->Fill(mStop,mLSP,SR,weightL*muRFdown);
-	  }
-	  
-	}//SR
-      }//JES!=1
-      if(JES==1){
-	if(SR  >0){
-	  histos["SR_JESup_"  +thissample]->Fill(mStop,mLSP,SR,weight);
-	  if(dopolarization){
-	    histos["SR_JESup_"  +thissampleR]->Fill(mStop,mLSP,SR,weight);
-	    histos["SR_JESup_"  +thissampleL]->Fill(mStop,mLSP,SR,weight);
+	    //finally - do signal regions!
+	    histos["SR_yield_"       +thesample] ->Fill(mStop,mLSP,SR,weight);
+	    histos["SR_ISRup_"       +thesample] ->Fill(mStop,mLSP,SR,weight*ISRup);
+	    histos["SR_ISRdown_"     +thesample] ->Fill(mStop,mLSP,SR,weight*ISRdown);
+	    histos["SR_Xsecup_"      +thesample] ->Fill(mStop,mLSP,SR,weight*XSup);
+	    histos["SR_Xsecdown_"    +thesample] ->Fill(mStop,mLSP,SR,weight*XSdown);
+	    //histos["SR_PUup_"        +thesample] ->Fill(mStop,mLSP,SR,weight*PUup);
+	    //histos["SR_PUdown_"      +thesample] ->Fill(mStop,mLSP,SR,weight*PUdown);
+	    histos["SR_BHFup_"       +thesample] ->Fill(mStop,mLSP,SR,weight*BSFHup);
+	    histos["SR_BLFup_"       +thesample] ->Fill(mStop,mLSP,SR,weight*BSFLup);
+	    histos["SR_BHFdown_"     +thesample] ->Fill(mStop,mLSP,SR,weight*BSFHdown);
+	    histos["SR_BLFdown_"     +thesample] ->Fill(mStop,mLSP,SR,weight*BSFLdown);
+	    //histos["SR_LepEffup_"    +thesample] ->Fill(mStop,mLSP,SR,weight*lEffup);//lepSF not yet in babies
+	    //histos["SR_LepEffdown_"  +thesample] ->Fill(mStop,mLSP,SR,weight*lEffdown);
+	    //histos["SR_LepEffFSup_"  +thesample] ->Fill(mStop,mLSP,SR,weight*lEffFSup);
+	    //histos["SR_LepEffFSdown_"+thesample] ->Fill(mStop,mLSP,SR,weight*lEffFSdown);
+	    histos["SR_muRFup_"      +thesample] ->Fill(mStop,mLSP,SR,weight*muRFup);
+	    histos["SR_muRFdown_"    +thesample] ->Fill(mStop,mLSP,SR,weight*muRFdown);
+	  }//SR
+	}//JES!=1
+	if(JES==1){
+	  if(SR  >0){
+	    histos["SR_JESup_"  +thesample]->Fill(mStop,mLSP,SR,weight);
 	  }
 	}
-      }
-      if(JES==-1){
-	if(SR  >0) {
-	  histos["SR_JESdown_"+thissample]->Fill(mStop,mLSP,SR,weight);
-	  if(dopolarization){
-	    histos["SR_JESdown_"+thissampleR]->Fill(mStop,mLSP,SR,weight);
-	    histos["SR_JESdown_"+thissampleL]->Fill(mStop,mLSP,SR,weight);
+	if(JES==-1){
+	  if(SR  >0) {
+	    histos["SR_JESdown_"+thesample]->Fill(mStop,mLSP,SR,weight);
 	  }
 	}
-      }
-
+      }//thesample
 
     }//event loop
   
@@ -426,6 +356,20 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
     cout << Form( "ERROR: number of events from files (%d) is not equal to total number of events (%d)", nEventsChain, nEventsTotal ) << endl;
   }
 
+  //zero out negative entries
+  for(map<string,TH1F*>::iterator h=    histos.begin(); h!=    histos.end();++h){
+    for(int jx = 1; jx<=h->second->GetNbinsX(); ++jx){
+      for(int jy = 1; jy<=h->second->GetNbinsY(); ++jy){
+	for(int jz = 1; jz<=h->second->GetNbinsY(); ++jz){
+	  if(h->second->GetBinContent(jx,jy,jz)<0){
+	    h->second->SetBinContent(jx,jy,jz,0);
+	    h->second->SetBinError(jx,jy,jz,0);
+	  }
+	}
+      }
+    }
+  }
+  
   string filename;
   filename = "rootfiles/CheckHistos_"+samplename+".root";
   TFile *ff = new TFile(filename.c_str(),"RECREATE");
@@ -504,6 +448,20 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
     f->Close();
     cout << "Saved histos in " << f->GetName() << endl;
   }
+  //finally store lepsplit histos
+  filename = "rootfiles/Histos_"+samplename+"_lepbinned.root";
+  TFile *fl = new TFile(filename.c_str(),"RECREATE");
+  fl->cd();
+  for(unsigned int i = 0; i<histonames.size(); ++i){
+    for(unsigned int j = 1; j<Nthissample; ++j){
+      string mapname = histonames[i] + "_" + thissample[j];
+      string savename = histonames[i] + "_" + sampleext[j];//using this we can simply hadd samples
+      histos[mapname]->Write(savename.c_str(),TObject::kOverwrite);
+    }
+  }
+  //for(map<string,TH1F*>::iterator h=    histos.begin(); h!=    histos.end();++h) h->second->Write();//rename sample - don't use this
+  fl->Close();
+  cout << "Saved histos in " << fl->GetName() << endl;
 
   // return
   bmark->Stop("benchmark");

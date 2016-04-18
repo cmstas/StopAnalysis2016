@@ -4,6 +4,7 @@
 . haddJES.sh NonZRare
 . haddJES.sh Zinv
 . haddJES.sh WJets
+. haddJES.sh Rest
 #. haddJES.sh Data #Data has no JES
 . haddJES.sh T2tt
 . haddJES.sh T2tt_lefthanded

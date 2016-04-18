@@ -31,5 +31,9 @@ The latter runs on data / SM-MC, the former on signal.
 They are separated as signal has 3 dimensions (mStop,mLSP,SR),
 while SM/data has only one SR.
 
-Finally, a small helper script HaddJES.sh / HaddAllJES.sh does
-hadd of the output files with standard JES, and JES up/down (for JES uncertainty).
+Finally, a small helper script haddJES.sh / haddAllJES.sh does
+hadd of the output files with standard JES, and JES up/down (for JES
+uncertainty).
+A similar helper script haddSMLeps.sh adds the lepton-binned
+histograms ("eq1l,ge2l,Znunu,1ltop,1lnottop,1lW,1lnotW") for all
+SM samples.

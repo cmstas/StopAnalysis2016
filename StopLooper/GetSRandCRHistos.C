@@ -146,18 +146,23 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
   histonames.push_back("CR0b_HFXsecup");
   histonames.push_back("CR0b_HFXsecdown");
 
+  const unsigned int Nthissample = 8;
+  string thissample[Nthissample] = {samplename,samplename + "_1ltop",samplename + "_1lnottop",samplename + "_1lW",samplename + "_1lnotW",samplename + "_eq1l",samplename + "_ge2l",samplename + "_Znunu"};
+  string sampleext[Nthissample] = {"","1ltop","1lnottop","1lW","1lnotW","eq1l","ge2l","Znunu"};
+  bool passsample[Nthissample]={true,false,false,false,false,false,false,false};
   //currently we have SR and CR histograms bins - in future, might have multiple
   //to keep name short, do use SR bins, and not the binning variables
   string ttbar = "TTbar";
   for(unsigned int i = 0; i<histonames.size(); ++i){
     string mysample = samplename;
-    for(unsigned int j = 0; j<2; ++j){
+    for(unsigned int j = 0; j<Nthissample+1; ++j){
       //split ttbar into 1l,2l. Safely can drop 0l
-      if(samplename.find(ttbar)!=string::npos){
-	if(j==0)      mysample = samplename + "2l";
-	else if(j==1) mysample = samplename + "1l";
+      if(samplename.find(ttbar)!=string::npos){//check if we want to expand this
+	if(j==0)      mysample = thissample[0] + "2l";
+	else if(j==1) mysample = thissample[0] + "1l";
       }
       else if(j==1) continue;//no need to split other samples
+      if(j>=2) mysample = thissample[j-1];
       //adding "mysample" to histogram name is only temporary for bookkeeping purposes
       //in the end all histograms will be separated into separate rootfiles, and histogram names
       //will be only "histonames[i]"
@@ -264,6 +269,7 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
       double weight = rawweight;
       if( !tas::is_data() ) weight *= BSFweight;
       //double weight = rawweight*BSFweight*tas::weight_lepSF();//not yet in babies
+      if(event==0) cout << "weight " << weight << " nEvents " << nEventsTree << " filename " << currentFile->GetTitle() << endl;
 
       //get SR and CR bins
       if(StF::isSignalOrControlRegion()==false) continue;
@@ -282,12 +288,27 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
       }
 
       //the sample name is actually only important for ttbar, else the TFile name would be enough
-      string thissample = samplename;
-      if(samplename=="TTbar"){
-	if(tas::is2lep() ) thissample = "TTbar2l";
-	else if(tas::is1lepFromTop() ) thissample = "TTbar1l";
+      thissample[0] = samplename;
+      //extra treatment for ttbar
+      if(samplename.find(ttbar)!=string::npos){//check if we want to expand this
+	if(tas::is2lep() ) thissample[0] = "TTbar2l";
+	else if(tas::is1lepFromTop() ) thissample[0] = "TTbar1l";
 	else continue;//drop hadronic ttbar
       }
+      //lepton splitting
+      if(tas::is1lep() && tas::is1lepFromTop() ) { passsample[1] =  true; passsample[2] = false; }//is1lep needed in case of Znunu events
+      else if(tas::is1lep() )                    { passsample[1] = false; passsample[2] =  true; }
+      else                                       { passsample[1] = false; passsample[2] = false; }
+      if(tas::is1lep() && tas::is1lepFromW()   ) { passsample[3] =  true; passsample[4] = false; }
+      else if(tas::is1lep() )                    { passsample[3] = false; passsample[4] =  true; }
+      else                                       { passsample[3] = false; passsample[4] = false; }
+      if(tas::is1lep() )    passsample[5] = true;
+      else                  passsample[5] = false;
+      if(tas::is2lep() )    passsample[6] = true;
+      else                  passsample[6] = false;
+      if(tas::isZtoNuNu() ) passsample[7] = true;
+      else                  passsample[7] = false;
+      
       //get HF
       bool isWHF = false;
       if(samplename=="WJets"){
@@ -355,7 +376,7 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
 	BSFLup   = tas::weight_btagsf_light_UP()/tas::weight_btagsf()*BSFnorm/BSFnormHup;
 	BSFHdown = tas::weight_btagsf_heavy_DN()/tas::weight_btagsf()*BSFnorm/BSFnormHup;
 	BSFLdown = tas::weight_btagsf_light_DN()/tas::weight_btagsf()*BSFnorm/BSFnormHup;
-	if(thissample!="tW"){//apparently tW does not have Q2 variations
+	if(samplename!="tW"){//apparently tW does not have Q2 variations
 	  muRFup   = tas::genweights().at(4)/tas::genweights().at(0)*muRFnorm/muRFnormup;
 	  muRFdown = tas::genweights().at(8)/tas::genweights().at(0)*muRFnorm/muRFnormdown;
 	} else {
@@ -364,105 +385,108 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
 	}
       }
       //now I got everything - fill histograms
-      if(abs(JES)!=1){
-	if(SR>0){
-	  histos["SR_yield_"  +thissample]->Fill(SR,weight);
-	  histos["SR2l_yield_"+thissample]->Fill(SR,weight2l);
-	  histos["SR0b_yield_"+thissample]->Fill(SR,weight0b);
+      for(unsigned int j = 0; j<Nthissample; ++j){
+	if(!passsample[j]) continue;//not that this is true for j==0 always
+	if(abs(JES)!=1){
+	  if(SR>0){
+	    histos["SR_yield_"  +thissample[j] ]->Fill(SR,weight);
+	    histos["SR2l_yield_"+thissample[j] ]->Fill(SR,weight2l);
+	    histos["SR0b_yield_"+thissample[j] ]->Fill(SR,weight0b);
 
-	  histos["SR2l_K34up_"     +thissample]->Fill(SR,weight2l*(K+Kerr)/K);
-	  histos["SR2l_K34down_"   +thissample]->Fill(SR,weight2l*(K-Kerr)/K);
-	  histos["SR2l_muRFup_"    +thissample]->Fill(SR,weight2l*muRFup);
-	  histos["SR2l_muRFdown_"  +thissample]->Fill(SR,weight2l*muRFdown);
-	  //if(tas::weight_lepSF()>0){//current babies miss this branch
-	  //histos["SR2l_LepEffup_"  +thissample]->Fill(SR,weight2l*tas::weight_lepSF_up()/tas::weight_lepSF());
-	  //histos["SR2l_LepEffdown_"+thissample]->Fill(SR,weight2l*tas::weight_lepSF_down()/tas::weight_lepSF()));
-	  //}
-	  histos["SR2l_BHFup_"     +thissample]->Fill(SR,weight2l*BSFHup);
-	  histos["SR2l_BHFdown_"   +thissample]->Fill(SR,weight2l*BSFHdown);
-	  histos["SR2l_BLFup_"     +thissample]->Fill(SR,weight2l*BSFLup);
-	  histos["SR2l_BLFdown_"   +thissample]->Fill(SR,weight2l*BSFLdown);
-	  histos["SR2l_METresup_"  +thissample]->Fill(SR,weight2l*(metres+metreserr)/metres);
-	  histos["SR2l_METresdown_"+thissample]->Fill(SR,weight2l*(metres-metreserr)/metres);
-	  histos["SR2l_diNuPtup_"  +thissample]->Fill(SR,weight2l*(dinupt+dinupterr)/dinupt);
-	  histos["SR2l_diNuPtdown_"+thissample]->Fill(SR,weight2l*(dinupt-dinupterr)/dinupt);
+	    histos["SR2l_K34up_"     +thissample[j] ]->Fill(SR,weight2l*(K+Kerr)/K);
+	    histos["SR2l_K34down_"   +thissample[j] ]->Fill(SR,weight2l*(K-Kerr)/K);
+	    histos["SR2l_muRFup_"    +thissample[j] ]->Fill(SR,weight2l*muRFup);
+	    histos["SR2l_muRFdown_"  +thissample[j] ]->Fill(SR,weight2l*muRFdown);
+	    //if(tas::weight_lepSF()>0){//current babies miss this branch
+	    //histos["SR2l_LepEffup_"  +thissample[j] ]->Fill(SR,weight2l*tas::weight_lepSF_up()/tas::weight_lepSF());
+	    //histos["SR2l_LepEffdown_"+thissample[j] ]->Fill(SR,weight2l*tas::weight_lepSF_down()/tas::weight_lepSF()));
+	    //}
+	    histos["SR2l_BHFup_"     +thissample[j] ]->Fill(SR,weight2l*BSFHup);
+	    histos["SR2l_BHFdown_"   +thissample[j] ]->Fill(SR,weight2l*BSFHdown);
+	    histos["SR2l_BLFup_"     +thissample[j] ]->Fill(SR,weight2l*BSFLup);
+	    histos["SR2l_BLFdown_"   +thissample[j] ]->Fill(SR,weight2l*BSFLdown);
+	    histos["SR2l_METresup_"  +thissample[j] ]->Fill(SR,weight2l*(metres+metreserr)/metres);
+	    histos["SR2l_METresdown_"+thissample[j] ]->Fill(SR,weight2l*(metres-metreserr)/metres);
+	    histos["SR2l_diNuPtup_"  +thissample[j] ]->Fill(SR,weight2l*(dinupt+dinupterr)/dinupt);
+	    histos["SR2l_diNuPtdown_"+thissample[j] ]->Fill(SR,weight2l*(dinupt-dinupterr)/dinupt);
 
-	  histos["SR0b_Wwidthup_"  +thissample]->Fill(SR,weight0b*(1.+Wwidtherr));
-	  histos["SR0b_Wwidthdown_"+thissample]->Fill(SR,weight0b*(1.-Wwidtherr));
-	  histos["SR0b_HFXsecup_"  +thissample]->Fill(SR,weight0b*(1.+WHFxserr));//WHFxserr=0 if no HF
-	  histos["SR0b_HFXsecdown_"+thissample]->Fill(SR,weight0b*(1.-WHFxserr));//WHFxserr=0 if no HF
-	  histos["SR0b_muRFup_"    +thissample]->Fill(SR,weight0b*muRFup);
-	  histos["SR0b_muRFdown_"  +thissample]->Fill(SR,weight0b*muRFdown);
-	  //if(tas::weight_lepSF()>0){//current babies miss this branch
-	  //histos["SR0b_LepEffup_"  +thissample]->Fill(SR,weight0b*tas::weight_lepSF_up()/tas::weight_lepSF());
-	  //histos["SR0b_LepEffdown_"+thissample]->Fill(SR,weight0b*tas::weight_lepSF_down()/tas::weight_lepSF()));
-	  //}
-	  histos["SR0b_BHFup_"     +thissample]->Fill(SR,weight0b*BSFHup);
-	  histos["SR0b_BHFdown_"   +thissample]->Fill(SR,weight0b*BSFHdown);
-	  histos["SR0b_BLFup_"     +thissample]->Fill(SR,weight0b*BSFLup);
-	  histos["SR0b_BLFdown_"   +thissample]->Fill(SR,weight0b*BSFLdown);
-	  histos["SR0b_METresup_"  +thissample]->Fill(SR,weight0b*(metres+metreserr)/metres);
-	  histos["SR0b_METresdown_"+thissample]->Fill(SR,weight0b*(metres-metreserr)/metres);
-	  histos["SR0b_NuPtup_"    +thissample]->Fill(SR,weight0b*(1.+nupterr));
-	  histos["SR0b_NuPtdown_"  +thissample]->Fill(SR,weight0b*(1.-nupterr));
+	    histos["SR0b_Wwidthup_"  +thissample[j] ]->Fill(SR,weight0b*(1.+Wwidtherr));
+	    histos["SR0b_Wwidthdown_"+thissample[j] ]->Fill(SR,weight0b*(1.-Wwidtherr));
+	    histos["SR0b_HFXsecup_"  +thissample[j] ]->Fill(SR,weight0b*(1.+WHFxserr));//WHFxserr=0 if no HF
+	    histos["SR0b_HFXsecdown_"+thissample[j] ]->Fill(SR,weight0b*(1.-WHFxserr));//WHFxserr=0 if no HF
+	    histos["SR0b_muRFup_"    +thissample[j] ]->Fill(SR,weight0b*muRFup);
+	    histos["SR0b_muRFdown_"  +thissample[j] ]->Fill(SR,weight0b*muRFdown);
+	    //if(tas::weight_lepSF()>0){//current babies miss this branch
+	    //histos["SR0b_LepEffup_"  +thissample[j] ]->Fill(SR,weight0b*tas::weight_lepSF_up()/tas::weight_lepSF());
+	    //histos["SR0b_LepEffdown_"+thissample[j] ]->Fill(SR,weight0b*tas::weight_lepSF_down()/tas::weight_lepSF()));
+	    //}
+	    histos["SR0b_BHFup_"     +thissample[j] ]->Fill(SR,weight0b*BSFHup);
+	    histos["SR0b_BHFdown_"   +thissample[j] ]->Fill(SR,weight0b*BSFHdown);
+	    histos["SR0b_BLFup_"     +thissample[j] ]->Fill(SR,weight0b*BSFLup);
+	    histos["SR0b_BLFdown_"   +thissample[j] ]->Fill(SR,weight0b*BSFLdown);
+	    histos["SR0b_METresup_"  +thissample[j] ]->Fill(SR,weight0b*(metres+metreserr)/metres);
+	    histos["SR0b_METresdown_"+thissample[j] ]->Fill(SR,weight0b*(metres-metreserr)/metres);
+	    histos["SR0b_NuPtup_"    +thissample[j] ]->Fill(SR,weight0b*(1.+nupterr));
+	    histos["SR0b_NuPtdown_"  +thissample[j] ]->Fill(SR,weight0b*(1.-nupterr));
+	  }
+	  if(CR2l>0){
+	    histos["CR2l_yield_raw_"+thissample[j] ]->Fill(CR2l,weight);
+	    histos["CR2l_yield_"    +thissample[j] ]->Fill(CR2l,weight2l);
+
+	    histos["CR2l_K34up_"     +thissample[j] ]->Fill(CR2l,weight2l*(K+Kerr)/K);
+	    histos["CR2l_K34down_"   +thissample[j] ]->Fill(CR2l,weight2l*(K-Kerr)/K);
+	    histos["CR2l_muRFup_"    +thissample[j] ]->Fill(CR2l,weight2l*muRFup);
+	    histos["CR2l_muRFdown_"  +thissample[j] ]->Fill(CR2l,weight2l*muRFdown);
+	    //if(tas::weight_lepSF()>0){//current babies miss this branch
+	    //histos["CR2l_LepEffup_"  +thissample[j] ]->Fill(CR0b,weight2l*tas::weight_lepSF_up()/tas::weight_lepSF());
+	    //histos["CR2l_LepEffdown_"+thissample[j] ]->Fill(CR0b,weight2l*tas::weight_lepSF_down()/tas::weight_lepSF()));
+	    //}
+	    histos["CR2l_BHFup_"     +thissample[j] ]->Fill(CR2l,weight2l*BSFHup);
+	    histos["CR2l_BHFdown_"   +thissample[j] ]->Fill(CR2l,weight2l*BSFHdown);
+	    histos["CR2l_BLFup_"     +thissample[j] ]->Fill(CR2l,weight2l*BSFLup);
+	    histos["CR2l_BLFdown_"   +thissample[j] ]->Fill(CR2l,weight2l*BSFLdown);
+	    histos["CR2l_METresup_"  +thissample[j] ]->Fill(CR2l,weight2l*(metres+metreserr)/metres);
+	    histos["CR2l_METresdown_"+thissample[j] ]->Fill(CR2l,weight2l*(metres-metreserr)/metres);
+	    histos["CR2l_diNuPtup_"  +thissample[j] ]->Fill(CR2l,weight2l*(dinupt+dinupterr)/dinupt);
+	    histos["CR2l_diNuPtdown_"+thissample[j] ]->Fill(CR2l,weight2l*(dinupt-dinupterr)/dinupt);
+	  }
+	  if(CR0b>0){
+	    histos["CR0b_yield_raw_"+thissample[j] ]->Fill(CR0b,weight);
+	    histos["CR0b_yield_"    +thissample[j] ]->Fill(CR0b,weight0b);
+
+	    histos["CR0b_Wwidthup_"  +thissample[j] ]->Fill(CR0b,weight0b*(1.+Wwidtherr));
+	    histos["CR0b_Wwidthdown_"+thissample[j] ]->Fill(CR0b,weight0b*(1.-Wwidtherr));
+	    histos["CR0b_HFXsecup_"  +thissample[j] ]->Fill(CR0b,weight0b*(1.+WHFxserr));//WHFxserr=0 if no HF
+	    histos["CR0b_HFXsecdown_"+thissample[j] ]->Fill(CR0b,weight0b*(1.-WHFxserr));//WHFxserr=0 if no HF
+	    histos["CR0b_muRFup_"    +thissample[j] ]->Fill(CR0b,weight0b*muRFup);
+	    histos["CR0b_muRFdown_"  +thissample[j] ]->Fill(CR0b,weight0b*muRFdown);
+	    //if(tas::weight_lepSF()>0){//current babies miss this branch
+	    //histos["CR0b_LepEffup_"  +thissample[j] ]->Fill(CR0b,weight0b*tas::weight_lepSF_up()/tas::weight_lepSF());
+	    //histos["CR0b_LepEffdown_"+thissample[j] ]->Fill(CR0b,weight0b*tas::weight_lepSF_down()/tas::weight_lepSF()));
+	    //}
+	    histos["CR0b_BHFup_"     +thissample[j] ]->Fill(CR0b,weight0b*BSFHup);
+	    histos["CR0b_BHFdown_"   +thissample[j] ]->Fill(CR0b,weight0b*BSFHdown);
+	    histos["CR0b_BLFup_"     +thissample[j] ]->Fill(CR0b,weight0b*BSFLup);
+	    histos["CR0b_BLFdown_"   +thissample[j] ]->Fill(CR0b,weight0b*BSFLdown);
+	    histos["CR0b_METresup_"  +thissample[j] ]->Fill(CR0b,weight0b*(metres+metreserr)/metres);
+	    histos["CR0b_METresdown_"+thissample[j] ]->Fill(CR0b,weight0b*(metres-metreserr)/metres);
+	    histos["CR0b_NuPtup_"    +thissample[j] ]->Fill(CR0b,weight0b*(1.+nupterr));
+	    histos["CR0b_NuPtdown_"  +thissample[j] ]->Fill(CR0b,weight0b*(1.-nupterr));
+	  }
+	}//jes!=1
+	if(JES==1){
+	  if(SR  >0) histos["SR2l_JESup_"  +thissample[j] ]->Fill(SR  ,weight2l);
+	  if(SR  >0) histos["SR0b_JESup_"  +thissample[j] ]->Fill(SR  ,weight0b);
+	  if(CR2l>0) histos["CR2l_JESup_"  +thissample[j] ]->Fill(CR2l,weight2l);
+	  if(CR0b>0) histos["CR0b_JESup_"  +thissample[j] ]->Fill(CR0b,weight0b);
 	}
-	if(CR2l>0){
-	  histos["CR2l_yield_raw_"+thissample]->Fill(CR2l,weight);
-	  histos["CR2l_yield_"    +thissample]->Fill(CR2l,weight2l);
-
-	  histos["CR2l_K34up_"     +thissample]->Fill(CR2l,weight2l*(K+Kerr)/K);
-	  histos["CR2l_K34down_"   +thissample]->Fill(CR2l,weight2l*(K-Kerr)/K);
-	  histos["CR2l_muRFup_"    +thissample]->Fill(CR2l,weight2l*muRFup);
-	  histos["CR2l_muRFdown_"  +thissample]->Fill(CR2l,weight2l*muRFdown);
-	  //if(tas::weight_lepSF()>0){//current babies miss this branch
-	  //histos["CR2l_LepEffup_"  +thissample]->Fill(CR0b,weight2l*tas::weight_lepSF_up()/tas::weight_lepSF());
-	  //histos["CR2l_LepEffdown_"+thissample]->Fill(CR0b,weight2l*tas::weight_lepSF_down()/tas::weight_lepSF()));
-	  //}
-	  histos["CR2l_BHFup_"     +thissample]->Fill(CR2l,weight2l*BSFHup);
-	  histos["CR2l_BHFdown_"   +thissample]->Fill(CR2l,weight2l*BSFHdown);
-	  histos["CR2l_BLFup_"     +thissample]->Fill(CR2l,weight2l*BSFLup);
-	  histos["CR2l_BLFdown_"   +thissample]->Fill(CR2l,weight2l*BSFLdown);
-	  histos["CR2l_METresup_"  +thissample]->Fill(CR2l,weight2l*(metres+metreserr)/metres);
-	  histos["CR2l_METresdown_"+thissample]->Fill(CR2l,weight2l*(metres-metreserr)/metres);
-	  histos["CR2l_diNuPtup_"  +thissample]->Fill(CR2l,weight2l*(dinupt+dinupterr)/dinupt);
-	  histos["CR2l_diNuPtdown_"+thissample]->Fill(CR2l,weight2l*(dinupt-dinupterr)/dinupt);
+	if(JES==-1){
+	  if(SR  >0) histos["SR2l_JESdown_"    +thissample[j] ]->Fill(SR  ,weight2l);
+	  if(SR  >0) histos["SR0b_JESdown_"    +thissample[j] ]->Fill(SR  ,weight0b);
+	  if(CR2l>0) histos["CR2l_JESdown_"    +thissample[j] ]->Fill(CR2l,weight2l);
+	  if(CR0b>0) histos["CR0b_JESdown_"    +thissample[j] ]->Fill(CR0b,weight0b);
 	}
-	if(CR0b>0){
-	  histos["CR0b_yield_raw_"+thissample]->Fill(CR0b,weight);
-	  histos["CR0b_yield_"    +thissample]->Fill(CR0b,weight0b);
-
-	  histos["CR0b_Wwidthup_"  +thissample]->Fill(CR0b,weight0b*(1.+Wwidtherr));
-	  histos["CR0b_Wwidthdown_"+thissample]->Fill(CR0b,weight0b*(1.-Wwidtherr));
-	  histos["CR0b_HFXsecup_"  +thissample]->Fill(CR0b,weight0b*(1.+WHFxserr));//WHFxserr=0 if no HF
-	  histos["CR0b_HFXsecdown_"+thissample]->Fill(CR0b,weight0b*(1.-WHFxserr));//WHFxserr=0 if no HF
-	  histos["CR0b_muRFup_"    +thissample]->Fill(CR0b,weight0b*muRFup);
-	  histos["CR0b_muRFdown_"  +thissample]->Fill(CR0b,weight0b*muRFdown);
-	  //if(tas::weight_lepSF()>0){//current babies miss this branch
-	  //histos["CR0b_LepEffup_"  +thissample]->Fill(CR0b,weight0b*tas::weight_lepSF_up()/tas::weight_lepSF());
-	  //histos["CR0b_LepEffdown_"+thissample]->Fill(CR0b,weight0b*tas::weight_lepSF_down()/tas::weight_lepSF()));
-	  //}
-	  histos["CR0b_BHFup_"     +thissample]->Fill(CR0b,weight0b*BSFHup);
-	  histos["CR0b_BHFdown_"   +thissample]->Fill(CR0b,weight0b*BSFHdown);
-	  histos["CR0b_BLFup_"     +thissample]->Fill(CR0b,weight0b*BSFLup);
-	  histos["CR0b_BLFdown_"   +thissample]->Fill(CR0b,weight0b*BSFLdown);
-	  histos["CR0b_METresup_"  +thissample]->Fill(CR0b,weight0b*(metres+metreserr)/metres);
-	  histos["CR0b_METresdown_"+thissample]->Fill(CR0b,weight0b*(metres-metreserr)/metres);
-	  histos["CR0b_NuPtup_"    +thissample]->Fill(CR0b,weight0b*(1.+nupterr));
-	  histos["CR0b_NuPtdown_"  +thissample]->Fill(CR0b,weight0b*(1.-nupterr));
-	}
-      }//jes!=1
-      if(JES==1){
-	if(SR  >0) histos["SR2l_JESup_"  +thissample]->Fill(SR  ,weight2l);
-	if(SR  >0) histos["SR0b_JESup_"  +thissample]->Fill(SR  ,weight0b);
-	if(CR2l>0) histos["CR2l_JESup_"  +thissample]->Fill(CR2l,weight2l);
-	if(CR0b>0) histos["CR0b_JESup_"  +thissample]->Fill(CR0b,weight0b);
-      }
-      if(JES==-1){
-	if(SR  >0) histos["SR2l_JESdown_"    +thissample]->Fill(SR  ,weight2l);
-	if(SR  >0) histos["SR0b_JESdown_"    +thissample]->Fill(SR  ,weight0b);
-	if(CR2l>0) histos["CR2l_JESdown_"    +thissample]->Fill(CR2l,weight2l);
-	if(CR0b>0) histos["CR0b_JESdown_"    +thissample]->Fill(CR0b,weight0b);
-      }
+      }//Nthissample
 
     }//event loop
   
@@ -474,7 +498,17 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
   if ( nEventsChain != nEventsTotal ) {
     cout << Form( "ERROR: number of events from files (%d) is not equal to total number of events (%d)", nEventsChain, nEventsTotal ) << endl;
   }
-  
+
+  //zero out negative entries
+  for(map<string,TH1F*>::iterator h=    histos.begin(); h!=    histos.end();++h){
+    for(int jx = 1; jx<=h->second->GetNbinsX(); ++jx){
+      if(h->second->GetBinContent(jx)<0){
+	h->second->SetBinContent(jx,0);
+	h->second->SetBinError(jx,0);
+      }
+    }
+  }
+
   //save histograms
   if(samplename.find(ttbar)!=string::npos){
     string filename = "rootfiles/SRandCRHistos_"+samplename+"2l.root";
@@ -509,7 +543,20 @@ int ScanChain( TChain* chain, string samplename, int JES = 0, bool fast = true, 
     f->Close();
     cout << "Saved histos in " << f->GetName() << endl;
   }
-
+  //finally store lepsplit histos
+  string filename = "rootfiles/SRandCRHistos_"+samplename+"_lepbinned.root";
+  TFile *fl = new TFile(filename.c_str(),"RECREATE");
+  fl->cd();
+  for(unsigned int i = 0; i<histonames.size(); ++i){
+    for(unsigned int j = 1; j<Nthissample; ++j){
+      string mapname = histonames[i] + "_" + thissample[j];
+      string savename = histonames[i] + "_" + sampleext[j];//using this we can simply hadd samples
+      histos[mapname]->Write(savename.c_str(),TObject::kOverwrite);
+    }
+  }
+  //for(map<string,TH1F*>::iterator h=    histos.begin(); h!=    histos.end();++h) h->second->Write();//rename sample - don't use this
+  fl->Close();
+  cout << "Saved histos in " << fl->GetName() << endl;
   // return
   bmark->Stop("benchmark");
   cout << endl;
