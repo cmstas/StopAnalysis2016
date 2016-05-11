@@ -1,0 +1,24 @@
+# Ignore compiled code
+*.o
+*.so
+*.d
+*rdict.pcm
+#Ignore ~ files
+*~
+#ignore datacards and its directories
+*.txt
+datacards/
+rootfiles/
+*.root
+!xsec_stop_13TeV.root
+#Ignore stupid combine files
+roostats*
+Signif_*
+Limits_*
+
+# Ignore screen files
+.display.screen
+
+# Ignore linkDef stuff
+LinkDef.cc
+LinkDef_out.*
