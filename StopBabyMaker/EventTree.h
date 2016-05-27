@@ -27,6 +27,11 @@ public:
  
     void Reset ();
     void SetBranches (TTree* tree);
+    void SetZllBranches (TTree* tree);
+    void SetPhotonBranches (TTree* tree);
+    void SetMETFilterBranches (TTree* tree);
+    void SetExtraVariablesBranches (TTree* tree);
+    void SetSecondLepBranches (TTree* tree);
     void SetAliases (TTree* tree) const;
     void FillCommon (const std::string &root_file_name = "");
     void SetMetFilterEvents(); 
@@ -177,7 +182,8 @@ public:
     float mass_lsp;
     float mass_chargino;
     float mass_stop;
-        
+    float mass_gluino;       
+ 
     //gen met
     float genmet;
     float genmet_phi;
@@ -198,14 +204,18 @@ public:
     //int  HLT_HT900;
     int HLT_SingleMu; 
     int HLT_SingleEl;
+    int HLT_MET;
+    int HLT_DiEl;
+    int HLT_DiMu;
+    int HLT_Photon;
+    int HLT_MuE;
+
     int HLT_MET170;
     int HLT_MET120Btag;      
     int HLT_MET120Mu5;
     //new
     int HLT_HT350MET120;
-    int HLT_DiEl;
     int HLT_DiEl_17_12;
-    int HLT_DiMu;
     int HLT_Mu8El17;
     int HLT_Mu8El23;
     int HLT_Mu17El12;

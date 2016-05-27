@@ -22,6 +22,9 @@ public:
 
     void Reset ();
     void SetBranches (TTree* tree);
+    void SetBranches_electronID(TTree* tree);
+    void SetBranches_Iso(TTree* tree);
+    void SetBranches_SynchTools (TTree* tree);
     void SetAliases (TTree* tree) const;
     void FillCommon (int id, int idx);
 
@@ -34,16 +37,12 @@ public:
     // lepton reco info
     LorentzVector p4;
     //LorentzVector pfp4;
+    int pdgid;
     float pt;
     float eta;
     float phi;
     float mass; 
-    bool  is_mu;
-    bool  is_el;
-    //int is_fromw;
     int   charge;
-    int   pdgid;
-    int   type;
 
     int isFrom;
 
@@ -61,6 +60,7 @@ public:
     bool  conversionVeto;
     float etaSC ;
     float ChiSqr;
+    float eoverpin; 
 
     float chiso;
     float nhiso;
@@ -76,46 +76,55 @@ public:
     float miniRelIsoEA;
     
     float MiniIso;
-
-    float ip3d;
-    float ip3derr;
-    bool  is_pfmu;
+    float relIso;
 
     //
     // lepton gen info
     //
     LorentzVector mcp4;
-    int mcid;
+    int mc_motherid;
+
+    bool passVeto;    //currently contains miniIso
+    bool passLooseID;
+    bool passMediumID;//currently contains miniIso
+    bool passTightID;
+
+  //  int mus_pfcands_idx;
+    int production_type;
+/*obsolete
+    bool  is_mu;
+    bool  is_el;
+    int   type;
+    float ip3d;
+    float ip3derr;
+    bool  is_pfmu;
+
     int mcstatus;
     int mcidx;
     int mc_motherid;
     int mc_motheridx;
-    int mc3dr;    
-    int mc3id;     
-    int mc3idx;     
-    int mc3motherid; 
+    int mc3dr;
+    int mc3id;
+    int mc3idx;
+    int mc3motherid;
     int mc3motheridx;
+
     // electron specific info
     //
     bool is_eleid_loose;
     bool is_eleid_medium;
     bool is_eleid_tight;
-    float eoverpin; 
     bool is_phys14_loose_noIso;
     bool is_phys14_medium_noIso;
     bool is_phys14_tight_noIso;
     //veci els_pfcands_idx;
     //
     // muon specific info
-    bool is_muoid_medium; 
+    bool is_muoid_medium;
     bool is_muoid_loose;
     bool is_muoid_tight;
+*/
 
-    bool passVeto;    //currently contains miniIso
-    bool passMediumID;//currently contains miniIso
-
-  //  int mus_pfcands_idx;
-    int production_type;
 };
 
 #endif

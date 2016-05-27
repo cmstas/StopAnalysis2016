@@ -31,6 +31,12 @@ public:
     void deleteBtagSFTool();
     void InitBtagSFTool( TH2D* h_btag_eff_b, TH2D* h_btag_eff_c, TH2D* h_btag_eff_udsg, bool isFastsim_);
     void SetBranches (TTree* tree);
+    void SetAK4Branches_Other(TTree* tree);
+    void SetAK4Branches_EF(TTree* tree);
+    void SetAK4Branches_SynchTools (TTree* tree);
+    void SetAK4Branches_Overleps (TTree* tree);
+    void SetAK8Branches (TTree* tree);
+    void SetAK4Branches (TTree* tree);
     void SetAliases (TTree* tree);
     void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_err_heavy_UP, float & btagprob_err_heavy_DN,float & btagprob_err_light_UP, float & btagprob_err_light_DN ,unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim);
     float getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFastsim);

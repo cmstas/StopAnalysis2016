@@ -91,28 +91,32 @@ babyMaker::babyMaker(){
    jets = JetTree();
    Taus = TauTree();
    Tracks = IsoTracksTree();
+   gen_leps = GenParticleTree("leps_");
+   gen_nus = GenParticleTree("nus_");
+   gen_qs  = GenParticleTree("qs_");
+   gen_bosons = GenParticleTree("bosons_");
+   gen_susy = GenParticleTree("susy_");
+
+//obsolete
+//   gen_tops = GenParticleTree("ts_");  //merged into gen_qs   
    //gen_els = GenParticleTree("els_");
    //gen_mus = GenParticleTree("mus_");
    //gen_taus = GenParticleTree("taus_");
-   gen_leps = GenParticleTree("leps_");
    //gen_nuels = GenParticleTree("nuels_");
    //gen_numus = GenParticleTree("numus_");
    //gen_nutaus = GenParticleTree("nutaus_");
-   gen_nus = GenParticleTree("nus_");
-   gen_tops = GenParticleTree("ts_");
    //gen_bs  = GenParticleTree("bs_");
    //gen_cs  = GenParticleTree("cs_");
-   gen_qs  = GenParticleTree("qs_");
    //gen_glus = GenParticleTree("glus_");
-   gen_bosons = GenParticleTree("bosons_");
    //gen_ws  = GenParticleTree("ws_");
    //gen_zs  = GenParticleTree("zs_");
    //gen_phs = GenParticleTree("phs_");
    //gen_hs  = GenParticleTree("hs_");
-   gen_susy = GenParticleTree("susy_");
+
+
 }
 
-void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down,   bool applyLeptonSFs, bool applyVetoLeptonSFs, bool applyBtagSFs, bool isFastsim){
+void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down,   bool applyLeptonSFs, bool applyVetoLeptonSFs, bool applyBtagSFs, bool isFastsim,bool filltaus_, bool filltracks_, bool fillZll_, bool fillPhoton_,bool fillMETfilt_, bool fill2ndlep_, bool fillExtraEvtVar_, bool fillAK4EF_, bool fillAK4_Other_, bool fillOverleps_, bool fillAK4Synch_, bool fillElID_, bool fillIso_, bool fillLepSynch_){
 
   skim_nvtx            = nvtx;
   skim_met             = met;
@@ -152,6 +156,22 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
   skim_applyVetoLeptonSFs  = applyVetoLeptonSFs;
   skim_applyBtagSFs    = applyBtagSFs;
   skim_isFastsim       = isFastsim;
+
+  filltaus   = filltaus_;
+  filltracks   =filltracks_;
+  fillZll   =fillZll_;
+  fillPhoton   =fillPhoton_;
+  fillMETfilt   =fillMETfilt_;
+  fill2ndlep   =fill2ndlep_;
+  fillExtraEvtVar   =fillExtraEvtVar_;
+
+  fillAK4EF   =fillAK4EF_;
+  fillAK4_Other   =fillAK4_Other_;
+  fillOverleps   =fillOverleps_;
+  fillAK4Synch   =fillAK4Synch_;
+  fillElID   =fillElID_;
+  fillIso   =fillIso_;
+  fillLepSynch   =fillLepSynch_;
 }
 
 
@@ -165,29 +185,52 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   lep1.SetBranches(BabyTree);
   lep2.SetBranches(BabyTree);
   ph.SetBranches(BabyTree);
-  jets.SetBranches(BabyTree);
-  Taus.SetBranches(BabyTree);
-  Tracks.SetBranches(BabyTree);
+  jets.SetAK4Branches(BabyTree);
+//  Taus.SetBranches(BabyTree);
+//  Tracks.SetBranches(BabyTree);
+  gen_leps.SetBranches(BabyTree);
+  gen_nus.SetBranches(BabyTree);
+  gen_qs.SetBranches(BabyTree);
+  gen_bosons.SetBranches(BabyTree);
+  gen_susy.SetBranches(BabyTree);
+
+  //optional
+  if(filltaus)  Taus.SetBranches(BabyTree);
+  if(filltracks)  Tracks.SetBranches(BabyTree);
+
+  if(fillZll)  StopEvt.SetZllBranches(BabyTree);
+  if(fillPhoton) StopEvt.SetPhotonBranches(BabyTree);
+  if(fillMETfilt) StopEvt.SetMETFilterBranches(BabyTree);
+  if(fill2ndlep) StopEvt.SetExtraVariablesBranches(BabyTree);
+  if(fillExtraEvtVar) StopEvt.SetSecondLepBranches(BabyTree);
+ 
+  if(fillAK4EF)   jets.SetAK4Branches_EF(BabyTree);
+  if(fillAK4_Other)  jets.SetAK4Branches_Other(BabyTree);
+  if(fillOverleps)  jets.SetAK4Branches_Overleps(BabyTree);
+  if(fillAK4Synch)  jets.SetAK4Branches_SynchTools(BabyTree);
+  if(fillElID)  lep1.SetBranches_electronID(BabyTree);
+  if(fillIso)  lep1.SetBranches_Iso(BabyTree);
+  if(fillLepSynch)  lep1.SetBranches_SynchTools(BabyTree);
+  if(fillElID)  lep2.SetBranches_electronID(BabyTree);
+  if(fillIso)  lep2.SetBranches_Iso(BabyTree);
+  if(fillLepSynch)  lep2.SetBranches_SynchTools(BabyTree);
+
+   
+//obsolete
   //gen_els.SetBranches(BabyTree);
   //gen_mus.SetBranches(BabyTree);
   //gen_taus.SetBranches(BabyTree);
-  gen_leps.SetBranches(BabyTree);
   //gen_nuels.SetBranches(BabyTree);
   //gen_numus.SetBranches(BabyTree);
   //gen_nutaus.SetBranches(BabyTree);
-  gen_nus.SetBranches(BabyTree);
-  gen_tops.SetBranches(BabyTree);
+  //gen_tops.SetBranches(BabyTree);
   //gen_bs.SetBranches(BabyTree);
   //gen_cs.SetBranches(BabyTree);
-  gen_qs.SetBranches(BabyTree);
   //gen_glus.SetBranches(BabyTree);
   //gen_ws.SetBranches(BabyTree);
   //gen_zs.SetBranches(BabyTree);
   //gen_phs.SetBranches(BabyTree);
-  //gen_hs.SetBranches(BabyTree);
-  gen_bosons.SetBranches(BabyTree);
-  gen_susy.SetBranches(BabyTree);
-    
+  //gen_hs.SetBranches(BabyTree); 
 }
 
 void babyMaker::InitBabyNtuple(){
@@ -199,6 +242,14 @@ void babyMaker::InitBabyNtuple(){
   ph.Reset();
   Taus.Reset();
   Tracks.Reset();
+  
+  gen_leps.Reset();
+  gen_nus.Reset();
+  gen_qs.Reset();
+  gen_bosons.Reset();
+  gen_susy.Reset();
+
+//obsolete
   //gen_els.Reset();
   //gen_mus.Reset();
   //gen_taus.Reset();
@@ -215,13 +266,7 @@ void babyMaker::InitBabyNtuple(){
   //gen_phs.Reset();
   //gen_lsp.Reset();
   //gen_stop.Reset();
-  
-  gen_leps.Reset();
-  gen_nus.Reset();
-  gen_tops.Reset();
-  gen_qs.Reset();
-  gen_bosons.Reset();
-  gen_susy.Reset();
+  //gen_tops.Reset();
 } 
 
 
@@ -690,6 +735,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if(sparm_names().at(nsparm).Contains("mStop")) StopEvt.mass_stop = sparm_values().at(nsparm);
 	  if(sparm_names().at(nsparm).Contains("mCharg")) StopEvt.mass_chargino = sparm_values().at(nsparm);
 	  if(sparm_names().at(nsparm).Contains("mLSP")) StopEvt.mass_lsp = sparm_values().at(nsparm);
+          if(sparm_names().at(nsparm).Contains("mGl")) StopEvt.mass_gluino = sparm_values().at(nsparm);
 	}
 	//std::cout << "Got signal mass point mStop " << StopEvt.mass_stop << " mLSP " << StopEvt.mass_lsp << std::endl;
 	if(genps_weight()>0) histNEvts->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1);
@@ -774,49 +820,23 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //gen particles
       if (!evt_isRealData()){
 	for(unsigned int genx = 0; genx < genps_p4().size() ; genx++){
-	  //void GenParticleTree::FillCommon (int idx, int pdgid_=0, int pdgmotherid_=0, int status_=0)
-
-	  // Only keep first and last particles in a sequence
 	  if( genps_id().at(genx)==genps_id_simplemother().at(genx) && !genps_isLastCopy().at(genx) ) continue;
 
 	  if( genps_isHardProcess().at(genx) ||
 	      genps_fromHardProcessDecayed().at(genx) ||
 	      genps_fromHardProcessFinalState().at(genx) ||
-	      //genps_isMostlyLikePythia6Status3().at(genx) ||
 	      genps_isLastCopy().at(genx) ||
 	      genps_status().at(genx)==1 ){
      	    
 	    if( abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau) gen_leps.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_mu    ) gen_mus.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_tau   ) gen_taus.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_nue   ) gen_nuels.FillCommon(genx);            
 	    if( abs(genps_id().at(genx)) == pdg_numu || abs(genps_id().at(genx)) == pdg_nue || abs(genps_id().at(genx)) == pdg_nutau ) gen_nus.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_nutau ) gen_nutaus.FillCommon(genx);
-	    if( abs(genps_id().at(genx)) == pdg_t     ) gen_tops.FillCommon(genx);
-	    if( abs(genps_id().at(genx)) == pdg_b || abs(genps_id().at(genx)) == pdg_c || abs(genps_id().at(genx)) == pdg_s || abs(genps_id().at(genx)) == pdg_d ||abs(genps_id().at(genx)) == pdg_u   ) gen_qs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_c     ) gen_cs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_s     ) gen_qs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_d     ) gen_qs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_u     ) gen_qs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_g &&
-	    //    genps_p4().at(genx).Pt()>10.0         ) gen_glus.FillCommon(genx);
+	    if( abs(genps_id().at(genx)) == pdg_t || abs(genps_id().at(genx)) == pdg_b || abs(genps_id().at(genx)) == pdg_c || abs(genps_id().at(genx)) == pdg_s || abs(genps_id().at(genx)) == pdg_d ||abs(genps_id().at(genx)) == pdg_u   ) gen_qs.FillCommon(genx);
 	    if( abs(genps_id().at(genx)) == pdg_W || abs(genps_id().at(genx)) == pdg_Z ||(abs(genps_id().at(genx)) == pdg_ph &&
                 genps_p4().at(genx).Pt()>5.0)  || abs(genps_id().at(genx)) == pdg_h  ) gen_bosons.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_Z     ) gen_zs.FillCommon(genx);
-	    //if( abs(genps_id().at(genx)) == pdg_ph &&
-	    //	  genps_p4().at(genx).Pt()>5.0         ) gen_phs.FillCommon(genx);
-	    
-	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_lsp.FillCommon(genx);
 	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_susy.FillCommon(genx);
-	    //if(abs(genps_id().at(genx)) == pdg_chi_1neutral && genps_status().at(genx) == 1) StopEvt.mass_lsp = genps_mass().at(genx);//use sparm
 	    
-	    //if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_stop.FillCommon(genx);
-	    //if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_stop.FillCommon(genx);
 	    if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_susy.FillCommon(genx);
 	    if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_susy.FillCommon(genx);
-	    
-	    //if(abs(genps_id().at(genx)) == pdg_stop1 && genps_status().at(genx) == 62) StopEvt.mass_stop = genps_mass().at(genx);//use sparm
-	    //if(abs(genps_id().at(genx)) == pdg_chi_1plus1 && genps_status().at(genx) == 62) StopEvt.mass_chargino = genps_mass().at(genx);//use sparm	    
 	    
 	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
 	    
@@ -843,8 +863,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }
 	}
 	if(istopevent){
-	  for(unsigned int genx = 0; genx < gen_tops.id.size() ; genx++){
-	    if(abs(gen_tops.id.at(genx))==pdg_t && gen_tops.isLastCopy.at(genx)) hardsystem += gen_tops.p4.at(genx);
+	  for(unsigned int genx = 0; genx < gen_qs.id.size() ; genx++){
+	    if(abs(gen_qs.id.at(genx))==pdg_t && gen_qs.isLastCopy.at(genx)) hardsystem += gen_qs.p4.at(genx);
 	  }
 	}
 	if(isWevent){
@@ -924,7 +944,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(StopEvt.firstGoodVtxIdx!=0) continue; //really check that first vertex is good
       nEvents_pass_skim_nVtx++;
       //keep those here - any event without vertex is BS
-
       //save met here because of JEC
       if(applyJECfromFile){
         pair<float,float> newmet;
@@ -1044,7 +1063,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Lep1 SF
       if(skim_applyLeptonSFs && !StopEvt.is_data && nVetoLeptons>0){
 	
-	if(lep1.is_el){
+	if(abs(lep1.pdgid) == pdg_el){
 	  int binX = h_el_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()) );
 	  int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
 	  lepSF    = h_el_SF->GetBinContent( binX, binY );
@@ -1060,7 +1079,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  
 	}
 	
-	if(lep1.is_mu){
+	if(abs(lep1.pdgid) == pdg_mu){
 	  int binX = h_mu_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()) );
 	  int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
 	  lepSF    = h_mu_SF->GetBinContent( binX, binY );
@@ -1081,7 +1100,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Lep2 SF
       if( skim_applyLeptonSFs && !StopEvt.is_data && nVetoLeptons>1 ){
 	
-	if(lep2.is_el){
+	if(abs(lep2.pdgid) == pdg_el){
 	  
 	  int binX = h_el_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
 	  int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
@@ -1098,7 +1117,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
 	}
 	
-	if(lep2.is_mu){
+	if(abs(lep2.pdgid) == pdg_mu){
 	  int binX = h_mu_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
 	  int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
 	  lepSF    *= h_mu_SF->GetBinContent( binX, binY );
@@ -1734,7 +1753,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Trigger Information
       //
       //std::cout << "[babymaker::looper]: filling HLT vars" << std::endl;
+      //////////////// 2015 Run II  //////////////////////
+      StopEvt.HLT_MET = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_v");//just to be safe
+      StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele23_WPLoose_Gsf_v");
+      StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_eta2p1_v") || passHLTTriggerPattern("HLT_IsoMu20_v") || passHLTTriggerPattern("HLT_IsoTkMu20_eta2p1_v") || passHLTTriggerPattern("HLT_IsoTkMu20_v");
+      StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
+      StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
+      StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") ||  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v");
+      StopEvt.HLT_Photon = passHLTTriggerPattern("HLT_Photon175_v") || passHLTTriggerPattern("HLT_Photon165_HE10_v") || (passHLTTriggerPattern("HLT_Photon") && passHLTTriggerPattern("R9Id90_HE10_IsoM_v" ) );
+     ///////////////////////////////////////////////////////////
 
+      /*obsolete
       //StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_eta2p1_IterTrk02_v") || passHLTTriggerPattern("HLT_IsoTkMu20_eta2p1_IterTrk02_v");   
       //StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v");   
       //StopEvt.HLT_MET170 = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v");
@@ -1785,7 +1814,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
       StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
       StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
-
+  */
       //
       // Fill Tree
       //

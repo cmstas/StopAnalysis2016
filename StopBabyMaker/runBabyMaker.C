@@ -99,6 +99,22 @@ int main(int argc, char **argv){
   int   nphs            = 0;
   float phs_pt          = 20.0;
   float phs_eta         = 2.4;
+
+  bool filltaus_  =  false;
+  bool filltracks_  =  false;
+  bool fillZll_  =  false;
+  bool fillPhoton_  =  false;
+  bool fillMETfilt_  =  false;
+  bool fill2ndlep_  =  false;
+  bool fillExtraEvtVar_  =  false;
+
+  bool fillAK4EF_  =  false;
+  bool fillAK4_Other_  =  false;
+  bool fillOverleps_  =  false;
+  bool fillAK4Synch_  =  false;
+  bool fillElID_  =  false;
+  bool fillIso_  =  false;
+  bool fillLepSynch_  =  false;
   
   // Input sanitation
   if( !( goodLep_mu_pt>looseLep_mu_pt && looseLep_mu_pt>vetoLep_mu_pt) ){
@@ -117,7 +133,7 @@ int main(int argc, char **argv){
   //
   // Set Skim Variables
   //
-  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, apply2ndlepVeto,nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta, nBJets,  nphs, phs_pt, phs_eta, applyJECfromFile, JES_central_up_down, applyLeptonSFs, applyVetoLeptonSFs, applyBtagSFs, isFastsim);
+  mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, apply2ndlepVeto,nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta, nBJets,  nphs, phs_pt, phs_eta, applyJECfromFile, JES_central_up_down, applyLeptonSFs, applyVetoLeptonSFs, applyBtagSFs, isFastsim, filltaus_,  filltracks_,  fillZll_,  fillPhoton_, fillMETfilt_,  fill2ndlep_,  fillExtraEvtVar_,  fillAK4EF_,  fillAK4_Other_,  fillOverleps_,  fillAK4Synch_,  fillElID_,  fillIso_,  fillLepSynch_);
 
   //
   // Use arguments to set run parameters
