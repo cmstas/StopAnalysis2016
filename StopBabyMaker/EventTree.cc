@@ -67,7 +67,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
     ls  = evt_lumiBlock();
     evt = evt_event();
     nvtxs = numberOfGoodVertices();
-
+    firstGoodVtxIdx = firstGoodVertex();
  
     calomet = evt_calomet();
     calomet_phi = evt_calometPhi();
@@ -76,7 +76,9 @@ void EventTree::FillCommon (const std::string &root_file_name)
 
     // the recommended met filters //
     if(!signal){
-      filt_met = hbheNoiseFilter_25ns()*filt_cscBeamHalo()*firstGoodVertex()*filt_eeBadSc();
+      if(nvtxs>0) filt_met = true;
+      else filt_met = false;
+      filt_met = filt_met*hbheNoiseFilter_25ns()*filt_cscBeamHalo()*filt_eeBadSc();
 
       filt_cscbeamhalo = filt_cscBeamHalo();
       filt_eebadsc = filt_eeBadSc();
@@ -108,7 +110,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
 	sparms_values = sparm_values();
 	for ( auto name : sparm_names() )
 	  sparms_names.push_back(name.Data());
-	
+          sparms_subProcessId     = sparm_subProcessId();	
       }
       genmet = gen_met();
       genmet_phi = gen_metPhi();
@@ -178,10 +180,10 @@ void EventTree::Reset ()
     ngoodleps      =  -9999;
 //    nlooseleps     =  -9999;
     nvetoleps      =  -9999;
-  //  genlepsfromtop = -9999;
+    genlepsfromtop = -9999;
 
-    //genLepsHardProcess = -9999;
-  //  genNusHardProcess  = -9999;
+    genLepsHardProcess = -9999;
+    genNusHardProcess  = -9999;
     
     is0lep    = -9999;
     is1lep    = -9999;
@@ -282,7 +284,7 @@ void EventTree::Reset ()
     sparms_xsec			= -9999.;
 */
     sparms_values.clear();
-//    sparms_subProcessId 	= -9999;
+    sparms_subProcessId 	= -9999;
     mass_stop                   = -9999;
     mass_lsp                    = -9999;
     mass_chargino               = -9999;
@@ -301,7 +303,6 @@ void EventTree::Reset ()
     HLT_MET                = -9999.;
     HLT_DiEl               = -9999.;
     HLT_MuE                = -9999.;
-    HLT_Photon             = -9999.;
     HLT_DiMu               = -9999.;
 
    /* HLT_MET170             = -9999.;
@@ -507,7 +508,6 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_DiEl", &HLT_DiEl );
     tree->Branch("HLT_DiMu", &HLT_DiMu );
     tree->Branch("HLT_MuE", &HLT_MuE);
-    tree->Branch("HLT_Photon", &HLT_Photon);
     tree->Branch("nPhotons",             &nPhotons);
     tree->Branch("ph_ngoodjets",         &ph_ngoodjets);
     tree->Branch("ph_ngoodbtags",        &ph_ngoodbtags);
@@ -562,6 +562,7 @@ void EventTree::SetMETFilterBranches (TTree* tree)
     tree->Branch("filt_trkPOG", &filt_trkPOG);
     tree->Branch("filt_trkPOG_tmc", &filt_trkPOG_tmc);
     tree->Branch("filt_trkPOG_tms", &filt_trkPOG_tms);
+    tree->Branch("firstGoodVtxIdx", &firstGoodVtxIdx);
 }
 
 void EventTree::SetPhotonBranches (TTree* tree)
@@ -614,6 +615,7 @@ void EventTree::SetZllBranches (TTree* tree)
     tree->Branch("Zll_MT2_lb_b", &Zll_MT2_lb_b);
     tree->Branch("Zll_MT2_lb_bqq_mass", &Zll_MT2_lb_bqq_mass);
     tree->Branch("Zll_MT2_lb_bqq", &Zll_MT2_lb_bqq);
+    tree->Branch("genlepsfromtop", &genlepsfromtop);
 }
 
 /*/obsolete branches///
@@ -667,8 +669,12 @@ void EventTree::SetZllBranches (TTree* tree)
     tree->Branch("filt_eff", &filt_eff);
     tree->Branch("nlooseleps",&nlooseleps);
     tree->Branch("genlepsfromtop", &genlepsfromtop);
+
+//dont need to save these but do need them in the event tree
     tree->Branch("genLepsHardProcess", &genLepsHardProcess);
     tree->Branch("genNusHardProcess", &genNusHardProcess);
+/////
+
     tree->Branch("sparms_filterEfficiency", &sparms_filterEfficiency);
     tree->Branch("sparms_pdfScale", &sparms_pdfScale);
     tree->Branch("sparms_pdfWeight1", &sparms_pdfWeight1);

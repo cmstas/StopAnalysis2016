@@ -187,7 +187,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
         ak4pfjets_phi.push_back(p4sCorrJets.at(jindex).phi());
         ak4pfjets_mass.push_back(p4sCorrJets.at(jindex).mass());
 
-        dphi_ak4pfjet_met.push_back(getdphi(p4sCorrJets.at(jindex).phi(), evt_pfmetPhi()));
+        //dphi_ak4pfjet_met.push_back(getdphi(p4sCorrJets.at(jindex).phi(), evt_pfmetPhi()));
         ak4pfjets_CSV.push_back(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex));
         ak4pfjets_puid.push_back(loosePileupJetId(jindex));
         ak4pfjets_parton_flavor.push_back(pfjets_partonFlavour().at(jindex));
@@ -237,7 +237,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 		if (abs(pfjets_hadronFlavour().at(jindex)) == 5) flavor = BTagEntry::FLAV_B;
 		else if (abs(pfjets_hadronFlavour().at(jindex)) == 4) flavor = BTagEntry::FLAV_C;
 
-	        float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].eta())));
+	        float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].pt())));
 	        float eta_cutoff = std::min(2.39,fabs(double(p4sCorrJets[jindex].eta())));
 		float weight_cent(1.), weight_UP(1.), weight_DN(1.);
 

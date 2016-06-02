@@ -201,8 +201,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   if(fillZll)  StopEvt.SetZllBranches(BabyTree);
   if(fillPhoton) StopEvt.SetPhotonBranches(BabyTree);
   if(fillMETfilt) StopEvt.SetMETFilterBranches(BabyTree);
-  if(fill2ndlep) StopEvt.SetExtraVariablesBranches(BabyTree);
-  if(fillExtraEvtVar) StopEvt.SetSecondLepBranches(BabyTree);
+  if(fill2ndlep) StopEvt.SetSecondLepBranches(BabyTree);
+  if(fillExtraEvtVar) StopEvt.SetExtraVariablesBranches(BabyTree);
  
   if(fillAK4EF)   jets.SetAK4Branches_EF(BabyTree);
   if(fillAK4_Other)  jets.SetAK4Branches_Other(BabyTree);
@@ -833,11 +833,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    if( abs(genps_id().at(genx)) == pdg_t || abs(genps_id().at(genx)) == pdg_b || abs(genps_id().at(genx)) == pdg_c || abs(genps_id().at(genx)) == pdg_s || abs(genps_id().at(genx)) == pdg_d ||abs(genps_id().at(genx)) == pdg_u   ) gen_qs.FillCommon(genx);
 	    if( abs(genps_id().at(genx)) == pdg_W || abs(genps_id().at(genx)) == pdg_Z ||(abs(genps_id().at(genx)) == pdg_ph &&
                 genps_p4().at(genx).Pt()>5.0)  || abs(genps_id().at(genx)) == pdg_h  ) gen_bosons.FillCommon(genx);
-	    if(abs(genps_id().at(genx)) == pdg_chi_1neutral) gen_susy.FillCommon(genx);
-	    
-	    if(abs(genps_id().at(genx)) == pdg_stop1 ) gen_susy.FillCommon(genx);
-	    if(abs(genps_id().at(genx)) == pdg_stop2 ) gen_susy.FillCommon(genx);
-	    
+
+            //add all SUSY particles
+            if(abs(genps_id().at(genx))>=1000000&&abs(genps_id().at(genx))<=1000040) gen_susy.FillCommon(genx);	    
+ 
 	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_nue && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t) n_nuelfromt++;      
 	    
 	    if(abs(genps_id_mother().at(genx)) == pdg_W && abs(genps_id().at(genx)) == pdg_numu && genps_status().at(genx) == 1 && abs(genps_id_mother().at(genps_idx_mother().at(genx))) == pdg_t ) n_numufromt++;
@@ -1028,7 +1027,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       nVetoLeptons = GoodLeps.size() + LooseLeps.size() + VetoLeps.size();
       
       StopEvt.ngoodleps  = nGoodLeptons; 
-      StopEvt.nlooseleps = nLooseLeptons; 
+//      StopEvt.nlooseleps = nLooseLeptons; //why are these needed?
       StopEvt.nvetoleps  = nVetoLeptons; 
       
       //std::cout << "[babymaker::looper]: filling lepton variables" << std::endl;
@@ -1382,6 +1381,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	
       } // end if >0 jets      
 
+      if(fillZll){
       //
       // Zll Event Variables
       //
@@ -1458,7 +1458,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }
 	}//end of Zll filling
       }//end of Zll
-		
+    }
+ 
+    if(fillPhoton){ 
      //
       // Photon Event Variables
       //
@@ -1543,7 +1545,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }//at least one lepton
 	}//at least one jet
       }//end of photon additions
-    
+   } 
       //
       // Tau Selection
       //
@@ -1642,18 +1644,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       } // end loop over pfCands
 
+     /*obsolete
       if(vetotracks<1) StopEvt.PassTrackVeto = true;
       else StopEvt.PassTrackVeto = false;
     
       if(vetotracks_v2<1) StopEvt.PassTrackVeto_v2 = true;
       else StopEvt.PassTrackVeto_v2 = false;
-    
-      if(vetotracks_v3<1) StopEvt.PassTrackVeto_v3 = true;
-      else StopEvt.PassTrackVeto_v3 = false;
+    */
+      if(vetotracks_v3<1) StopEvt.PassTrackVeto = true;
+      else StopEvt.PassTrackVeto = false;
     
       if(skim_2ndlepveto){
             if(StopEvt.nvetoleps!=1) continue;
-            if(!StopEvt.PassTrackVeto_v3) continue;
+            if(!StopEvt.PassTrackVeto) continue;
             if(!StopEvt.PassTauVeto) continue;
       }
       nEvents_pass_skim_2ndlepVeto++;
@@ -1760,7 +1763,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
       StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
       StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") ||  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v");
-      StopEvt.HLT_Photon = passHLTTriggerPattern("HLT_Photon175_v") || passHLTTriggerPattern("HLT_Photon165_HE10_v") || (passHLTTriggerPattern("HLT_Photon") && passHLTTriggerPattern("R9Id90_HE10_IsoM_v" ) );
+ 
+     //photons more complicated because of prescales
+      StopEvt.HLT_Photon90_CaloIdL_PFHT500 = passHLTTriggerPattern("HLT_Photon90_CaloIdL_PFHT500_v");
+      StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v" ));
+      StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"));
+      StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
+      StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
+      StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
+
      ///////////////////////////////////////////////////////////
 
       /*obsolete
