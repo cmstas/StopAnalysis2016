@@ -228,7 +228,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
                 ak4pfjets_leadMEDbjet_p4 = p4sCorrJets.at(jindex);
              }
                 ak4pfjets_MEDbjet_pt.push_back(p4sCorrJets.at(jindex).pt());
-               bool isFastsim = false; 
+               //bool isFastsim = false; 
               // btag SF - not final yet
               if (!evt_isRealData()&&applyBtagSFs) {
                 float eff = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), isFastsim);
