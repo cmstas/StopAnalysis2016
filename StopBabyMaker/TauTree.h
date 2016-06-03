@@ -34,10 +34,8 @@ public:
     vecLorentzVector tau_p4;
     std::vector<vecLorentzVector> tau_isocand_p4;
     std::vector<vecLorentzVector> tau_sigcand_p4;
-    vecd tau_mass;
     std::vector<vecd> tau_ID;
     vecd tau_passID;
-    vecd tau_charge;
     int ngoodtaus;
     vecd tau_againstMuonTight;
     vecd tau_againstElectronLoose;

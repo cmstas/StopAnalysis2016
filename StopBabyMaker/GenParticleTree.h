@@ -36,49 +36,52 @@ public:
    
  	//commented out variables are available on CMS3 but not stored
 	veci gentaudecay;
-        //TauDecay gentaudecay;
-	
-	/*event level genps info
-        float alphaQCD;
-	float pthat;
-	float qScale;
-	float weight;
-        unsigned int signalProcessID;*/
-
 	vecLorentzVector p4;
         
-	//LorentzVector prod_vtx;
-	//vecLorentzVector lepdaughter_p4;
-	//vecd charge;
-	//vecd iso;
-	//vecd mass;
 	veci id;
 	veci genpsidx;
         vecb isfromt;
 	veci status;
-	//vecb fromHardProcessBeforeFSR;
 	vecb fromHardProcessDecayed;
 	vecb fromHardProcessFinalState;
-	//vecb isDirectHardProcessTauDecayProductFinalState;
-	//vecb isDirectPromptTauDecayProductFinalState;
 	vecb isHardProcess;
 	vecb isLastCopy;
-	//vecb isLastCopyBeforeFSR;
-	//vecb isMostlyLikePythia6Status3;
-	//vecb isPromptDecayed;
-	//vecb isPromptFinalState;
-	//std::vector<veci> lepdaughter_id;
 	int gen_nfromt;
         vecLorentzVector motherp4;
-	//vecd mothercharge;
         veci motherid;
         veci motheridx;
         veci motherstatus;
 	vecLorentzVector gmotherp4;
-	//veci gmothercharge;
 	veci gmotherid;
         veci gmotheridx;
 	veci gmotherstatus;
+
+// obsolete branches //
+        //TauDecay gentaudecay;
+
+        /*event level genps info
+        float alphaQCD;
+        float pthat;
+        float qScale;
+        float weight;
+        unsigned int signalProcessID;*/
+        //LorentzVector prod_vtx;
+        //vecLorentzVector lepdaughter_p4;
+        //vecd charge;
+        //vecd iso;
+        //vecd mass;
+        //vecb fromHardProcessBeforeFSR;
+        //vecb isDirectHardProcessTauDecayProductFinalState;
+        //vecb isDirectPromptTauDecayProductFinalState;
+        //vecb isLastCopyBeforeFSR;
+        //vecb isMostlyLikePythia6Status3;
+        //vecb isPromptDecayed;
+        //vecb isPromptFinalState;
+        //std::vector<veci> lepdaughter_id;
+        //vecd mothercharge;
+        //veci gmothercharge;
+        //TauDecay gentaudecay;
+
 	//vecLorentzVector simplemotherp4;
 	////veci simplemothercharge;
 	//veci simplemotherid;

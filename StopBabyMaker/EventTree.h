@@ -27,6 +27,11 @@ public:
  
     void Reset ();
     void SetBranches (TTree* tree);
+    void SetZllBranches (TTree* tree);
+    void SetPhotonBranches (TTree* tree);
+    void SetMETFilterBranches (TTree* tree);
+    void SetExtraVariablesBranches (TTree* tree);
+    void SetSecondLepBranches (TTree* tree);
     void SetAliases (TTree* tree) const;
     void FillCommon (const std::string &root_file_name = "");
     void SetMetFilterEvents(); 
@@ -41,11 +46,6 @@ public:
     int nvtxs;
 
     int   firstGoodVtxIdx;
-    int   firstVtx_isfake;
-    float firstVtx_ndof;
-    float firstVtx_posRho;
-    float firstVtx_posZ;
-    LorentzVector  firstVtx_posp4;
 
     unsigned int nEvents;
     unsigned int nEvents_goodvtx;
@@ -54,10 +54,9 @@ public:
     unsigned int nEvents_2goodjets;
 
     int genlepsfromtop;
-
-    int genLepsHardProcess;
+    int genLepsHardProcess;                                                                                               
     int genNusHardProcess;
-    
+
     int is0lep;
     int is1lep;
     int is2lep;
@@ -67,15 +66,14 @@ public:
     int is1lepFromTop;
 
     int ngoodleps;
-    int nlooseleps;   
     int nvetoleps;   
  
     float MT2W;
-    float MT2W_lep2;
     float hadronic_top_chi2;
     float topness;
-    float topness_lep2;
     float topnessMod;
+    float MT2W_lep2;
+    float topness_lep2;
     float topnessMod_lep2;
 
     float MT2_lb_b;
@@ -164,20 +162,15 @@ public:
     float weight_PUdown;
     float hardgenpt;
     //sparms
-    vecs  sparms_comment;
+//    vecs  sparms_comment;
     vecs  sparms_names;
-    float sparms_filterEfficiency;
-    float sparms_pdfScale;
-    float sparms_pdfWeight1;
-    float sparms_pdfWeight2;
-    float sparms_weight;
-    float sparms_xsec;
     vecd  sparms_values;
     int   sparms_subProcessId;
     float mass_lsp;
     float mass_chargino;
     float mass_stop;
-        
+    float mass_gluino;       
+ 
     //gen met
     float genmet;
     float genmet_phi;
@@ -185,50 +178,16 @@ public:
 
     //veto
     bool PassTrackVeto;
-    bool PassTrackVeto_v2;
-    bool PassTrackVeto_v3;
     bool PassTauVeto;
 
-    float EA_all_rho;
-    float EA_allcalo_rho;
-    float EA_centralcalo_rho;
-    float EA_centralchargedpileup_rho;
-    float EA_centralneutral_rho;
     //trigger
     //int  HLT_HT900;
     int HLT_SingleMu; 
     int HLT_SingleEl;
-    int HLT_MET170;
-    int HLT_MET120Btag;      
-    int HLT_MET120Mu5;
-    //new
-    int HLT_HT350MET120;
+    int HLT_MET;
     int HLT_DiEl;
-    int HLT_DiEl_17_12;
     int HLT_DiMu;
-    int HLT_Mu8El17;
-    int HLT_Mu8El23;
-    int HLT_Mu17El12;
-    int HLT_Mu23El12;
-    int HLT_SingleElTight;
-    int HLT_SingleEl23;
-    int HLT_SingleEl27;
-    int HLT_SingleEl27Tight;
-    int HLT_SingleElHT200;
-    int HLT_SingleMuNoEta;
-    int HLT_SingleMuNoIso;
-    int HLT_SingleMuNoIsoNoEta;
-    int HLT_Mu6HT200MET125;
-
-    int HLT_HT350MET100;
-    int HLT_SingleMu17 ;
-    int HLT_SingleMu18 ;
-    int HLT_SingleMu20 ;
-    int HLT_SingleMu24 ;
-
-    int HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight;
-    int HLT_MET90_MHT90_IDTight;
-    int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;
+    int HLT_MuE;
 
     int HLT_Photon90_CaloIdL_PFHT500;
     int HLT_Photon22_R9Id90_HE10_IsoM;
@@ -245,8 +204,6 @@ public:
     //float pu_weight;
     float lep_sf;
     float btag_sf;
-    float HLT_SingleMu_eff;
-    float HLT_SingleEl_eff;
 
     //photon addition
     int nPhotons;
@@ -298,6 +255,63 @@ public:
     float Zll_MT2_lb_bqq_mass;
     float Zll_MT2_lb_bqq;
 
+
+/*obsolete
+    int   firstVtx_isfake;                                                                                               
+    float firstVtx_ndof;
+    float firstVtx_posRho;
+    float firstVtx_posZ;
+    LorentzVector  firstVtx_posp4;
+    int genLepsHardProcess;                                                                                               
+    int genNusHardProcess;
+    int nlooseleps;  
+
+    float sparms_filterEfficiency;
+    float sparms_pdfScale;
+    float sparms_pdfWeight1;
+    float sparms_pdfWeight2;
+    float sparms_weight;
+    float sparms_xsec;
+    int   sparms_subProcessId; 
+    bool PassTrackVeto_v2;
+    bool PassTrackVeto_v3;
+    float EA_all_rho;
+    float EA_allcalo_rho;                                                                                                  
+    float EA_centralcalo_rho;
+    float EA_centralchargedpileup_rho;
+    float EA_centralneutral_rho;
+    int HLT_MET170;
+    int HLT_MET120Btag;      
+    int HLT_MET120Mu5;
+    //new
+    int HLT_HT350MET120;
+    int HLT_DiEl_17_12;
+    int HLT_Mu8El17;
+    int HLT_Mu8El23;
+    int HLT_Mu17El12;
+    int HLT_Mu23El12;
+    int HLT_SingleElTight;
+    int HLT_SingleEl23;
+    int HLT_SingleEl27;
+    int HLT_SingleEl27Tight;
+    int HLT_SingleElHT200;
+    int HLT_SingleMuNoEta;
+    int HLT_SingleMuNoIso;
+    int HLT_SingleMuNoIsoNoEta;
+    int HLT_Mu6HT200MET125;
+
+    int HLT_HT350MET100;
+    int HLT_SingleMu17 ;
+    int HLT_SingleMu18 ;
+    int HLT_SingleMu20 ;
+    int HLT_SingleMu24 ;
+
+    int HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight;
+    int HLT_MET90_MHT90_IDTight;
+    int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;
+    float HLT_SingleMu_eff;
+    float HLT_SingleEl_eff;
+*/
     
 };
  

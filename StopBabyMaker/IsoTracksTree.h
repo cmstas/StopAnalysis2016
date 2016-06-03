@@ -31,8 +31,8 @@ public:
     vecd isoTracks_absIso;
     vecd isoTracks_dz;
     veci isoTracks_pdgId;
-    veci isoTracks_selectedidx;
-    int  isoTracks_nselected;
+//    veci isoTracks_selectedidx;
+//    int  isoTracks_nselected;
     vecb isoTracks_isVetoTrack;
     vecb isoTracks_isVetoTrack_v2;
     vecb isoTracks_isVetoTrack_v3;
