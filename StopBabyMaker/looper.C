@@ -544,7 +544,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Set JSON file
   //
-  const char* json_file = "json_files/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt";
+  const char* json_file = "json_files/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt";
   set_goodrun_file_json(json_file);
   
   //
@@ -570,11 +570,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     jetcorr_uncertainty_filename = "jecfiles/Fastsim15_Uncertainty_AK4PFchs.txt";
   }  
   else {
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
-    //jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
-    jetcorr_uncertainty_filename = "jecfiles/Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt";
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/Spring16_25nsV1_MC_L1FastJet_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/Spring16_25nsV1_MC_L2Relative_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/Spring16_25nsV1_MC_L3Absolute_AK4PFchs.txt");
+    jetcorr_uncertainty_filename = "jetCorrections/Spring16_25nsV1_MC_Uncertainty_AK4PFchs.txt";
   }
 
   cout << "applying JEC from the following files:" << endl;
