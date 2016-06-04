@@ -1,22 +1,4 @@
-list=['data_double_eg_2015C_25ns',
-      'data_double_eg_2015D_05Oct2015_v1_25ns',
-      'data_double_eg_2015D_promptRecoV4_25ns',
-      'data_double_mu_2015C_25ns',
-      'data_double_mu_2015D_05Oct2015_v1_25ns',
-      'data_double_mu_2015D_promptRecoV4_25ns',
-      'data_muon_eg_2015C_25ns',
-      'data_muon_eg_2015D_05Oct2015_v1_25ns',
-      'data_muon_eg_2015D_05Oct2015_v2_25ns',
-      'data_muon_eg_2015D_promptRecoV4_25ns',
-      'data_single_electron_2015C_25ns',
-      'data_single_electron_2015D_05Oct2015_v1_25ns',
-      'data_single_electron_2015D_promptRecoV4_25ns',
-      'data_single_muon_2015C_25ns',
-      'data_single_muon_2015D_05Oct2015_v1_25ns',
-      'data_single_muon_2015D_promptRecoV4_25ns',
-      'data_met_2015C_25ns',
-      'data_met_2015D_05Oct2015_v1_25ns',
-      'data_met_2015D_promptRecoV4_25ns']
+data = ['data_double_eg_Run2016B_MINIAOD_PromptReco-v2','data_double_mu_Run2016B_MINIAOD_PromptReco-v2','data_muon_eg_Run2016B_MINIAOD_PromptReco-v2','data_single_electron_Run2016B_MINIAOD_PromptReco-v2','data_single_muon_Run2016B_MINIAOD_PromptReco-v2','data_met_Run2016B_MINIAOD_PromptReco-v2']
 qcd = ['QCD_Pt-15to20_EMEnriched',
        'QCD_Pt-20to30_EMEnriched',
        'QCD_Pt-30to50_EMEnriched',
@@ -25,48 +7,51 @@ qcd = ['QCD_Pt-15to20_EMEnriched',
        'QCD_Pt-120to170_EMEnriched',
        'QCD_Pt-170to300_EMEnriched',
        'QCD_Pt-300toInf_EMEnriched']
-ttbar = ['ttbar_powheg_pythia8_25ns','ttbar_powheg_pythia8_ext3_25ns']
-wjets = ['DYJetsToLL_m50_amcnlo_pythia8_50ns',
+ttbar = ['ttbar_singleLeptFromT_madgraph_pythia8_25ns',
+          'ttbar_singleLeptFromTbar_madgraph_pythia8_25ns',
+          'ttbar_singleLeptFromTbar_madgraph_pythia8_ext1_25ns',
+          'ttbar_diLept_madgraph_pythia8_25ns',
+          'ttbar_diLept_madgraph_pythia8_ext1_25ns','ttbarTo2L2Nu_powheg_25ns']
+singletop = ['tbar_tch_4f_powheg_pythia8_25ns',
+               't_sch_4f_amcnlo_pythia8_25ns',
+              't_tbarW_5f_powheg_pythia8_25ns',
+              't_tW_5f_powheg_pythia8_25ns']
+wjets = [
          'WJetsToLNu_madgraph_pythia8_25ns',
          'WJetsToLNu_HT100To200_madgraph_pythia8_25ns',
+         'WJetsToLNu_HT100To200_madgraph_pythia8_ext1_25ns',
          'WJetsToLNu_HT200To400_madgraph_pythia8_25ns',
+         'WJetsToLNu_HT200To400_madgraph_pythia8_ext1_25ns',
          'WJetsToLNu_HT400To600_madgraph_pythia8_25ns',
-          'WJetsToLNu_HT600To800_madgraph_pythia8_25ns',
-          'WJetsToLNu_HT800To1200_madgraph_pythia8_25ns',
-          'WJetsToLNu_HT1200To2500_madgraph_pythia8_25ns',
-          'WJetsToLNu_HT2500ToInf_madgraph_pythia8_25ns',
+         'WJetsToLNu_HT600To800_madgraph_pythia8_25ns',
+         'WJetsToLNu_HT800To1200_madgraph_pythia8_25ns',
+         'WJetsToLNu_HT800To1200_madgraph_pythia8_ext1_25ns',
+         'WJetsToLNu_HT1200To2500_madgraph_pythia8_25ns',
+         'WJetsToLNu_HT2500ToInf_madgraph_pythia8_25ns',
          'WJetsToLNu_HT600ToInf_madgraph_pythia8_25ns']
 zjets = [
-         'DYJetsToLL_M-50_HT-100to200',
-         'DYJetsToLL_M-50_HT-200to400',
-         'DYJetsToLL_M-50_HT-400to600',
-         'DYJetsToLL_M-50_HT-600toInf']
+         'DYJetsToLL_m10To50_amcnlo_pythia8_25ns',
+          'DYJetsToLL_m50_amcnlo_pythia8_25ns'
+    #     'DYJetsToLL_M-50_HT-100to200',
+    #     'DYJetsToLL_M-50_HT-200to400',
+    #     'DYJetsToLL_M-50_HT-400to600',
+   #      'DYJetsToLL_M-50_HT-600toInf'
+         ]
+diboson = ['WW_pythia8_25ns','WWToLNuQQ_powheg_25ns','WWTo2l2Nu_powheg_25ns','WZ_pythia8_25ns','WZTo3LNu_powheg_pythia8_25ns','WZTo2L2Q_amcnlo_pythia8_25ns','WZTo1L3Nu_amcnlo_pythia8_25ns','WZTo1LNu2Q_amcnlo_pythia8_25ns','ZZ_pythia8_25ns','ZZTo2L2Q_amcnlo_pythia8_25ns','ZZTo2Q2Nu_amcnlo_pythia8_25ns','ZZTo2L2Nu_powheg_pythia8_25ns']
+
 wjets_highht = [
             ]
-#singletop = ['ST_t-channel_antitop',
-#              'ST_t-channel_top',
-#              'ST_s-channel',
-#              'ST_tW_antitop_5f_inclusiveDecays',
-#              'ST_tW_antitop_5f_scaledown',
-#              'ST_tW_antitop_5f_scaleup',
-#              'ST_tW_top_5f_inclusiveDecays',
-#              'ST_tW_top_5f_scaledown',
-#              'ST_tW_top_5f_scaleup']
-singletop = ['tbar_tch_4f_powheg_pythia8_25ns',
-             't_tch_4f_powheg_pythia8_25ns',
-             't_sch_4f_amcnlo_pythia8_25ns',
-             't_tbarW_5f_powheg_pythia8_25ns',
-             't_tW_5f_powheg_pythia8_25ns'
-             ]
-print singletop
-ttv = ['TTZToLLNuNu_M-10_amcnlo_pythia8_25ns']
+ttv = ['TTWJetsToQQ_amcnlo_pythia8_25ns',
+       'TTWJetsToLNu_amcnlo_pythia8_25ns',
+       'TTZToQQ_amcnlo_pythia8_25ns',
+       'TTZToLLNuNu_M-10_amcnlo_pythia8_25ns']
+
 towrite = open('towrite.sh','w')
-f = open('../sample.dat')
+f = open('../sample_2016.dat')
 towrite.write('source settings.sh\n')
 towrite.write('TAG=${analysis_version}\n')
 for line in f:
-    for sample in singletop+ttv+list+ttbar+wjets+zjets:
-        print 'run ', sample
+    for sample in singletop+ttv+ttbar+wjets+zjets+diboson:
     #    print 'run ',sample
         if sample in line and 'Name' in line:
            print sample
