@@ -78,7 +78,7 @@ if [ ${num_missing_files} -gt 0 ]; then
 	do
 cat >> $condor_resubmit_script_filename << EOF
 
-executable=wrapper.sh
+executable=condorExecutable.sh
 transfer_executable=True
 ${arg_list[${index_of_missing_files[$i]}]}
 queue

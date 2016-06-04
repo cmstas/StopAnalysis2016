@@ -47,7 +47,7 @@ int main(int argc, char **argv){
   //
   if(argc<2){
     cout<<" runBabyMaker takes five arguments: ./runBabyMaker sample_name nevents file_number outpath samplelist" << endl;
-    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=-1 (-1=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  samplelist=sample.dat by default"<<endl;
+    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=-1 (-1=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  samplelist=sample_2016.dat by default"<<endl;
     return 0;
   }
 
@@ -153,7 +153,7 @@ int main(int argc, char **argv){
   
   const char* suffix = file == -1 ? "" : Form("_%i", file);
 
-  char *input = "sample.dat";
+  char *input = "sample_2016.dat";
   if(argc>5) input = argv[5];
 
 

@@ -52,6 +52,7 @@ cp -r $BABYMAKER_DIR_NAME/json_files/ $CONDOR_DIR_NAME/StopBabyMaker/
 cp -r $BABYMAKER_DIR_NAME/jecfiles/ $CONDOR_DIR_NAME/StopBabyMaker/
 cp -r $BABYMAKER_DIR_NAME/xsec_stop_13TeV.root $CONDOR_DIR_NAME/StopBabyMaker/
 cp -r $BABYMAKER_DIR_NAME/btagsf/ $CONDOR_DIR_NAME/StopBabyMaker/
+cp -r $BABYMAKER_DIR_NAME/lepsf/ $CONDOR_DIR_NAME/StopBabyMaker/
 cp -r $CORE_DIR/* $CONDOR_DIR_NAME/CORE/
 
 tar czf $CONDOR_DIR_NAME.tar.gz $CONDOR_DIR_NAME/
