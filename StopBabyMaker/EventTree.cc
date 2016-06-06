@@ -78,8 +78,8 @@ void EventTree::FillCommon (const std::string &root_file_name)
     if(!signal){
       if(nvtxs>0) filt_met = true;
       else filt_met = false;
-      filt_met = filt_met*filt_cscBeamHalo()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso()*badChargedCandidateFilter();
-
+      filt_met = filt_met*filt_cscBeamHalo()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso();
+      filt_badChargedCandidateFilter = badChargedCandidateFilter();
       filt_cscbeamhalo = filt_cscBeamHalo();
       filt_cscbeamhalo2015 = filt_cscBeamHalo2015();
       filt_globaltighthalo2016 = filt_globalTightHalo2016();
@@ -408,8 +408,8 @@ void EventTree::Reset ()
      filt_trkPOG_logerr_tmc = false;
      filt_trkPOG_tmc = false;
      filt_trkPOG_tms = false;
+     filt_badChargedCandidateFilter = false;
 
-    filt_met = false;
 
     nPhotons             = -9999;
     ph_selectedidx       = -9999;
@@ -558,6 +558,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("ph_ngoodjets",         &ph_ngoodjets);
     tree->Branch("ph_ngoodbtags",        &ph_ngoodbtags);
     tree->Branch("filt_met", &filt_met);
+    tree->Branch("filt_badChargedCandidateFilter", &filt_badChargedCandidateFilter);
     tree->Branch("hardgenpt", &hardgenpt);
 }
 
@@ -607,6 +608,7 @@ void EventTree::SetMETFilterBranches (TTree* tree)
     tree->Branch("filt_hbheisonoise", &filt_hbheisonoise);
     tree->Branch("filt_hcallaser", &filt_hcallaser);
     tree->Branch("filt_met", &filt_met);
+    tree->Branch("filt_badChargedCandidateFilter", &filt_badChargedCandidateFilter);
     tree->Branch("filt_trkfail", &filt_trkfail);
     tree->Branch("filt_trkPOG", &filt_trkPOG);
     tree->Branch("filt_trkPOG_logerr_tmc", &filt_trkPOG_logerr_tmc);
