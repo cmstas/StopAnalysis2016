@@ -98,6 +98,9 @@ public:
     float calomet_phi;
 
     float filt_cscbeamhalo;
+    float filt_cscbeamhalo2015;
+    float filt_globaltighthalo2016;
+    float filt_globalsupertighthalo2016;
     float filt_ecallaser;
     float filt_ecaltp;
     float filt_eebadsc;
@@ -109,9 +112,9 @@ public:
     float filt_met;
     float filt_trkfail;
     float filt_trkPOG;
+    float filt_trkPOG_logerr_tmc;
     float filt_trkPOG_tmc;
     float filt_trkPOG_tms;
-    float filt_eff;
 
     float dR_lep_leadb;
     float dR_lep2_leadb;    

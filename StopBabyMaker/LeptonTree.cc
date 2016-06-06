@@ -64,6 +64,10 @@ void LeptonTree::FillCommon (int id, int idx)
         passTightID = electronID(idx, STOP_tight_v3);
         passVeto     = electronID(idx, STOP_veto_v3);
 
+        is_lepid_loose_noiso  = isLooseElectronPOGspring15noIso_v1(idx);
+        is_lepid_medium_noiso = isMediumElectronPOGspring15noIso_v1(idx);
+        is_lepid_tight_noiso  = isTightElectronPOGspring15noIso_v1(idx);
+
         //id variables
         eoverpin        = els_eOverPIn().at(idx); 
         sigmaIEtaEta_fill5x5 = els_sigmaIEtaIEta_full5x5().at(idx);
@@ -111,6 +115,11 @@ void LeptonTree::FillCommon (int id, int idx)
         passMediumID = muonID(idx, STOP_medium_v3);
         passTightID =  muonID(idx, STOP_tight_v2);
 	passVeto = muonID(idx, STOP_loose_v3);
+
+        is_lepid_loose_noiso  = isLooseMuonPOG(idx);
+        is_lepid_medium_noiso = isMediumMuonPOG(idx);
+        is_lepid_tight_noiso  = isTightMuonPOG(idx);
+
         //iso variables
         chiso     = mus_isoR04_pf_ChargedHadronPt().at(idx);
         nhiso     = mus_isoR04_pf_NeutralHadronEt().at(idx);
@@ -233,6 +242,10 @@ void LeptonTree::Reset()
     mass 	= -9999.;
     phi		= -9999.;
 
+    is_lepid_loose_noiso  = false;
+    is_lepid_medium_noiso = false;
+    is_lepid_tight_noiso  = false;
+
 /* obsolete 
     is_mu           = false;
     is_el           = false;
@@ -301,6 +314,9 @@ void LeptonTree::SetBranches_electronID(TTree* tree)
     tree->Branch(Form("%setaSC"         , prefix_.c_str()) , &etaSC);
     tree->Branch(Form("%sChiSqr"        , prefix_.c_str()) , &ChiSqr);
     tree->Branch(Form("%seoverpin"        , prefix_.c_str()) , &eoverpin        ); 
+    tree->Branch(Form("%sis_lepid_loose_noiso" , prefix_.c_str()) , &is_lepid_loose_noiso);
+    tree->Branch(Form("%sis_lepid_medium_noiso" , prefix_.c_str()) , &is_lepid_medium_noiso); 
+    tree->Branch(Form("%sis_lepid_tight_noiso"  , prefix_.c_str()) , &is_lepid_tight_noiso); 
 } 
 
 void LeptonTree::SetBranches_Iso(TTree* tree)
