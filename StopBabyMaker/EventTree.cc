@@ -78,7 +78,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
     if(!signal){
       if(nvtxs>0) filt_met = true;
       else filt_met = false;
-      filt_met = filt_met*filt_cscBeamHalo()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso();
+      filt_met = filt_met*filt_cscBeamHalo()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso()*badChargedCandidateFilter();
 
       filt_cscbeamhalo = filt_cscBeamHalo();
       filt_cscbeamhalo2015 = filt_cscBeamHalo2015();
