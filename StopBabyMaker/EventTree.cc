@@ -78,9 +78,12 @@ void EventTree::FillCommon (const std::string &root_file_name)
     if(!signal){
       if(nvtxs>0) filt_met = true;
       else filt_met = false;
-      filt_met = filt_met*hbheNoiseFilter_25ns()*filt_cscBeamHalo()*filt_eeBadSc();
+      filt_met = filt_met*filt_cscBeamHalo()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso();
 
       filt_cscbeamhalo = filt_cscBeamHalo();
+      filt_cscbeamhalo2015 = filt_cscBeamHalo2015();
+      filt_globaltighthalo2016 = filt_globalTightHalo2016();
+      filt_globalsupertighthalo2016 = filt_globalSuperTightHalo2016();
       filt_eebadsc = filt_eeBadSc();
       filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
       filt_ecallaser = filt_ecalLaser();
@@ -89,12 +92,13 @@ void EventTree::FillCommon (const std::string &root_file_name)
 //      filt_met = filt_metfilter();
       filt_trkfail = filt_trackingFailure();
       filt_trkPOG = filt_trkPOGFilters();
-      filt_trkPOG_tmc = filt_trkPOG_logErrorTooManyClusters();
+      filt_trkPOG_logerr_tmc = filt_trkPOG_logErrorTooManyClusters();
+      filt_trkPOG_tmc =filt_trkPOG_manystripclus53X();
       filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
     }
-    filt_hbhenoise = hbheNoiseFilter_25ns();
-    filt_hbheisonoise = hbheIsoNoiseFilter();
-    
+    filt_hbhenoise = filt_hbheNoise(); // hbheNoiseFilter_25ns();
+    filt_hbheisonoise = filt_hbheNoiseIso();//hbheIsoNoiseFilter();
+   
     
     if (!is_data)
     {
@@ -386,6 +390,25 @@ void EventTree::Reset ()
     filt_trkPOG_tms = false;
     filt_eff = -9999.;*/
 
+     filt_cscbeamhalo = false;
+     filt_cscbeamhalo2015 = false;
+     filt_globaltighthalo2016 = false;
+     filt_globalsupertighthalo2016 = false;
+     filt_ecallaser = false;
+     filt_ecaltp = false;
+     filt_eebadsc = false;
+     filt_goodvtx = false;
+     filt_badevents = false;
+     filt_hbhenoise = false;
+     filt_hbheisonoise = false;
+     filt_hcallaser = false;
+     filt_met = false;
+     filt_trkfail = false;
+     filt_trkPOG = false;
+     filt_trkPOG_logerr_tmc = false;
+     filt_trkPOG_tmc = false;
+     filt_trkPOG_tms = false;
+
     filt_met = false;
 
     nPhotons             = -9999;
@@ -572,6 +595,9 @@ void EventTree::SetExtraVariablesBranches (TTree* tree)
 void EventTree::SetMETFilterBranches (TTree* tree)
 {
     tree->Branch("filt_cscbeamhalo", &filt_cscbeamhalo);
+    tree->Branch("filt_cscbeamhalo2015", &filt_cscbeamhalo2015);
+    tree->Branch("filt_globaltighthalo2016", &filt_globaltighthalo2016);
+    tree->Branch("filt_globalsupertighthalo2016", &filt_globalsupertighthalo2016);
     tree->Branch("filt_ecallaser", &filt_ecallaser);
     tree->Branch("filt_ecaltp", &filt_ecaltp);
     tree->Branch("filt_eebadsc", &filt_eebadsc);
@@ -583,6 +609,7 @@ void EventTree::SetMETFilterBranches (TTree* tree)
     tree->Branch("filt_met", &filt_met);
     tree->Branch("filt_trkfail", &filt_trkfail);
     tree->Branch("filt_trkPOG", &filt_trkPOG);
+    tree->Branch("filt_trkPOG_logerr_tmc", &filt_trkPOG_logerr_tmc);
     tree->Branch("filt_trkPOG_tmc", &filt_trkPOG_tmc);
     tree->Branch("filt_trkPOG_tms", &filt_trkPOG_tms);
     tree->Branch("firstGoodVtxIdx", &firstGoodVtxIdx);

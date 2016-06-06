@@ -89,6 +89,10 @@ public:
     bool passMediumID;//currently contains miniIso
     bool passTightID;
 
+    bool is_lepid_loose_noiso;
+    bool is_lepid_medium_noiso;
+    bool is_lepid_tight_noiso;
+
   //  int mus_pfcands_idx;
     int production_type;
 /*obsolete
