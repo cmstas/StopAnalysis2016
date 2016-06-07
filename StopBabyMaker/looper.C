@@ -474,7 +474,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     hPUdown = (TH1D*)pileupfile->Get("puWeightDown");
   }
   
-  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 22, 0.5,22.5);
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 24, 0.5,24.5);
   counterhist->Sumw2();
   counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
   counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -498,11 +498,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(20,"weight_ISR_up");
   counterhist->GetXaxis()->SetBinLabel(21,"weight_ISR_down");
   counterhist->GetXaxis()->SetBinLabel(22,"NEvents");
-
+  counterhist->GetXaxis()->SetBinLabel(23,"weight_btagsf_fastsim_UP");
+  counterhist->GetXaxis()->SetBinLabel(24,"weight_btagsf_fastsim_DN");
+  
   TH3D* counterhistSig;
   TH2F* histNEvts;//count #evts per signal point
   if(isSignalFromFileName){//create histos only for signals
-    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 21, 0.5,21.5);//15000 bins!
+    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 23, 0.5,23.5);//15000 bins!
     counterhistSig->Sumw2();
     counterhistSig->GetZaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
     counterhistSig->GetZaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -525,6 +527,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     counterhistSig->GetZaxis()->SetBinLabel(19,"weight_ISR_nominal");
     counterhistSig->GetZaxis()->SetBinLabel(20,"weight_ISR_up");
     counterhistSig->GetZaxis()->SetBinLabel(21,"weight_ISR_down");
+    counterhistSig->GetZaxis()->SetBinLabel(22,"weight_btagsf_fastsim_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(23,"weight_btagsf_fastsim_DN");
     histNEvts = new TH2F( "histNEvts", "h_histNEvts", 37,99,1024, 19,-1,474);//x=mStop, y=mLSP
     histNEvts->Sumw2();
   }
@@ -749,31 +753,33 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	float SMSpdf_weight_down = 1;
 	float SMSsum_of_weights= 0;
 	float SMSaverage_of_weights= 0;
-	//error on pdf replicas 
-	for(int ipdf=9;ipdf<109;ipdf++){
-	  SMSaverage_of_weights += cms3.genweights().at(ipdf);        
-	}// average of weights
-	SMSaverage_of_weights =  average_of_weights/100.;
-	for(int ipdf=9;ipdf<109;ipdf++){
-	  SMSsum_of_weights += pow(cms3.genweights().at(ipdf)- SMSaverage_of_weights,2);          
-	}//std of weights.
-	SMSpdf_weight_up = (average_of_weights+sqrt(SMSsum_of_weights/99.)); 
-	SMSpdf_weight_down = (average_of_weights-sqrt(SMSsum_of_weights/99.)); 
-	StopEvt.pdf_up_weight = SMSpdf_weight_up;//overwrite here, although it should not matter
-	StopEvt.pdf_down_weight = SMSpdf_weight_down;//overwrite here, although it should not matter
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1,genweights()[0]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,2,genweights()[1]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,3,genweights()[2]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,4,genweights()[3]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,5,genweights()[4]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,6,genweights()[5]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,7,genweights()[6]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,8,genweights()[7]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,9,genweights()[8]);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,10,SMSpdf_weight_up);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,11,SMSpdf_weight_down);  
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,12,genweights()[109]); // α_s variation. 
-	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,13,genweights()[110]); // α_s variation. 
+	//error on pdf replicas
+	if(genweights().size()>109){ //fix segfault
+	  for(int ipdf=9;ipdf<109;ipdf++){
+	    SMSaverage_of_weights += cms3.genweights().at(ipdf);        
+	  }// average of weights
+	  SMSaverage_of_weights =  average_of_weights/100.;
+	  for(int ipdf=9;ipdf<109;ipdf++){
+	    SMSsum_of_weights += pow(cms3.genweights().at(ipdf)- SMSaverage_of_weights,2);          
+	  }//std of weights.
+	  SMSpdf_weight_up = (average_of_weights+sqrt(SMSsum_of_weights/99.)); 
+	  SMSpdf_weight_down = (average_of_weights-sqrt(SMSsum_of_weights/99.)); 
+	  StopEvt.pdf_up_weight = SMSpdf_weight_up;//overwrite here, although it should not matter
+	  StopEvt.pdf_down_weight = SMSpdf_weight_down;//overwrite here, although it should not matter
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1,genweights()[0]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,2,genweights()[1]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,3,genweights()[2]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,4,genweights()[3]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,5,genweights()[4]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,6,genweights()[5]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,7,genweights()[6]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,8,genweights()[7]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,9,genweights()[8]);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,10,SMSpdf_weight_up);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,11,SMSpdf_weight_down);  
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,12,genweights()[109]); // α_s variation. 
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,13,genweights()[110]); // α_s variation.
+	}
       }// is signal
 
       //
@@ -1201,7 +1207,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        float btagprob_err_heavy_DN = 0.;
        float btagprob_err_light_UP = 0.;
        float btagprob_err_light_DN = 0.;
-
+       float btagprob_err_FS_UP = 0.;
+       float btagprob_err_FS_DN = 0.;
  
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
       // Get the jets overlapping with the selected leptons
@@ -1214,7 +1221,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	// Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
 	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_err_heavy_UP, btagprob_err_heavy_DN, btagprob_err_light_UP,btagprob_err_light_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
+        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_err_heavy_UP, btagprob_err_heavy_DN, btagprob_err_light_UP,btagprob_err_light_DN,btagprob_err_FS_UP,btagprob_err_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
       }
 
       // SAVE B TAGGING SF 
@@ -1224,6 +1231,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         StopEvt.weight_btagsf_light_UP = StopEvt.weight_btagsf + btagprob_err_light_UP*StopEvt.weight_btagsf;
         StopEvt.weight_btagsf_heavy_DN = StopEvt.weight_btagsf - btagprob_err_heavy_DN*StopEvt.weight_btagsf;
         StopEvt.weight_btagsf_light_DN = StopEvt.weight_btagsf - btagprob_err_light_DN*StopEvt.weight_btagsf;
+	StopEvt.weight_btagsf_fastsim_UP = StopEvt.weight_btagsf + btagprob_err_FS_UP*StopEvt.weight_btagsf;
+        StopEvt.weight_btagsf_fastsim_DN = StopEvt.weight_btagsf - btagprob_err_FS_DN*StopEvt.weight_btagsf;
       }
      // save the sum of weights for normalization offline to n-babies.
      // comment: this has to go before the skim_nBJets - else you create a bias
@@ -1233,6 +1242,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhist->Fill(16,StopEvt.weight_btagsf_light_UP);
        counterhist->Fill(17,StopEvt.weight_btagsf_heavy_DN);
        counterhist->Fill(18,StopEvt.weight_btagsf_light_DN);
+       counterhist->Fill(23,StopEvt.weight_btagsf_fastsim_DN);
+       counterhist->Fill(24,StopEvt.weight_btagsf_fastsim_DN);
      }
      if(isSignalFromFileName && !evt_isRealData() && skim_applyBtagSFs){
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,14,StopEvt.weight_btagsf);
@@ -1240,6 +1251,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,16,StopEvt.weight_btagsf_light_UP);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,17,StopEvt.weight_btagsf_heavy_DN);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,18,StopEvt.weight_btagsf_light_DN);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,22,StopEvt.weight_btagsf_fastsim_DN);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,23,StopEvt.weight_btagsf_fastsim_DN);
      }
 
      // 
@@ -1331,6 +1344,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(nVetoLeptons>1) StopEvt.MT2_lb_bqq_lep2 = CalcMT2_lb_bqq_(StopEvt.pfmet,StopEvt.pfmet_phi,lep2.p4,mybjets,myaddjets,jets.ak4pfjets_p4,0,false);
       
       }
+      //MT2(l,l)
+      if(nVetoLeptons>1) StopEvt.MT2_l_l = CalcMT2_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,lep2.p4,false,0);
 
       vector<pair<float, int> > rankminDR; 
       vector<pair<float, int> > rankmaxDPhi;
@@ -1430,6 +1445,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  StopEvt.Zll_met     = sqrt(pow(Zllmetpx,2)+pow(Zllmetpy,2) );
 	  StopEvt.Zll_met_phi = atan2(Zllmetpy,Zllmetpx);
 	  if(jets.ak4pfjets_p4.size()>1) StopEvt.Zll_mindphi_met_j1_j2 =  getMinDphi(StopEvt.Zll_met_phi,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
+	  if(nVetoLeptons>2) StopEvt.Zll_MT2_l_l = CalcMT2_(StopEvt.pfmet,StopEvt.pfmet_phi,AllLeps[Zl1].p4,AllLeps[Zl2].p4,false,0);
 	  if(StopEvt.Zll_selLep == 1){
 	    StopEvt.Zll_mt_met_lep = calculateMt(lep1.p4, StopEvt.Zll_met, StopEvt.Zll_met_phi);
 	    StopEvt.Zll_dphi_Wlep = DPhi_W_lep(StopEvt.Zll_met, StopEvt.Zll_met_phi, lep1.p4);
@@ -1507,6 +1523,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  StopEvt.ph_mt_met_lep = calculateMt(lep1.p4, StopEvt.ph_met, StopEvt.ph_met_phi);
 	  StopEvt.ph_dphi_Wlep = DPhi_W_lep(StopEvt.ph_met, StopEvt.ph_met_phi, lep1.p4);
 	}
+	if(nVetoLeptons>1) StopEvt.ph_MT2_l_l = CalcMT2_(StopEvt.pfmet,StopEvt.pfmet_phi,lep1.p4,lep2.p4,false,0);
 	if(jetsp4_phcleaned.size()>1){
 	  if(nVetoLeptons>0) {
 	    StopEvt.ph_MT2W = CalcMT2W_(mybjets,myaddjets,lep1.p4,StopEvt.ph_met, StopEvt.ph_met_phi);

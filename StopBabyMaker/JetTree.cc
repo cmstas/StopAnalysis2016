@@ -68,7 +68,7 @@ float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFas
     return h->GetBinContent(binx,biny);
 }
 
-void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_err_heavy_UP, float & btagprob_err_heavy_DN,float & btagprob_err_light_UP, float & btagprob_err_light_DN ,unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim)
+void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_err_heavy_UP, float & btagprob_err_heavy_DN,float & btagprob_err_light_UP, float & btagprob_err_light_DN, float & btagprob_err_FS_UP, float & btagprob_err_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim)
 {
     
     // fill info for ak4pfjets
@@ -240,7 +240,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 
 	        float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].pt())));
 	        float eta_cutoff = std::min(2.39,fabs(double(p4sCorrJets[jindex].eta())));
-		float weight_cent(1.), weight_UP(1.), weight_DN(1.);
+		float weight_cent(1.), weight_UP(1.), weight_DN(1.), weight_FS_UP(1.), weight_FS_DN(1.);
 
 //                cout<<"read uncertainty from btagsf reader:"<<endl;
 		if (flavor == BTagEntry::FLAV_UDSG) {
@@ -253,15 +253,19 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 		  weight_DN = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
 		}
 		if (isFastsim) {
+		  weight_FS_UP = weight_cent * reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff);
+		  weight_FS_DN = weight_cent * reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff);
 		  weight_cent *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_UP *= reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_DN *= reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff);
+		  weight_UP *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
+		  weight_DN *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
 		}
   //              cout<<"got uncertainty from btagsf reader:"<<endl;
                 btagprob_data *= weight_cent * eff;
                 btagprob_mc *= eff;
                 float abserr_UP = weight_UP - weight_cent;
                 float abserr_DN = weight_cent - weight_DN;
+		float abserr_FS_UP = weight_FS_UP - weight_cent;
+                float abserr_FS_DN = weight_cent - weight_FS_DN;
 		if (flavor == BTagEntry::FLAV_UDSG) {
                   btagprob_err_light_UP += abserr_UP/weight_cent;
                   btagprob_err_light_DN += abserr_DN/weight_cent;
@@ -269,6 +273,10 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
                   btagprob_err_heavy_UP += abserr_UP/weight_cent;
                   btagprob_err_heavy_DN += abserr_DN/weight_cent;
                 }
+		if(isFastsim){
+		  btagprob_err_FS_UP += abserr_FS_UP/weight_cent;
+		  btagprob_err_FS_DN += abserr_FS_DN/weight_cent;
+		}
 //                cout<<"btagprob_err_heavy_UP"<<btagprob_err_heavy_UP<<endl;
                }
              }else{ 
@@ -280,7 +288,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 	      else if (abs(pfjets_hadronFlavour().at(jindex)) == 4) flavor = BTagEntry::FLAV_C;
 	      float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].eta())));
 	      float eta_cutoff = std::min(2.39,fabs(double(p4sCorrJets[jindex].eta())));
-	      float weight_cent(1.), weight_UP(1.), weight_DN(1.);
+	      float weight_cent(1.), weight_UP(1.), weight_DN(1.), weight_FS_UP(1.), weight_FS_DN(1.);
 	      if (flavor == BTagEntry::FLAV_UDSG) {
 		weight_cent = reader_light->eval(flavor, eta_cutoff, pt_cutoff);
 		weight_UP = reader_light_UP->eval(flavor, eta_cutoff, pt_cutoff);
@@ -291,15 +299,19 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 		weight_DN = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
 	      }
 	      if (isFastsim) {
+		weight_FS_UP = weight_cent * reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff);//this is pure fastsimSF
+		weight_FS_DN = weight_cent * reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff);//this is pure fastsimSF
 		weight_cent *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);
-		weight_UP *= reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff);
-		weight_DN *= reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff);
+		weight_UP *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
+		weight_DN *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
 	      }
 
               btagprob_data *= (1. - weight_cent * eff);
               btagprob_mc *= (1. - eff);
               float abserr_UP = weight_UP - weight_cent;
               float abserr_DN = weight_cent - weight_DN;
+	      float abserr_FS_UP = weight_FS_UP - weight_cent;
+	      float abserr_FS_DN = weight_cent - weight_FS_DN;
 	      if (flavor == BTagEntry::FLAV_UDSG) {
                 btagprob_err_light_UP += (-eff * abserr_UP)/(1 - eff * weight_cent);
                 btagprob_err_light_DN += (-eff * abserr_DN)/(1 - eff * weight_cent);
@@ -307,6 +319,10 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
                 btagprob_err_heavy_UP += (-eff * abserr_UP)/(1 - eff * weight_cent);
                 btagprob_err_heavy_DN += (-eff * abserr_DN)/(1 - eff * weight_cent);
               }
+	      if(isFastsim){
+		btagprob_err_FS_UP += (-eff * abserr_FS_UP)/(1 - eff * weight_cent);
+		btagprob_err_FS_DN += (-eff * abserr_FS_DN)/(1 - eff * weight_cent);
+	      }
            }
          }
 	if(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex)> btagdisc){
