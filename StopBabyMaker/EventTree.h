@@ -115,6 +115,7 @@ public:
     float filt_trkPOG_logerr_tmc;
     float filt_trkPOG_tmc;
     float filt_trkPOG_tms;
+    float filt_badChargedCandidateFilter;
 
     float dR_lep_leadb;
     float dR_lep2_leadb;    
