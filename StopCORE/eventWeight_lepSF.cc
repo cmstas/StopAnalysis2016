@@ -215,11 +215,15 @@ void eventWeight_lepSF::getLepWeight( std::vector< double > recoLep_pt, std::vec
   } // end loop over reco leptons
 
 
+  if(sampleIsFastsim) return;
+
+  if( (int)genLostLep_pt.size()==0 ) return;
+  
   // GenLostLepton scale factors
   binX = -99;
   binY = -99;
   for(int iLep=0; iLep<(int)genLostLep_pt.size(); iLep++){
-
+    
     if( abs(genLostLep_pdgid[iLep])!=11 &&
 	abs(genLostLep_pdgid[iLep])!=13    ) continue;
     if( genLostLep_pt[iLep] <= 5.0 ) continue;
@@ -238,16 +242,15 @@ void eventWeight_lepSF::getLepWeight( std::vector< double > recoLep_pt, std::vec
       double vetoLepSF_temp_Up = (vetoLepSF_temp + h_el_SF_veto->GetBinError(binX, binY));
       double vetoLepSF_temp_Dn = (vetoLepSF_temp - h_el_SF_veto->GetBinError(binX, binY));
       
-      if( vetoEff==1.0 ){
+      if( (1.0-vetoEff)>0.0 ){
+	weight_vetoLepSF    *= ( 1.0-(vetoEff*vetoLepSF_temp) )/( 1.0-vetoEff );
+	weight_vetoLepSF_Up *= ( 1.0-(vetoEff*vetoLepSF_temp_Up) )/( 1.0-vetoEff );
+	weight_vetoLepSF_Dn *= ( 1.0-(vetoEff*vetoLepSF_temp_Dn) )/( 1.0-vetoEff );	    
+      }
+      else{
 	weight_vetoLepSF    *= 1.0;
 	weight_vetoLepSF_Up *= 1.0;
 	weight_vetoLepSF_Dn *= 1.0;
-      }
-      else{
-	weight_vetoLepSF    *= ( 1-(vetoEff*vetoLepSF_temp) )/( 1-vetoEff );
-	weight_vetoLepSF_Up *= ( 1-(vetoEff*vetoLepSF_temp_Up) )/( 1-vetoEff );
-	weight_vetoLepSF_Dn *= ( 1-(vetoEff*vetoLepSF_temp_Dn) )/( 1-vetoEff );	    
-	
       }
 
     } // end if genLostLepton is electron
@@ -266,15 +269,15 @@ void eventWeight_lepSF::getLepWeight( std::vector< double > recoLep_pt, std::vec
       double vetoLepSF_temp_Up = (vetoLepSF_temp + h_mu_SF_veto->GetBinError(binX, binY));
       double vetoLepSF_temp_Dn = (vetoLepSF_temp - h_mu_SF_veto->GetBinError(binX, binY));
       
-      if( vetoEff==1.0 ){
-	weight_vetoLepSF    = 1.0;
-	weight_vetoLepSF_Up = 1.0;
-	weight_vetoLepSF_Dn = 1.0;
+      if( (1.0-vetoEff)>0.0 ){
+	weight_vetoLepSF    *= ( 1.0-(vetoEff*vetoLepSF_temp) )/( 1.0-vetoEff );
+	weight_vetoLepSF_Up *= ( 1.0-(vetoEff*vetoLepSF_temp_Up) )/( 1.0-vetoEff );
+	weight_vetoLepSF_Dn *= ( 1.0-(vetoEff*vetoLepSF_temp_Dn) )/( 1.0-vetoEff );	    
       }
       else{
-	weight_vetoLepSF    = ( 1-(vetoEff*vetoLepSF_temp) )/( 1-vetoEff );
-	weight_vetoLepSF_Up = ( 1-(vetoEff*vetoLepSF_temp_Up) )/( 1-vetoEff );
-	weight_vetoLepSF_Dn = ( 1-(vetoEff*vetoLepSF_temp_Dn) )/( 1-vetoEff );	    
+	weight_vetoLepSF    *= 1.0;
+	weight_vetoLepSF_Up *= 1.0;
+	weight_vetoLepSF_Dn *= 1.0;
       }
 
     } // end if genLostLepton is muon

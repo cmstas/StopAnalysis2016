@@ -47,7 +47,6 @@ eventWeight_bTagSF::eventWeight_bTagSF( bool isFastsim ){
 
 eventWeight_bTagSF::~eventWeight_bTagSF(){
   
-  f_btag_eff->Close();
   
   delete calib;
   delete reader_heavy;
@@ -58,12 +57,20 @@ eventWeight_bTagSF::~eventWeight_bTagSF(){
   delete reader_light_DN;
   
   if(sampleIsFastsim){
+
+    f_btag_eff_fastsim->Close();
+    f_btag_eff_fastsim->~TFile();
+
     delete calib_fastsim;
     delete reader_fastsim;
     delete reader_fastsim_UP;
     delete reader_fastsim_DN;
   }
-    
+  else{
+    f_btag_eff->Close();
+    f_btag_eff->~TFile();
+  }
+  
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -113,7 +120,7 @@ void eventWeight_bTagSF::getBTagWeight( std::vector< double > jet_pt, std::vecto
     // Get jet pT, eta, within cutoffs of efficiency file
     double pt_eff  = std::max(20.0, std::min(399.0, jet_pt[iJet]));
     double eta_eff = std::min(2.39, fabs(jet_eta[iJet]) );
-
+    
     double pt_reader  = std::max(30.0, std::min(669.0, jet_pt[iJet]));
     double eta_reader = std::min(2.39, fabs(jet_eta[iJet]) );
 
@@ -156,14 +163,14 @@ void eventWeight_bTagSF::getBTagWeight( std::vector< double > jet_pt, std::vecto
       weight_DN   = reader_light_DN->eval(flavor, eta_reader, pt_reader);
     }
 
-  
+    
     // extra SF for fastsim
     if(sampleIsFastsim) {
       weight_cent *= reader_fastsim->eval(flavor,eta_reader,pt_reader);
       weight_UP   *= reader_fastsim_UP->eval(flavor,eta_reader,pt_reader);
       weight_DN   *= reader_fastsim_DN->eval(flavor,eta_reader,pt_reader);
     }
-
+    
 
     double abserr_UP = weight_UP - weight_cent;
     double abserr_DN = weight_cent - weight_DN;

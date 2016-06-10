@@ -29,7 +29,8 @@ namespace recoClassyInfo{
 	   k_2lep_2selLep,
 	   k_2lep_1selLep_1vetoLep,
 	   k_2lep_1selLep_1isoTrack,
-	   k_2lep_1selLep_1pfTau
+	   k_2lep_1selLep_1pfTau,
+	   k_nRecoClassy
   };
 
   
@@ -43,7 +44,8 @@ namespace recoClassyInfo{
       std::string        label;
       std::string        title;
       std::string        tex;
-  
+
+      recoClassyUtil(){};
       recoClassyUtil( recoClassyInfo::ID recoClassy );
       ~recoClassyUtil(){};
 
@@ -57,13 +59,17 @@ namespace recoClassyInfo{
   typedef std::pair< recoClassyInfo::ID, bool > pair_id_passBool;
   typedef std::vector< std::pair< recoClassyInfo::ID, bool > > vect_id_passBool;
 
+  typedef std::vector< recoClassyInfo::recoClassyUtil > vect_util;
+  typedef std::pair< recoClassyInfo::recoClassyUtil, bool > pair_util_passBool;
+  typedef std::vector< std::pair< recoClassyInfo::recoClassyUtil, bool > > vect_util_passBool;
+
   
   //
   // Namespace functions
   //
   bool passRecoClassy( recoClassyInfo::ID recoClassy );
-  vect_id_passBool passRecoClassyFromList( vect_id recoClassyList );
-  vect_id getRecoClassyList( analyzerInfo::ID analysis );
+  vect_util_passBool passRecoClassyFromList( vect_util recoClassyList, bool onlyReturnTrue );
+  vect_util getRecoClassyList( analyzerInfo::ID analysis );
 
   
 }; // end namespace def

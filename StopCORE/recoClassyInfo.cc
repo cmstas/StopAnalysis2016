@@ -16,64 +16,64 @@ recoClassyInfo::recoClassyUtil::recoClassyUtil( recoClassyInfo::ID recoClassy ){
   case( k_1lep_el ):
     id    = recoClassy;
     label = "ee1lep_el";
-    title = "==1 lepton, el";
-    tex   = "$==1$~lepton,~el";
+    title = "1 lepton, el";
+    tex   = "$1$~lepton,~el";
     break;
 
   case( k_1lep_mu ):
     id    = recoClassy;
     label = "ee1lep_mu";
-    title = "==1 lepton, muon";
-    tex   = "$==1$~lepton,~muon";
+    title = "1 lepton, muon";
+    tex   = "$1$~lepton,~muon";
     break;
 
   case( k_2lep_elel ):
     id    = recoClassy;
     label = "ee2lep_elel";
-    title = "==2 leptons, el,el";
-    tex   = "$==2$~leptons,~el,el";
+    title = "2 leptons, el,el";
+    tex   = "$2$~leptons,~el,el";
     break;
 
   case( k_2lep_elmu ):
     id    = recoClassy;
     label = "ee2lep_elmu";
-    title = "==2 leptons, el,mu";
-    tex   = "$==2$~leptons,~el,$\\mu$";
+    title = "2 leptons, el,mu";
+    tex   = "$2$~leptons,~el,$\\mu$";
     break;
 
   case( k_2lep_mumu ):
     id    = recoClassy;
     label = "ee2lep_mumu";
-    title = "==2 leptons, mu,mu";
-    tex   = "$==2$~leptons,~$\\mu,\\mu$";
+    title = "2 leptons, mu,mu";
+    tex   = "$2$~leptons,~$\\mu,\\mu$";
     break;
 
   case( k_2lep_2selLep ):
     id    = recoClassy;
     label = "ee2lep_2selLep";
-    title = "==2 leptons, 2 selected leptons";
-    tex   = "$==2$~leptons,~2~selected~leptons";
+    title = "2 leptons, 2 selected leptons";
+    tex   = "$2$~leptons,~2~selected~leptons";
     break;
 
   case( k_2lep_1selLep_1vetoLep ):
     id    = recoClassy;
     label = "ee2lep_1selLep_1vetoLep";
-    title = "==2 leptons, 1 selected, 1 veto lepton";
-    tex   = "$==2$~leptons,~1~selected,~1~veto~lepton";
+    title = "2 leptons, 1 selected, 1 veto lepton";
+    tex   = "$2$~leptons,~1~selected,~1~veto~lepton";
     break;
 
   case( k_2lep_1selLep_1isoTrack ):
     id    = recoClassy;
     label = "ee2lep_1selLep_1isoTrack";
-    title = "==2 leptons, 1 selected lepton, 1 isolated track";
-    tex   = "$==2$~leptons,~1~selected~lepton,~1~isolated~track";
+    title = "2 leptons, 1 selected lepton, 1 isolated track";
+    tex   = "$2$~leptons,~1~selected~lepton,~1~isolated~track";
     break;
 
   case( k_2lep_1selLep_1pfTau ):
     id    = recoClassy;
     label = "ee2lep_1selLep_1pfTau";
-    title = "==2 leptons, 1 selected lepton, 1 tau";
-    tex   = "$==2$~leptons,~1~selected~lepton,~1~$\\tau$";
+    title = "2 leptons, 1 selected lepton, 1 tau";
+    tex   = "$2$~leptons,~1~selected~lepton,~1~$\\tau$";
     break;
 
   default:
@@ -159,16 +159,19 @@ bool recoClassyInfo::passRecoClassy( recoClassyInfo::ID recoClassy ){
 
 //////////////////////////////////////////////////////////////////////
 
-recoClassyInfo::vect_id_passBool recoClassyInfo::passRecoClassyFromList( vect_id recoClassyList ){
+recoClassyInfo::vect_util_passBool recoClassyInfo::passRecoClassyFromList( vect_util recoClassyList, bool onlyReturnTrue ){
 
-  vect_id_passBool result;
+  vect_util_passBool result;
 
   for(int iClassy=0; iClassy<(int)recoClassyList.size(); iClassy++){
 
-    pair_id_passBool temp_result;
+    pair_util_passBool temp_result;
     temp_result.first  = recoClassyList[iClassy];
-    temp_result.second = passRecoClassy( temp_result.first ) ? true : false;
-    result.push_back( temp_result );
+    temp_result.second = passRecoClassy( temp_result.first.id ) ? true : false;
+    if( onlyReturnTrue ){
+      if( temp_result.second ) result.push_back( temp_result );
+    }
+    else result.push_back( temp_result );
 
   }
 
@@ -178,53 +181,53 @@ recoClassyInfo::vect_id_passBool recoClassyInfo::passRecoClassyFromList( vect_id
 
 //////////////////////////////////////////////////////////////////////
 
-recoClassyInfo::vect_id recoClassyInfo::getRecoClassyList( analyzerInfo::ID analysis ){
+recoClassyInfo::vect_util recoClassyInfo::getRecoClassyList( analyzerInfo::ID analysis ){
 
-  vect_id result;
+  vect_util result;
   
   switch( analysis ){
 
   case( analyzerInfo::k_SR ):
-    result.push_back( k_incl );
-    result.push_back( k_1lep_el );
-    result.push_back( k_1lep_mu );
+    result.push_back( recoClassyUtil(k_incl) );
+    //result.push_back( recoClassyUtil(k_1lep_el) );
+    //result.push_back( recoClassyUtil(k_1lep_mu) );
     break;
 
   case( analyzerInfo::k_CR0b ):
-    result.push_back( k_incl );
-    result.push_back( k_1lep_el );
-    result.push_back( k_1lep_mu );
+    result.push_back( recoClassyUtil(k_incl) );
+    //result.push_back( recoClassyUtil(k_1lep_el) );
+    //result.push_back( recoClassyUtil(k_1lep_mu) );
     break;
 
   case( analyzerInfo::k_CR1l_bulkWJets ):
-    result.push_back( k_incl );
-    result.push_back( k_1lep_el );
-    result.push_back( k_1lep_mu );
+    result.push_back( recoClassyUtil(k_incl) );
+    //result.push_back( recoClassyUtil(k_1lep_el) );
+    //result.push_back( recoClassyUtil(k_1lep_mu) );
     break;
 
   case( analyzerInfo::k_CR2l ):
-    result.push_back( k_incl );
-    result.push_back( k_2lep_2selLep );
-    result.push_back( k_2lep_1selLep_1vetoLep );
-    result.push_back( k_2lep_1selLep_1isoTrack );
-    result.push_back( k_2lep_1selLep_1pfTau );
+    result.push_back( recoClassyUtil(k_incl) );
+    result.push_back( recoClassyUtil(k_2lep_2selLep) );
+    result.push_back( recoClassyUtil(k_2lep_1selLep_1vetoLep) );
+    result.push_back( recoClassyUtil(k_2lep_1selLep_1isoTrack) );
+    result.push_back( recoClassyUtil(k_2lep_1selLep_1pfTau) );
     break;
 
   case( analyzerInfo::k_CR2l_bulkTTbar ):
-    result.push_back( k_incl );
-    result.push_back( k_2lep_elel );
-    result.push_back( k_2lep_elmu );
-    result.push_back( k_2lep_mumu );
+    result.push_back( recoClassyUtil(k_incl) );
+    result.push_back( recoClassyUtil(k_2lep_elel) );
+    result.push_back( recoClassyUtil(k_2lep_elmu) );
+    result.push_back( recoClassyUtil(k_2lep_mumu) );
     break;
 
 
   case( analyzerInfo::k_CRGammaJets ):
-    result.push_back( k_incl );
+    result.push_back( recoClassyUtil(k_incl) );
     break;
 
   default:
     std::cout << "Could not find reco classification info from recoClassy enum provided!" << std::endl;
-    result.push_back( k_incl );
+    result.push_back( recoClassyUtil(k_incl) );
     break;
 
   }; // end selection switch

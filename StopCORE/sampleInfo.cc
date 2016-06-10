@@ -1,7 +1,15 @@
 #include "sampleInfo.h"
 
 // ROOT
+#include "TROOT.h"
 #include "Riostream.h"
+#include "TFile.h"
+#include "TCollection.h"
+#include "TKey.h"
+#include "TClass.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TH3.h"
 
 // C
 #include <vector>
@@ -10,11 +18,21 @@
 
 sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
 
-  id        = sample;
-  isData    = false;
-  isFastsim = false;
-  isSignal  = false;
+  id           = sample;
+  isData       = false;
+  isFastsim    = false;
+  isSignal     = false;
+  isSignalScan = false;
+  isAMCNLO     = false;
 
+  nBins_stop = 37; 
+  min_stop   = 87.5; 
+  max_stop   = 1012.5;
+
+  nBins_lsp  = 19; 
+  min_lsp    = -12.5; 
+  max_lsp    = 462.5;
+  
   std::pair< std::string, std::string > temp_i_o;
   
   temp_i_o.first  = baby_inputDir_nominal;
@@ -28,14 +46,44 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
   temp_i_o.first  = baby_inputDir_jesDn;
   temp_i_o.second = baby_outputDir_jesDn;
   baby_i_o.push_back(temp_i_o);
-  
+
+  massPtList.clear();
+  std::pair< double, double > massPt;
   
   switch( sample ){
     
+  case( k_T2tt ):
+    label = "T2tt_25ns";
+    title = "T2tt";
+    tex   = "T2tt";
+    isSignal     = true;
+    isSignalScan = true;
+    isFastsim    = true;
+    inputBabies.push_back("Signal_T2tt.root");
+    baby_i_o.clear();
+    temp_i_o.first  = "/hadoop/cms/store/user/haweber/condor/stop1l/stopbabies_20160127/merged_files/";
+    temp_i_o.second = baby_outputDir_nominal;
+    baby_i_o.push_back(temp_i_o);
+    temp_i_o.first  = "/hadoop/cms/store/user/haweber/condor/stop1l/stopbabies_20160127_JESup/merged_files/";
+    temp_i_o.second = baby_outputDir_jesUp;
+    baby_i_o.push_back(temp_i_o);
+    temp_i_o.first  = "/hadoop/cms/store/user/haweber/condor/stop1l/stopbabies_20160127_JESdown/merged_files/";
+    temp_i_o.second = baby_outputDir_jesDn;
+    baby_i_o.push_back(temp_i_o);
+    massPt.first = 800; massPt.second = 100;
+    massPtList.push_back(massPt);
+    massPt.first = 800; massPt.second = 350;
+    massPtList.push_back(massPt);
+    massPt.first = 500; massPt.second = 325;
+    massPtList.push_back(massPt);
+    massPt.first = 400; massPt.second = 225;
+    massPtList.push_back(massPt);
+    break;
+
   case( k_single_lepton_met_2015CD ):
     label  = "data_single_lepton_met_2015CD_25ns";
     title  = "Data, single e/mu, MET dataset, 2015CD";
-    tex    = "Data,~single~$e/\\mu/$,~MET,~dataset,~2015CD";
+    tex    = "Data,~single~$e/\\mu$,~MET,~dataset,~2015CD";
     isData = true;
     inputBabies.push_back("data_met*.root");
     inputBabies.push_back("data_single_electron*.root");
@@ -97,7 +145,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
   case( k_single_lepton_2015CD ):
     label  = "data_single_lepton_2015CD_25ns";
     title  = "Data, single e/mu dataset, 2015CD";
-    tex    = "Data,~single~$e/\\mu/$,~dataset,~2015CD";
+    tex    = "Data,~single~$e/\\mu$,~dataset,~2015CD";
     isData = true;
     inputBabies.push_back("data_single_electron*.root");
     inputBabies.push_back("data_single_muon*.root");
@@ -158,7 +206,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
   case( k_single_mu_2015CD ):
     label  = "data_single_mu_2015CD_25ns";
     title  = "Data, single muon dataset, 2015CD";
-    tex    = "Data,~single~$\\mu/$,~dataset,~2015CD";
+    tex    = "Data,~single~$\\mu$,~dataset,~2015CD";
     isData = true;
     inputBabies.push_back("data_single_muon*.root");
     baby_i_o.clear();
@@ -549,6 +597,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "DY+Jets to LL, M10to50, amcnlo pythia8";
     tex   = "DY+Jets$\\rightarrow\\ell\\ell$,~M10to50,~amcnlo~pythia8";
     inputBabies.push_back("DYJetsToLL_m10To50_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;    
 
   case( k_DYJetsToLL_m50_amcnlo_pythia8 ):
@@ -556,6 +605,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "DY+Jets to LL, M50, amcnlo pythia8";
     tex   = "DY+Jets$\\rightarrow\\ell\\ell$,~M50,~amcnlo~pythia8";
     inputBabies.push_back("DYJetsToLL_m50_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;        
     
   case( k_WJetsToLNu ):
@@ -576,6 +626,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "W+Jets to LNu, amcnlo pythia8";
     tex   = "W+Jets$\\rightarrow\\ell\\nu$,~amcnlo~pythia8";
     inputBabies.push_back("WJetsToLNu_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_WJetsToLNu_HT100ToInf_madgraph_pythia8 ):
@@ -663,6 +714,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "single t, s-channel, amcnlo pythia8";
     tex   = "single $t$,~s-channel,~amcnlo~pythia8";
     inputBabies.push_back("t_sch_4f_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_t_tch_4f_powheg_pythia8 ):
@@ -799,6 +851,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "WZ to 2L2Q, amcnlo pythia8";
     tex   = "$WZ{\\rightarrow}2{\\ell}2Q$,~amcnlo~pythia8";
     inputBabies.push_back("WZTo2L2Q_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_WZTo1LNu2Q_amcnlo_pythia8 ):
@@ -806,6 +859,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "WZ to LNu2Q, amcnlo pythia8";
     tex   = "$WZ{\\rightarrow}{\\ell}{\\nu}2Q$,~amcnlo~pythia8";
     inputBabies.push_back("WZTo1LNu2Q_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_WZTo1L3Nu_amcnlo_pythia8 ):
@@ -813,6 +867,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "WZ to 1L3Nu, amcnlo pythia8";
     tex   = "$WZ{\\rightarrow}1{\\ell}3{\\nu}$,~amcnlo~pythia8";
     inputBabies.push_back("WZTo1L3Nu_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_ZZ ):
@@ -844,6 +899,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "ZZ to 2L2Q, amcnlo pythia8";
     tex   = "$ZZ{\\rightarrow}2{\\ell}2Q$,~amcnlo~pythia8";
     inputBabies.push_back("ZZTo2L2Q_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_ZZTo2L2Nu_powheg_pythia8 ):
@@ -858,6 +914,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "ZZ to 2Q2Nu, amcnlo pythia8";
     tex   = "$ZZ{\\rightarrow}2Q2{\\nu}$,~amcnlo~pythia8";
     inputBabies.push_back("ZZTo2Q2Nu_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_TTV ):
@@ -873,7 +930,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
   case( k_TTW ):
     label = "TTW_25ns";
     title = "TTW";
-    tex   = "$t\\bar{t}+W";
+    tex   = "$t\\bar{t}+W$";
     inputBabies.push_back("TTWJetsToLNu_amcnlo_pythia8_25ns*.root");
     inputBabies.push_back("TTWJetsToQQ_amcnlo_pythia8_25ns*.root");
     break;
@@ -883,6 +940,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "TTW to LNu, amcnlo pythia8";
     tex   = "$t\\bar{t}+W{\\rightarrow}{\\ell}{\\nu}$,~amcnlo~pythia8";
     inputBabies.push_back("TTWJetsToLNu_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_TTWJetsToQQ_amcnlo_pythia8 ):
@@ -890,6 +948,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "TTW to QQ, amcnlow pythia8";
     tex   = "$t\\bar{t}+W{\\rightarrow}QQ$,~amcnlo~pythia8";
     inputBabies.push_back("TTWJetsToQQ_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
     
   case( k_TTZ ):
@@ -905,6 +964,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "TTZ to QQ, amcnlo pythia8";
     tex   = "$t\\bar{t}+Z{\\rightarrow}QQ$,~amcnlo~pythia8";
     inputBabies.push_back("TTZToQQ_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_TTZToLLNuNu_m10_amcnlo_pythia8 ):
@@ -912,6 +972,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "TTZ to 2L2Nu, amcnlo pythia8";
     tex   = "$t\\bar{t}+Z{\\rightarrow}2{\\ell}2{\\nu}$,~amcnlo~pythia8";
     inputBabies.push_back("TTZToLLNuNu_M-10_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_tZq ):
@@ -927,6 +988,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "tZq to 2L, amcnlo pythia8";
     tex   = "$tZq{\\rightarrow}2{\\ell}$,~amcnlo~pythia8";
     inputBabies.push_back("tZq_ll_4f_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
 
   case( k_tZq_nunu_4f_amcnlo_pythia8 ):
@@ -934,6 +996,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title = "tZq to 2Nu, amcnlo pythia8";
     tex   = "$tZq{\\rightarrow}2{\\nu}$,~amcnlo~pythia8";
     inputBabies.push_back("tZq_nunu_4f_amcnlo_pythia8_25ns*.root");
+    isAMCNLO = true;
     break;
     
   case( k_GJets_HT40toInf_madgraph_pythia8 ):
@@ -1031,10 +1094,10 @@ sampleInfo::vect_id sampleInfo::getSampleList( analyzerInfo::ID analysis ){
   case( analyzerInfo::k_SR ):
   case( analyzerInfo::k_CR0b ):
   case( analyzerInfo::k_CR1l_bulkWJets ):
+  case( analyzerInfo::k_CR2l ):
     result.push_back( sampleInfo::k_single_lepton_met_2015CD );
     break;
   
-  case( analyzerInfo::k_CR2l ):
   case( analyzerInfo::k_CR2l_bulkTTbar ):
     result.push_back( sampleInfo::k_diLepton_2015CD );
     break;
@@ -1076,13 +1139,9 @@ sampleInfo::vect_id sampleInfo::getSampleList( analyzerInfo::ID analysis ){
   default:
 
     // MC, ttbar
-    //result.push_back( sampleInfo::k_ttbar_powheg_pythia8 );
     result.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 );
-    //result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
     //result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
-    //result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 );
     //result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
-    //result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8 );
     //result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1);
   
     // MC, DYJets
@@ -1136,6 +1195,54 @@ sampleInfo::vect_id sampleInfo::getSampleList( analyzerInfo::ID analysis ){
   }; // end switch to choose monte carlo
 
   return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+int sampleInfo::scaleSample(std::string f_in_name, std::string f_out_name, double SF){
+
+  std::cout << "Rescaling histos in: " << std::endl;
+  std::cout << "    " << f_in_name << ", by SF = " << SF << std::endl;
+  std::cout << "Output written to: " << std::endl;
+  std::cout << "    " << f_out_name << std::endl;
+
+  TFile *f_in  = new TFile(f_in_name.c_str(), "read");
+  TFile *f_out = new TFile(f_out_name.c_str(), "recreate");
+  
+  TIter nextIter(f_in->GetListOfKeys());
+  TKey *key;
+  while ((key = (TKey*)nextIter())) {
+    
+    TClass *cl = gROOT->GetClass(key->GetClassName());
+    
+    if(cl->InheritsFrom("TH1D")){      
+      TH1D *h = (TH1D*)key->ReadObj();
+      TH1D *h_clone = (TH1D*)h->Clone();
+      h_clone->SetDirectory(f_out);
+      h_clone->Scale(SF);
+    }
+    
+    if(cl->InheritsFrom("TH2D")){
+      TH2D *h = (TH2D*)key->ReadObj();
+      TH2D *h_clone = (TH2D*)h->Clone();
+      h_clone->SetDirectory(f_out);
+      h_clone->Scale(SF);
+    }
+
+    if(cl->InheritsFrom("TH3D")){
+      TH3D *h = (TH3D*)key->ReadObj();
+      TH3D *h_clone = (TH3D*)h->Clone();
+      h_clone->SetDirectory(f_out);
+      h_clone->Scale(SF);
+    }
+
+  }
+
+  f_in->Close();
+  f_out->Write();
+  f_out->Close();
+
+  return 0;
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -63,7 +63,8 @@ namespace categoryInfo{
 	   k_ge2btags_ge100met,
 	   k_ge2btags_ge150met,
 	   k_ge2btags_ge200met,
-	   k_ge2btags_ge250met
+	   k_ge2btags_ge250met,
+	   k_nCats
   };
 
 
@@ -77,7 +78,8 @@ namespace categoryInfo{
       std::string     label;
       std::string     title;
       std::string     tex;
-      
+
+      categoryUtil(){};
       categoryUtil( categoryInfo::ID category );
       ~categoryUtil(){};
   };
@@ -90,13 +92,17 @@ namespace categoryInfo{
   typedef std::pair< categoryInfo::ID, bool > pair_id_passBool;
   typedef std::vector< categoryInfo::ID > vect_id;
 
+  typedef std::vector< std::pair< categoryInfo::categoryUtil, bool > > vect_util_passBool;
+  typedef std::pair< categoryInfo::categoryUtil, bool > pair_util_passBool;
+  typedef std::vector< categoryInfo::categoryUtil > vect_util;
+
 
   //
   // NAMESPACE FUNCTIONS
   //
   bool passCategory( categoryInfo::ID category );
-  vect_id_passBool passCategoriesFromList( vect_id categoryList );
-  vect_id getCategoryList( analyzerInfo::ID analysis );
+  vect_util_passBool passCategoriesFromList( vect_util categoryList, bool onlyReturnTrue );
+  vect_util getCategoryList( analyzerInfo::ID analysis );
 
 }; // end class def
 

@@ -59,7 +59,7 @@ eventWeight_lepSF.o: eventWeight_lepSF.cc eventWeight_lepSF.h
 	$(CXX) $(CXXFLAGS) -c eventWeight_lepSF.cc
 
 
-selectionInfo.o: selectionInfo.cc selectionInfo.h analyzerInfo.h analyzerInfo.cc stop_1l_babyAnalyzer.cc stop_1l_babyAnalyzer.h
+selectionInfo.o: selectionInfo.cc selectionInfo.h analyzerInfo.h analyzerInfo.cc sampleInfo.cc sampleInfo.h stop_1l_babyAnalyzer.cc stop_1l_babyAnalyzer.h
 	$(CXX) $(CXXFLAGS) -c selectionInfo.cc
 
 

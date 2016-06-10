@@ -167,7 +167,7 @@ selectionInfo::cutUtil::cutUtil( selectionInfo::ID cut ){
 
 //////////////////////////////////////////////////////////////////////
 
-selectionInfo::selectionUtil::selectionUtil( vect_id cuts, bool isData ){
+selectionInfo::selectionUtil::selectionUtil( vect_util cuts, sampleInfo::ID sample_id ){
   
   v_cuts.clear();
   v_cuts = cuts;
@@ -175,10 +175,14 @@ selectionInfo::selectionUtil::selectionUtil( vect_id cuts, bool isData ){
   h_cutflow     = NULL;
   h_cutflow_wgt = NULL;
   vect_cutflow_nMinus1.clear();
+  
+  h_cutflow_sig     = NULL;
+  h_cutflow_sig_wgt = NULL;
+  vect_cutflow_nMinus1_sig.clear();
 
-  sample_is_data = isData;
-
-  if( sample_is_data ){
+  sample_info = new sampleInfo::sampleUtil( sample_id );
+  
+  if( sample_info->isData ){
     std::cout << "    Loading bad event files" << std::endl;
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/csc2015_Dec01.txt");
     metFilterTxt.loadBadEventList("/nfs-6/userdata/mt2utils/ecalscn1043093_Dec01.txt");
@@ -193,13 +197,16 @@ selectionInfo::selectionUtil::selectionUtil( vect_id cuts, bool isData ){
 
 selectionInfo::selectionUtil::~selectionUtil(){
 
-  if( sample_is_data ){
+  if( sample_info->isData ){
     duplicate_removal::clear_list();
   }
   
   v_cuts.clear();
   vect_cutflow_nMinus1.clear();
-   
+  vect_cutflow_nMinus1_sig.clear();
+
+  sample_info->~sampleUtil();
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -210,12 +217,21 @@ void selectionInfo::selectionUtil::setupCutflowHistos( TFile *f_out ){
   std::string h_name  = "h__cutflow";
   std::string h_title = "Cutflow, Unweighted Events";
 
-  h_cutflow = new TH1D( h_name.c_str(), h_title.c_str(), (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
-  h_cutflow->SetDirectory( f_out );
-
-  for(int iBin=1; iBin<=(int)h_cutflow->GetNbinsX(); iBin++){
-    selectionInfo::cutUtil cut_info( v_cuts[iBin-1] );
-    h_cutflow->GetXaxis()->SetBinLabel( iBin, cut_info.label.c_str() );
+  if( sample_info->isSignalScan ){
+    h_cutflow_sig = new TH3D( h_name.c_str(), h_title.c_str(), sample_info->nBins_stop, sample_info->min_stop, sample_info->max_stop, sample_info->nBins_lsp, sample_info->min_lsp, sample_info->max_lsp, (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
+    h_cutflow_sig->SetDirectory( f_out );
+ 
+    for(int iBin=1; iBin<=(int)h_cutflow_sig->GetNbinsZ(); iBin++){
+      h_cutflow_sig->GetZaxis()->SetBinLabel( iBin, v_cuts[iBin-1].label.c_str() );
+    }
+  }
+  else{
+    h_cutflow = new TH1D( h_name.c_str(), h_title.c_str(), (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
+    h_cutflow->SetDirectory( f_out );
+ 
+    for(int iBin=1; iBin<=(int)h_cutflow->GetNbinsX(); iBin++){
+      h_cutflow->GetXaxis()->SetBinLabel( iBin, v_cuts[iBin-1].label.c_str() );
+    }
   }
 
 
@@ -223,44 +239,79 @@ void selectionInfo::selectionUtil::setupCutflowHistos( TFile *f_out ){
   h_name  = "h__cutflow_wgt";
   h_title = "Cutflow";
 
-  h_cutflow_wgt = new TH1D( h_name.c_str(), h_title.c_str(), (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
-  h_cutflow_wgt->SetDirectory( f_out );
-
-  for(int iBin=1; iBin<=(int)h_cutflow_wgt->GetNbinsX(); iBin++){
-    selectionInfo::cutUtil cut_info( v_cuts[iBin-1] );
-    h_cutflow_wgt->GetXaxis()->SetBinLabel( iBin, cut_info.label.c_str() );
+  if( sample_info->isSignalScan ){
+    h_cutflow_sig_wgt = new TH3D( h_name.c_str(), h_title.c_str(), sample_info->nBins_stop, sample_info->min_stop, sample_info->max_stop, sample_info->nBins_lsp, sample_info->min_lsp, sample_info->max_lsp, (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
+    h_cutflow_sig_wgt->SetDirectory( f_out );
+    
+    for(int iBin=1; iBin<=(int)h_cutflow_sig_wgt->GetNbinsZ(); iBin++){
+      h_cutflow_sig_wgt->GetZaxis()->SetBinLabel( iBin, v_cuts[iBin-1].label.c_str() );
+    }
   }
-
+  else{
+    h_cutflow_wgt = new TH1D( h_name.c_str(), h_title.c_str(), (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
+    h_cutflow_wgt->SetDirectory( f_out );
   
+    for(int iBin=1; iBin<=(int)h_cutflow_wgt->GetNbinsX(); iBin++){
+      h_cutflow_wgt->GetXaxis()->SetBinLabel( iBin, v_cuts[iBin-1].label.c_str() );
+    }
+  }
+  
+
   // N-1 Cutflow
   const int nCuts = (int)v_cuts.size();
-  TH1D *h_cutflow_Nminus1[nCuts];
 
-  for(int iCut=0; iCut<(int)v_cuts.size(); iCut++){
-
-    selectionInfo::cutUtil cut_info( v_cuts[iCut] );
-
-    h_name  = "h__cutflow_nMinus1__" + cut_info.label;
-    h_title = "Cutflow, N-1, " + cut_info.title;
-
-    h_cutflow_Nminus1[iCut] = new TH1D( h_name.c_str(), h_title.c_str(), (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
-    h_cutflow_Nminus1[iCut]->SetDirectory( f_out );
-
-    int bin=1;
-    for(int jCut=0; jCut<(int)v_cuts.size(); jCut++){
-      if( jCut==iCut ) continue;
-      selectionInfo::cutUtil cut_info_j( v_cuts[jCut] );
-      h_cutflow_Nminus1[iCut]->GetXaxis()->SetBinLabel( bin, cut_info_j.label.c_str() );
-      bin++;
-    }
+  if( sample_info->isSignalScan ){
+    TH3D *h_cutflow_Nminus1[nCuts];
     
-    h_cutflow_Nminus1[iCut]->GetXaxis()->SetBinLabel( bin, cut_info.label.c_str() );
+    for(int iCut=0; iCut<(int)v_cuts.size(); iCut++){
+      
+      h_name  = "h__cutflow_nMinus1__" + v_cuts[iCut].label;
+      h_title = "Cutflow, N-1, " + v_cuts[iCut].title;
 
-    vect_cutflow_nMinus1.push_back( h_cutflow_Nminus1[iCut] );
+      h_cutflow_Nminus1[iCut] = new TH3D( h_name.c_str(), h_title.c_str(), sample_info->nBins_stop, sample_info->min_stop, sample_info->max_stop, sample_info->nBins_lsp, sample_info->min_lsp, sample_info->max_lsp, (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
+      h_cutflow_Nminus1[iCut]->SetDirectory( f_out );
+      
+      int bin=1;
+      for(int jCut=0; jCut<(int)v_cuts.size(); jCut++){
+	if( jCut==iCut ) continue;
+	h_cutflow_Nminus1[iCut]->GetZaxis()->SetBinLabel( bin, v_cuts[jCut].label.c_str() );
+	bin++;
+      }
+      
+      h_cutflow_Nminus1[iCut]->GetZaxis()->SetBinLabel( bin, v_cuts[iCut].label.c_str() );
+      
+      vect_cutflow_nMinus1_sig.push_back( h_cutflow_Nminus1[iCut] );
+      
+    } // end loop over cuts
 
-  } // end loop over cuts
+  } // end if signal
+  else{
+    TH1D *h_cutflow_Nminus1[nCuts];
 
+    for(int iCut=0; iCut<(int)v_cuts.size(); iCut++){
+      
+      h_name  = "h__cutflow_nMinus1__" + v_cuts[iCut].label;
+      h_title = "Cutflow, N-1, " + v_cuts[iCut].title;
+
+      h_cutflow_Nminus1[iCut] = new TH1D( h_name.c_str(), h_title.c_str(), (int)v_cuts.size(), 0.0, (double)v_cuts.size() );
+      h_cutflow_Nminus1[iCut]->SetDirectory( f_out );
+      
+      int bin=1;
+      for(int jCut=0; jCut<(int)v_cuts.size(); jCut++){
+	if( jCut==iCut ) continue;
+	h_cutflow_Nminus1[iCut]->GetXaxis()->SetBinLabel( bin, v_cuts[jCut].label.c_str() );
+	bin++;
+      }
+      
+      h_cutflow_Nminus1[iCut]->GetXaxis()->SetBinLabel( bin, v_cuts[iCut].label.c_str() );
+      
+      vect_cutflow_nMinus1.push_back( h_cutflow_Nminus1[iCut] );
+      
+    } // end loop over cuts
+
+  } // end if not signal
     
+
   return;
 
 }
@@ -352,9 +403,12 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     break;
 
   case( k_diLepton_bulkTTbar ):
-    if( babyAnalyzer.nlooseleps()>=2     &&
-	babyAnalyzer.lep1_p4().Pt()>30.0 && 
-	babyAnalyzer.lep2_p4().Pt()>15.0    ) result = true;
+    if( babyAnalyzer.lep1_p4().Pt()>30.0 && 
+	babyAnalyzer.lep2_p4().Pt()>15.0 &&
+	babyAnalyzer.lep1_miniRelIsoEA()<0.1 &&
+	babyAnalyzer.lep2_miniRelIsoEA()<0.1 &&
+	( (babyAnalyzer.lep1_is_mu() && babyAnalyzer.lep1_is_muoid_tight()) || (babyAnalyzer.lep1_is_el() && fabs(babyAnalyzer.lep1_p4().Eta())<1.442 && babyAnalyzer.lep1_passMediumID()) ) &&
+	( (babyAnalyzer.lep2_is_mu() && babyAnalyzer.lep2_is_muoid_tight()) || (babyAnalyzer.lep2_is_el() && fabs(babyAnalyzer.lep2_p4().Eta())<1.442 && babyAnalyzer.lep2_passMediumID()) )    ) result = true;
     break;
 
   case( k_oppSignLeptons ):
@@ -362,9 +416,9 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     break;
 
   case( k_zMassWindow ):
-    if(abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==24 ) result = true;
-    else if( (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).Pt()>(91.1876+15.0) || 
-	     (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).Pt()<(91.1876-15.0)    ) result = true; 
+    if((abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid()))==24 ) result = true;
+    else if( (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()>(91.1876+15.0) || 
+	     (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()<(91.1876-15.0)    ) result = true; 
     break;
 
   case( k_ge20_diLepMass ):
@@ -416,7 +470,7 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
 bool selectionInfo::selectionUtil::passSelection(){
 
   for(int iCut=0; iCut<(int)v_cuts.size(); iCut++){
-    if( !passCut( v_cuts[iCut] ) ) return false;
+    if( !passCut( v_cuts[iCut].id ) ) return false;
   }
   return true;
 
@@ -426,52 +480,109 @@ bool selectionInfo::selectionUtil::passSelection(){
 
 void selectionInfo::selectionUtil::fillCutflowHistos( double wgt ){  
   
-  if( !h_cutflow ){
-    std::cout << "      Error, must call setupCutflowHistos( TFile *f_out ) before attempting to fill cutflow histogram" << std::endl;
-    return;
+  int nCuts = (int)v_cuts.size();
+
+  vector<bool> passCuts;
+  for(int iCut=0; iCut<nCuts; iCut++){
+    passCuts.push_back( passCut( v_cuts[iCut].id ) );
   }
 
-  // Cutflow, Unweighted
-  for(int iCut=0; iCut<(int)v_cuts.size(); iCut++){
-    if( passCut( v_cuts[iCut] ) ){
-      selectionInfo::cutUtil cut_info( v_cuts[iCut] );
-      h_cutflow->Fill( cut_info.label.c_str(), 1.0 );
-    }
-    else break;
-  }
-  
-  // Cutflow, Weighted
-  for(int iCut=0; iCut<(int)v_cuts.size(); iCut++){
-    if( passCut( v_cuts[iCut] ) ){
-      selectionInfo::cutUtil cut_info( v_cuts[iCut] );
-      h_cutflow_wgt->Fill( cut_info.label.c_str(), wgt );
-    }
-    else break;
-  }
-  
-  // N-1 Cutflow
-  for(int iCut=0; iCut<(int)v_cuts.size(); iCut++){
 
-    bool pass_nMinus1 = true;
-    for(int jCut=0; jCut<(int)v_cuts.size(); jCut++){
-      
-      if( jCut==iCut ) continue;
-      if( passCut( v_cuts[jCut] ) ){
-	selectionInfo::cutUtil cut_info_j( v_cuts[jCut] );
-	vect_cutflow_nMinus1[iCut]->Fill( cut_info_j.label.c_str(), wgt );
+  if( sample_info->isSignalScan ){
+
+    // Intput Sanitation
+    if( !h_cutflow_sig ){
+      std::cout << "      Error, must call setupCutflowHistos( TFile *f_out ) before attempting to fill cutflow histogram" << std::endl;
+      return;
+    }
+
+    // Cutflow, Unweighted
+    for(int iCut=0; iCut<nCuts; iCut++){
+      if( passCuts[iCut] ){
+	h_cutflow_sig->Fill( babyAnalyzer.mass_stop(), babyAnalyzer.mass_lsp(), v_cuts[iCut].label.c_str(), 1.0 );
       }
-      else{
-	pass_nMinus1 = false;
-	break;
-      }
+      else break;
     }
     
-    if( pass_nMinus1 ){
-      selectionInfo::cutUtil cut_info( v_cuts[iCut] );
-      vect_cutflow_nMinus1[iCut]->Fill( cut_info.label.c_str(), wgt );
+    // Cutflow, Weighted
+    for(int iCut=0; iCut<nCuts; iCut++){
+      if( passCuts[iCut] ){
+	h_cutflow_sig_wgt->Fill( babyAnalyzer.mass_stop(), babyAnalyzer.mass_lsp(), v_cuts[iCut].label.c_str(), wgt );
+      }
+      else break;
+    }
+  
+    // N-1 Cutflow
+    for(int iCut=0; iCut<nCuts; iCut++){
+      
+      bool pass_nMinus1 = true;
+      for(int jCut=0; jCut<nCuts; jCut++){
+	
+	if( jCut==iCut ) continue;
+	if( passCuts[jCut] ){
+	  vect_cutflow_nMinus1_sig[iCut]->Fill( babyAnalyzer.mass_stop(), babyAnalyzer.mass_lsp(), v_cuts[jCut].label.c_str(), wgt );
+	}
+	else{
+	  pass_nMinus1 = false;
+	  break;
+	}
+      }
+      
+      if( pass_nMinus1 ){
+	vect_cutflow_nMinus1_sig[iCut]->Fill( babyAnalyzer.mass_stop(), babyAnalyzer.mass_lsp(), v_cuts[iCut].label.c_str(), wgt );
+      }
+
     }
 
+
   }
+  else{
+
+    // Intput Sanitation
+    if( !h_cutflow ){
+      std::cout << "      Error, must call setupCutflowHistos( TFile *f_out ) before attempting to fill cutflow histogram" << std::endl;
+      return;
+    }
+
+    // Cutflow, Unweighted
+    for(int iCut=0; iCut<nCuts; iCut++){
+      if( passCuts[iCut] ){
+	h_cutflow->Fill( v_cuts[iCut].label.c_str(), 1.0 );
+      }
+      else break;
+    }
+    
+    // Cutflow, Weighted
+    for(int iCut=0; iCut<nCuts; iCut++){
+      if( passCuts[iCut] ){
+	h_cutflow_wgt->Fill( v_cuts[iCut].label.c_str(), wgt );
+      }
+      else break;
+    }
+  
+    // N-1 Cutflow
+    for(int iCut=0; iCut<nCuts; iCut++){
+      
+      bool pass_nMinus1 = true;
+      for(int jCut=0; jCut<nCuts; jCut++){
+	
+	if( jCut==iCut ) continue;
+	if( passCuts[jCut] ){
+	  vect_cutflow_nMinus1[iCut]->Fill( v_cuts[jCut].label.c_str(), wgt );
+	}
+	else{
+	  pass_nMinus1 = false;
+	  break;
+	}
+      }
+      
+      if( pass_nMinus1 ){
+	vect_cutflow_nMinus1[iCut]->Fill( v_cuts[iCut].label.c_str(), wgt );
+      }
+
+    }
+
+  } // end if not signalScan
   
   return;
 
@@ -479,124 +590,157 @@ void selectionInfo::selectionUtil::fillCutflowHistos( double wgt ){
 
 //////////////////////////////////////////////////////////////////////
 
-void selectionInfo::selectionUtil::printCutflow(){
+void selectionInfo::selectionUtil::printCutflow(double mStop, double mLSP){
 
-  // Input Sanitation
-  if( !h_cutflow ){
-    std::cout << "      Error, must call setupCutflowHistos( TFile *f_out ) before attempting to fill cutflow histogram" << std::endl;
-    return;
-  }
+  if( sample_info->isSignalScan ){
+    // Input Sanitation
+    if( !h_cutflow_sig ){
+      std::cout << "      Error, must call setupCutflowHistos( TFile *f_out ) before attempting to access cutflow histogram" << std::endl;
+      return;
+    }
 
-  // Get width of cuts
-  int label_width = 1;
-  for(int iBin=1; iBin<=(int)h_cutflow->GetNbinsX(); iBin++){
-    std::string temp_label =  h_cutflow->GetXaxis()->GetBinLabel(iBin);
-    label_width = std::max( label_width, (int)temp_label.length() );
-  }
+    int binX = h_cutflow_sig->GetXaxis()->FindBin(mStop);
+    int binY = h_cutflow_sig->GetYaxis()->FindBin(mLSP);
 
-  std::cout << "    Printing Cutflow: " << std::endl;
-  for(int iBin=1; iBin<=(int)h_cutflow->GetNbinsX(); iBin++){
-    std::cout << "      ";
-    std::cout << setw(label_width);
-    std::cout << h_cutflow->GetXaxis()->GetBinLabel(iBin);
-    std::cout << ": ";
-    std::cout << setw(12);
-    std::cout << h_cutflow->GetBinContent(iBin);
-    std::cout << ", ";
-    std::cout << h_cutflow_wgt->GetBinContent(iBin) << std::endl;
+    // Get width of cuts
+    int label_width = 1;
+    for(int iBin=1; iBin<=(int)h_cutflow_sig->GetNbinsZ(); iBin++){
+      std::string temp_label =  h_cutflow_sig->GetZaxis()->GetBinLabel(iBin);
+      label_width = std::max( label_width, (int)temp_label.length() );
+    }
+    
+    std::cout << "    Printing Cutflow, for mStop=" << mStop << ", mLSP=" << mLSP << ": " << std::endl;
+    for(int iBin=1; iBin<=(int)h_cutflow_sig->GetNbinsZ(); iBin++){
+      std::cout << "      ";
+      std::cout << setw(label_width);
+      std::cout << h_cutflow_sig->GetZaxis()->GetBinLabel(iBin);
+      std::cout << ": ";
+      std::cout << setw(12);
+      std::cout << h_cutflow_sig->GetBinContent(binX,binY,iBin);
+      std::cout << ", ";
+      std::cout << h_cutflow_sig_wgt->GetBinContent(binX,binY,iBin) << std::endl;
+    }
+    
+    
   }
-  
+  else{
+    // Input Sanitation
+    if( !h_cutflow ){
+      std::cout << "      Error, must call setupCutflowHistos( TFile *f_out ) before attempting to access cutflow histogram" << std::endl;
+      return;
+    }
+    
+    // Get width of cuts
+    int label_width = 1;
+    for(int iBin=1; iBin<=(int)h_cutflow->GetNbinsX(); iBin++){
+      std::string temp_label =  h_cutflow->GetXaxis()->GetBinLabel(iBin);
+      label_width = std::max( label_width, (int)temp_label.length() );
+    }
+    
+    std::cout << "    Printing Cutflow: " << std::endl;
+    for(int iBin=1; iBin<=(int)h_cutflow->GetNbinsX(); iBin++){
+      std::cout << "      ";
+      std::cout << setw(label_width);
+      std::cout << h_cutflow->GetXaxis()->GetBinLabel(iBin);
+      std::cout << ": ";
+      std::cout << setw(12);
+      std::cout << h_cutflow->GetBinContent(iBin);
+      std::cout << ", ";
+      std::cout << h_cutflow_wgt->GetBinContent(iBin) << std::endl;
+    }
+    
+  } // end if not signal scan
+
+
   return;
 }
 
 //////////////////////////////////////////////////////////////////////
 
-selectionInfo::vect_id selectionInfo::getCutList( analyzerInfo::ID analysis ){
+selectionInfo::vect_util selectionInfo::getCutList( analyzerInfo::ID analysis ){
 
-  vect_id result;
+  vect_util result;
 
   switch( analysis ){
 
   case( analyzerInfo::k_SR ):
-    result.push_back( k_dataFilter );
-    result.push_back( k_trigger_singleLep_or_MET );
-    result.push_back( k_goodVtx );
-    result.push_back( k_ee1_selLep );
-    result.push_back( k_ee0_vetoLep );
-    result.push_back( k_trackVeto );
-    result.push_back( k_tauVeto );
-    result.push_back( k_ge2_jets );
-    result.push_back( k_ge1_bJets );
-    result.push_back( k_ge250_met );
-    result.push_back( k_ge150_mt );
-    result.push_back( k_ge0p8_minDPhi );
+    result.push_back( cutUtil(k_dataFilter) );
+    result.push_back( cutUtil(k_trigger_singleLep_or_MET) );
+    result.push_back( cutUtil(k_goodVtx) );
+    result.push_back( cutUtil(k_ee1_selLep) );
+    result.push_back( cutUtil(k_ee0_vetoLep) );
+    result.push_back( cutUtil(k_trackVeto) );
+    result.push_back( cutUtil(k_tauVeto) );
+    result.push_back( cutUtil(k_ge2_jets) );
+    result.push_back( cutUtil(k_ge1_bJets) );
+    result.push_back( cutUtil(k_ge250_met) );
+    result.push_back( cutUtil(k_ge150_mt) );
+    result.push_back( cutUtil(k_ge0p8_minDPhi) );
     break;
 
   case( analyzerInfo::k_CR0b ):
-    result.push_back( k_dataFilter );
-    result.push_back( k_trigger_singleLep_or_MET );
-    result.push_back( k_goodVtx );
-    result.push_back( k_ee1_selLep );
-    result.push_back( k_ee0_vetoLep );
-    result.push_back( k_trackVeto );
-    result.push_back( k_tauVeto );
-    result.push_back( k_ge2_jets );
-    result.push_back( k_ee0_bJets );
-    result.push_back( k_ge250_met );
-    result.push_back( k_ge150_mt );
-    result.push_back( k_ge0p8_minDPhi );
+    result.push_back( cutUtil(k_dataFilter) );
+    result.push_back( cutUtil(k_trigger_singleLep_or_MET) );
+    result.push_back( cutUtil(k_goodVtx) );
+    result.push_back( cutUtil(k_ee1_selLep) );
+    result.push_back( cutUtil(k_ee0_vetoLep) );
+    result.push_back( cutUtil(k_trackVeto) );
+    result.push_back( cutUtil(k_tauVeto) );
+    result.push_back( cutUtil(k_ge2_jets) );
+    result.push_back( cutUtil(k_ee0_bJets) );
+    result.push_back( cutUtil(k_ge250_met) );
+    result.push_back( cutUtil(k_ge150_mt) );
+    result.push_back( cutUtil(k_ge0p8_minDPhi) );
     break;
 
   case( analyzerInfo::k_CR1l_bulkWJets ):
-    result.push_back( k_dataFilter );
-    result.push_back( k_trigger_singleLep_or_MET );
-    result.push_back( k_goodVtx );
-    result.push_back( k_ee1_selLep );
-    result.push_back( k_ee0_vetoLep );
-    result.push_back( k_trackVeto );
-    result.push_back( k_tauVeto );
-    result.push_back( k_ge2_jets );
-    result.push_back( k_ge1_bJets );
-    result.push_back( k_ge0p8_minDPhi );
+    result.push_back( cutUtil(k_dataFilter) );
+    result.push_back( cutUtil(k_trigger_singleLep_or_MET) );
+    result.push_back( cutUtil(k_goodVtx) );
+    result.push_back( cutUtil(k_ee1_selLep) );
+    result.push_back( cutUtil(k_ee0_vetoLep) );
+    result.push_back( cutUtil(k_trackVeto) );
+    result.push_back( cutUtil(k_tauVeto) );
+    result.push_back( cutUtil(k_ge2_jets) );
+    result.push_back( cutUtil(k_ge1_bJets) );
+    result.push_back( cutUtil(k_ge0p8_minDPhi) );
     break;
 
   case( analyzerInfo::k_CR2l ):
-    result.push_back( k_dataFilter );
-    result.push_back( k_trigger_singleLep_or_MET );
-    result.push_back( k_goodVtx );
-    result.push_back( k_diLepton );
-    result.push_back( k_ge2_jets );
-    result.push_back( k_ge1_bJets );
-    result.push_back( k_ge250_met );
-    result.push_back( k_ge150_mt );
-    result.push_back( k_ge0p8_minDPhi );
+    result.push_back( cutUtil(k_dataFilter) );
+    result.push_back( cutUtil(k_trigger_singleLep_or_MET) );
+    result.push_back( cutUtil(k_goodVtx) );
+    result.push_back( cutUtil(k_diLepton) );
+    result.push_back( cutUtil(k_ge2_jets) );
+    result.push_back( cutUtil(k_ge1_bJets) );
+    result.push_back( cutUtil(k_ge250_met) );
+    result.push_back( cutUtil(k_ge150_mt) );
+    result.push_back( cutUtil(k_ge0p8_minDPhi) );
     break;
 
   case( analyzerInfo::k_CR2l_bulkTTbar ):
-    result.push_back( k_dataFilter );
-    result.push_back( k_trigger_diLep );
-    result.push_back( k_goodVtx );
-    result.push_back( k_diLepton_bulkTTbar );
-    result.push_back( k_oppSignLeptons );
-    result.push_back( k_zMassWindow );
-    result.push_back( k_ge20_diLepMass );
-    result.push_back( k_ge2_jets );
-    result.push_back( k_ge50_met );
-    result.push_back( k_ge150_mt );
-    result.push_back( k_ge0p8_minDPhi );
+    result.push_back( cutUtil(k_dataFilter) );
+    result.push_back( cutUtil(k_goodVtx) );
+    result.push_back( cutUtil(k_diLepton_bulkTTbar) );
+    result.push_back( cutUtil(k_oppSignLeptons) );
+    result.push_back( cutUtil(k_trigger_diLep) );
+    result.push_back( cutUtil(k_ge20_diLepMass) );
+    result.push_back( cutUtil(k_zMassWindow) );
+    result.push_back( cutUtil(k_ge2_jets) );
+    result.push_back( cutUtil(k_ge50_met) );
     break;
 
   case( analyzerInfo::k_CRGammaJets ):
-    result.push_back( k_dataFilter );
-    result.push_back( k_goodVtx );
-    result.push_back( k_ge2_jets );
-    result.push_back( k_ge50_met );
+    result.push_back( cutUtil(k_dataFilter) );
+    result.push_back( cutUtil(k_goodVtx) );
+    result.push_back( cutUtil(k_ge2_jets) );
+    result.push_back( cutUtil(k_ge50_met) );
     break;
 
   default:
-    result.push_back( k_dataFilter );
-    result.push_back( k_goodVtx );
-    result.push_back( k_ge2_jets );
+    result.push_back( cutUtil(k_dataFilter) );
+    result.push_back( cutUtil(k_goodVtx) );
+    result.push_back( cutUtil(k_ge2_jets) );
     break;
 
   }; // end analyzer switch

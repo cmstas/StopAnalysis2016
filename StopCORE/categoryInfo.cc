@@ -9,8 +9,8 @@ categoryInfo::categoryUtil::categoryUtil( categoryInfo::ID category ){
   case( k_incl ):
     id    = category;
     label = "incl";
-    title = "Inclusive Categorization";
-    tex   = "Inclusive~Categorization";
+    title = "Post-Selection";
+    tex   = "Post~Selection";
     break;  
 
   case( k_ge2jets ):
@@ -23,8 +23,8 @@ categoryInfo::categoryUtil::categoryUtil( categoryInfo::ID category ){
   case( k_ge2jets_ge6p4modTop ):
     id    = category;
     label = "ge2jets_ge6p4modTop";
-    title = ">=2 jets, modified topness>=6.4";
-    tex   = "$\\ge2$~jets,~Modified~Topness$\\ge6.4$";
+    title = ">=2 jets, modTopness>=6.4";
+    tex   = "$\\ge2$~jets,~modTopness$\\ge6.4$";
     break;  
 
   case( k_ge2jets_lt200mt2w ):
@@ -44,43 +44,43 @@ categoryInfo::categoryUtil::categoryUtil( categoryInfo::ID category ){
   case( k_ee2jets ):
     id    = category;
     label = "ee2jets";
-    title = "==2 jets";
-    tex   = "$==2$~jets";
+    title = "2 jets";
+    tex   = "$2$~jets";
     break;  
 
   case( k_ee2jets_250to350met ):
     id    = category;
     label = "ee2jets_250to350met";
-    title = "==2 jets, 250<MET<350";
-    tex   = "$==2$~jets,~$250<MET<350$";
+    title = "2 jets, 250<MET<350";
+    tex   = "$2$~jets,~$250<MET<350$";
     break;
 
   case( k_ee2jets_350toInfmet ):
     id    = category;
     label = "ee2jets_350toInfmet";
-    title = "==2 jets, MET>350";
-    tex   = "$==2$~jets,~$MET>350$";
+    title = "2 jets, MET>350";
+    tex   = "$2$~jets,~$MET>350$";
     break;
 
   case( k_ee2jets_ge6p4modTop ):
     id    = category;
     label = "ee2jets_ge6p4modTop";
-    title = "==2 jets, modified topness>=6.4";
-    tex   = "$==2$~jets,~Modified~Topness$\\ge6.4$";
+    title = "2 jets, modTopness>=6.4";
+    tex   = "$2$~jets,~modTopness$\\ge6.4$";
     break;
 
   case( k_ee2jets_ge6p4modTop_250to350met ):
     id    = category;
     label = "ee2jets_ge6p4modTop_250to350met";
-    title = "==2 jets, modified topness>=6.4, 250<MET<350";
-    tex   = "$==2$~jets,~Modified~Topness$\\ge6.4$,~$250<MET<350$";
+    title = "2 jets, modTopness>=6.4, 250<MET<350";
+    tex   = "$2$~jets,~modTopness$\\ge6.4$,~$250<MET<350$";
     break;
 
   case( k_ee2jets_ge6p4modTop_350toInfmet ):
     id    = category;
     label = "ee2jets_ge6p4modTop_350toInfmet";
-    title = "==2 jets, modified topness>=6.4, MET>350";
-    tex   = "$==2$~jets,~Modified~Topness$\\ge6.4$,~$MET>350$";
+    title = "2 jets, modTopness>=6.4, MET>350";
+    tex   = "$2$~jets,~modTopness$\\ge6.4$,~$MET>350$";
     break;
 
   case( k_ge3jets ):
@@ -107,50 +107,50 @@ categoryInfo::categoryUtil::categoryUtil( categoryInfo::ID category ){
   case( k_ee3jets ):
     id    = category;
     label = "ee3jets";
-    title = "==3 jets";
-    tex   = "$==3$~jets";
+    title = "3 jets";
+    tex   = "$3$~jets";
     break;
 
   case( k_ee3jets_250to350met ):
     id    = category;
     label = "ee3jets_250to350met";
-    title = "==3 jets, 250<MET<350";
-    tex   = "$==3$~jets,~$250<MET<350$";
+    title = "3 jets, 250<MET<350";
+    tex   = "$3$~jets,~$250<MET<350$";
     break;
 
   case( k_ee3jets_350toInfmet ):
     id    = category;
     label = "ee3jets_350toInfmet";
-    title = "==3 jets, MET>350";
-    tex   = "$==3$~jets,~$MET>350$";
+    title = "3 jets, MET>350";
+    tex   = "$3$~jets,~$MET>350$";
     break;
 
   case( k_ee3jets_lt200mt2w ):
     id    = category;
     label = "ee3jets_lt200mt2w";
-    title = "==3 jets, MT2W<200";
-    tex   = "$==3$~jets,~MT2W$<200$";
+    title = "3 jets, MT2W<200";
+    tex   = "$3$~jets,~MT2W$<200$";
     break;
 
   case( k_ee3jets_ge200mt2w ):
     id    = category;
     label = "ee3jets_ge200mt2w";
-    title = "==3 jets, MT2W>=200";
-    tex   = "$==3$~jets,~MT2W$\\ge200$";
+    title = "3 jets, MT2W>=200";
+    tex   = "$3$~jets,~MT2W$\\ge200$";
     break;
 
   case( k_ee3jets_ge200mt2w_250to350met ):
     id    = category;
     label = "ee3jets_ge200mt2w_250to350met";
-    title = "==3 jets, MT2W>=200, 250<MET<350";
-    tex   = "$==3$~jets,~MT2W$\\ge200$,~$250<MET<350$";
+    title = "3 jets, MT2W>=200, 250<MET<350";
+    tex   = "$3$~jets,~MT2W$\\ge200$,~$250<MET<350$";
     break;
 
   case( k_ee3jets_ge200mt2w_350toInfmet ):
     id    = category;
     label = "ee3jets_ge200mt2w_350toInfmet";
-    title = "==3 jets, MT2W>=200, MET>350";
-    tex   = "$==3$~jets,~MT2W$\\ge200$,~$MET>350$";
+    title = "3 jets, MT2W>=200, MET>350";
+    tex   = "$3$~jets,~MT2W$\\ge200$,~$MET>350$";
     break;
 
   case( k_ge4jets ):
@@ -600,16 +600,19 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
 
 //////////////////////////////////////////////////////////////////////
 
-categoryInfo::vect_id_passBool categoryInfo::passCategoriesFromList( vect_id categoryList ){
+categoryInfo::vect_util_passBool categoryInfo::passCategoriesFromList( vect_util categoryList, bool onlyReturnTrue ){
 
-  vect_id_passBool result;
+  vect_util_passBool result;
 
   for(int iCat=0; iCat<(int)categoryList.size(); iCat++){
 
-    pair_id_passBool temp_result;
+    pair_util_passBool temp_result;
     temp_result.first  = categoryList[iCat];
-    temp_result.second = passCategory( temp_result.first ) ? true : false;
-    result.push_back( temp_result );
+    temp_result.second = passCategory( temp_result.first.id ) ? true : false;
+    if( onlyReturnTrue ){
+      if( temp_result.second ) result.push_back( temp_result );
+    }
+    else result.push_back( temp_result );
 
   }
 
@@ -619,98 +622,98 @@ categoryInfo::vect_id_passBool categoryInfo::passCategoriesFromList( vect_id cat
 
 //////////////////////////////////////////////////////////////////////
 
-categoryInfo::vect_id categoryInfo::getCategoryList( analyzerInfo::ID analysis ){
+categoryInfo::vect_util categoryInfo::getCategoryList( analyzerInfo::ID analysis ){
 
-  vect_id result;
+  vect_util result;
 
   switch( analysis ){
     
   case( analyzerInfo::k_SR ):
   case( analyzerInfo::k_CR0b ):
   case( analyzerInfo::k_CR2l ):
-    result.push_back( k_incl );
-    result.push_back( k_ge2jets );
-    result.push_back( k_ge2jets_ge6p4modTop );
-    result.push_back( k_ge2jets_lt200mt2w );
-    result.push_back( k_ge2jets_ge200mt2w );
-    result.push_back( k_ee2jets );
-    result.push_back( k_ee2jets_ge6p4modTop );
-    result.push_back( k_ee2jets_ge6p4modTop_250to350met );
-    result.push_back( k_ee2jets_ge6p4modTop_350toInfmet );
-    result.push_back( k_ge3jets );
-    result.push_back( k_ge3jets_lt200mt2w );
-    result.push_back( k_ge3jets_ge200mt2w );
-    result.push_back( k_ee3jets );
-    result.push_back( k_ee3jets_lt200mt2w );
-    result.push_back( k_ee3jets_ge200mt2w );
-    result.push_back( k_ee3jets_ge200mt2w_250to350met );
-    result.push_back( k_ee3jets_ge200mt2w_350toInfmet );
-    result.push_back( k_ge4jets );
-    result.push_back( k_ge4jets_lt200mt2w );
-    result.push_back( k_ge4jets_lt200mt2w_250to325met );
-    result.push_back( k_ge4jets_lt200mt2w_325toInfmet );
-    result.push_back( k_ge4jets_ge200mt2w );
-    result.push_back( k_ge4jets_ge200mt2w_250to350met );
-    result.push_back( k_ge4jets_ge200mt2w_350to450met );
-    result.push_back( k_ge4jets_ge200mt2w_450toInfmet );
-    result.push_back( k_ge5jets );
+    result.push_back( categoryUtil(k_incl) );
+    result.push_back( categoryUtil(k_ge2jets) );
+    result.push_back( categoryUtil(k_ge2jets_ge6p4modTop) );
+    result.push_back( categoryUtil(k_ge2jets_lt200mt2w) );
+    result.push_back( categoryUtil(k_ge2jets_ge200mt2w) );
+    result.push_back( categoryUtil(k_ee2jets) );
+    result.push_back( categoryUtil(k_ee2jets_ge6p4modTop) );
+    result.push_back( categoryUtil(k_ee2jets_ge6p4modTop_250to350met) );
+    result.push_back( categoryUtil(k_ee2jets_ge6p4modTop_350toInfmet) );
+    result.push_back( categoryUtil(k_ge3jets) );
+    result.push_back( categoryUtil(k_ge3jets_lt200mt2w) );
+    result.push_back( categoryUtil(k_ge3jets_ge200mt2w) );
+    result.push_back( categoryUtil(k_ee3jets) );
+    result.push_back( categoryUtil(k_ee3jets_lt200mt2w) );
+    result.push_back( categoryUtil(k_ee3jets_ge200mt2w) );
+    result.push_back( categoryUtil(k_ee3jets_ge200mt2w_250to350met) );
+    result.push_back( categoryUtil(k_ee3jets_ge200mt2w_350toInfmet) );
+    result.push_back( categoryUtil(k_ge4jets) );
+    result.push_back( categoryUtil(k_ge4jets_lt200mt2w) );
+    result.push_back( categoryUtil(k_ge4jets_lt200mt2w_250to325met) );
+    result.push_back( categoryUtil(k_ge4jets_lt200mt2w_325toInfmet) );
+    result.push_back( categoryUtil(k_ge4jets_ge200mt2w) );
+    result.push_back( categoryUtil(k_ge4jets_ge200mt2w_250to350met) );
+    result.push_back( categoryUtil(k_ge4jets_ge200mt2w_350to450met) );
+    result.push_back( categoryUtil(k_ge4jets_ge200mt2w_450toInfmet) );
+    result.push_back( categoryUtil(k_ge5jets) );
     break;
 
   case( analyzerInfo::k_CR1l_bulkWJets ):
-    result.push_back( k_incl );
+    result.push_back( categoryUtil(k_incl) );
     break;
   
   case( analyzerInfo::k_CR2l_bulkTTbar ):
-    result.push_back( k_incl );
-    result.push_back( k_ge1btags_ge50met );
-    result.push_back( k_ge1btags_ge100met );
-    result.push_back( k_ge1btags_ge150met );
-    result.push_back( k_ge1btags_ge200met );
-    result.push_back( k_ge1btags_ge250met );
-    result.push_back( k_ge2btags_ge50met );
-    result.push_back( k_ge2btags_ge100met );
-    result.push_back( k_ge2btags_ge150met );
-    result.push_back( k_ge2btags_ge200met );
-    result.push_back( k_ge2btags_ge250met );
+    result.push_back( categoryUtil(k_incl) );
+    result.push_back( categoryUtil(k_ge1btags_ge50met) );
+    result.push_back( categoryUtil(k_ge1btags_ge100met) );
+    result.push_back( categoryUtil(k_ge1btags_ge150met) );
+    result.push_back( categoryUtil(k_ge1btags_ge200met) );
+    result.push_back( categoryUtil(k_ge1btags_ge250met) );
+    result.push_back( categoryUtil(k_ge2btags_ge50met) );
+    result.push_back( categoryUtil(k_ge2btags_ge100met) );
+    result.push_back( categoryUtil(k_ge2btags_ge150met) );
+    result.push_back( categoryUtil(k_ge2btags_ge200met) );
+    result.push_back( categoryUtil(k_ge2btags_ge250met) );
     break;
 
   case( analyzerInfo::k_CRGammaJets ):
-    result.push_back( k_incl );
-    result.push_back( k_ge2jets);
-    result.push_back( k_ee2jets);
-    result.push_back( k_ee2jets_250to350met);
-    result.push_back( k_ee2jets_350toInfmet);
-    result.push_back( k_ge3jets);
-    result.push_back( k_ee3jets);
-    result.push_back( k_ee3jets_250to350met);
-    result.push_back( k_ee3jets_350toInfmet);
-    result.push_back( k_ge4jets);
-    result.push_back( k_ge4jets_250to325met);
-    result.push_back( k_ge4jets_325toInfmet);
-    result.push_back( k_ge4jets_250to350met);
-    result.push_back( k_ge4jets_350to450met);
-    result.push_back( k_ge4jets_450toInfmet);
-    result.push_back( k_ge5jets);
+    result.push_back( categoryUtil(k_incl) );
+    result.push_back( categoryUtil(k_ge2jets) );
+    result.push_back( categoryUtil(k_ee2jets) );
+    result.push_back( categoryUtil(k_ee2jets_250to350met) );
+    result.push_back( categoryUtil(k_ee2jets_350toInfmet) );
+    result.push_back( categoryUtil(k_ge3jets) );
+    result.push_back( categoryUtil(k_ee3jets) );
+    result.push_back( categoryUtil(k_ee3jets_250to350met) );
+    result.push_back( categoryUtil(k_ee3jets_350toInfmet) );
+    result.push_back( categoryUtil(k_ge4jets) );
+    result.push_back( categoryUtil(k_ge4jets_250to325met) );
+    result.push_back( categoryUtil(k_ge4jets_325toInfmet) );
+    result.push_back( categoryUtil(k_ge4jets_250to350met) );
+    result.push_back( categoryUtil(k_ge4jets_350to450met) );
+    result.push_back( categoryUtil(k_ge4jets_450toInfmet) );
+    result.push_back( categoryUtil(k_ge5jets) );
     break;
   
   default:
-    result.push_back( k_incl );
-    result.push_back( k_ge2jets );
-    result.push_back( k_ge2jets_ge6p4modTop );
-    result.push_back( k_ge2jets_lt200mt2w );
-    result.push_back( k_ge2jets_ge200mt2w );
-    result.push_back( k_ee2jets );
-    result.push_back( k_ee2jets_ge6p4modTop );
-    result.push_back( k_ge3jets );
-    result.push_back( k_ge3jets_lt200mt2w );
-    result.push_back( k_ge3jets_ge200mt2w );
-    result.push_back( k_ee3jets );
-    result.push_back( k_ee3jets_lt200mt2w );
-    result.push_back( k_ee3jets_ge200mt2w );
-    result.push_back( k_ge4jets );
-    result.push_back( k_ge4jets_lt200mt2w );
-    result.push_back( k_ge4jets_ge200mt2w );
-    result.push_back( k_ge5jets );
+    result.push_back( categoryUtil(k_incl) );
+    result.push_back( categoryUtil(k_ge2jets) );
+    result.push_back( categoryUtil(k_ge2jets_ge6p4modTop) );
+    result.push_back( categoryUtil(k_ge2jets_lt200mt2w) );
+    result.push_back( categoryUtil(k_ge2jets_ge200mt2w) );
+    result.push_back( categoryUtil(k_ee2jets) );
+    result.push_back( categoryUtil(k_ee2jets_ge6p4modTop) );
+    result.push_back( categoryUtil(k_ge3jets) );
+    result.push_back( categoryUtil(k_ge3jets_lt200mt2w) );
+    result.push_back( categoryUtil(k_ge3jets_ge200mt2w) );
+    result.push_back( categoryUtil(k_ee3jets) );
+    result.push_back( categoryUtil(k_ee3jets_lt200mt2w) );
+    result.push_back( categoryUtil(k_ee3jets_ge200mt2w) );
+    result.push_back( categoryUtil(k_ge4jets) );
+    result.push_back( categoryUtil(k_ge4jets_lt200mt2w) );
+    result.push_back( categoryUtil(k_ge4jets_ge200mt2w) );
+    result.push_back( categoryUtil(k_ge5jets) );
     break;
     
   }; // end analysis switch

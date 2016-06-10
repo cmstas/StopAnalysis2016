@@ -23,7 +23,8 @@ namespace genClassyInfo{
 	   k_ee1lep_fromW,
 	   k_ee1lep_fromTop,
 	   k_ge2lep,
-	   k_ZtoNuNu
+	   k_ZtoNuNu,
+	   k_nGenClassy
   };
 
 
@@ -38,6 +39,7 @@ namespace genClassyInfo{
       std::string       title;
       std::string       tex;
       
+      genClassyUtil(){};
       genClassyUtil( genClassyInfo::ID genClassy );
       ~genClassyUtil(){};
    
@@ -51,13 +53,17 @@ namespace genClassyInfo{
   typedef std::pair< genClassyInfo::ID, bool > pair_id_passBool;
   typedef std::vector< std::pair< genClassyInfo::ID, bool > > vect_id_passBool;
 
+  typedef std::vector< genClassyInfo::genClassyUtil > vect_util;
+  typedef std::pair< genClassyInfo::genClassyUtil, bool > pair_util_passBool;
+  typedef std::vector< std::pair< genClassyInfo::genClassyUtil, bool > > vect_util_passBool;
+
 
   //
   // Namespace functions
   //
   bool passGenClassy( genClassyInfo::ID genClassy );
-  vect_id_passBool passGenClassyFromList( vect_id genClassyList );
-  vect_id getGenClassyList( analyzerInfo::ID analysis );
+  vect_util_passBool passGenClassyFromList( vect_util genClassyList, bool returnOnlyTrue );
+  vect_util getGenClassyList( analyzerInfo::ID analysis );
 
 
 }; // end namespace

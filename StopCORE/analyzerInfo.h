@@ -19,7 +19,8 @@ namespace analyzerInfo{
 	   k_CR1l_bulkWJets,
 	   k_CR2l,
 	   k_CR2l_bulkTTbar,
-	   k_CRGammaJets
+	   k_CRGammaJets,
+	   k_nAnalyzer
   };
 
 

@@ -59,7 +59,8 @@ namespace systematicInfo{
 	   k_ISRUp,
 	   k_ISRDown,
 	   k_xsecUp,
-	   k_xsecDown
+	   k_xsecDown,
+	   k_nSys
   };
 
 
@@ -82,27 +83,35 @@ namespace systematicInfo{
       std::string        title;
       std::string        tex;
       bool               hasOwnBabies;
-  
+
+      systematicUtil(){};
       systematicUtil( systematicInfo::ID systematic );
       ~systematicUtil(){};
   };
 
 
   //
+  // TYPEDEFs
+  //
+  typedef std::vector< systematicInfo::systematicUtil > vect_util;
+  typedef std::pair< systematicInfo::systematicUtil, double > pair_util_wgt;
+  typedef std::vector< std::pair< systematicInfo::systematicUtil, double > > vect_util_wgt;
+
+  //
   // Namespace functions
   //
   double getSystematicWeight( systematicInfo::ID systematic, eventWeightInfo *evt_wgt );
   
-  vect_id_wgt getSystematicWeightsFromList( vect_id systematicList, eventWeightInfo *evt_wgt );
+  vect_util_wgt getSystematicWeightsFromList( vect_util systematicList, eventWeightInfo *evt_wgt );
   
-  vect_id getSystematicList( analyzerInfo::ID analysis, bool sample_isFastsim, bool sample_isSignal );
+  vect_util getSystematicList( analyzerInfo::ID analysis, bool sample_isFastsim, bool sample_isSignal );
   
-  vect_id getSystematicList_all();
-  vect_id getSystematicList_forLimit_lostLepton();
-  vect_id getSystematicList_forLimit_oneLeptonNotFromTop();
-  vect_id getSystematicList_forLimit_oneLeptonFromTop();
-  vect_id getSystematicList_forLimit_ZtoNuNu();
-  vect_id getSystematicList_forLimit_sig();
+  vect_util getSystematicList_all();
+  vect_util getSystematicList_forLimit_lostLepton();
+  vect_util getSystematicList_forLimit_oneLeptonNotFromTop();
+  vect_util getSystematicList_forLimit_oneLeptonFromTop();
+  vect_util getSystematicList_forLimit_ZtoNuNu();
+  vect_util getSystematicList_forLimit_sig();
     
 }; // end class def
 

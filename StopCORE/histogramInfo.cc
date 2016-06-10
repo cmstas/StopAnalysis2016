@@ -2,28 +2,23 @@
 
 ////////////////////////////////////////////////////////////////////// 
 
-std::string histogramInfo::getHistoLabel( std::string base, genClassyInfo::ID genClassyId, recoClassyInfo::ID recoClassyId, categoryInfo::ID catId, systematicInfo::ID sysId ){
+std::string histogramInfo::getHistoLabel( std::string base, genClassyInfo::genClassyUtil genClassy, recoClassyInfo::recoClassyUtil recoClassy, categoryInfo::categoryUtil cat, systematicInfo::systematicUtil sys ){
 
   std::string result = "";
 
-  result += "h__";
   result += base;
   
-  genClassyInfo::genClassyUtil genClassy( genClassyId );
   result += "__genClassy_";
   result += genClassy.label;
   
-  recoClassyInfo::recoClassyUtil recoClassy( recoClassyId );
   result += "__recoClassy_";
   result += recoClassy.label;
   
-  categoryInfo::categoryUtil category( catId );
   result += "__cat_";
-  result += category.label;
+  result += cat.label;
   
-  systematicInfo::systematicUtil systematic( sysId );
   result += "__sys_";
-  result += systematic.label;
+  result += sys.label;
 
   return result;
 
@@ -31,27 +26,23 @@ std::string histogramInfo::getHistoLabel( std::string base, genClassyInfo::ID ge
 
 ////////////////////////////////////////////////////////////////////// 
 
-std::string histogramInfo::getHistoTitle( std::string base, genClassyInfo::ID genClassyId, recoClassyInfo::ID recoClassyId, categoryInfo::ID catId, systematicInfo::ID sysId ){
+std::string histogramInfo::getHistoTitle( std::string base, genClassyInfo::genClassyUtil genClassy, recoClassyInfo::recoClassyUtil recoClassy, categoryInfo::categoryUtil cat, systematicInfo::systematicUtil sys ){
 
   std::string result = "";
 
   result += base;
   
-  genClassyInfo::genClassyUtil genClassy( genClassyId );
   result += ", genClassy: ";
   result += genClassy.title;
   
-  recoClassyInfo::recoClassyUtil recoClassy( recoClassyId );
   result += ", recoClassy: ";
   result += recoClassy.title;
   
-  categoryInfo::categoryUtil category( catId );
   result += ", category: ";
-  result += category.title;
+  result += cat.title;
   
-  systematicInfo::systematicUtil systematic( sysId );
   result += ", systematic: ";
-  result += systematic.title;
+  result += sys.title;
 
   return result;
 
@@ -59,24 +50,20 @@ std::string histogramInfo::getHistoTitle( std::string base, genClassyInfo::ID ge
 
 ////////////////////////////////////////////////////////////////////// 
 
-std::string histogramInfo::getYieldHistoLabel( std::string base, genClassyInfo::ID genClassyId, recoClassyInfo::ID recoClassyId, systematicInfo::ID sysId ){
+std::string histogramInfo::getYieldHistoLabel( std::string base, genClassyInfo::genClassyUtil genClassy, recoClassyInfo::recoClassyUtil recoClassy, systematicInfo::systematicUtil sys ){
   
   std::string result = "";
 
-  result += "h__";
   result += base;
   
-  genClassyInfo::genClassyUtil genClassy( genClassyId );
   result += "__genClassy_";
   result += genClassy.label;
   
-  recoClassyInfo::recoClassyUtil recoClassy( recoClassyId );
   result += "__recoClassy_";
   result += recoClassy.label;
   
-  systematicInfo::systematicUtil systematic( sysId );
   result += "__sys_";
-  result += systematic.label;
+  result += sys.label;
   
   return result;
 
@@ -84,23 +71,20 @@ std::string histogramInfo::getYieldHistoLabel( std::string base, genClassyInfo::
 
 ////////////////////////////////////////////////////////////////////// 
 
-std::string histogramInfo::getYieldHistoTitle( std::string base, genClassyInfo::ID genClassyId, recoClassyInfo::ID recoClassyId, systematicInfo::ID sysId ){
+std::string histogramInfo::getYieldHistoTitle( std::string base, genClassyInfo::genClassyUtil genClassy, recoClassyInfo::recoClassyUtil recoClassy, systematicInfo::systematicUtil sys ){
 
   std::string result = "";
 
   result += base;
   
-  genClassyInfo::genClassyUtil genClassy( genClassyId );
   result += ", genClassy: ";
   result += genClassy.title;
   
-  recoClassyInfo::recoClassyUtil recoClassy( recoClassyId );
   result += ", recoClassy: ";
   result += recoClassy.title;
   
-  systematicInfo::systematicUtil systematic( sysId );
   result += ", systematic: ";
-  result += systematic.title;
+  result += sys.title;
   
   return result;
 
@@ -108,9 +92,25 @@ std::string histogramInfo::getYieldHistoTitle( std::string base, genClassyInfo::
 
 //////////////////////////////////////////////////////////////////////   
 
-histogramInfo::h1_Util::h1_Util( TFile *f_out, std::string label, std::string title, int nBins, double min, double max, genClassyInfo::vect_id genClassys, recoClassyInfo::vect_id recoClassys, categoryInfo::vect_id cats, systematicInfo::vect_id sys ){
+int histogramInfo::getHistoIndex( systematicInfo::ID sys, genClassyInfo::ID genClassy, recoClassyInfo::ID recoClassy, categoryInfo::ID cat ){
+  
+  int result = sys*nGenClassy_*nRecoClassy_*nCats_ + genClassy*nRecoClassy_*nCats_ + recoClassy*nCats_ + cat;
 
-  histos.clear();
+  return result;
+}
+  
+//////////////////////////////////////////////////////////////////////   
+
+int histogramInfo::getYieldHistoIndex( systematicInfo::ID sys, genClassyInfo::ID genClassy, recoClassyInfo::ID recoClassy ){
+
+  int result = sys*nGenClassy_*nRecoClassy_ + genClassy*nRecoClassy_ + recoClassy;
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////   
+
+histogramInfo::h1_Util::h1_Util( TFile *f_out, std::string label, std::string title, int nBins, double min, double max, genClassyInfo::vect_util genClassys, recoClassyInfo::vect_util recoClassys, categoryInfo::vect_util cats, systematicInfo::vect_util sys ){
 
   h_label_base = label;
   h_title_base = title;
@@ -124,19 +124,23 @@ histogramInfo::h1_Util::h1_Util( TFile *f_out, std::string label, std::string ti
   h_categories  = cats;
   h_systematics = sys;
 
+  for(int iHist=0; iHist<nHists_; iHist++) histos[iHist] = NULL;
+
   for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
     for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
       for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
 	for(int iCat=0; iCat<(int)h_categories.size(); iCat++){
-		  
-	  std::string h_label = getHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
+
+	  int iHist = getHistoIndex( h_systematics[iSys].id, h_genClassy[iGen].id, h_recoClassy[iReco].id, h_categories[iCat].id );
+	  //int iHist = h_systematics[iSys].id*nGenClassy_*nRecoClassy_*nCats_ + h_genClassy[iGen].id*nRecoClassy_*nCats_ + h_recoClassy[iReco].id*nCats_ + h_categories[iCat].id;
+	  
+	  std::string h_name  = getHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
 	  std::string h_title = getHistoTitle( h_title_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
 
-	  TH1D *h_temp = new TH1D( h_label.c_str(), h_title.c_str(), h_nBins, h_min, h_max );
-	  h_temp->SetDirectory( f_out );
+	  histos[ iHist ] = new TH1D( h_name.c_str(), h_title.c_str(), h_nBins, h_min, h_max );
 
-	  histos[ h_label ] = h_temp;
-
+	  histos[ iHist ]->SetDirectory( f_out );
+	  
 	} // end loop over categories
       } // end loop over reco classifications
     } // end loop over gen classifications
@@ -145,127 +149,9 @@ histogramInfo::h1_Util::h1_Util( TFile *f_out, std::string label, std::string ti
 }
 
 ////////////////////////////////////////////////////////////////////// 
-/*
-void histogramInfo::h1_Util::fill( double value, genClassyInfo::vect_id_passBool pass_genClassy, recoClassyInfo::vect_id_passBool pass_recoClassy, categoryInfo::vect_id_passBool pass_cat, systematicInfo::vect_id_wgt sys_wgts ){
 
-  //
-  // Loop over genClassy,recoClassy,categories,systematics that
-  //   are owned by h1_Util, fill when pass evt criteria for each
-  //
-  
-  for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
-    for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
-      for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
-	for(int iCat=0; iCat<(int)h_categories.size(); iCat++){
-	  
-	  for(int iEvtSys=0; iEvtSys<(int)sys_wgts.size(); iEvtSys++){
-	    if( sys_wgts[iEvtSys].first != h_systematics[iSys] ) continue;
-	  	    
-	    for(int iEvtGen=0; iEvtGen<(int)pass_genClassy.size(); iEvtGen++){
-	      if( pass_genClassy[iEvtGen].first != h_genClassy[iGen] ) continue;
-	      if( !pass_genClassy[iEvtGen].second ) continue;
+histogramInfo::h1_Yield_Util::h1_Yield_Util( TFile *f_out, std::string label, std::string title, genClassyInfo::vect_util genClassys, recoClassyInfo::vect_util recoClassys, categoryInfo::vect_util cats, systematicInfo::vect_util sys ){
 
-	      for(int iEvtReco=0; iEvtReco<(int)pass_recoClassy.size(); iEvtReco++){
-		if( pass_recoClassy[iEvtReco].first != h_recoClassy[iReco] ) continue;
-		if( !pass_recoClassy[iEvtReco].second ) continue;
-
-		for(int iEvtCat=0; iEvtCat<(int)pass_cat.size(); iEvtCat++){
-		  if( pass_cat[iEvtCat].first != h_categories[iCat] ) continue;
-		  if( !pass_cat[iEvtCat].second ) continue;
-
-		  std::string h_label = getHistoLabel( h_label_base, h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
-		  histos[ h_label ]->Fill( std::max( h_min+EPS, std::min(value, h_max-EPS) ), sys_wgts[iEvtSys].second );
-		  
-		} // end loop over categories, passed this event
-	      } // end loop over reco classifications, passed this event
-	    } // end gen classifications, passed this event
-	  } // end loop over systematic weights, this event
-
-	} // end loop over histogram categories
-      } // end loop over histogram recoClassifications
-    } // end loop over histogram genClassifications
-  } // end loop over histogram systematics
-
-  return;
-}
-*/
-////////////////////////////////////////////////////////////////////// 
-
-void histogramInfo::h1_Util::fill( double value, genClassyInfo::vect_id_passBool pass_genClassy, recoClassyInfo::vect_id_passBool pass_recoClassy, categoryInfo::vect_id_passBool pass_cat, systematicInfo::vect_id_wgt sys_wgts ){
-
-  //
-  // Loop over genClassy,recoClassy,categories,systematics that
-  //   are owned by h1_Util, fill when pass evt criteria for each
-  //
-  
-  for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
-
-    bool fillSys=false;
-    for(int iEvtSys=0; iEvtSys<(int)sys_wgts.size(); iEvtSys++){
-      if( sys_wgts[iEvtSys].first == h_systematics[iSys] ){
-	fillSys = true;
-	break;
-      }
-    }
-    if(!fillSys) continue;
-
-	  
-    for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
-      
-      bool fillGenClassy=false;
-      for(int iEvtGen=0; iEvtGen<(int)pass_genClassy.size(); iEvtGen++){
-	if( pass_genClassy[iEvtGen].first == h_genClassy[iGen] &&
-	    pass_genClassy[iEvtGen].second ){
-	  fillGenClassy = true;
-	  break;
-	}
-      }
-      if(!fillGenClassy) continue;
-	  
-
-      for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
-
-	bool fillRecoClassy=false;
-	for(int iEvtReco=0; iEvtReco<(int)pass_recoClassy.size(); iEvtReco++){
-	  if( pass_recoClassy[iEvtReco].first == h_recoClassy[iReco] &&
-	      pass_recoClassy[iEvtReco].second ){
-	    fillRecoClassy=true;
-	    break;
-	  }
-	}
-	if(!fillRecoClassy) continue;
-	
-	
-	for(int iCat=0; iCat<(int)h_categories.size(); iCat++){
-	  
-	  bool fillCat=false;
-	  for(int iEvtCat=0; iEvtCat<(int)pass_cat.size(); iEvtCat++){
-	    if( pass_cat[iEvtCat].first == h_categories[iCat] &&
-		pass_cat[iEvtCat].second ){
-	      fillCat=true;
-	      break;
-	    }
-	  }
-	  if(!fillCat) continue;
-
-
-	  std::string h_label = getHistoLabel( h_label_base, h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
-	  histos[ h_label ]->Fill( std::max( h_min+EPS, std::min(value, h_max-EPS) ), sys_wgts[iSys].second );
-	  
-	} // end loop over histogram categories
-      } // end loop over histogram recoClassifications
-    } // end loop over histogram genClassifications
-  } // end loop over histogram systematics
-  
-  return;
-}
-
-////////////////////////////////////////////////////////////////////// 
-
-histogramInfo::h1_Yield_Util::h1_Yield_Util( TFile *f_out, std::string label, std::string title, genClassyInfo::vect_id genClassys, recoClassyInfo::vect_id recoClassys, categoryInfo::vect_id cats, systematicInfo::vect_id sys ){
-
-  histos.clear();
-  
   h_label_base = label;
   h_title_base = title;
   
@@ -275,23 +161,26 @@ histogramInfo::h1_Yield_Util::h1_Yield_Util( TFile *f_out, std::string label, st
   h_systematics = sys;
   
   int nBins = (int)h_categories.size();
+
+  for(int iHist=0; iHist<nYieldHists_; iHist++) histos[iHist] = NULL;
   
   for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
     for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
       for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
 	
-	std::string h_label = getYieldHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_systematics[iSys] );
+	int iHist = getYieldHistoIndex( h_systematics[iSys].id, h_genClassy[iGen].id, h_recoClassy[iReco].id );
+	//int iHist = h_systematics[iSys].id*nGenClassy_*nRecoClassy_ + h_genClassy[iGen].id*nRecoClassy_ + h_recoClassy[iReco].id;
+	
+	std::string h_name  = getYieldHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_systematics[iSys] );
 	std::string h_title = getYieldHistoTitle( h_title_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_systematics[iSys] );
 	
-	TH1D *h_temp = new TH1D( h_label.c_str(), h_title.c_str(), nBins, 0.0, (double)nBins );
+	histos[ iHist ] = new TH1D( h_name.c_str(), h_title.c_str(), nBins, 0.0, (double)nBins );
 	
 	for(int iCat=0; iCat<(int)h_categories.size(); iCat++){
-	  categoryInfo::categoryUtil category( h_categories[iCat] );
-	  h_temp->GetXaxis()->SetBinLabel(iCat+1, category.label.c_str() ); 
+	  histos[ iHist ]->GetXaxis()->SetBinLabel(iCat+1, h_categories[iCat].label.c_str() ); 
 	} // end loop over categories
 	
-	h_temp->SetDirectory( f_out );
-	histos[ h_label ] = h_temp;
+	histos[ iHist ]->SetDirectory( f_out );
 	
       } // end loop over reco classifications
     } // end loop over gen classifications
@@ -299,122 +188,8 @@ histogramInfo::h1_Yield_Util::h1_Yield_Util( TFile *f_out, std::string label, st
 }
 
 ////////////////////////////////////////////////////////////////////// 
-/*
-void histogramInfo::h1_Yield_Util::fill( genClassyInfo::vect_id_passBool pass_genClassy, recoClassyInfo::vect_id_passBool pass_recoClassy, categoryInfo::vect_id_passBool pass_cat, systematicInfo::vect_id_wgt sys_wgts ){
 
-  //
-  // Loop over genClassy,recoClassy,categories,systematics that
-  //   are owned by h1_Util, fill when pass evt criteria for each
-  //
-  for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
-    for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
-      for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
-	
-	for(int iEvtSys=0; iEvtSys<(int)sys_wgts.size(); iEvtSys++){
-	  if( sys_wgts[iEvtSys].first != h_systematics[iSys] ) continue;
-	  
-	  for(int iEvtGen=0; iEvtGen<(int)pass_genClassy.size(); iEvtGen++){
-	    if( pass_genClassy[iEvtGen].first != h_genClassy[iGen] ) continue;
-	    if( !pass_genClassy[iEvtGen].second ) continue;
-
-	    for(int iEvtReco=0; iEvtReco<(int)pass_recoClassy.size(); iEvtReco++){
-	      if( pass_recoClassy[iEvtReco].first != h_recoClassy[iReco] ) continue;
-	      if( !pass_recoClassy[iEvtReco].second ) continue;
-
-	      for(int iEvtCat=0; iEvtCat<(int)pass_cat.size(); iEvtCat++){
-		if( !pass_cat[iEvtCat].second ) continue;
-		
-		std::string h_label = getYieldHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_systematics[iSys] );
-
-		categoryInfo::categoryUtil category( pass_cat[iEvtCat].first );
-
-		histos[ h_label ]->Fill( category.label.c_str(), sys_wgts[iEvtSys].second );
-		  
-	      } // end loop over categories, passed this event
-	    } // end loop over reco classifications, passed this event
-	  } // end gen classifications, passed this event
-	} // end loop over systematic weights, this event
-
-      
-      } // end loop over histogram recoClassifications
-    } // end loop over histogram genClassifications
-  } // end loop over histogram systematics
-
-  return;
-}
-*/
-////////////////////////////////////////////////////////////////////// 
-
-
-void histogramInfo::h1_Yield_Util::fill( genClassyInfo::vect_id_passBool pass_genClassy, recoClassyInfo::vect_id_passBool pass_recoClassy, categoryInfo::vect_id_passBool pass_cat, systematicInfo::vect_id_wgt sys_wgts ){
-
-  //
-  // Loop over genClassy,recoClassy,categories,systematics that
-  //   are owned by h1_Util, fill when pass evt criteria for each
-  //
-  for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
-    
-    bool fillSys=false;
-    for(int iEvtSys=0; iEvtSys<(int)sys_wgts.size(); iEvtSys++){
-      if( sys_wgts[iEvtSys].first == h_systematics[iSys] ){
-	fillSys=true;
-	break;
-      }
-    }
-    if(!fillSys) continue;
-
-    
-    for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
-
-      bool fillGenClassy=false;
-      for(int iEvtGen=0; iEvtGen<(int)pass_genClassy.size(); iEvtGen++){
-	if( pass_genClassy[iEvtGen].first == h_genClassy[iGen] &&
-	    pass_genClassy[iEvtGen].second ){
-	  fillGenClassy=true;
-	  break;
-	}
-      }
-      if(!fillGenClassy) continue;
-
-
-      for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
-
-	bool fillRecoClassy=false;
-	for(int iEvtReco=0; iEvtReco<(int)pass_recoClassy.size(); iEvtReco++){
-	  if( pass_recoClassy[iEvtReco].first == h_recoClassy[iReco] &&
-	      pass_recoClassy[iEvtReco].second ){
-	    fillRecoClassy=true;
-	    break;
-	  }
-	}
-	if(!fillRecoClassy) continue;
-	
-
-	for(int iEvtCat=0; iEvtCat<(int)pass_cat.size(); iEvtCat++){
-	  if( pass_cat[iEvtCat].second ){
-	    
-	    std::string h_label = getYieldHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_systematics[iSys] );
-	    
-	    categoryInfo::categoryUtil category( pass_cat[iEvtCat].first );
-	    
-	    histos[ h_label ]->Fill( category.label.c_str(), sys_wgts[iSys].second );
-	    
-	  } // end if pass category	  
-	} // end loop over categories, passed this event
-	
-	
-      } // end loop over histogram recoClassifications
-    } // end loop over histogram genClassifications
-  } // end loop over histogram systematics
-  
-  return;
-}
-
-////////////////////////////////////////////////////////////////////// 
-
-histogramInfo::h2_Util::h2_Util( TFile *f_out, std::string label, std::string title, int nBins_x, double min_x, double max_x, int nBins_y, double min_y, double max_y, genClassyInfo::vect_id genClassys, recoClassyInfo::vect_id recoClassys, categoryInfo::vect_id cats, systematicInfo::vect_id sys ){
-
-  histos.clear();
+histogramInfo::h2_Util::h2_Util( TFile *f_out, std::string label, std::string title, int nBins_x, double min_x, double max_x, int nBins_y, double min_y, double max_y, genClassyInfo::vect_util genClassys, recoClassyInfo::vect_util recoClassys, categoryInfo::vect_util cats, systematicInfo::vect_util sys ){
 
   h_label_base = label;
   h_title_base = title;
@@ -431,20 +206,24 @@ histogramInfo::h2_Util::h2_Util( TFile *f_out, std::string label, std::string ti
   h_recoClassy  = recoClassys;
   h_categories  = cats;
   h_systematics = sys;
+  
+  for(int iHist=0; iHist<nHists_; iHist++) histos[iHist] = NULL;
 
   for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
     for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
       for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
 	for(int iCat=0; iCat<(int)h_categories.size(); iCat++){
+
+	  int iHist = getHistoIndex( h_systematics[iSys].id, h_genClassy[iGen].id, h_recoClassy[iReco].id, h_categories[iCat].id );
+	  //int iHist = h_systematics[iSys].id*nGenClassy_*nRecoClassy_*nCats_ + h_genClassy[iGen].id*nRecoClassy_*nCats_ + h_recoClassy[iReco].id*nCats_ + h_categories[iCat].id;
 		  
-	  std::string h_label = getHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
+	  std::string h_name  = getHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
 	  std::string h_title = getHistoTitle( h_title_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
 
-	  TH2D *h_temp = new TH2D( h_label.c_str(), h_title.c_str(), h_nBins_x, h_min_x, h_max_x, h_nBins_y, h_min_y, h_max_y );
-	  h_temp->SetDirectory( f_out );
-
-	  histos[ h_label ] = h_temp;
-
+	  histos[ iHist ] = new TH2D( h_name.c_str(), h_title.c_str(), h_nBins_x, h_min_x, h_max_x, h_nBins_y, h_min_y, h_max_y );
+	  
+	  histos[ iHist ]->SetDirectory( f_out );
+	  
 	} // end loop over categories
       } // end loop over reco classifications
     } // end loop over gen classifications
@@ -454,47 +233,106 @@ histogramInfo::h2_Util::h2_Util( TFile *f_out, std::string label, std::string ti
 
 ////////////////////////////////////////////////////////////////////// 
 
-void histogramInfo::h2_Util::fill( double value_x, double value_y, genClassyInfo::vect_id_passBool pass_genClassy, recoClassyInfo::vect_id_passBool pass_recoClassy, categoryInfo::vect_id_passBool pass_cat, systematicInfo::vect_id_wgt sys_wgts ){
+histogramInfo::h3_Util::h3_Util( TFile *f_out, std::string label, std::string title, int nBins_x, double min_x, double max_x, int nBins_y, double min_y, double max_y, int nBins_z, double min_z, double max_z, genClassyInfo::vect_util genClassys, recoClassyInfo::vect_util recoClassys, categoryInfo::vect_util cats, systematicInfo::vect_util sys ){
 
-  //
-  // Loop over genClassy,recoClassy,categories,systematics that
-  //   are owned by h1_Util, fill when pass evt criteria for each
-  //
+  h_label_base = label;
+  h_title_base = title;
+  
+  h_nBins_x = nBins_x;
+  h_min_x   = min_x;
+  h_max_x   = max_x; 
+
+  h_nBins_y = nBins_y;
+  h_min_y   = min_y;
+  h_max_y   = max_y; 
+ 
+  h_nBins_y = nBins_z;
+  h_min_y   = min_z;
+  h_max_y   = max_z; 
+ 
+  h_genClassy   = genClassys;
+  h_recoClassy  = recoClassys;
+  h_categories  = cats;
+  h_systematics = sys;
+  
+  for(int iHist=0; iHist<nHists_; iHist++) histos[iHist] = NULL;
+
   for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
     for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
       for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
 	for(int iCat=0; iCat<(int)h_categories.size(); iCat++){
+
+	  int iHist = getHistoIndex( h_systematics[iSys].id, h_genClassy[iGen].id, h_recoClassy[iReco].id, h_categories[iCat].id );
+	  //int iHist = h_systematics[iSys].id*nGenClassy_*nRecoClassy_*nCats_ + h_genClassy[iGen].id*nRecoClassy_*nCats_ + h_recoClassy[iReco].id*nCats_ + h_categories[iCat].id;
+
+	  std::string h_name = getHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
+	  std::string h_title = getHistoTitle( h_title_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
+
+	  histos[ iHist ] = new TH3D( h_name.c_str(), h_title.c_str(), h_nBins_x, h_min_x, h_max_x, h_nBins_y, h_min_y, h_max_y, h_nBins_z, h_min_z, h_max_z );
+	  histos[ iHist ]->SetDirectory( f_out );
 	  
+	} // end loop over categories
+      } // end loop over reco classifications
+    } // end loop over gen classifications
+  } // end loop over systematics
 
-	  for(int iEvtSys=0; iEvtSys<(int)sys_wgts.size(); iEvtSys++){
-	    if( sys_wgts[iEvtSys].first != h_systematics[iSys] ) continue;
-	    
-	    for(int iEvtGen=0; iEvtGen<(int)pass_genClassy.size(); iEvtGen++){
-	      if( pass_genClassy[iEvtGen].first != h_genClassy[iGen] ) continue;
-	      if( !pass_genClassy[iEvtGen].second ) continue;
+}
 
-	      for(int iEvtReco=0; iEvtReco<(int)pass_recoClassy.size(); iEvtReco++){
-		if( pass_recoClassy[iEvtReco].first != h_recoClassy[iReco] ) continue;
-		if( !pass_recoClassy[iEvtReco].second ) continue;
+////////////////////////////////////////////////////////////////////// 
 
-		for(int iEvtCat=0; iEvtCat<(int)pass_cat.size(); iEvtCat++){
-		  if( pass_cat[iEvtCat].first != h_categories[iCat] ) continue;
-		  if( !pass_cat[iEvtCat].second ) continue;
+histogramInfo::h3_Yield_Util::h3_Yield_Util( TFile *f_out, std::string label, std::string title, int nBins_x, double h_min_x, double h_max_x, int nBins_y, double h_min_y, double h_max_y, genClassyInfo::vect_util genClassys, recoClassyInfo::vect_util recoClassys, categoryInfo::vect_util cats, systematicInfo::vect_util sys ){
 
-		  std::string h_label = getHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_categories[iCat], h_systematics[iSys] );
-		  histos[ h_label ]->Fill( std::max( h_min_x+EPS, std::min(value_x, h_max_x-EPS) ), std::max( h_min_y+EPS, std::min(value_y, h_max_y-EPS) ), sys_wgts[iEvtSys].second );
-		  
-		} // end loop over categories, passed this event
-	      } // end loop over reco classifications, passed this event
-	    } // end gen classifications, passed this event
-	  } // end loop over systematic weights, this event
+  h_label_base = label;
+  h_title_base = title;
+  
+  h_genClassy   = genClassys;
+  h_recoClassy  = recoClassys;
+  h_categories  = cats;
+  h_systematics = sys;
+  
+  int nBins = (int)h_categories.size();
+  
+  for(int iHist=0; iHist<nYieldHists_; iHist++) histos[iHist] = NULL;
 
-	} // end loop over histogram categories
-      } // end loop over histogram recoClassifications
-    } // end loop over histogram genClassifications
-  } // end loop over histogram systematics
+  for(int iSys=0; iSys<(int)h_systematics.size(); iSys++){
+    for(int iGen=0; iGen<(int)h_genClassy.size(); iGen++){
+      for(int iReco=0; iReco<(int)h_recoClassy.size(); iReco++){
+	
+	int iHist = getYieldHistoIndex( h_systematics[iSys].id, h_genClassy[iGen].id, h_recoClassy[iReco].id );
+	//int iHist = h_systematics[iSys].id*nGenClassy_*nRecoClassy_ + h_genClassy[iGen].id*nRecoClassy_ + h_recoClassy[iReco].id;
 
-  return;
+	std::string h_name  = getYieldHistoLabel( h_label_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_systematics[iSys] );
+	std::string h_title = getYieldHistoTitle( h_title_base.c_str(), h_genClassy[iGen], h_recoClassy[iReco], h_systematics[iSys] );
+	
+	histos[ iHist ] = new TH3D( h_name.c_str(), h_title.c_str(), nBins_x, h_min_x, h_max_x, nBins_y, h_min_y, h_max_y, nBins, 0.0, (double)nBins );
+	
+	for(int iCat=0; iCat<nBins; iCat++){
+	  histos[ iHist ]->GetZaxis()->SetBinLabel(iCat+1, h_categories[iCat].label.c_str() ); 
+	} // end loop over categories
+	
+	histos[ iHist ]->SetDirectory( f_out );
+	
+      } // end loop over reco classifications
+    } // end loop over gen classifications
+  } // end loop over systematics
+}
+
+////////////////////////////////////////////////////////////////////// 
+
+TH1D* histogramInfo::getProjectionZ( double valX, double valY, TH3D *h3 ){
+
+  TH1D *result = NULL;
+
+  int binX = h3->GetXaxis()->FindBin( valX );
+  int binY = h3->GetYaxis()->FindBin( valY );
+
+  h3->GetXaxis()->SetRange( binX, binX );
+  h3->GetYaxis()->SetRange( binY, binY );
+  h3->GetZaxis()->SetRange( 1, h3->GetNbinsZ() );
+  
+  result = (TH1D*)h3->Project3D( "z" );
+
+  return result;
 }
 
 ////////////////////////////////////////////////////////////////////// 

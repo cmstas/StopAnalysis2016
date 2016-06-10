@@ -11,8 +11,20 @@ eventWeightInfo::eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils, bool
   DR_MATCHED = 0.1;
   LUMI       = 2.260;
   LUMI_ERR   = 0.046;
-  
-  
+
+  // Initialize Switches for additional SFs
+  apply_bTag_sf    = false;
+  apply_lep_sf     = false;
+  apply_vetoLep_sf = false;
+  apply_lepFS_sf   = false;
+  apply_topPt_sf   = false;
+  apply_metRes_sf  = false;
+  apply_nJetsK3_sf = false;
+  apply_nJetsK4_sf = false;
+  apply_diNuPt_sf  = false;
+  apply_ISR_sf     = false;
+  apply_sample_sf  = false;
+
   // Decision to use Utilities vs direct from baby for bTag and lep SFs
   useBTagSFs_fromUtils = useBTagUtils;
   useLepSFs_fromUtils  = useLepSFUtils;
@@ -24,6 +36,7 @@ eventWeightInfo::eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils, bool
 
   // Initialize baby weights histograms
   h_sig_counter = NULL;
+  h_sig_counter_nEvents = NULL;
   h_bkg_counter = NULL;
 
 
@@ -75,6 +88,7 @@ void eventWeightInfo::getWeightHistogramFromBaby( TFile *sourceFile ){
   // Get counter histogram from source file
   if( sample_info->isSignal ){
     h_sig_counter = (TH3D*)sourceFile->Get("h_counterSMS");
+    h_sig_counter_nEvents = (TH2D*)sourceFile->Get("histNEvts");
   }
   else if( !sample_info->isData ){
     h_bkg_counter = (TH1D*)sourceFile->Get("h_counter");
@@ -92,6 +106,10 @@ void eventWeightInfo::initializeWeights(){
   nEvents = 1.0;
   xsec = 1.0;
   xsec_err = 0.0;
+
+  mStop = 1.0;
+  mLSP = 1.0;
+  mChargino = 1.0;
   
   // Event weights for each systematic
   sf_nominal = 1.0;
@@ -101,11 +119,6 @@ void eventWeightInfo::initializeWeights(){
   sf_bTagEffHF_dn = 1.0;
   sf_bTagEffLF_up = 1.0;
   sf_bTagEffLF_dn = 1.0;
-  norm_bTagEff = 1.0;
-  norm_bTagEffHF_up = 1.0;
-  norm_bTagEffHF_dn = 1.0;
-  norm_bTagEffLF_up = 1.0;
-  norm_bTagEffLF_dn = 1.0;
   
   sf_lep = 1.0;
   sf_lep_up = 1.0;
@@ -139,7 +152,10 @@ void eventWeightInfo::initializeWeights(){
   sf_diNuPt_up = 1.0;
   sf_diNuPt_dn = 1.0;
   
-  sf_nuPt = 1.0;
+  sf_ISR = 1.0;
+  sf_ISR_up = 1.0;
+  sf_ISR_dn = 1.0;
+  
   sf_nuPt_up = 1.0;
   sf_nuPt_dn = 1.0;
   
@@ -151,30 +167,18 @@ void eventWeightInfo::initializeWeights(){
   
   sf_alphas_up = 1.0;
   sf_alphas_dn = 1.0;
-  norm_alphas = 1.0;
-  norm_alphas_up = 1.0;
-  norm_alphas_dn = 1.0;
   
   sf_q2_up = 1.0;
   sf_q2_dn = 1.0;
-  norm_q2 = 1.0;
-  norm_q2_up = 1.0;
-  norm_q2_dn = 1.0;
   
   sf_lumi = 1.0;
   sf_lumi_up = 1.0;
   sf_lumi_dn = 1.0;
   
-  sf_ISR = 1.0;
-  sf_ISR_up = 1.0;
-  sf_ISR_dn = 1.0;
-  norm_ISR = 1.0;
-  norm_ISR_up = 1.0;
-  norm_ISR_dn = 1.0;
-
   sf_xsec_up = 1.0;
   sf_xsec_dn = 1.0;
-  
+
+  sf_sample = 1.0;
   
   return;
 }
@@ -186,90 +190,35 @@ void eventWeightInfo::getEventWeights(){
   
   initializeWeights();
 
+
   // If sample is data
   if( sample_info->isData ) return;
  
 
   // If sample is signal scan
-  double mStop     = 1.0;
-  double mLSP      = 1.0;
-  //double mChargino = 1.0;
-  if( sample_info->isSignal ){
-    mStop     = babyAnalyzer.mass_stop();
-    mLSP      = babyAnalyzer.mass_lsp();
-    //mChargino = babyAnalyzer.mass_chargino();
-  }
-
-
-  // Variables to form baseline event weight
-  if( sample_info->isSignal ){
-    nEvents = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,22));
-    getSignalXSecWeight( mStop, xsec, sf_xsec_up, sf_xsec_dn );  
-  }
-  else{
-    nEvents = h_bkg_counter->GetBinContent(22);
-    xsec = babyAnalyzer.xsec();
-    xsec_err = 0.0;
-  }
- 
-
-  // Event weights for each systematic
+  if( sample_info->isSignal ) getSusyMasses( mStop, mLSP );
   
-  // nominal
-  if( sample_info->isSignal ){
-    sf_nominal = LUMI*1000*xsec/nEvents;
-  }
-  else if( !sample_info->isData ){
-    sf_nominal = babyAnalyzer.scale1fb()*LUMI;
-  }
 
+  // Get nEvents
+  getNEvents( nEvents );
+
+
+  // Get xSec
+  getXSecWeight( xsec, sf_xsec_up, sf_xsec_dn );  
+
+
+  // Get Scale1fb*Lumi Wgt
+  getScaleToLumiWeight( sf_nominal );
+
+  
   // btag
-  if( useBTagSFs_fromUtils ){
-    getBTagWeight_fromUtils( sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn ); 
-  }
-  else{
-    sf_bTag         = babyAnalyzer.weight_btagsf();
-    sf_bTagEffHF_up = babyAnalyzer.weight_btagsf_heavy_UP();
-    sf_bTagEffHF_dn = babyAnalyzer.weight_btagsf_heavy_DN();
-    sf_bTagEffLF_up = babyAnalyzer.weight_btagsf_light_UP();
-    sf_bTagEffLF_dn = babyAnalyzer.weight_btagsf_light_DN();
-  }
+  getBTagWeight( sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn ); 
   
-  if( sample_info->isSignal ){
-    norm_bTagEff      = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,14));
-    norm_bTagEffHF_up = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,15));
-    norm_bTagEffHF_dn = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,17));
-    norm_bTagEffLF_up = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,16));
-    norm_bTagEffLF_dn = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,18));
-  }
-  else{
-    norm_bTagEff      = h_bkg_counter->GetBinContent(14);
-    norm_bTagEffHF_up = h_bkg_counter->GetBinContent(15);
-    norm_bTagEffHF_dn = h_bkg_counter->GetBinContent(17);
-    norm_bTagEffLF_up = h_bkg_counter->GetBinContent(16);
-    norm_bTagEffLF_dn = h_bkg_counter->GetBinContent(18);
-  }
- 
  
   // lepSFs
-  if( useLepSFs_fromUtils ){
-    getLepSFWeight_fromUtils( sf_lep, sf_lep_up, sf_lep_dn, sf_lepFS, sf_lepFS_up, sf_lepFS_dn, sf_vetoLep, sf_vetoLep_up, sf_vetoLep_dn );
-  }
-  else{
-    //sf_lep = babyAnalyzer.weight_lepSF();
-    //sf_lep_up = babyAnalyzer.weight_lepSF_up();
-    //sf_lep_dn = babyAnalyzer.weight_lepSF_dn();
-    
-    //sf_vetoLep = babyAnalyzer.weight_vetoLepSF();
-    //sf_vetoLep_up = babyAnalyzer.weight_vetoLepSF_up();
-    //sf_vetoLep_dn = babyAnalyzer.weight_vetoLepSF_dn();
-    
-    //sf_lepFS = babyAnalyzer.weight_lepSF_fastSim();
-    //sf_lepFS_up = babyAnalyzer.weight_lepSF_fastSim_up();
-    //sf_lepFS_dn = babyAnalyzer.weight_lepSF_fastSim_dn();
-  }
+  getLepSFWeight( sf_lep, sf_lep_up, sf_lep_dn, sf_lepFS, sf_lepFS_up, sf_lepFS_dn, sf_vetoLep, sf_vetoLep_up, sf_vetoLep_dn );
 
-
+  
   // top pT Reweighting
   getTopPtWeight( sf_topPt, sf_topPt_up, sf_topPt_dn );
 
@@ -291,7 +240,7 @@ void eventWeightInfo::getEventWeights(){
 
 
   // Nuetrino pT scale factor
-  getNuPtSF( sf_nuPt, sf_nuPt_up, sf_nuPt_dn );
+  getNuPtSF( sf_nuPt_up, sf_nuPt_dn );
 
 
   // W width scale factor
@@ -304,43 +253,126 @@ void eventWeightInfo::getEventWeights(){
 
   // Alpha Strong, QCD variation
   getAlphasWeight( sf_alphas_up, sf_alphas_dn );
-  if( sample_info->isSignal ){
-    norm_alphas    = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,1));
-    norm_alphas_up = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,12));
-    norm_alphas_dn = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,13));
-  }
-  else{
-    norm_alphas = h_bkg_counter->GetBinContent(1);
-    norm_alphas_up = h_bkg_counter->GetBinContent(12);
-    norm_alphas_dn = h_bkg_counter->GetBinContent(13);
-  }
+  
 
   // Q2 Variation, muF, muR
   getQ2Weight( sf_q2_up, sf_q2_dn );
-  if( sample_info->isSignal ){
-    norm_q2    = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,1));
-    norm_q2_up = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,5));
-    norm_q2_dn = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,9));
-  }
-  else{
-    norm_q2 = h_bkg_counter->GetBinContent(1);
-    norm_q2_up = h_bkg_counter->GetBinContent(5);
-    norm_q2_dn = h_bkg_counter->GetBinContent(9);
-  }
+  
 
   // Lumi Variation
-  getLumiWeight( sf_lumi, sf_lumi_up, sf_lumi_dn );
+  getLumi( sf_lumi, sf_lumi_up, sf_lumi_dn );
 
 
   // ISR Correction
-  if( sample_info->isSignal ){
-    getISRWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
-    norm_ISR = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,19));
-    norm_ISR_up = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,20));
-    norm_ISR_dn = h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,21));
-  }
+  if( sample_info->isSignal ) getISRWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
+  
+
+  // Sample Scale Factor
+  sf_sample = getSampleWeight( sample_info->id );
   
   return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void eventWeightInfo::getSusyMasses( double &mStop, double &mLSP ){
+
+  mStop = 1.0;
+  mLSP  = 1.0;
+  //mChargino = 1.0;
+
+  if( sample_info->isSignal ){
+    mStop     = babyAnalyzer.mass_stop();
+    mLSP      = babyAnalyzer.mass_lsp();
+    //mChargino = babyAnalyzer.mass_chargino();
+  }
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void eventWeightInfo::getNEvents( int &nEvts ){
+
+  nEvts = 1;
+
+  if( sample_info->isSignal ){
+
+    getSusyMasses(mStop,mLSP);
+
+    nEvts = (int)h_sig_counter_nEvents->GetBinContent(h_sig_counter->FindBin(mStop,mLSP));
+  }
+  else{
+    nEvts = h_bkg_counter->GetBinContent(22);
+  }
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void eventWeightInfo::getScaleToLumiWeight( double &wgt ){
+
+  wgt = 1.0;
+
+  if( sample_info->isData ) return;
+
+  if( sample_info->isSignal ){
+    getSusyMasses(mStop,mLSP);
+    getXSecWeight( xsec, sf_xsec_up, sf_xsec_dn );  
+    getNEvents( nEvents );
+    wgt = LUMI*1000.0*xsec/(double)nEvents;
+  }
+  else{
+    wgt = babyAnalyzer.scale1fb()*LUMI;
+  }
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void eventWeightInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ){
+
+  wgt_btagsf       = 1.0;
+  wgt_btagsf_hf_up = 1.0;
+  wgt_btagsf_hf_dn = 1.0;
+  wgt_btagsf_lf_up = 1.0;
+  wgt_btagsf_lf_dn = 1.0;
+
+  if( !apply_bTag_sf ) return;
+
+  if( useBTagSFs_fromUtils ){
+    getBTagWeight_fromUtils( wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn ); 
+  }
+  else{
+    wgt_btagsf       = babyAnalyzer.weight_btagsf();
+    wgt_btagsf_hf_up = babyAnalyzer.weight_btagsf_heavy_UP();
+    wgt_btagsf_hf_dn = babyAnalyzer.weight_btagsf_heavy_DN();
+    wgt_btagsf_lf_up = babyAnalyzer.weight_btagsf_light_UP();
+    wgt_btagsf_lf_dn = babyAnalyzer.weight_btagsf_light_DN();
+  }
+  
+  // Normalization
+  getNEvents( nEvents );
+  
+  if( sample_info->isSignal ){
+    getSusyMasses(mStop,mLSP);
+  
+    wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,14)) );
+    wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,15)) );
+    wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,17)) );
+    wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,16)) );
+    wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,18)) );
+  }
+  else{
+    wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(14) );
+    wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(15) );
+    wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(17) );
+    wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(16) );
+    wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(18) );
+  }
+  
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -361,6 +393,60 @@ void eventWeightInfo::getBTagWeight_fromUtils( double &wgt_btagsf, double &wgt_b
 
   return;
 
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void eventWeightInfo::getLepSFWeight( double &weight_lepSF, double &weight_lepSF_Up, double &weight_lepSF_Dn, double &weight_lepFSSF, double &weight_lepFSSF_Up, double &weight_lepFSSF_Dn, double &weight_vetoLepSF, double &weight_vetoLepSF_Up, double &weight_vetoLepSF_Dn ){
+
+  weight_lepSF = 1.0;
+  weight_lepSF_Up = 1.0;
+  weight_lepSF_Dn = 1.0;
+  weight_lepFSSF = 1.0;
+  weight_lepFSSF_Up = 1.0;
+  weight_lepFSSF_Dn = 1.0;
+  weight_vetoLepSF = 1.0;
+  weight_vetoLepSF_Up = 1.0;
+  weight_vetoLepSF_Dn = 1.0;
+
+  if( !apply_lep_sf && !apply_vetoLep_sf && !apply_lepFS_sf ) return;
+  
+  if( useLepSFs_fromUtils ){
+    getLepSFWeight_fromUtils( weight_lepSF, weight_lepSF_Up, weight_lepSF_Dn, weight_lepFSSF, weight_lepFSSF_Up, weight_lepFSSF_Dn, weight_vetoLepSF, weight_vetoLepSF_Up, weight_vetoLepSF_Dn );
+  }
+  else{
+    //sf_lep = babyAnalyzer.weight_lepSF();
+    //sf_lep_up = babyAnalyzer.weight_lepSF_up();
+    //sf_lep_dn = babyAnalyzer.weight_lepSF_dn();
+    
+    //sf_vetoLep = babyAnalyzer.weight_vetoLepSF();
+    //sf_vetoLep_up = babyAnalyzer.weight_vetoLepSF_up();
+    //sf_vetoLep_dn = babyAnalyzer.weight_vetoLepSF_dn();
+    
+    //sf_lepFS = babyAnalyzer.weight_lepSF_fastSim();
+    //sf_lepFS_up = babyAnalyzer.weight_lepSF_fastSim_up();
+    //sf_lepFS_dn = babyAnalyzer.weight_lepSF_fastSim_dn();
+  }
+
+  
+  if( !apply_lep_sf ){
+    weight_lepSF = 1.0;
+    weight_lepSF_Up = 1.0;
+    weight_lepSF_Dn = 1.0;
+  }
+  if( !apply_vetoLep_sf ){
+    weight_vetoLepSF = 1.0;
+    weight_vetoLepSF_Up = 1.0;
+    weight_vetoLepSF_Dn = 1.0;
+  }
+  if( !apply_lepFS_sf ){
+    weight_lepFSSF = 1.0;
+    weight_lepFSSF_Up = 1.0;
+    weight_lepFSSF_Dn = 1.0;
+  }
+  
+
+  return;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -427,7 +513,7 @@ void eventWeightInfo::getLepSFWeight_fromUtils( double &weight_lepSF, double &we
  
 
 
-  if( babyAnalyzer.is2lep() ){
+  if( babyAnalyzer.is2lep() && babyAnalyzer.nvetoleps()==1 ){
 
     // Find gen lepton matched to reco lepton
     int matched_idx = -1;
@@ -550,7 +636,20 @@ void eventWeightInfo::getTopPtWeight( double &weight_topPt, double &weight_topPt
   if( nTopsFound!=2 )      cout << "    Did not find 2 tops for top pT reweighting, nFound=" << nTopsFound << endl;
 
 
-  weight_topPt_up = topPtWeight(genTopPt, genTopBarPt);
+  double weight_temp = topPtWeight(genTopPt, genTopBarPt);
+
+  
+  if( apply_topPt_sf ){
+    weight_topPt    = weight_temp;
+    weight_topPt_up = ( ((weight_temp-1.0)*2.0)+1.0 );
+    weight_topPt_dn = 1.0;
+  }
+  // if !apply_topPt_sf still use as uncertainty
+  else{
+    weight_topPt    = 1.0;
+    weight_topPt_up = weight_temp;
+    weight_topPt_dn = 1.0;
+  }
 
 
   return;
@@ -564,10 +663,13 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
   weight_metRes_up = 1.0;
   weight_metRes_dn = 1.0;
 
+  if(!apply_metRes_sf) return;
+
   double sf_val = 1.0;
   double sf_err = 0.0;
 
   if( sample_info->isData ) return;
+  if( sample_info->isSignal ) return;
 
   if( babyAnalyzer.ngoodjets()==2 ){
 
@@ -651,10 +753,13 @@ void eventWeightInfo::getNJetsSF_K3( double &weight_K3, double &weight_K3_up, do
   weight_K3_up = 1.0;
   weight_K3_dn = 1.0;
 
+  if(!apply_nJetsK3_sf) return;
+
   double sf_val = 1.0;
   double sf_err = 1.0;
 
   if( sample_info->isData ) return;
+  if( sample_info->isSignal ) return;
 
   if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext3 ) return;
@@ -683,10 +788,13 @@ void eventWeightInfo::getNJetsSF_K4( double &weight_K4, double &weight_K4_up, do
   weight_K4_up = 1.0;
   weight_K4_dn = 1.0;
 
+  if(!apply_nJetsK4_sf) return;
+
   double sf_val = 1.0;
   double sf_err = 1.0;
 
   if( sample_info->isData ) return;
+  if( sample_info->isSignal ) return;
 
   if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext3 ) return;
@@ -715,10 +823,13 @@ void eventWeightInfo::getDiNuPtSF( double &weight_diNuPt, double &weight_diNuPt_
   weight_diNuPt_up = 1.0;
   weight_diNuPt_dn = 1.0;
 
+  if(!apply_diNuPt_sf) return;
+
   double sf_val = 1.0;
   double sf_err = 1.0;
 
   if( sample_info->isData ) return;
+  if( sample_info->isSignal ) return;
 
   if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext3 ) return;
@@ -749,9 +860,8 @@ void eventWeightInfo::getDiNuPtSF( double &weight_diNuPt, double &weight_diNuPt_
 
 //////////////////////////////////////////////////////////////////////
 
-void eventWeightInfo::getNuPtSF( double &weight_nuPt, double &weight_nuPt_up, double &weight_nuPt_dn ){
+void eventWeightInfo::getNuPtSF( double &weight_nuPt_up, double &weight_nuPt_dn ){
 
-  weight_nuPt    = 1.0;
   weight_nuPt_up = 1.0;
   weight_nuPt_dn = 1.0;
 
@@ -759,7 +869,8 @@ void eventWeightInfo::getNuPtSF( double &weight_nuPt, double &weight_nuPt_up, do
   double sf_err = 0.0;
 
   if( sample_info->isData ) return;
-  
+  if( sample_info->isSignal ) return;
+
   if( !babyAnalyzer.is1lepFromW() ) return;
 
   if( babyAnalyzer.ngoodjets()==2 && 
@@ -787,7 +898,6 @@ void eventWeightInfo::getNuPtSF( double &weight_nuPt, double &weight_nuPt_up, do
     
   } // end if nJets>=4 && MT2W>200
 
-  weight_nuPt    = sf_val;
   weight_nuPt_up = (sf_val + sf_err);
   weight_nuPt_dn = (sf_val - sf_err);
 
@@ -806,7 +916,8 @@ void eventWeightInfo::getWwidthSF( double &weight_Wwidth_up, double &weight_Wwid
   double sf_err = 0.0;
 
   if( sample_info->isData ) return;
-  
+  if( sample_info->isSignal ) return;
+
   if( !babyAnalyzer.is1lepFromW() ) return;
 
   if( babyAnalyzer.ngoodjets()==2 && 
@@ -848,6 +959,7 @@ void eventWeightInfo::getWJetsHFXSecSF( double &weight_hfXsec_up, double &weight
   double sf_err = 0.0;
 
   if( sample_info->isData ) return;
+  if( sample_info->isSignal ) return;
 
   if( sample_info->id != sampleInfo::k_WJetsToLNu &&
       sample_info->id != sampleInfo::k_WJetsToLNu_amcnlo_pythia8 &&
@@ -911,9 +1023,24 @@ void eventWeightInfo::getAlphasWeight( double &weight_alphas_up, double &weight_
   if( sample_info->isData ) return;
 
   if( babyAnalyzer.genweights().size() < 110 ) return;
-
+  
   weight_alphas_up = babyAnalyzer.genweights().at(109)/babyAnalyzer.genweights().at(0);
   weight_alphas_dn = babyAnalyzer.genweights().at(110)/babyAnalyzer.genweights().at(0);
+
+  // Normalization
+  if( sample_info->isSignal ){
+    weight_alphas_up *= (  h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,1)) / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,12))  );
+    weight_alphas_dn *= (  h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,1)) / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,13))  );
+  }
+  else{
+    weight_alphas_up *= ( h_bkg_counter->GetBinContent(1) / h_bkg_counter->GetBinContent(12) );
+    weight_alphas_dn *= ( h_bkg_counter->GetBinContent(1) / h_bkg_counter->GetBinContent(13) );
+  }
+
+  if( weight_alphas_up<0.0 || weight_alphas_dn<0.0 ){
+    weight_alphas_up = 1.0;
+    weight_alphas_dn = 1.0;
+  }
 
   return;
 }
@@ -932,12 +1059,24 @@ void eventWeightInfo::getQ2Weight( double &weight_q2_up, double &weight_q2_dn ){
   weight_q2_up = babyAnalyzer.genweights().at(4)/babyAnalyzer.genweights().at(0);
   weight_q2_dn = babyAnalyzer.genweights().at(8)/babyAnalyzer.genweights().at(0);
 
+  // Normalization
+  if( sample_info->isSignal ){
+    
+    weight_q2_up *= ( h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,1)) / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,5)) );
+    weight_q2_dn *= ( h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,1)) / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,9)) );
+  }
+  else{
+    weight_q2_up *= ( h_bkg_counter->GetBinContent(1) / h_bkg_counter->GetBinContent(5) );
+    weight_q2_dn *= ( h_bkg_counter->GetBinContent(1) / h_bkg_counter->GetBinContent(9) );
+  }
+
+
   return;
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void eventWeightInfo::getLumiWeight( double &weight_lumi, double &weight_lumi_up, double &weight_lumi_dn ){
+void eventWeightInfo::getLumi( double &weight_lumi, double &weight_lumi_up, double &weight_lumi_dn ){
 
   weight_lumi    = 1.0;
   weight_lumi_up = 1.0;
@@ -961,20 +1100,28 @@ void eventWeightInfo::getISRWeight( double &weight_ISR, double &weight_ISR_up, d
   weight_ISR_up = 1.0;
   weight_ISR_dn = 1.0;
 
-  if( sample_info->isData ) return;
+  if(!apply_ISR_sf) return;
 
+  if( sample_info->isData ) return;
   if( !sample_info->isSignal ) return;
 
   weight_ISR    = babyAnalyzer.weight_ISR();
   weight_ISR_up = babyAnalyzer.weight_ISRup();
   weight_ISR_dn = babyAnalyzer.weight_ISRdown();
 
+  // Normalization
+  getNEvents(nEvents);
+
+  weight_ISR    *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,19)) );
+  weight_ISR_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,20)) );
+  weight_ISR_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,21)) );
+
   return;
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void eventWeightInfo::getSignalXSecWeight( double mStop, double &weight_xsec, double &weight_xsec_up, double &weight_xsec_dn ){
+void eventWeightInfo::getXSecWeight( double &weight_xsec, double &weight_xsec_up, double &weight_xsec_dn ){
 
   weight_xsec    = 1.0;
   weight_xsec_up = 1.0;
@@ -985,17 +1132,53 @@ void eventWeightInfo::getSignalXSecWeight( double mStop, double &weight_xsec, do
   
   if( sample_info->isData ) return;
 
-  if( !sample_info->isSignal ) return;
- 
-  xsec_val = h_sig_xsec->GetBinContent(h_sig_xsec->FindBin(mStop));
-  xsec_err = h_sig_xsec->GetBinError(h_sig_xsec->FindBin(mStop));
-
+  if( !sample_info->isSignal ){
+    xsec_val = babyAnalyzer.xsec();
+  }
+  else{
+    getSusyMasses(mStop,mLSP);
+    xsec_val = h_sig_xsec->GetBinContent(h_sig_xsec->FindBin(mStop));
+    xsec_err = h_sig_xsec->GetBinError(h_sig_xsec->FindBin(mStop));
+  }
   weight_xsec    = xsec_val;
   weight_xsec_up = (xsec_val+xsec_err);
   weight_xsec_dn = (xsec_val-xsec_err);
 
   return;
 
+}
+
+//////////////////////////////////////////////////////////////////////
+
+double eventWeightInfo::getSampleWeight( sampleInfo::ID sample ){
+
+  double result = 1.0;
+
+  if(!apply_sample_sf ) return result;
+
+  switch( sample ){
+
+  case( sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8 ):
+    result = 1.041;
+    break;
+    
+  case( sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8 ):
+    result = 0.9321;
+    break;
+
+  case( sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8 ):
+    result = 1.0384;
+    break;
+
+  case( sampleInfo::k_WJetsToLNu_HT600ToInf_madgraph_pythia8 ):
+    result = 0.9532;
+    break;
+
+  default:
+    break;
+  };
+
+  return result;
 }
 
 //////////////////////////////////////////////////////////////////////

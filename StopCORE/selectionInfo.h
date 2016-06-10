@@ -9,11 +9,13 @@
 
 // stopCORE
 #include "analyzerInfo.h"
+#include "sampleInfo.h"
 #include "stop_1l_babyAnalyzer.h"
 
 // ROOT
 #include "TFile.h"
 #include "TH1D.h"
+#include "TH3D.h"
 
 // C
 #include <string>
@@ -53,9 +55,8 @@ namespace selectionInfo{
 	   k_ge150_mt,
 	   k_ge0p8_minDPhi
   };
-
+  
   typedef std::vector< selectionInfo::ID > vect_id;
-
 
   //
   // UTILITY CLASS FOR INDIVIDUAL CUTS
@@ -69,11 +70,13 @@ namespace selectionInfo{
       std::string title;
       std::string tex;
 
+      cutUtil(){};
       cutUtil( selectionInfo::ID cut );
       ~cutUtil(){};
  
   };
   
+  typedef std::vector< selectionInfo::cutUtil > vect_util;
 
   //
   // UTILITY CLASS FOR SETS OF CUTS
@@ -82,9 +85,9 @@ namespace selectionInfo{
 
     public:
 
-      vect_id v_cuts;
+      vect_util v_cuts;
 
-      bool sample_is_data;
+      sampleInfo::sampleUtil *sample_info;
 
       eventFilter metFilterTxt; 
       
@@ -92,14 +95,18 @@ namespace selectionInfo{
       TH1D *h_cutflow_wgt;
       std::vector< TH1D* > vect_cutflow_nMinus1;
 
-      selectionUtil( vect_id selection, bool isData );
+      TH3D *h_cutflow_sig;
+      TH3D *h_cutflow_sig_wgt;
+      std::vector< TH3D* > vect_cutflow_nMinus1_sig;
+
+      selectionUtil( vect_util selection, sampleInfo::ID sample );
       ~selectionUtil();
 
       void setupCutflowHistos( TFile *f_out );  
       bool passCut( selectionInfo::ID cut );
       bool passSelection();
       void fillCutflowHistos( double wgt );
-      void printCutflow();
+      void printCutflow(double mStop=800.0, double mLSP=100.0);
 
   }; // end class def
 
@@ -107,7 +114,7 @@ namespace selectionInfo{
   //
   // Namespace functions
   //
-  vect_id getCutList( analyzerInfo::ID analysis );
+  vect_util getCutList( analyzerInfo::ID analysis );
 
     
 }; // end namespace def

@@ -30,7 +30,8 @@ namespace sampleInfo{
   //
   // ENUMS
   //
-  enum ID{ k_single_lepton_met_2015CD,
+  enum ID{ k_T2tt,
+           k_single_lepton_met_2015CD,
            k_met_2015CD,
 	   k_met_2015C,
 	   k_met_2015D_05Oct2015_v1,
@@ -128,7 +129,8 @@ namespace sampleInfo{
 	   k_GJets_HT100To200_madgraph_pythia8,
 	   k_GJets_HT200To400_madgraph_pythia8,
 	   k_GJets_HT400To600_madgraph_pythia8,
-	   k_GJets_HT600ToInf_madgraph_pythia8
+	   k_GJets_HT600ToInf_madgraph_pythia8,
+	   k_nSample
   };
 
   
@@ -146,15 +148,30 @@ namespace sampleInfo{
     public:
     
       sampleInfo::ID id;
+
       std::vector< std::pair< std::string, std::string > > baby_i_o;
       std::vector< std::string > inputBabies;
+
       std::string label;
       std::string title;
       std::string tex;
+
       bool isData;
       bool isFastsim;
       bool isSignal;
+      bool isSignalScan;
+      bool isAMCNLO;
+
+      int nBins_stop;
+      double min_stop;
+      double max_stop;
       
+      int nBins_lsp;
+      double min_lsp;
+      double max_lsp;
+
+      std::vector< std::pair< int, int > >  massPtList;
+          
       sampleUtil( sampleInfo::ID sample );
       ~sampleUtil(){};
       
@@ -162,7 +179,8 @@ namespace sampleInfo{
   
 
   vect_id getSampleList( analyzerInfo::ID analysis );
-   
+
+  int scaleSample(std::string f_in_name, std::string f_out_name, double SF);
 
 }; // end namespace def
 
