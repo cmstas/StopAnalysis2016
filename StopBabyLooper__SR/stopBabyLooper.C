@@ -56,8 +56,8 @@ int stopBabyLooper(){
   sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2015CD );
   //sampleList.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 ); 
+  sampleList.push_back( sampleInfo::k_T2tt ); 
   
-
   //
   // Loop over samples
   //
@@ -100,6 +100,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
   // Loop over different input directories for each sample, ie Nominal, JES
   //
   for(int iDir=0; iDir<(int)sample.baby_i_o.size(); iDir++){
+
     
     //
     // Benchmark
@@ -118,7 +119,8 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
       // input directory
       string input = sample.baby_i_o[iDir].first;
-      if(iDir==0) input += "Skims_SR__20160202/";
+      if(iDir==0 && 
+         sample_id!=sampleInfo::k_T2tt) input += "Skims_SR__20160202/";
       
       // input file
       input += sample.inputBabies[iFile];
@@ -135,7 +137,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
     // output dir
     string f_output_name = "";
-    f_output_name += "/data/tmp/jgwood/temp_stopAnalysis/";
+    //f_output_name += "/data/tmp/jgwood/temp_stopAnalysis/";
     f_output_name += sample.baby_i_o[iDir].second;
 
     // output name
@@ -156,16 +158,16 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     // Get List of Cuts for selection
     //
     cout << "    Loading cutList" << endl << endl;
-    selectionInfo::vect_id cutList;
+    selectionInfo::vect_util cutList;
     cutList = selectionInfo::getCutList( analysis ); 
-    //cutList.push_back( selectionInfo::k_goodVtx );  
-
-  
+    //cutList.push_back( selectionInfo::cutUtil(selectionInfo::k_goodVtx) );  
+    
+    
     //
     // Declare Selection Object
     //
     cout << "    Loading selectorUtil" << endl << endl;
-    selectionInfo::selectionUtil selector( cutList, sample.isData );
+    selectionInfo::selectionUtil selector( cutList, sample.id );
     selector.setupCutflowHistos( f_output );
 
 
@@ -173,33 +175,33 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     // Declare genClassification list
     //
     cout << "    Loading genClassyList" << endl << endl;
-    genClassyInfo::vect_id genClassyList;
+    genClassyInfo::vect_util genClassyList;
     genClassyList = genClassyInfo::getGenClassyList( analysis );
-    //genClassyList.push_back( genClassyInfo::k_incl );
-  
+    //genClassyList.push_back( genClassyInfo::genClassyUtil(genClassyInfo::k_incl) );
+    
     if( sample.isData ){
       genClassyList.clear();
-      genClassyList.push_back( genClassyInfo::k_incl );
+      genClassyList.push_back( genClassyInfo::genClassyUtil(genClassyInfo::k_incl) );
     }
 
-
+    
     //
     // Declare recoClassification list
     //
-    recoClassyInfo::vect_id recoClassyList;
     cout << "    Loading recoClassyList" << endl << endl;
+    recoClassyInfo::vect_util recoClassyList;
     recoClassyList = recoClassyInfo::getRecoClassyList( analysis );
-    //recoClassyList.push_back( recoClassyInfo::k_incl ); 
-  
+    //recoClassyList.push_back( recoClassyInfo::recoClassyUtil(recoClassyInfo::k_incl) ); 
+    
 
     //
     // Declare categoryInfo List
     //
-    categoryInfo::vect_id catList;
     cout << "    Loading categoryList" << endl << endl;
+    categoryInfo::vect_util catList;
     catList = categoryInfo::getCategoryList( analysis );
-    //catList.push_back( categoryInfo::k_incl );
-
+    //catList.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    
 
     //
     // Get Event Weight Object
@@ -208,54 +210,103 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     bool bTagSF_fromFile = true;
     bool lepSF_fromFile  = true;
     eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile );
-      
+
+    // Switches for applying weights
+    wgtInfo->apply_bTag_sf    = true;
+    wgtInfo->apply_lep_sf     = true;
+    wgtInfo->apply_vetoLep_sf = true;
+    wgtInfo->apply_lepFS_sf   = true;
+    wgtInfo->apply_topPt_sf   = false; // true=sf, false=uncertainty
+    wgtInfo->apply_metRes_sf  = true;
+    wgtInfo->apply_nJetsK3_sf = true; // only !=1.0 for powheg pythia8 tt2l
+    wgtInfo->apply_nJetsK4_sf = true; // only !=1.0 for powheg pythia8 tt2l
+    wgtInfo->apply_diNuPt_sf  = true; // only !=1.0 for powheg pythia8 tt2l
+    wgtInfo->apply_ISR_sf     = true; // only !=1.0 for signal
+    wgtInfo->apply_sample_sf  = true; // only !=1.0 for some WJetsHT samps
+
 
     //
     // Declare systematicInfo Object
     //
-    systematicInfo::vect_id systematicList;
     cout << "    Loading systematicList" << endl << endl;
+    systematicInfo::vect_util systematicList;
     systematicList = systematicInfo::getSystematicList( analysis, sample.isFastsim, sample.isSignal );
-    //systematicList.push_back( systematicInfo::k_nominal ); 
-
+    //systematicList.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) ); 
+    
     if( sample.isData ){
       systematicList.clear();
-      systematicList.push_back( systematicInfo::k_nominal ); 
+      systematicList.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) ); 
     }
 
-
+       
     //
     // Declare Histograms
     //
     cout << "    Loading histograms" << endl << endl;
     TH1::SetDefaultSumw2();
+    TH2::SetDefaultSumw2();
+    TH3::SetDefaultSumw2();
+
+    const int h_nSystematic = systematicInfo::k_nSys;
+    const int h_nGenClassy  = genClassyInfo::k_nGenClassy;
+    const int h_nRecoClassy = recoClassyInfo::k_nRecoClassy;
+    const int h_nCategory   = categoryInfo::k_nCats;
   
-    categoryInfo::vect_id   cat_temp;
-    systematicInfo::vect_id sys_temp;
+    const int h_nMassPt = sample.massPtList.size();
+
+    categoryInfo::vect_util   cat_temp;
+    systematicInfo::vect_util sys_temp;
     
     
     //
     // Yields
     //
-    histogramInfo::h1_Yield_Util h_yield( f_output, "yields", "Yields", genClassyList, recoClassyList, catList, systematicList );
-
+    histogramInfo::h1_Yield_Util *h1_yield = NULL;
+    histogramInfo::h3_Yield_Util *h3_yield = NULL;
+    if( sample.isSignalScan ){
+      h3_yield = new histogramInfo::h3_Yield_Util( f_output, "yields", "Yields", sample.nBins_stop, sample.min_stop, sample.max_stop, sample.nBins_lsp, sample.min_lsp, sample.max_lsp, genClassyList, recoClassyList, catList, systematicList );
+    }
+    else{
+      h1_yield = new histogramInfo::h1_Yield_Util( f_output, "yields", "Yields", genClassyList, recoClassyList, catList, systematicList );
+    }
+    
     
     //
     // nJets
     //
     cat_temp.clear(); sys_temp.clear();
 
-    cat_temp.push_back( categoryInfo::k_incl );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
 
-    sys_temp.push_back( systematicInfo::k_nominal );
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
 
-    histogramInfo::h1_Util h_nJets( f_output, "nJets", "nJets", 11, -0.5, 10.5, genClassyList, recoClassyList, cat_temp, sys_temp );
+    histogramInfo::h1_Util *h1_nJets = NULL;
+    histogramInfo::h1_Util *h1_scan_nJets[ h_nMassPt ];
+    if( sample.isSignalScan ){
 
-    
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "nJets__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "nJets, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_nJets[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 11, -0.5, 10.5, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_nJets = new histogramInfo::h1_Util( f_output, "nJets", "nJets", 11, -0.5, 10.5, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+        
+
     
     //
     // Event Counters
     //
+    cout << "    Loading files to loop over" << endl << endl;
     unsigned int nEventsTotal = 0;
     unsigned int nEventsChain = chain->GetEntries();
     if( nEvents >= 0 ) nEventsChain = nEvents;
@@ -301,8 +352,8 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	if(fast) tree->LoadTree(event);
 	babyAnalyzer.GetEntry(event);
 	++nEventsTotal;
-	
-	
+
+
 	//
 	// Progress
 	//
@@ -310,76 +361,140 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
 
 	//
+	// Initialize Weights
+	//
+	wgtInfo->initializeWeights();
+	
+	
+	//
 	// Check duplicate event
 	//
 	if( sample.isData &&
 	    !selector.passCut( selectionInfo::k_duplicateRemoval ) ){
 	  continue;
 	}
-	  
-	
-	//
-	// Get Event Weight
-	//
-	wgtInfo->initializeWeights();
-	wgtInfo->getEventWeights();
-	
-	systematicInfo::vect_id_wgt evt_wgts;
-	evt_wgts = systematicInfo::getSystematicWeightsFromList( systematicList, wgtInfo );
-	
 
+	
 	//
-	// Get nominal weight
+	// Get Weight To Scale to Lumi (scale1fb*LUMI)
 	//
-	double nominal_wgt = 1.0;
-	for(int iSys=0; iSys<(int)evt_wgts.size(); iSys++){
-	  if( evt_wgts[iSys].first == systematicInfo::k_nominal ){
-	    nominal_wgt = evt_wgts[iSys].second;
-	    break;
-	  }
-	}
+	double scaleToLumi_wgt = 1.0;
+	wgtInfo->getScaleToLumiWeight( scaleToLumi_wgt );
 
 	
 	//
 	// Pass Cuts
 	//
-	selector.fillCutflowHistos( nominal_wgt );
+	selector.fillCutflowHistos( scaleToLumi_wgt );
 	if( !selector.passSelection() ) continue;
 	
 	
 	//
-	// Determine Gen Classification
+	// Fill event weights
 	//
-	genClassyInfo::vect_id_passBool evt_genClassy;
-	evt_genClassy = genClassyInfo::passGenClassyFromList( genClassyList );
+	wgtInfo->getEventWeights();
+
+
+	//
+	// Get event weights for each systematic
+	//
+	systematicInfo::vect_util_wgt sysWgtsList;
+	sysWgtsList = systematicInfo::getSystematicWeightsFromList( systematicList, wgtInfo );
+
+
+	//
+	// Check gen classifications that pass for this event
+	//
+	genClassyInfo::vect_util_passBool passGenClassyList;
+	passGenClassyList = genClassyInfo::passGenClassyFromList( genClassyList, true );
+	
+
+	//
+	// Check reco classifications that pass for this event
+	//
+	recoClassyInfo::vect_util_passBool passRecoClassyList;
+	passRecoClassyList = recoClassyInfo::passRecoClassyFromList( recoClassyList, true );
+
+
+	//
+	// Check categories that pass for this event
+	//
+	categoryInfo::vect_util_passBool passCatList;
+	passCatList = categoryInfo::passCategoriesFromList( catList, true );
 
 	
 	//
-	// Determine Reco Classification
-	//
-	recoClassyInfo::vect_id_passBool evt_recoClassy;
-	evt_recoClassy = recoClassyInfo::passRecoClassyFromList( recoClassyList );
-
-	
-	//
-	// Determine Signal Region Category
-	//
-	categoryInfo::vect_id_passBool evt_categories;
-	evt_categories = categoryInfo::passCategoriesFromList( catList );
-      	
-	
-	//
-	// Fill Histos
+	// Compute Event Variables
 	//
 
-	// Yields
-	h_yield.fill( evt_genClassy, evt_recoClassy, evt_categories, evt_wgts );
-	
-	// nJets
-	h_nJets.fill( ngoodjets(), evt_genClassy, evt_recoClassy, evt_categories, evt_wgts ) ;
-	
 
 
+	//
+	// Fill Histograms
+	//
+	
+	// Loop over systematics
+	for( int iSys=0; iSys<(int)sysWgtsList.size(); iSys++){
+	  
+	  // Loop over gen classifications
+	  for(int iGen=0; iGen<(int)passGenClassyList.size(); iGen++){
+	    
+	    // Loop over reco classifications
+	    for(int iReco=0; iReco<(int)passRecoClassyList.size(); iReco++){
+	      
+	      // Loop over categories
+	      for(int iCat=0; iCat<(int)passCatList.size(); iCat++){
+		
+		int iYieldHist = histogramInfo::getYieldHistoIndex( sysWgtsList[iSys].first.id, passGenClassyList[iGen].first.id, passRecoClassyList[iReco].first.id );
+		int iHist      = histogramInfo::getHistoIndex( sysWgtsList[iSys].first.id, passGenClassyList[iGen].first.id, passRecoClassyList[iReco].first.id, passCatList[iCat].first.id );
+		
+  		
+		//
+		// Fill Histograms
+		//
+		
+		// Signal
+		if( sample.isSignalScan ){
+		  
+		  // Yields
+		  if( h3_yield->histos[iYieldHist] ) h3_yield->histos[iYieldHist]->Fill( wgtInfo->mStop, wgtInfo->mLSP, passCatList[iCat].first.label.c_str(), sysWgtsList[iSys].second );
+		  
+		  
+		  // Loop over mass point list
+		  for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+
+		    if( wgtInfo->mStop != sample.massPtList[iMassPt].first ) continue;
+		    if( wgtInfo->mLSP != sample.massPtList[iMassPt].second ) continue;
+		   
+		    // nJets
+		    if( h1_scan_nJets[iMassPt]->histos[iHist] ) h1_scan_nJets[iMassPt]->histos[iHist]->Fill( ngoodjets(), sysWgtsList[iSys].second );
+
+		  } // end loop over mass points
+
+		} 
+		// Data and Backgrounds
+		else{
+
+		  // Yields
+		  if( h1_yield->histos[iYieldHist] ) h1_yield->histos[iYieldHist]->Fill( passCatList[iCat].first.label.c_str(), sysWgtsList[iSys].second );
+		  
+		  // nJets
+		  if( h1_nJets->histos[iHist] ) h1_nJets->histos[iHist]->Fill( ngoodjets(), sysWgtsList[iSys].second );
+
+		}
+		
+		
+	      } // end loop over categories
+
+	    } // end loop over reco classifications
+
+	  } // end loop over gen classifications
+
+	} // end loop over systematics
+		
+
+
+    
       } // end loop over events in tree
       
       
