@@ -25,6 +25,16 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 
   
   //
+  // Configuration Variables
+  //
+  bool usePsuedoData = true;
+
+  bool doRescale = true;
+  //double rescale = 1.0; // use lumi from stopCORE
+  double rescale = 5.0/0.8042; // rescale to new lumi
+
+  
+  //
   // Analyzer Type
   //
   analyzerInfo::ID analysis = analyzerInfo::k_SR;
@@ -34,8 +44,14 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   //
   TFile *f_input = NULL;
 
-  sampleInfo::sampleUtil data_util( sampleInfo::k_single_lepton_met_2015CD );
-  //sampleInfo::sampleUtil data_util( sampleInfo::k_allBkg );
+  sampleInfo::sampleUtil *data_util = NULL;
+  if(usePsuedoData){
+    data_util = new sampleInfo::sampleUtil( sampleInfo::k_allBkg );
+  }
+  else{
+    data_util = new sampleInfo::sampleUtil( sampleInfo::k_single_lepton_met_2015CD );
+  }
+  
 
   sampleInfo::sampleUtil allBkg_util( sampleInfo::k_allBkg );
 
@@ -412,6 +428,11 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	      yield = h_yield_sig->GetBinContent( binX,binY,binZ );
 	      error = h_yield_sig->GetBinError( binX,binY,binZ );
 	    
+	      if(doRescale){
+		yield *= rescale;
+		error *= rescale;
+	      }
+
 	      if( yield == 0.0 ){
 		fprintf(f_out, " & --- ");
 	      }
@@ -472,6 +493,11 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	    yield = h_yield_bkg->GetBinContent( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	    error = h_yield_bkg->GetBinError( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	   
+	    if(doRescale){
+		yield *= rescale;
+		error *= rescale;
+	      }
+
 	    if( yield == 0.0 ){
 	      fprintf(f_out, " & --- ");
 	    }
@@ -519,6 +545,11 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	  yield = h_yield_bkg->GetBinContent( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	  error = h_yield_bkg->GetBinError( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	  
+	  if(doRescale){
+	    yield *= rescale;
+	    error *= rescale;
+	  }
+
 	  if( yield == 0.0 ){
 	    fprintf(f_out, " & --- ");
 	  }
@@ -544,11 +575,11 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	//
 	f_input_name = f_input_dir;
 	f_input_name += "h__";
-	f_input_name += data_util.label;
+	f_input_name += data_util->label;
 	f_input_name += ".root";
 	f_input = new TFile( f_input_name.Data(), "read");
 
-	fprintf(f_out, "%s ", data_util.tex.c_str() );
+	fprintf(f_out, "%s ", data_util->tex.c_str() );
 
 	// Loop over category list
 	for(int iCat=0; iCat<(int)tableList[iTable].size(); iCat++){
@@ -563,6 +594,11 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	  TH1D *h_yield_data = (TH1D*)f_input->Get(h_name.c_str());
 	  yield = h_yield_data->GetBinContent( h_yield_data->GetXaxis()->FindBin(category.label.c_str()) );
 	  error = sqrt(yield);
+	  
+	  if(doRescale){
+	    yield *= rescale;
+	    error = sqrt(yield);
+	  }
 	  
 	  if( yield == 0.0 ){
 	    fprintf(f_out, " & --- ");
@@ -619,6 +655,11 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	    yield = h_yield_bkg->GetBinContent( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	    error = h_yield_bkg->GetBinError( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	   
+	    if(doRescale){
+	      yield *= rescale;
+	      error *= rescale;
+	    }
+
 	    if( yield == 0.0 ){
 	      fprintf(f_out, " & --- ");
 	    }
