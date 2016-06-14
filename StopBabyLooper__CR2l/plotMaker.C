@@ -92,7 +92,7 @@ void plotMaker( bool plotByGenDecay=true ){
   // data
   //
   std::pair< sampleInfo::ID, genClassyInfo::ID > sample_data;
-  sample_data.first  = sampleInfo::k_single_lepton_met_2015CD;
+  sample_data.first  = sampleInfo::k_single_lepton_met_2016B;
   sample_data.second = genClassyInfo::k_incl;
  
 

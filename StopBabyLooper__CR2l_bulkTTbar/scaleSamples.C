@@ -27,19 +27,19 @@ void scaleSamples(std::string f_input_dir, std::string f_output_dir){
 
   target.first  = sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8;
   target.second = 1.041;
-  targetList.push_back(target);
+  //targetList.push_back(target);
 
   target.first = sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8;
   target.second = 0.9321;
-  targetList.push_back(target);
+  //targetList.push_back(target);
 
   target.first = sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8;
   target.second = 1.0384;
-  targetList.push_back(target);
+  //targetList.push_back(target);
 
   target.first = sampleInfo::k_WJetsToLNu_HT600ToInf_madgraph_pythia8;
   target.second = 0.9532;
-  targetList.push_back(target);
+  //targetList.push_back(target);
 
 
   for(int iTarget=0; iTarget<(int)targetList.size(); iTarget++){

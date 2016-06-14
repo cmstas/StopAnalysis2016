@@ -34,7 +34,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   //
   TFile *f_input = NULL;
 
-  sampleInfo::sampleUtil data_util( sampleInfo::k_single_lepton_met_2015CD );
+  sampleInfo::sampleUtil data_util( sampleInfo::k_single_lepton_met_2016B );
   //sampleInfo::sampleUtil data_util( sampleInfo::k_allBkg );
 
   sampleInfo::sampleUtil allBkg_util( sampleInfo::k_allBkg );

@@ -79,392 +79,128 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     massPt.first = 400; massPt.second = 225;
     massPtList.push_back(massPt);
     break;
-
-  case( k_single_lepton_met_2015CD ):
-    label  = "data_single_lepton_met_2015CD_25ns";
-    title  = "Data, single e/mu, MET dataset, 2015CD";
-    tex    = "Data,~single~$e/\\mu$,~MET,~dataset,~2015CD";
+    
+  case( k_single_lepton_met_2016B ):
+    label  = "data_single_lepton_met_2016B_25ns";
+    title  = "Data, single e/mu, MET dataset, 2016B";
+    tex    = "Data,~single~$e/\\mu$,~MET,~dataset,~2016B";
     isData = true;
     inputBabies.push_back("data_met*.root");
     inputBabies.push_back("data_single_electron*.root");
     inputBabies.push_back("data_single_muon*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
 
-  case( k_met_2015CD ):
-    label  = "data_met_2015CD_25ns";
-    title  = "Data, MET dataset, 2015CD";
-    tex    = "Data,~MET,~dataset,~2015CD";
+  case( k_met_2016B ):
+    label  = "data_met_2016B_25ns";
+    title  = "Data, MET dataset, 2016B";
+    tex    = "Data,~MET,~dataset,~2016B";
     isData = true;
     inputBabies.push_back("data_met*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
 
-  case( k_met_2015C ):
-    label  = "data_met_2015C_25ns";
-    title  = "Data, MET dataset, 2015C";
-    tex    = "Data,~MET,~dataset,~2015C";
-    isData = true;
-    inputBabies.push_back("data_met_2015C*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_met_2015D_05Oct2015_v1 ):
-    label  = "data_met_2015D_05Oct2015_v1_25ns";
-    title  = "Data, MET dataset, 2015D 05Oct2015 v1";
-    tex    = "Data,~MET,~dataset,~2015D~05Oct2015~v1";
-    isData = true;
-    inputBabies.push_back("data_met_2015D_05Oct2015_v1*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_met_2015D_promptRecoV4 ):
-    label  = "data_met_2015D_promptRecoV4_25ns";
-    title  = "Data, MET dataset, 2015D prompt reco V4";
-    tex    = "Data,~MET,~dataset,~2015D~prompt~reco~V4";
-    isData = true;
-    inputBabies.push_back("data_met_2015D_promtRecoV4*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_lepton_2015CD ):
-    label  = "data_single_lepton_2015CD_25ns";
-    title  = "Data, single e/mu dataset, 2015CD";
-    tex    = "Data,~single~$e/\\mu$,~dataset,~2015CD";
+  case( k_single_lepton_2016B ):
+    label  = "data_single_lepton_2016B_25ns";
+    title  = "Data, single e/mu dataset, 2016B";
+    tex    = "Data,~single~$e/\\mu$,~dataset,~2016B";
     isData = true;
     inputBabies.push_back("data_single_electron*.root");
     inputBabies.push_back("data_single_muon*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
 
-  case( k_single_el_2015CD ):
-    label  = "data_single_el_2015CD_25ns";
-    title  = "Data, single electron dataset, 2015CD";
-    tex    = "Data,~single~$e$,~dataset,~2015CD";
+  case( k_single_el_2016B_promptRecoV2 ):
+    label  = "data_single_el_2016B_promptRecoV2_25ns";
+    title  = "Data, single electron dataset, 2016B, promptReco v2";
+    tex    = "Data,~single~$e$,~dataset,~2016B,~promptReco~v2";
     isData = true;
     inputBabies.push_back("data_single_electron*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
 
-  case( k_single_el_2015C ):
-    label  = "data_single_el_2015C_25ns";
-    title  = "Data, single electron dataset, 2015C";
-    tex    = "Data,~single~$e$,~dataset,~2015C";
-    isData = true;
-    inputBabies.push_back("data_single_electron_2015C*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_el_2015D_05Oct2015_v1 ):
-    label  = "data_single_el_2015D_05Oct2015_v1_25ns";
-    title  = "Data, single electron dataset, 2015D 05Oct2015 v1";
-    tex    = "Data,~single~$e$,~dataset,~2015D~05Oct2015~v1";
-    isData = true;
-    inputBabies.push_back("data_single_electron_2015D_05Oct2015_v1*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_el_2015D_promptRecoV4 ):
-    label  = "data_single_el_2015D_promptRecoV4_25ns";
-    title  = "Data, single electron dataset, 2015D prompt reco V4";
-    tex    = "Data,~single~$e$,~dataset,~2015D~prompt~reco~v4";
-    isData = true;
-    inputBabies.push_back("data_single_electron_promptRecoV4*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_mu_2015CD ):
-    label  = "data_single_mu_2015CD_25ns";
-    title  = "Data, single muon dataset, 2015CD";
-    tex    = "Data,~single~$\\mu$,~dataset,~2015CD";
+  case( k_single_mu_2016B_promptRecoV2 ):
+    label  = "data_single_mu_2016B_promptREcoV2_25ns";
+    title  = "Data, single muon dataset, 2016B, promptRecoV2";
+    tex    = "Data,~single~$\\mu$,~dataset,~2016B,~promptReco~v2";
     isData = true;
     inputBabies.push_back("data_single_muon*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
 
-  case( k_single_mu_2015C ):
-    label  = "data_single_mu_2015C_25ns";
-    title  = "Data, single muon dataset, 2015C";
-    tex    = "Data,~single~$\\mu$,~dataset,~2015C";
-    isData = true;
-    inputBabies.push_back("data_single_muon_2015C*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_mu_2015D_05Oct2015_v1 ):
-    label  = "data_single_mu_2015D_05Oct2015_v1_25ns";
-    title  = "Data, single muon dataset, 2015D 05Oct2015 v1";
-    tex    = "Data,~single~$\\mu$,~dataset,~2015D~05Oct2015~v1";
-    isData = true;
-    inputBabies.push_back("data_single_muon_2015D_05Oct2015_v1*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_mu_2015D_promptRecoV4 ):
-    label  = "data_single_mu_2015D_promptRecoV4_25ns";
-    title  = "Data, single muon dataset, 2015D prompt reco V4";
-    tex    = "Data,~single~$\\mu$,~dataset,~2015D~prompt~reco~v4";
-    isData = true;
-    inputBabies.push_back("data_single_muon_promptRecoV4*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_diLepton_2015CD ):
-    label  = "data_diLepton_2015CD_25ns";
-    title  = "Data, ee/emu/mumu dataset, 2015CD";
-    tex    = "Data,$~ee/e\\mu/\\mu\\mu$~dataset,~2015CD";
+  case( k_diLepton_2016B ):
+    label  = "data_diLepton_2016B_25ns";
+    title  = "Data, ee/emu/mumu dataset, 2016B";
+    tex    = "Data,$~ee/e\\mu/\\mu\\mu$~dataset,~2016B";
     isData = true;
     inputBabies.push_back("data_muon_eg*.root");
     inputBabies.push_back("data_double_eg*.root");
     inputBabies.push_back("data_double_mu*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
     
-  case( k_muon_eg_2015CD ):
-    label  = "data_muon_eg_2015CD_25ns";
-    title  = "Data, e/mu dataset, 2015CD";
-    tex    = "Data,$~e\\mu$~dataset,~2015CD";
+  case( k_muon_eg_2016B_promptRecoV2 ):
+    label  = "data_muon_eg_2016B_prompRecoV2_25ns";
+    title  = "Data, e/mu dataset, 2016B, prompRecoV2";
+    tex    = "Data,$~e\\mu$~dataset,~2016B,~promptRecoV2";
     isData = true;
     inputBabies.push_back("data_muon_eg*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
   
-  case( k_muon_eg_2015C ):
-    label  = "data_muon_eg_2015C_25ns";
-    title  = "Data, e/mu dataset, 2015C";
-    tex    = "Data,$~e\\mu$~dataset,~2015C";
-    isData = true;
-    inputBabies.push_back("data_muon_eg_2015C*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-  
-  case( k_muon_eg_2015D_05Oct2015_v1 ):
-    label  = "data_muon_eg_2015D_05Oct2015_v1_25ns";
-    title  = "Data, e/mu dataset, 2015D 05Oct2015 v1";
-    tex    = "Data,$~e\\mu$~dataset,~2015D~05Oct2015~v1";
-    isData = true;
-    inputBabies.push_back("data_muon_eg_2015D_05Oct2015_v1*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_muon_eg_2015D_05Oct2015_v2 ):
-    label  = "data_muon_eg_2015D_05Oct2015_v2_25ns";
-    title  = "Data, e/mu dataset, 2015D 05Oct2015 v2";
-    tex    = "Data,$~e\\mu$~dataset,~2015D~05Oct2015~v1";
-    isData = true;
-    inputBabies.push_back("data_muon_eg_2015D_05Oct2015_v2*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_muon_eg_2015D_promptRecoV4 ):
-    label  = "data_muon_eg_2015D_promptRecoV4_25ns";
-    title  = "Data, e/mu dataset, 2015D prompt reco V4";
-    tex    = "Data,$~e\\mu$~dataset,~2015D~prompt~reco~V4";
-    isData = true;
-    inputBabies.push_back("data_muon_eg_2015D_promptRecoV4*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_double_eg_2015CD ):
-    label  = "data_double_eg_2015CD_25ns";
-    title  = "Data, ee dataset, 2015CD";
-    tex    = "Data,$~ee$~dataset,~2015CD";
+  case( k_double_eg_2016B_promptRecoV2 ):
+    label  = "data_double_eg_2016B_prompRecoV2_25ns";
+    title  = "Data, ee dataset, 2016B, promptReco V2";
+    tex    = "Data,$~ee$~dataset,~2016B,~promptReco~V2";
     isData = true;
     inputBabies.push_back("data_double_eg*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
 
-  case( k_double_eg_2015C ):
-    label  = "data_double_eg_2015C_25ns";
-    title  = "Data, ee dataset, 2015C";
-    tex    = "Data,$~ee$~dataset,~2015C";
-    isData = true;
-    inputBabies.push_back("data_double_eg_2015C*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_double_eg_2015D_05Oct2015_v1 ):
-    label  = "data_double_eg_2015D_05Oct2015_v1_25ns";
-    title  = "Data, ee dataset, 2015D 05Oct2015 v1";
-    tex    = "Data,$~ee$~dataset,~2015D~05Oct2015~v1";
-    isData = true;
-    inputBabies.push_back("data_double_eg_2015D_05Oct2015*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_double_eg_2015D_promptRecoV4 ):
-    label  = "data_double_eg_2015D_promptRecoV4_25ns";
-    title  = "Data, ee dataset, 2015D promptReco v4";
-    tex    = "Data,$~ee$~dataset,~2015D~promptReco~v4";
-    isData = true;
-    inputBabies.push_back("data_double_eg_2015D_promptRecoV4*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_double_muon_2015CD ):
-    label  = "data_double_muon_2015CD_25ns";
-    title  = "Data, mumu dataset, 2015CD";
-    tex    = "Data,$~\\mu\\mu$~dataset,~2015CD";
+  case( k_double_muon_2016B_promptRecoV2 ):
+    label  = "data_double_muon_2016B_prompRecoV2_25ns";
+    title  = "Data, mumu dataset, 2016B, promptRecoV2";
+    tex    = "Data,$~\\mu\\mu$~dataset,~2016B,~promptRecoV2";
     isData = true;
     inputBabies.push_back("data_double_mu*.root");
     baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
+    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;    
 
-  case( k_double_muon_2015C ):
-    label  = "data_double_muon_2015C_25ns";
-    title  = "Data, mumu dataset, 2015C";
-    tex    = "Data,$~\\mu\\mu$~dataset,~2015C";
-    isData = true;
-    inputBabies.push_back("data_double_mu_2015C*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;  
-
-  case( k_double_muon_2015D_05Oct2015_v1 ):
-    label  = "data_double_muon_2015D_05Oct2015_v1_25ns";
-    title  = "Data, mumu dataset, 2015D 05Oct2015 v1";
-    tex    = "Data,$~\\mu\\mu$~dataset,~2015D~05Oct2015~v1";
-    isData = true;
-    inputBabies.push_back("data_double_mu_2015D_05Oct2015_v1*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;    
-  
-  case( k_double_muon_2015D_promptRecoV4 ):
-    label  = "data_double_muon_2015D_promptRecoV4_25ns";
-    title  = "Data, mumu dataset, 2015D promptReco v4";
-    tex    = "Data,$~\\mu\\mu$~dataset,~2015D~promptReco~v4";
-    isData = true;
-    inputBabies.push_back("data_double_mu_2015D_promptRecoV4*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = baby_inputDir_nominal;
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;    
-
-  case( k_single_photon_2015CD ):
-    label  = "data_single_photon_2015CD_25ns";
-    title  = "Data, single photon dataset, 2015CD";
-    tex    = "Data,~single~$\\gamma$,~dataset,~2015CD";
+  case( k_single_photon_2016B_promptRecoV2 ):
+    label  = "data_single_photon_2016B_promptRecoV2_25ns";
+    title  = "Data, single photon dataset, 2016B, promptRecoV2";
+    tex    = "Data,~single~$\\gamma$,~dataset,~2016B,~promptRecoV2";
     isData = true;
     inputBabies.push_back("singlephoton_*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/haweber/condor/stop1l/stopbabies_201510XX_photons/merged_files/";
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_photon_2015C ):
-    label  = "data_single_photon_2015C_25ns";
-    title  = "Data, single photon dataset, 2015C";
-    tex    = "Data,~single~$\\gamma$,~dataset,~2015C";
-    isData = true;
-    inputBabies.push_back("singlephoton_2015C*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/haweber/condor/stop1l/stopbabies_201510XX_photons/merged_files/";
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_photon_2015D_05Oct2015_v1 ):
-    label  = "data_single_photon_2015D_05Oct2015_v1_25ns";
-    title  = "Data, single photon dataset, 2015D 05Oct2015 v1";
-    tex    = "Data,~single~$\\gamma$,~dataset,~2015D~05Oct2015~v1";
-    isData = true;
-    inputBabies.push_back("singlephoton_2015D_05Oct2015_v1*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/haweber/condor/stop1l/stopbabies_201510XX_photons/merged_files/";
-    temp_i_o.second = baby_outputDir_nominal;
-    baby_i_o.push_back(temp_i_o);
-    break;
-
-  case( k_single_photon_2015D_promptRecoV4 ):
-    label  = "data_single_photon_2015D_promptRecoV4_25ns";
-    title  = "Data, single photon dataset, 2015D prompt reco V4";
-    tex    = "Data,~single~$\\gamma$,~dataset,~2015D~prompt~reco~v4";
-    isData = true;
-    inputBabies.push_back("singlephoton_promptRecoV4*.root");
-    baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/haweber/condor/stop1l/stopbabies_201510XX_photons/merged_files/";
+    temp_i_o.first  = "";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -1145,19 +881,19 @@ sampleInfo::vect_id sampleInfo::getSampleList( analyzerInfo::ID analysis ){
   case( analyzerInfo::k_CR0b ):
   case( analyzerInfo::k_CR1l_bulkWJets ):
   case( analyzerInfo::k_CR2l ):
-    result.push_back( sampleInfo::k_single_lepton_met_2015CD );
+    result.push_back( sampleInfo::k_single_lepton_met_2016B );
     break;
   
   case( analyzerInfo::k_CR2l_bulkTTbar ):
-    result.push_back( sampleInfo::k_diLepton_2015CD );
+    result.push_back( sampleInfo::k_diLepton_2016B );
     break;
   
   case( analyzerInfo::k_CRGammaJets ):
-    result.push_back( sampleInfo::k_single_photon_2015CD );
+    result.push_back( sampleInfo::k_single_photon_2016B_promptRecoV2 );
     break;
     
   default:
-    result.push_back( sampleInfo::k_single_lepton_met_2015CD );
+    result.push_back( sampleInfo::k_single_lepton_met_2016B );
     break;
   
   }; // end switch to choose data

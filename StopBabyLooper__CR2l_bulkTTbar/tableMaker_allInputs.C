@@ -33,7 +33,7 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   // Sample List
   //
   sampleInfo::vect_id sampleList;
-  sampleList.push_back( sampleInfo::k_diLepton_2015CD );
+  sampleList.push_back( sampleInfo::k_diLepton_2016B );
   sampleList.push_back( sampleInfo::k_allBkg );
   sampleList.push_back( sampleInfo::k_ttbar );
   //sampleList.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 );

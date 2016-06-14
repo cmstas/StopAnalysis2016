@@ -1,0 +1,13 @@
+to run looper, sum output histograms, make plots and tables, execute:
+
+. go_go_analyzer.sh
+
+to see how to run any of the commands individually look inside go_go_analyzer.h.
+
+Typically, the general command is:
+
+root -l -b -q head.C macro.C++
+
+where head.C loads the stopCORE libraries.  To make babies:
+
+root -l -b -q head.C stopBabyLooper.C++

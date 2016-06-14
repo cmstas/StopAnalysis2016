@@ -60,7 +60,7 @@ int stopBabyLooper(){
   //
   sampleInfo::vect_id sampleList;
   sampleList = sampleInfo::getSampleList( analysis ); 
-  //sampleList.push_back( sampleInfo::k_diLepton_2015CD );
+  //sampleList.push_back( sampleInfo::k_diLepton_2016B );
   //sampleList.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 ); 
   
   //

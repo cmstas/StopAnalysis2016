@@ -9,8 +9,8 @@ eventWeightInfo::eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils, bool
 
   // Utilty Var Constants
   DR_MATCHED = 0.1;
-  LUMI       = 0.8042;
-  LUMI_ERR   = LUMI*0.04;
+  LUMI       = 2.07;
+  LUMI_ERR   = LUMI*0.05;
 
   // Initialize Switches for additional SFs
   apply_bTag_sf    = false;

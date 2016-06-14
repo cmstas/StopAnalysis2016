@@ -27,11 +27,11 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   //
   // Configuration Variables
   //
-  bool usePsuedoData = true;
+  bool usePsuedoData = false;
 
-  bool doRescale = true;
-  //double rescale = 1.0; // use lumi from stopCORE
-  double rescale = 5.0/0.8042; // rescale to new lumi
+  bool doRescale = false;
+  double rescale = 1.0; // use lumi from stopCORE
+  //double rescale = 5.0/2.07; // rescale to new lumi
 
   
   //
@@ -49,7 +49,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
     data_util = new sampleInfo::sampleUtil( sampleInfo::k_allBkg );
   }
   else{
-    data_util = new sampleInfo::sampleUtil( sampleInfo::k_single_lepton_met_2015CD );
+    data_util = new sampleInfo::sampleUtil( sampleInfo::k_single_lepton_met_2016B );
   }
   
 

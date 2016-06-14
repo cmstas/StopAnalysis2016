@@ -65,7 +65,7 @@ root -l -b -q head.C tableMaker_summedInputs.C++'("Histos/Nominal/","Output/Tabl
 # Calculate Uncertainties
 #echo "Calculating Uncertainties..."
 #echo ""
-#root -l -b -q calcErrors.C++ >& Histos/Nominal/calcErrors.log
+root -l -b -q calcErrors.C++ >& Histos/Nominal/calcErrors.log
 
 # Make plots
 echo "Making Plots..."

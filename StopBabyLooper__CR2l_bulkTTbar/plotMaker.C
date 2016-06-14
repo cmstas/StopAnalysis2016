@@ -39,7 +39,7 @@ void plotMaker( bool plotByGenDecay=true ){
   TString outExt = ".pdf";
   
   //double lumi    = 5.0; // for studies
-  double lumi    = 0.8042; // 2015, final lumi
+  double lumi    = 2.07; // 2016
   
   double sig_SF  = 1.0;
 
@@ -95,7 +95,7 @@ void plotMaker( bool plotByGenDecay=true ){
   // data
   //
   std::pair< sampleInfo::ID, genClassyInfo::ID > sample_data;
-  sample_data.first  = sampleInfo::k_diLepton_2015CD;
+  sample_data.first  = sampleInfo::k_diLepton_2016B;
   sample_data.second = genClassyInfo::k_incl;
  
 

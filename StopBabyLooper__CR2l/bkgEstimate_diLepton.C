@@ -30,11 +30,11 @@ int bkgEstimate_diLepton(){
   //
   // Configuration Variables
   //
-  bool usePsuedoData = true;
+  bool usePsuedoData = false;
 
-  bool doRescale = true;
-  //double rescale = 1.0; // use lumi from stopCORE
-  double rescale = 5.0/0.8042; // rescale to new lumi
+  bool doRescale = false;
+  double rescale = 1.0; // use lumi from stopCORE
+  //double rescale = 5.0/2.07; // rescale to new lumi
 
   TString yield_base = "yields";
 
@@ -80,7 +80,7 @@ int bkgEstimate_diLepton(){
     f_data_CR= new TFile(inDir_CR+"h__allBkg_25ns.root", "read");
   }
   else{
-    f_data_CR = new TFile(inDir_CR+"h__data_single_lepton_met_2015CD_25ns.root", "read");
+    f_data_CR = new TFile(inDir_CR+"h__data_single_lepton_met_2016B_25ns.root", "read");
   }
   
 
