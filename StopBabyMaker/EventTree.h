@@ -78,6 +78,7 @@ public:
 
     float MT2_lb_b;
     float MT2_lb_b_lep2;
+    float MT2_l_l;
     float MT2_lb_b_mass;
     float MT2_lb_b_mass_lep2;
     float MT2_lb_bqq;
@@ -110,12 +111,12 @@ public:
     float filt_hbheisonoise;
     float filt_hcallaser;
     float filt_met;
+    float filt_badChargedCandidateFilter;
     float filt_trkfail;
     float filt_trkPOG;
     float filt_trkPOG_logerr_tmc;
     float filt_trkPOG_tmc;
     float filt_trkPOG_tms;
-    float filt_badChargedCandidateFilter;
 
     float dR_lep_leadb;
     float dR_lep2_leadb;    
@@ -149,6 +150,8 @@ public:
     float weight_btagsf_light_UP;
     float weight_btagsf_heavy_DN;
     float weight_btagsf_light_DN;
+    float weight_btagsf_fastsim_UP;
+    float weight_btagsf_fastsim_DN;
     float weight_lepSF;
     float weight_lepSF_up;
     float weight_lepSF_down;
@@ -227,6 +230,7 @@ public:
     float ph_topnessMod;
     float ph_MT2_lb_b_mass;
     float ph_MT2_lb_b;
+    float ph_MT2_l_l;
     float ph_MT2_lb_bqq_mass;
     float ph_MT2_lb_bqq;
     float ph_hadronic_top_chi2;
@@ -256,6 +260,7 @@ public:
     float Zll_topnessMod;
     float Zll_MT2_lb_b_mass;
     float Zll_MT2_lb_b;
+    float Zll_MT2_l_l;
     float Zll_MT2_lb_bqq_mass;
     float Zll_MT2_lb_bqq;
 
