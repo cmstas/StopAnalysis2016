@@ -62,18 +62,19 @@ recoClassyInfo::recoClassyUtil::recoClassyUtil( recoClassyInfo::ID recoClassy ){
     tex   = "$2$~leptons,~1~selected,~1~veto~lepton";
     break;
 
-  case( k_2lep_1selLep_1isoTrack ):
+  case( k_2lep_2selOrVetoLep ):
     id    = recoClassy;
-    label = "ee2lep_1selLep_1isoTrack";
-    title = "2 leptons, 1 selected lepton, 1 isolated track";
-    tex   = "$2$~leptons,~1~selected~lepton,~1~isolated~track";
+    label = "ee2lep_2selLepOrVetoLep";
+    title = "2 leptons, 2 selected or veto leptons";
+    tex   = "$2$~leptons,~2~selected~or~veto~leptons";
     break;
+    
 
-  case( k_2lep_1selLep_1pfTau ):
+  case( k_2lep_1selLep_1isoTrackOrPfTau ):
     id    = recoClassy;
-    label = "ee2lep_1selLep_1pfTau";
-    title = "2 leptons, 1 selected lepton, 1 tau";
-    tex   = "$2$~leptons,~1~selected~lepton,~1~$\\tau$";
+    label = "ee2lep_1selLep_1isoTrackOrPfTau";
+    title = "2 leptons, 1 selected lepton, 1 isolated track or pfTau";
+    tex   = "$2$~leptons,~1~selected~lepton,~1~isolated~track~or~pfTau";
     break;
 
   default:
@@ -129,21 +130,32 @@ bool recoClassyInfo::passRecoClassy( recoClassyInfo::ID recoClassy ){
     if( babyAnalyzer.ngoodleps()>=2 ) result = true;
     break;
 
+  //case( k_2lep_1selLep_1vetoLep ):
+    //if( babyAnalyzer.ngoodleps()==1 &&
+    //	babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) result = true;
+    //break;
+
+  //case( k_2lep_2selOrVetoLep ):
+    //if( (babyAnalyzer.ngoodleps()>=2)     ||
+    //	(babyAnalyzer.ngoodleps()==1 &&
+    //	 babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0   )    ) result = true;
+    //break;
+  
   case( k_2lep_1selLep_1vetoLep ):
     if( babyAnalyzer.ngoodleps()==1 &&
 	babyAnalyzer.nvetoleps()>=2    ) result = true;
     break;
 
-  case( k_2lep_1selLep_1isoTrack ):
-    if( babyAnalyzer.ngoodleps()==1 &&
-	babyAnalyzer.nvetoleps()==1 &&
-	!babyAnalyzer.PassTrackVeto() ) result = true;
+  case( k_2lep_2selOrVetoLep ):
+    if( (babyAnalyzer.ngoodleps()>=2)     ||
+	(babyAnalyzer.ngoodleps()==1 &&
+	 babyAnalyzer.nvetoleps()>=2   )    ) result = true;
     break;
-
-  case( k_2lep_1selLep_1pfTau ):
+      
+  case( k_2lep_1selLep_1isoTrackOrPfTau ):
     if( babyAnalyzer.ngoodleps()==1 &&
 	babyAnalyzer.nvetoleps()==1 &&
-	!babyAnalyzer.PassTauVeto() ) result = true;
+	(!babyAnalyzer.PassTrackVeto()||!babyAnalyzer.PassTauVeto()) ) result = true;
     break;
 
   default:
@@ -209,8 +221,8 @@ recoClassyInfo::vect_util recoClassyInfo::getRecoClassyList( analyzerInfo::ID an
     result.push_back( recoClassyUtil(k_incl) );
     result.push_back( recoClassyUtil(k_2lep_2selLep) );
     result.push_back( recoClassyUtil(k_2lep_1selLep_1vetoLep) );
-    result.push_back( recoClassyUtil(k_2lep_1selLep_1isoTrack) );
-    result.push_back( recoClassyUtil(k_2lep_1selLep_1pfTau) );
+    result.push_back( recoClassyUtil(k_2lep_2selOrVetoLep) );
+    result.push_back( recoClassyUtil(k_2lep_1selLep_1isoTrackOrPfTau) );
     break;
 
   case( analyzerInfo::k_CR2l_bulkTTbar ):

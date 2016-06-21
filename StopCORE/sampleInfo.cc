@@ -89,7 +89,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     inputBabies.push_back("data_single_electron*.root");
     inputBabies.push_back("data_single_muon*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -101,7 +101,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isData = true;
     inputBabies.push_back("data_met*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -114,7 +114,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     inputBabies.push_back("data_single_electron*.root");
     inputBabies.push_back("data_single_muon*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -126,7 +126,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isData = true;
     inputBabies.push_back("data_single_electron*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -138,7 +138,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isData = true;
     inputBabies.push_back("data_single_muon*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -152,7 +152,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     inputBabies.push_back("data_double_eg*.root");
     inputBabies.push_back("data_double_mu*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -164,7 +164,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isData = true;
     inputBabies.push_back("data_muon_eg*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -176,7 +176,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isData = true;
     inputBabies.push_back("data_double_eg*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;
@@ -188,7 +188,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isData = true;
     inputBabies.push_back("data_double_mu*.root");
     baby_i_o.clear();
-    temp_i_o.first  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160612/merged_files/";
+    temp_i_o.first  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
     temp_i_o.second = baby_outputDir_nominal;
     baby_i_o.push_back(temp_i_o);
     break;    
@@ -928,7 +928,8 @@ sampleInfo::vect_id sampleInfo::getSampleList( analyzerInfo::ID analysis ){
     //result.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 );
     //result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
     result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
-    result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
+    //result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
+    result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 );
     result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1);
   
     // MC, DYJets

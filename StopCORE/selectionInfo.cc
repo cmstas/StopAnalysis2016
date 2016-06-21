@@ -395,10 +395,16 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
 	
   case( k_diLepton ):
     if( (babyAnalyzer.ngoodleps()>=2) ||
-	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0) ||
-	(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTrackVeto()) ||
-	(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTauVeto()) ) result = true;
-    break;
+    	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0) ||
+    	(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTrackVeto()) ||
+    	(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTauVeto()) ) result = true;
+  break;
+
+  //case( k_diLepton ):
+    //if( (babyAnalyzer.ngoodleps()>=2) ||
+    	//(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0) ||
+	//(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTrackVeto()) ) result = true;
+    //break;
 
   case( k_diLepton_bulkTTbar ):
     if( babyAnalyzer.lep1_p4().Pt()>30.0 && 
@@ -526,7 +532,7 @@ void selectionInfo::selectionUtil::fillCutflowHistos( double wgt ){
 	}
       }
       
-      if( pass_nMinus1 ){
+      if( pass_nMinus1 && passCuts[iCut] ){
 	vect_cutflow_nMinus1_sig[iCut]->Fill( babyAnalyzer.mass_stop(), babyAnalyzer.mass_lsp(), v_cuts[iCut].label.c_str(), wgt );
       }
 
@@ -574,7 +580,7 @@ void selectionInfo::selectionUtil::fillCutflowHistos( double wgt ){
 	}
       }
       
-      if( pass_nMinus1 ){
+      if( pass_nMinus1 && passCuts[iCut] ){
 	vect_cutflow_nMinus1[iCut]->Fill( v_cuts[iCut].label.c_str(), wgt );
       }
 
@@ -722,7 +728,7 @@ selectionInfo::vect_util selectionInfo::getCutList( analyzerInfo::ID analysis ){
 
   case( analyzerInfo::k_CR2l_bulkTTbar ):
     result.push_back( cutUtil(k_dataFilter) );
-    //result.push_back( cutUtil(k_trigger_diLep) );
+    result.push_back( cutUtil(k_trigger_diLep) );
     result.push_back( cutUtil(k_goodVtx) );
     result.push_back( cutUtil(k_diLepton_bulkTTbar) );
     result.push_back( cutUtil(k_oppSignLeptons) );

@@ -241,7 +241,7 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
 
   TString yield_name = "yields";
 
-  analyzerInfo::ID analysis = analyzerInfo::k_CR2l;
+  analyzerInfo::ID analysis = analyzerInfo::k_CR2l_bulkTTbar;
 
 
   // pointer for tex file output

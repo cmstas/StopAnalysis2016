@@ -34,7 +34,7 @@ int bkgEstimate_diLepton(){
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 5.0/2.07; // rescale to new lumi
+  //double rescale = 10.0/2.07; // rescale to new lumi
 
   TString yield_base = "yields";
 
@@ -45,7 +45,8 @@ int bkgEstimate_diLepton(){
   //
   // recoClassy Type
   //
-  recoClassyInfo::recoClassyUtil recoClassyType(recoClassyInfo::k_incl);
+  recoClassyInfo::recoClassyUtil recoClassyType_CR(recoClassyInfo::k_2lep_2selOrVetoLep);
+  recoClassyInfo::recoClassyUtil recoClassyType_SR(recoClassyInfo::k_incl);
  
  
   //
@@ -317,7 +318,7 @@ int bkgEstimate_diLepton(){
     //
     // SR, category bin 
     //
-    hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType, nominal_sys );
+    hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, nominal_sys );
     
     h_temp = (TH1D*)f_SR->Get(hName);
     if(!h_temp) cout << "BAD SR CATEGORY BIN HISTO: " << hName << endl;
@@ -334,7 +335,7 @@ int bkgEstimate_diLepton(){
     //
     // SR, mc, cr2sr bin
     //
-    hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType, nominal_sys );
+    hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, nominal_sys );
 
     h_temp = (TH1D*)f_SR->Get(hName);
     if(!h_temp) cout << "BAD SR CRtoSR bin HISTO: " << hName << endl;
@@ -352,7 +353,7 @@ int bkgEstimate_diLepton(){
     //
     // CR, mc, cr2sr bin
     //
-    hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType, nominal_sys );
+    hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType_CR, nominal_sys );
     
     h_temp = (TH1D*)f_CR->Get(hName);
     if(!h_temp) cout << "BAD MC CR CRtoSR bin HISTO: " << hName << endl;
@@ -369,7 +370,7 @@ int bkgEstimate_diLepton(){
     //
     // CR, data, cr2sr bin
     //
-    hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_data_CR, recoClassyType, nominal_sys );
+    hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_data_CR, recoClassyType_CR, nominal_sys );
     
     h_temp = (TH1D*)f_data_CR->Get(hName);
     if(!h_temp) cout << "BAD DATA CR CRtoSR bin HISTO: " << hName << endl;
@@ -542,7 +543,7 @@ int bkgEstimate_diLepton(){
       //
       // SR, category bin, up
       //
-      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType, systematicList[iSys] );
+      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, systematicList[iSys] );
 
       h_temp = (TH1D*)f_SR->Get(hName);
       if(!h_temp) cout << "BAD SR CATEGORY BIN UP HISTO: " << hName << endl;
@@ -559,7 +560,7 @@ int bkgEstimate_diLepton(){
       //
       // SR, cr2sr bin, up
       //
-      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType, systematicList[iSys] );
+      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, systematicList[iSys] );
       
       h_temp = (TH1D*)f_SR->Get(hName);
       if(!h_temp) cout << "BAD SR INCL UP HISTO: " << hName << endl;
@@ -577,7 +578,7 @@ int bkgEstimate_diLepton(){
       //
       // CR, MC, cr2sr bin, up
       //
-      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType, systematicList[iSys] );
+      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType_CR, systematicList[iSys] );
       
       h_temp = (TH1D*)f_CR->Get(hName);
       if(!h_temp) cout << "BAD CR CRtoSR UP MC HISTO: " << hName << endl;
@@ -650,7 +651,7 @@ int bkgEstimate_diLepton(){
       //
       // SR, category bin, dn
       //
-      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType, systematicList[iSys+1] );
+      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, systematicList[iSys+1] );
       
       h_temp = (TH1D*)f_SR->Get(hName);
       if(!h_temp) cout << "BAD SR BIN DN HISTO: " << hName << endl;
@@ -667,7 +668,7 @@ int bkgEstimate_diLepton(){
       //
       // SR, CRtoSR bin, dn
       //
-      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType, systematicList[iSys+1] );
+      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, systematicList[iSys+1] );
 
       h_temp = (TH1D*)f_SR->Get(hName);
       if(!h_temp) cout << "BAD SR INCL DN HISTO: " << hName << endl;
@@ -685,7 +686,7 @@ int bkgEstimate_diLepton(){
       //
       // CR, MC, CRtoSR bin, dn
       //
-      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType, systematicList[iSys+1] );
+      hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType_CR, systematicList[iSys+1] );
       
       h_temp = (TH1D*)f_CR->Get(hName);
       if(!h_temp) cout << "BAD CR CRtoSR DN MC HISTO: " << hName << endl;

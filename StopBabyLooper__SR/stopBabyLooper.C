@@ -27,6 +27,12 @@
 #include "../StopCORE/histogramInfo.h"
 
 
+// typedefs
+typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
+typedef std::vector<LorentzVector> vecLorentzVector;
+
+
+// using namespaces
 using namespace std;
 using namespace tas;
 using namespace stop_1l;
@@ -55,7 +61,7 @@ int stopBabyLooper(){
   sampleInfo::vect_id sampleList;
   sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
-  //sampleList.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 ); 
+  //sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ); 
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
   //
@@ -302,6 +308,34 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     }
         
 
+
+    // Gen ttbar system pT
+    histogramInfo::h1_Util *h1_gen_ttbar_pt = NULL;
+    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge350met = NULL;
+    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge200mt2w = NULL;
+    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge200mt2w_ge350met = NULL;
+    bool sampleIsTTbar = false;
+    if( sample.id == sampleInfo::k_ttbar_powheg_pythia8 ||
+	sample.id == sampleInfo::k_ttbar_powheg_pythia8_ext3 ||
+	sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ||
+	sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 ||
+	sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 ||
+	sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 ||
+	sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8 ||
+	sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 ){
+      sampleIsTTbar = true;
+    }
+
+    if( sampleIsTTbar ){
+      
+      h1_gen_ttbar_pt = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_gen_ttbar_pt__ge350met = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge350met", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_gen_ttbar_pt__ge200mt2w = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge200mt2w", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_gen_ttbar_pt__ge200mt2w_ge350met = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge200mt2w_ge350met", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+
+    }
+
+    
     
     //
     // Event Counters
@@ -428,6 +462,23 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	//
 
 
+	// gen ttbar system pT
+	double ttbarPt = -99.9;
+       	LorentzVector genTTbar_LV;
+	int nFoundGenTop=0;
+	if( sampleIsTTbar ){
+	
+	  for(int iGen=0; iGen<(int)genqs_p4().size(); iGen++){
+	    if( abs(genqs_id().at(iGen))==6 &&
+		genqs_isLastCopy().at(iGen)    ){
+	      genTTbar_LV += genqs_p4().at(iGen);
+	      nFoundGenTop++;
+	    } // end if last copy of top
+	  } // end loop over gen quarks
+
+	  if( nFoundGenTop == 2 ) ttbarPt = genTTbar_LV.Pt();
+	} // end if not data
+
 
 	//
 	// Fill Histograms
@@ -480,6 +531,23 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		  
 		  // nJets
 		  if( h1_nJets->histos[iHist] ) h1_nJets->histos[iHist]->Fill( ngoodjets(), sysWgtsList[iSys].second );
+
+
+		  // gen ttbar pT
+		  if( sampleIsTTbar ){
+		    if( h1_gen_ttbar_pt->histos[iHist] ) h1_gen_ttbar_pt->histos[iHist]->Fill( ttbarPt, sysWgtsList[iSys].second );
+		    if( pfmet()>350.0 ){
+		      if( h1_gen_ttbar_pt__ge350met->histos[iHist] ) h1_gen_ttbar_pt__ge350met->histos[iHist]->Fill( ttbarPt, sysWgtsList[iSys].second );
+		    }
+		    if( MT2W()>200.0 ){
+		      if( h1_gen_ttbar_pt__ge200mt2w->histos[iHist] ) h1_gen_ttbar_pt__ge200mt2w->histos[iHist]->Fill( ttbarPt, sysWgtsList[iSys].second );
+		      if( pfmet()>350.0 ){
+			if( h1_gen_ttbar_pt__ge200mt2w_ge350met->histos[iHist] ) h1_gen_ttbar_pt__ge200mt2w_ge350met->histos[iHist]->Fill( ttbarPt, sysWgtsList[iSys].second );
+		      }
+		     
+		    }
+
+		  }
 
 		}
 		

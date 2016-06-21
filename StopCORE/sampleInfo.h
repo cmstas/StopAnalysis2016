@@ -18,7 +18,7 @@ namespace sampleInfo{
   //
   // Namespace utility vars
   //
-  const std::string baby_inputDir_nominal  = "/nfs-6/userdata/mliu/onelepbabies/V08-00-01/";
+  const std::string baby_inputDir_nominal  = "/hadoop/cms/store/user/isuarez/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v1__20160617/merged_files/";
   const std::string baby_inputDir_jesUp    = "";
   const std::string baby_inputDir_jesDn    = "";
 

@@ -43,7 +43,8 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   //sampleList.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 );
   //sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
   sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
-  sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
+  sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 );
   sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1);
   sampleList.push_back( sampleInfo::k_singleT );
   sampleList.push_back( sampleInfo::k_singleT_tW );

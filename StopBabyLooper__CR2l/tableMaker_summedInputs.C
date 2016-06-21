@@ -31,7 +31,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 5.0/2.07; // rescale to new lumi
+  //double rescale = 10.0/2.07; // rescale to new lumi
 
   
   //
@@ -147,8 +147,9 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   //
   // Reco Classy List
   //
-  recoClassyInfo::vect_id recoClassyList;
-  recoClassyList.push_back( recoClassyInfo::k_incl );
+  recoClassyInfo::vect_util recoClassyList;
+  recoClassyList = recoClassyInfo::getRecoClassyList( analysis );
+  //recoClassyList.push_back( recoClassyInfo::recoClassyUntil(recoClassyInfo::k_incl) );
     
 
   //
@@ -241,7 +242,10 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 
 	// Top Title
 	systematicInfo::systematicUtil systematic(systematicList[iSys]);
-	std::string table_title = systematic.tex;
+	std::string table_title = "RecoClassy: ";
+	table_title += recoClassyList[iRecoClassy].tex;
+	table_title += ", ";
+	table_title += systematic.tex;
 	table_title += " Systematic, Yield Table for Input Samples";
 
 	// First Header
@@ -414,7 +418,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	    
 	      categoryInfo::categoryUtil category( tableList[iTable][iCat] );
 	    
-	      std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassy, recoClassyInfo::recoClassyUtil(recoClassyInfo::k_incl), systematic );
+	      std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassy, recoClassyList[iRecoClassy], systematic );
 	      
 	      double yield = 0.0;
 	      double error = 0.0;
@@ -484,7 +488,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	    
 	    categoryInfo::categoryUtil category( tableList[iTable][iCat] );
 	    
-	    std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassy, recoClassyInfo::recoClassyUtil(recoClassyInfo::k_incl), systematic );
+	    std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassy, recoClassyList[iRecoClassy], systematic );
 	    
 	    double yield = 0.0;
 	    double error = 0.0;
@@ -536,7 +540,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	  
 	  categoryInfo::categoryUtil category( tableList[iTable][iCat] );
 	  
-	  std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassyInfo::k_incl, recoClassyInfo::k_incl, systematicList[iSys] );
+	  std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassyInfo::genClassyUtil(genClassyInfo::k_incl), recoClassyList[iRecoClassy], systematicList[iSys] );
 	    
 	  double yield = 0.0;
 	  double error = 0.0;
@@ -586,7 +590,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	  
 	  categoryInfo::categoryUtil category( tableList[iTable][iCat] );
 	  
-	  std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassyInfo::genClassyUtil(genClassyInfo::k_incl), recoClassyInfo::recoClassyUtil(recoClassyInfo::k_incl), systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+	  std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassyInfo::genClassyUtil(genClassyInfo::k_incl), recoClassyList[iRecoClassy], systematicInfo::systematicUtil(systematicInfo::k_nominal) );
 	    
 	  double yield = 0.0;
 	  double error = 0.0;
@@ -646,7 +650,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	    
 	    categoryInfo::categoryUtil category( tableList[iTable][iCat] );
 	    
-	    std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassy, recoClassyInfo::recoClassyUtil(recoClassyInfo::k_incl), systematic );
+	    std::string h_name = histogramInfo::getYieldHistoLabel( "yields", genClassy, recoClassyList[iRecoClassy], systematic );
 	    
 	    double yield = 0.0;
 	    double error = 0.0;

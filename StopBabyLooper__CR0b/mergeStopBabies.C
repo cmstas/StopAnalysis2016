@@ -57,7 +57,8 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   addSet.first = sampleInfo::k_ttbar;
   //addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_powheg_pythia8_ext3) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1) );
   addList.push_back(addSet);
   addSet.second.clear();

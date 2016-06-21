@@ -28,11 +28,13 @@
 #include "../StopCORE/systematicInfo.h"
 #include "../StopCORE/histogramInfo.h"
 
+
 // typedefs
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 typedef std::vector<LorentzVector> vecLorentzVector;
 
 
+// using namespaces
 using namespace std;
 using namespace tas;
 using namespace stop_1l;
@@ -61,7 +63,7 @@ int stopBabyLooper(){
   sampleInfo::vect_id sampleList;
   sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_diLepton_2016B );
-  //sampleList.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 ); 
+  //sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ); 
   
   //
   // Loop over samples

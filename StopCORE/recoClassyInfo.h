@@ -28,8 +28,8 @@ namespace recoClassyInfo{
 	   k_2lep_mumu,
 	   k_2lep_2selLep,
 	   k_2lep_1selLep_1vetoLep,
-	   k_2lep_1selLep_1isoTrack,
-	   k_2lep_1selLep_1pfTau,
+	   k_2lep_2selOrVetoLep,
+	   k_2lep_1selLep_1isoTrackOrPfTau,
 	   k_nRecoClassy
   };
 

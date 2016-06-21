@@ -415,7 +415,7 @@ void plotMaker( bool plotByGenDecay=true ){
 	
 	if( signal.isSignalScan ){
 
-	  std::vector< std::pair< double, double > > massPtList;
+	  std::vector< std::pair< int, int > > massPtList;
 	  if( signal.id==sampleInfo::k_T2tt ) massPtList = T2tt_list;
 
 	  for(int iMassPt=0; iMassPt<(int)massPtList.size(); iMassPt++){
