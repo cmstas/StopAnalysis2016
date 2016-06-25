@@ -34,7 +34,7 @@ int bkgEstimate_diLepton(){
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 10.0/2.07; // rescale to new lumi
+  //double rescale = 10.0/2.6; // rescale to new lumi
 
   TString yield_base = "yields";
 
@@ -45,7 +45,8 @@ int bkgEstimate_diLepton(){
   //
   // recoClassy Type
   //
-  recoClassyInfo::recoClassyUtil recoClassyType_CR(recoClassyInfo::k_2lep_2selOrVetoLep);
+  //recoClassyInfo::recoClassyUtil recoClassyType_CR(recoClassyInfo::k_2lep_2selOrVetoLep);
+  recoClassyInfo::recoClassyUtil recoClassyType_CR(recoClassyInfo::k_incl);
   recoClassyInfo::recoClassyUtil recoClassyType_SR(recoClassyInfo::k_incl);
  
  

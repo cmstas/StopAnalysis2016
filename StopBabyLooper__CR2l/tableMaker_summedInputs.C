@@ -31,7 +31,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 10.0/2.07; // rescale to new lumi
+  //double rescale = 10.0/2.6; // rescale to new lumi
 
   
   //
@@ -522,7 +522,8 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 
 	} // end loop over samples
 
-	
+	fprintf(f_out, "\\hline \\hline \n");
+
 	
 	//
 	//  Sum of All Background
@@ -536,6 +537,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	fprintf(f_out, "%s ", allBkg_util.tex.c_str() );
 
 	// Loop over category list
+	vector<double> allBkg_yield, allBkg_error;
 	for(int iCat=0; iCat<(int)tableList[iTable].size(); iCat++){
 	  
 	  categoryInfo::categoryUtil category( tableList[iTable][iCat] );
@@ -554,6 +556,10 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	    error *= rescale;
 	  }
 
+	  allBkg_yield.push_back(yield);
+	  allBkg_error.push_back(error);
+
+
 	  if( yield == 0.0 ){
 	    fprintf(f_out, " & --- ");
 	  }
@@ -568,7 +574,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	
 	fprintf(f_out, "\\"); 
 	fprintf(f_out, "\\* \n");
-	fprintf(f_out, "\\hline \\hline \n");
+	//fprintf(f_out, "\\hline \\hline \n");
 
 	f_input->Close();
 	f_input->~TFile();
@@ -586,6 +592,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	fprintf(f_out, "%s ", data_util->tex.c_str() );
 
 	// Loop over category list
+	vector<double> data_yield, data_error;
 	for(int iCat=0; iCat<(int)tableList[iTable].size(); iCat++){
 	  
 	  categoryInfo::categoryUtil category( tableList[iTable][iCat] );
@@ -603,7 +610,10 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	    yield *= rescale;
 	    error = sqrt(yield);
 	  }
-	  
+
+	  data_yield.push_back(yield);
+	  data_error.push_back(error);
+	  	  
 	  if( yield == 0.0 ){
 	    fprintf(f_out, " & --- ");
 	  }
@@ -618,10 +628,39 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 	
 	fprintf(f_out, "\\"); 
 	fprintf(f_out, "\\* \n");
-	fprintf(f_out, "\\hline \\hline \n");
+	//fprintf(f_out, "\\hline \\hline \n");
 
 	f_input->Close();
 	f_input->~TFile();
+
+	
+	//
+	// Calc Data/MC
+	//
+	fprintf(f_out, "Data/MC " );
+	for(int iCat=0; iCat<(int)tableList[iTable].size(); iCat++){
+	  
+	  double ratio_val = 0.0;
+	  double ratio_err = 0.0;
+
+	  if( allBkg_yield[iCat]>0.0 ) ratio_val = data_yield[iCat]/allBkg_yield[iCat];
+	  if( allBkg_yield[iCat]>0.0 && data_yield[iCat]>0.0 ) ratio_err = ratio_val*sqrt( pow(allBkg_error[iCat]/allBkg_yield[iCat],2) + pow(data_error[iCat]/data_yield[iCat],2) );
+
+	  if( ratio_val == 0.0 ){
+	    fprintf(f_out, " & --- ");
+	  }
+	  else if( ratio_val < 0.0 ){
+	    fprintf(f_out, " & \\textcolor{red}{ %.2f $\\pm$ %.2f } ", ratio_val, ratio_err);
+	  }
+	  else{
+	    fprintf(f_out, " & %.2f $\\pm$ %.2f ", ratio_val, ratio_err);
+	  }
+
+	}
+
+	fprintf(f_out, "\\"); 
+	fprintf(f_out, "\\* \n");
+	fprintf(f_out, "\\hline \\hline \n");
 
 	
 

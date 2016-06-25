@@ -66,6 +66,11 @@ class eventWeightInfo{
   // Event weights for each systematic
   double sf_nominal;
 
+  bool   apply_diLepTrigger_sf;
+  double sf_diLepTrigger;
+  double sf_diLepTrigger_up;
+  double sf_diLepTrigger_dn;
+
   bool   apply_bTag_sf;
   double sf_bTag;
   double sf_bTagEffHF_up;
@@ -98,20 +103,10 @@ class eventWeightInfo{
   double sf_metRes_up;
   double sf_metRes_dn;
   
-  bool   apply_nJetsK3_sf;
-  double sf_nJetsK3;
-  double sf_nJetsK3_up;
-  double sf_nJetsK3_dn;
-  
-  bool   apply_nJetsK4_sf;
-  double sf_nJetsK4;
-  double sf_nJetsK4_up;
-  double sf_nJetsK4_dn;
-  
-  bool   apply_diNuPt_sf;
-  double sf_diNuPt;
-  double sf_diNuPt_up;
-  double sf_diNuPt_dn;
+  bool   apply_ttbarSysPt_sf;
+  double sf_ttbarSysPt;
+  double sf_ttbarSysPt_up;
+  double sf_ttbarSysPt_dn;
   
   bool   apply_ISR_sf;
   double sf_ISR;
@@ -163,6 +158,8 @@ class eventWeightInfo{
 
   void getScaleToLumiWeight( double &wgt );
 
+  void getDiLepTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
+
   void getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn );
   
   void getBTagWeight_fromUtils( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ); 
@@ -175,11 +172,7 @@ class eventWeightInfo{
 
   void getMetResWeight( double &weight_metRes, double &weight_metRes_up, double &weight_metRes_dn );
 
-  void getNJetsSF_K3( double &weight_K3, double &weight_K3_up, double &weight_K3_dn );
-
-  void getNJetsSF_K4( double &weight_K4, double &weight_K4_up, double &weight_K4_dn );
-  
-  void getDiNuPtSF( double &weight_diNuPt, double &weight_diNuPt_up, double &weight_diNuPt_dn );
+  void getTTbarSysPtSF( double &weight_ttbarSysPt, double &weight_ttbarSysPt_up, double &weight_ttbarSysPt_dn );
 
   void getNuPtSF( double &weight_nuPt_up, double &weight_nuPt_dn );
 

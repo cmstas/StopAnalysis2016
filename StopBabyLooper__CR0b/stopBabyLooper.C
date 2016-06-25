@@ -213,18 +213,17 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile );
 
     // Switches for applying weights
-    wgtInfo->apply_bTag_sf    = false;
-    wgtInfo->apply_lep_sf     = false;
-    wgtInfo->apply_vetoLep_sf = false;
-    wgtInfo->apply_lepFS_sf   = false;
-    wgtInfo->apply_topPt_sf   = false; // true=sf, false=uncertainty
-    wgtInfo->apply_metRes_sf  = false;
-    wgtInfo->apply_nJetsK3_sf = false; // only !=1.0 for powheg pythia8 tt2l
-    wgtInfo->apply_nJetsK4_sf = false; // only !=1.0 for powheg pythia8 tt2l
-    wgtInfo->apply_diNuPt_sf  = false; // only !=1.0 for powheg pythia8 tt2l
-    wgtInfo->apply_ISR_sf     = false; // only !=1.0 for signal
-    wgtInfo->apply_sample_sf  = false; // only !=1.0 for some WJetsHT samps
-
+    wgtInfo->apply_diLepTrigger_sf = false;
+    wgtInfo->apply_bTag_sf         = false;
+    wgtInfo->apply_lep_sf          = false;
+    wgtInfo->apply_vetoLep_sf      = false;
+    wgtInfo->apply_lepFS_sf        = false;
+    wgtInfo->apply_topPt_sf        = false; // true=sf, false=uncertainty
+    wgtInfo->apply_metRes_sf       = true;
+    wgtInfo->apply_ttbarSysPt_sf   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
+    wgtInfo->apply_ISR_sf          = false; // only !=1.0 for signal
+    wgtInfo->apply_sample_sf       = false; // only !=1.0 for some WJetsHT samps
+    
 
     //
     // Declare systematicInfo Object

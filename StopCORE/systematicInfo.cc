@@ -30,6 +30,22 @@ systematicInfo::systematicUtil::systematicUtil( systematicInfo::ID systematic ){
     hasOwnBabies = true;
     break;
 
+  case( k_diLepTriggerUp ):
+    id          = systematic;
+    label       = "diLepTriggerSFUp";
+    title       = "DiLepton Trigger Scale Factor, Up";
+    tex         = "DiLepton~Trigger~Scale~Factor,~Up";
+    hasOwnBabies = false;
+    break;
+
+  case( k_diLepTriggerDown ):
+    id          = systematic;
+    label       = "diLepTriggerSFDn";
+    title       = "DiLepton Trigger Scale Factor, Down";
+    tex         = "DiLepton~Trigger~Scale~Factor,~Down";
+    hasOwnBabies = false;
+    break;
+
   case( k_bTagEffHFUp ):
     id          = systematic;
     label       = "bTagEffHFUp";
@@ -126,51 +142,19 @@ systematicInfo::systematicUtil::systematicUtil( systematicInfo::ID systematic ){
     hasOwnBabies = false;
     break;
 
-  case( k_nJetsSFK3Up ):
+  case( k_ttbarSysPtUp ):
     id          = systematic;
-    label       = "nJetsSFK3Up";
-    title       = "nJets SF, K3, Up";
-    tex         = "nJets~SF,~K3,~Up";
+    label       = "ttbarSysPtUp";
+    title       = "ttbar/tW system pT, Up";
+    tex         = "$t\\bar{t}/tW~p_{T}$,~Up";
     hasOwnBabies = false;
     break;
 
-  case( k_nJetsSFK3Down ):
+  case( k_ttbarSysPtDown ):
     id          = systematic;
-    label       = "nJetsSFK3Dn";
-    title       = "nJets SF, K3, Down";
-    tex         = "nJets~SF,~K3,~Down";
-    hasOwnBabies = false;
-    break;
-    
-  case( k_nJetsSFK4Up ):
-    id          = systematic;
-    label       = "nJetsSFK4Up";
-    title       = "nJets SF, K4, Up";
-    tex         = "nJets~SF,~K4,~Up";
-    hasOwnBabies = false;
-    break;
-
-  case( k_nJetsSFK4Down ):
-    id          = systematic;
-    label       = "nJetsSFK4Dn";
-    title       = "nJets SF, K4, Down";
-    tex         = "nJets~SF,~K4,~Down";
-    hasOwnBabies = false;
-    break;
-
-  case( k_diNuPtSF_Up ):
-    id          = systematic;
-    label       = "diNuPtUp";
-    title       = "diNuetrino pT, Up";
-    tex         = "${\\nu}{\\nu}p_{T}$,~Up";
-    hasOwnBabies = false;
-    break;
-
-  case( k_diNuPtSF_Down ):
-    id          = systematic;
-    label       = "diNuPtDn";
-    title       = "diNuetrino pT, Down";
-    tex         = "${\\nu}{\\nu}p_{T}$,~Down";
+    label       = "ttbarSysPtDn";
+    title       = "ttbar/tW system pT, Down";
+    tex         = "$t\\bar{t}/tW~p_{T}$,~Down";
     hasOwnBabies = false;
     break;
 
@@ -347,6 +331,10 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
   // Switches, set in looper, in eventWeightInfo.cc/h, determine if 
   //   these additional SFs are != 1.0
   //
+ 
+  // Apply diLepton Trigger scale factor
+  double wgt_diLepTrigger = evt_wgt->sf_diLepTrigger;
+  result *= wgt_diLepTrigger;
   
   // Apply bTag scale factor
   double wgt_bTag = evt_wgt->sf_bTag;
@@ -364,17 +352,9 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
   double wgt_metRes = evt_wgt->sf_metRes;
   result *= wgt_metRes;
 
-  // Apply nJets SF, K3 (will be 1 if not ttbar 2l)
-  double wgt_k3 = evt_wgt->sf_nJetsK3;
-  result *= wgt_k3;
-
-  // Apply nJets SF, K4 (will be 1 if not ttbar 2l)
-  double wgt_k4 = evt_wgt->sf_nJetsK4;
-  result *= wgt_k4;
-
-  // Apply diNu pT SF (will be 1 if not ttbar 2l) 
-  double wgt_diNuPt = evt_wgt->sf_diNuPt;
-  result *= wgt_diNuPt;
+  // Apply ttbar system pT SF (will be 1 if not ttbar/tW 2l) 
+  double wgt_ttbarSysPt = evt_wgt->sf_ttbarSysPt;
+  result *= wgt_ttbarSysPt;
 
   // Apply ISR SF( will be 1 if not Signal)
   double wgt_ISR = evt_wgt->sf_ISR;
@@ -383,7 +363,9 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
   // Apply sample weight (for WJets stitching)
   double wgt_sample = evt_wgt->sf_sample;
   result *= wgt_sample;
- 
+
+  double wgt_diLepTriggerUp = 1.0;
+  double wgt_diLepTriggerDn = 1.0;
   double wgt_bTagEffHFUp = 1.0;
   double wgt_bTagEffHFDn = 1.0;
   double wgt_bTagEffLFUp = 1.0;
@@ -396,12 +378,8 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
   double wgt_topPtDn = 1.0;
   double wgt_metResUp = 1.0;
   double wgt_metResDn = 1.0;
-  double wgt_k3Up = 1.0;
-  double wgt_k3Dn = 1.0;
-  double wgt_k4Up = 1.0;
-  double wgt_k4Dn = 1.0;
-  double wgt_diNuPtUp = 1.0;
-  double wgt_diNuPtDn = 1.0;
+  double wgt_ttbarSysPtUp = 1.0;
+  double wgt_ttbarSysPtDn = 1.0;
   double wgt_nuPtUp = 1.0;
   double wgt_nuPtDn = 1.0;
   double wgt_WwidthUp = 1.0;
@@ -428,6 +406,16 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
     break;
 
   case( k_JESDown ):
+    break;
+
+  case( k_diLepTriggerUp ):
+    wgt_diLepTriggerUp = (evt_wgt->sf_diLepTrigger_up/evt_wgt->sf_diLepTrigger);
+    result *= wgt_diLepTriggerUp;
+    break;
+
+  case( k_diLepTriggerDown ):
+    wgt_diLepTriggerDn = (evt_wgt->sf_diLepTrigger_dn/evt_wgt->sf_diLepTrigger);
+    result *= wgt_diLepTriggerDn;
     break;
 
   case( k_bTagEffHFUp ):
@@ -490,34 +478,14 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
     result *= wgt_metResDn;
     break;
 
-  case( k_nJetsSFK3Up ):
-    wgt_k3Up = evt_wgt->sf_nJetsK3_up/wgt_k3;
-    result *= wgt_k3Up;
+  case( k_ttbarSysPtUp ):
+    wgt_ttbarSysPtUp = (evt_wgt->sf_ttbarSysPt_up/wgt_ttbarSysPt);
+    result *= wgt_ttbarSysPtUp;
     break;
 
-  case( k_nJetsSFK3Down ):
-    wgt_k3Dn = evt_wgt->sf_nJetsK3_dn/wgt_k3;
-    result *= wgt_k3Dn;
-    break;
-    
-  case( k_nJetsSFK4Up ):
-    wgt_k4Up = evt_wgt->sf_nJetsK4_up/wgt_k4;
-    result *= wgt_k4Up;
-    break;
-
-  case( k_nJetsSFK4Down ):
-    wgt_k4Dn = evt_wgt->sf_nJetsK4_dn/wgt_k4;
-    result *= wgt_k4Dn;
-    break;
-
-  case( k_diNuPtSF_Up ):
-    wgt_diNuPtUp = evt_wgt->sf_diNuPt_up/wgt_diNuPt;
-    result *= wgt_diNuPtUp;
-    break;
-
-  case( k_diNuPtSF_Down ):
-    wgt_diNuPtDn = evt_wgt->sf_diNuPt_dn/wgt_diNuPt;
-    result *= wgt_diNuPtDn;
+  case( k_ttbarSysPtDown ):
+    wgt_ttbarSysPtDn = (evt_wgt->sf_ttbarSysPt_dn/wgt_ttbarSysPt);
+    result *= wgt_ttbarSysPtDn;
     break;
 
   case( k_nuPtSF_Up ):
@@ -658,12 +626,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList_all(){
   result.push_back( systematicUtil(k_topPtSFDown) );
   result.push_back( systematicUtil(k_metResUp) );
   result.push_back( systematicUtil(k_metResDown) );
-  result.push_back( systematicUtil(k_nJetsSFK3Up) );
-  result.push_back( systematicUtil(k_nJetsSFK3Down) );
-  result.push_back( systematicUtil(k_nJetsSFK4Up) );
-  result.push_back( systematicUtil(k_nJetsSFK4Down) );
-  result.push_back( systematicUtil(k_diNuPtSF_Up) );
-  result.push_back( systematicUtil(k_diNuPtSF_Down) );
+  result.push_back( systematicUtil(k_ttbarSysPtUp) );
+  result.push_back( systematicUtil(k_ttbarSysPtDown) );
   result.push_back( systematicUtil(k_nuPtSF_Up) );
   result.push_back( systematicUtil(k_nuPtSF_Down) );
   result.push_back( systematicUtil(k_WwidthSF_Up) );
@@ -719,12 +683,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList( analyzerInfo::ID an
       result.push_back( systematicUtil(k_xsecDown) );
     }
     else{
-      result.push_back( systematicUtil(k_nJetsSFK3Up) );
-      result.push_back( systematicUtil(k_nJetsSFK3Down) );
-      result.push_back( systematicUtil(k_nJetsSFK4Up) );
-      result.push_back( systematicUtil(k_nJetsSFK4Down) );
-      result.push_back( systematicUtil(k_diNuPtSF_Up) );
-      result.push_back( systematicUtil(k_diNuPtSF_Down) );
+      result.push_back( systematicUtil(k_ttbarSysPtUp) );
+      result.push_back( systematicUtil(k_ttbarSysPtDown) );
       result.push_back( systematicUtil(k_topPtSFUp) );
       result.push_back( systematicUtil(k_topPtSFDown) );
       result.push_back( systematicUtil(k_metResUp) );
@@ -835,12 +795,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList( analyzerInfo::ID an
       result.push_back( systematicUtil(k_xsecDown) );
     }
     else{
-      result.push_back( systematicUtil(k_nJetsSFK3Up) );
-      result.push_back( systematicUtil(k_nJetsSFK3Down) );
-      result.push_back( systematicUtil(k_nJetsSFK4Up) );
-      result.push_back( systematicUtil(k_nJetsSFK4Down) );
-      result.push_back( systematicUtil(k_diNuPtSF_Up) );
-      result.push_back( systematicUtil(k_diNuPtSF_Down) );
+      result.push_back( systematicUtil(k_ttbarSysPtUp) );
+      result.push_back( systematicUtil(k_ttbarSysPtDown) );
       result.push_back( systematicUtil(k_topPtSFUp) );
       result.push_back( systematicUtil(k_topPtSFDown) );
       result.push_back( systematicUtil(k_metResUp) );
@@ -856,6 +812,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList( analyzerInfo::ID an
 
   case( analyzerInfo::k_CR2l_bulkTTbar ):
     result.push_back( systematicUtil(k_nominal) );
+    result.push_back( systematicUtil(k_diLepTriggerUp) );
+    result.push_back( systematicUtil(k_diLepTriggerDown) );
     result.push_back( systematicUtil(k_bTagEffHFUp) );
     result.push_back( systematicUtil(k_bTagEffHFDown) );
     result.push_back( systematicUtil(k_bTagEffLFUp) );
@@ -872,6 +830,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList( analyzerInfo::ID an
     result.push_back( systematicUtil(k_topPtSFDown) );
     result.push_back( systematicUtil(k_metResUp) );
     result.push_back( systematicUtil(k_metResDown) );
+    result.push_back( systematicUtil(k_ttbarSysPtUp) );
+    result.push_back( systematicUtil(k_ttbarSysPtDown) );
        
     if( sample_isFastsim ){
       result.push_back( systematicUtil(k_lepFSSFUp) );
@@ -927,12 +887,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList_forLimit_lostLepton(
   result.push_back( systematicUtil(k_lepSFDown) );
   result.push_back( systematicUtil(k_metResUp) );
   result.push_back( systematicUtil(k_metResDown) );
-  result.push_back( systematicUtil(k_nJetsSFK3Up) );
-  result.push_back( systematicUtil(k_nJetsSFK3Down) );
-  result.push_back( systematicUtil(k_nJetsSFK4Up) );
-  result.push_back( systematicUtil(k_nJetsSFK4Down) );
-  result.push_back( systematicUtil(k_diNuPtSF_Up) );
-  result.push_back( systematicUtil(k_diNuPtSF_Down) );
+  result.push_back( systematicUtil(k_ttbarSysPtUp) );
+  result.push_back( systematicUtil(k_ttbarSysPtDown) );
   result.push_back( systematicUtil(k_pdfUp) );
   result.push_back( systematicUtil(k_pdfDown) );
   result.push_back( systematicUtil(k_alphasUp) );

@@ -218,18 +218,17 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile );
 
     // Switches for applying weights
-    wgtInfo->apply_bTag_sf    = false;
-    wgtInfo->apply_lep_sf     = false;
-    wgtInfo->apply_vetoLep_sf = false;
-    wgtInfo->apply_lepFS_sf   = false;
-    wgtInfo->apply_topPt_sf   = false; // true=sf, false=uncertainty
-    wgtInfo->apply_metRes_sf  = false;
-    wgtInfo->apply_nJetsK3_sf = false; // only !=1.0 for powheg pythia8 tt2l
-    wgtInfo->apply_nJetsK4_sf = false; // only !=1.0 for powheg pythia8 tt2l
-    wgtInfo->apply_diNuPt_sf  = false; // only !=1.0 for powheg pythia8 tt2l
-    wgtInfo->apply_ISR_sf     = false; // only !=1.0 for signal
-    wgtInfo->apply_sample_sf  = false; // only !=1.0 for some WJetsHT samps
-
+    wgtInfo->apply_diLepTrigger_sf = false;
+    wgtInfo->apply_bTag_sf         = false;
+    wgtInfo->apply_lep_sf          = false;
+    wgtInfo->apply_vetoLep_sf      = false;
+    wgtInfo->apply_lepFS_sf        = false;
+    wgtInfo->apply_topPt_sf        = false; // true=sf, false=uncertainty
+    wgtInfo->apply_metRes_sf       = true;
+    wgtInfo->apply_ttbarSysPt_sf   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
+    wgtInfo->apply_ISR_sf          = false; // only !=1.0 for signal
+    wgtInfo->apply_sample_sf       = false; // only !=1.0 for some WJetsHT samps
+    
 
     //
     // Declare systematicInfo Object
@@ -333,6 +332,109 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
       h1_gen_ttbar_pt__ge200mt2w = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge200mt2w", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
       h1_gen_ttbar_pt__ge200mt2w_ge350met = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge200mt2w_ge350met", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
 
+    }
+
+
+    //
+    // modified Topness
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_modTop = NULL;
+    histogramInfo::h1_Util *h1_scan_modTop[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "modTopness__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "modified topness, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_modTop[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 20, -20.0, 20.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_modTop = new histogramInfo::h1_Util( f_output, "modTopness", "modified topness", 20, -20.0, 20.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+    //
+    // MT2W
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_mt2w = NULL;
+    histogramInfo::h1_Util *h1_scan_mt2w[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "mt2w__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "MT2W, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_mt2w[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_mt2w = new histogramInfo::h1_Util( f_output, "mt2w", "MT2W", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+    //
+    // MET
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_met = NULL;
+    histogramInfo::h1_Util *h1_scan_met[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "met__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "MET, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_met[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_met = new histogramInfo::h1_Util( f_output, "met", "MET", 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
     }
 
     
@@ -520,6 +622,16 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		    // nJets
 		    if( h1_scan_nJets[iMassPt]->histos[iHist] ) h1_scan_nJets[iMassPt]->histos[iHist]->Fill( ngoodjets(), sysWgtsList[iSys].second );
 
+		    // modTop
+		    if( h1_scan_modTop[iMassPt]->histos[iHist] ) h1_scan_modTop[iMassPt]->histos[iHist]->Fill( topnessMod(), sysWgtsList[iSys].second );
+		    
+		    // mt2w
+		    if( h1_scan_mt2w[iMassPt]->histos[iHist] ) h1_scan_mt2w[iMassPt]->histos[iHist]->Fill( MT2W(), sysWgtsList[iSys].second );
+
+		    // met
+		    if( h1_scan_met[iMassPt]->histos[iHist] ) h1_scan_met[iMassPt]->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+
+
 		  } // end loop over mass points
 
 		} 
@@ -547,9 +659,20 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		     
 		    }
 
-		  }
+		  } // end if sample is ttbar
 
-		}
+
+		  // modTop
+		  if( h1_modTop->histos[iHist] ) h1_modTop->histos[iHist]->Fill( topnessMod(), sysWgtsList[iSys].second );
+
+		  // mt2w
+		  if( h1_mt2w->histos[iHist] ) h1_mt2w->histos[iHist]->Fill( MT2W(), sysWgtsList[iSys].second );
+		  
+		  // met
+		  if( h1_met->histos[iHist] ) h1_met->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+
+
+		} // end if not signal scan
 		
 		
 	      } // end loop over categories

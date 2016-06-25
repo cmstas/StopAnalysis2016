@@ -39,7 +39,7 @@ void plotMaker( bool plotByGenDecay=true ){
   TString outExt = ".pdf";
   
   //double lumi    = 5.0; // for studies
-  double lumi    = 2.07; // 2016
+  double lumi    = 2.6; // 2016
   
   double sig_SF  = 1.0;
 
@@ -71,6 +71,9 @@ void plotMaker( bool plotByGenDecay=true ){
   //
   recoClassyInfo::recoClassyUtil reco_incl( recoClassyInfo::k_incl );
   TString hName_reco_incl = reco_incl.label;
+
+  recoClassyInfo::vect_util recoClassyList;
+  recoClassyList = recoClassyInfo::getRecoClassyList( analysis );
 
   
   //
@@ -164,8 +167,8 @@ void plotMaker( bool plotByGenDecay=true ){
   //sigList.push_back( sample );
 
   // T2tt mass points
-  std::vector< std::pair< int, int > > T2tt_list;
-  std::pair< int, int > T2tt_mass_point;
+  std::vector< std::pair< double, double > > T2tt_list;
+  std::pair< double, double > T2tt_mass_point;
     
   T2tt_mass_point.first  = 400;
   T2tt_mass_point.second = 225;
@@ -206,6 +209,17 @@ void plotMaker( bool plotByGenDecay=true ){
   std::vector<std::string> var_list_title;
   std::vector<std::string> var_list_xaxis;
 
+  std::vector<bool> var_doRebin;
+  std::vector<int> var_rebin_nBins;
+  std::vector<double*> var_rebin_xBins;
+  std::vector<double*> var_rebin_xBinsSF;
+
+  bool noRebin = false;
+  int noRebin_nBins = 1;
+  double noRebin_xBins[2]{0.0,0.0}; // entries = nBins+1
+  double noRebin_xBinsSF[1]{1.0};   // SFs to keep bins Events/width
+
+
 
   // Plot Yields
   var_list_label.push_back( "yields" );
@@ -219,6 +233,11 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
 
   // Plot nJets
@@ -234,8 +253,110 @@ void plotMaker( bool plotByGenDecay=true ){
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // Plot Modified topness
+  var_list_label.push_back( "modTopness" );
+  var_list_title.push_back( "modified topness" );
+  var_list_xaxis.push_back( "modified topness" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // Plot MT2W
+  var_list_label.push_back( "mt2w" );
+  var_list_title.push_back( "MT2W" );
+  var_list_xaxis.push_back( "MT2W [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+
+  // Plot MET
+  var_list_label.push_back( "met" );
+  var_list_title.push_back( "E_{T}^{miss}" );
+  var_list_xaxis.push_back( "E_{T}^{miss} [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // Plot MET, rebinned
+  var_list_label.push_back( "met" );
+  var_list_title.push_back( "E_{T}^{miss}" );
+  var_list_xaxis.push_back( "E_{T}^{miss} [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  const int nRebins_met = 8;
+  double xRebins_met[nRebins_met+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
+  double xRebinsSF_met[nRebins_met]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.714  };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_met);
+  var_rebin_xBins.push_back(xRebins_met);
+  var_rebin_xBinsSF.push_back(xRebinsSF_met);
 
   
+
   //
   // Loop over files and grab histograms
   //
@@ -247,8 +368,11 @@ void plotMaker( bool plotByGenDecay=true ){
   TH1F *h_temp_up   = NULL;
   TH1F *h_temp_dn   = NULL;
   TH1F *h_clone     = NULL;
+  TH1F *h_clone_up  = NULL;
+  TH1F *h_clone_dn  = NULL;
   TH1F *h_clone_unc = NULL;
   TH3D *h3_temp     = NULL;
+
   
   for(int iVar=0; iVar<(int)var_list_label.size(); iVar++){
     
@@ -256,336 +380,419 @@ void plotMaker( bool plotByGenDecay=true ){
     std::size_t foundYield = var_list_label[iVar].find("yields");
     if( foundYield!=std::string::npos ) isYieldPlot=true;
 
-    for(int iCat=0; iCat<(int)catList[iVar].size(); iCat++){
+    for(int iReco=0; iReco<(int)recoClassyList.size(); iReco++){
 
-      categoryInfo::categoryUtil category( catList[iVar][iCat] );
-      std::string cat_title_for_subtitle = "";
+      for(int iCat=0; iCat<(int)catList[iVar].size(); iCat++){
 
-      if( !isYieldPlot ) cat_title_for_subtitle += category.title;
+	categoryInfo::categoryUtil category( catList[iVar][iCat] );
+	std::string cat_title_for_subtitle = "";
+
+	if( !isYieldPlot ) cat_title_for_subtitle += category.title;
       
 
-      // Get Data Data;
-      TFile *f_data = NULL;
-      if(plotData){
-	sampleInfo::sampleUtil data_util( sample_data.first );
+	// Get Data Data;
+	TFile *f_data = NULL;
+	if(plotData){
+	  sampleInfo::sampleUtil data_util( sample_data.first );
 
-	TString f_name = inDir;
-	f_name += "h__";
-	f_name += data_util.label;
-	f_name += ".root";
-	f_data = new TFile( f_name.Data(), "read" );
+	  TString f_name = inDir;
+	  f_name += "h__";
+	  f_name += data_util.label;
+	  f_name += ".root";
+	  f_data = new TFile( f_name.Data(), "read" );
 	
-	if( isYieldPlot ){
-	  hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassyInfo::genClassyUtil(sample_data.second), reco_incl, sys_nominal );
-	}
-	else{
-	  hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassyInfo::genClassyUtil(sample_data.second), reco_incl, category, sys_nominal );
-	}
-
-	hName_clone = hName;
-	hName_clone += "__data";
-
-	h_temp = (TH1F*)f_data->Get(hName);
-	if(!h_temp) cout << "BAD DATA HISTO: " << hName << endl;
-
-	h_data = (TH1F*)h_temp->Clone(hName_clone);
-      }
-
-      // Backgrounds
-      std::vector<TFile*> bkg_files;
-      std::pair<TH1F*,TH1F*> bkg_and_unc;
-      std::vector< std::pair<TH1F*,TH1F*> > bkg_histos;
-      std::vector<std::string> bkg_titles;
-      for(int iBkg=0; iBkg<(int)bkgList.size(); iBkg++){
-
-	sampleInfo::sampleUtil background( bkgList[iBkg].first );
-	genClassyInfo::genClassyUtil genClassification( bkgList[iBkg].second );
-
-	TString f_name = inDir;
-	f_name += "h__";
-	f_name += background.label;
-	f_name += ".root";
-	TFile *f_bkg = new TFile( f_name.Data(), "read" );
-	bkg_files.push_back(f_bkg);
-
-	if( isYieldPlot ){
-	  hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassification, reco_incl, sys_nominal );
-	}
-	else{
-	  hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassification, reco_incl, category, sys_nominal );
-	}
-
-	hName_clone = hName;
-	hName_clone += "__";
-	hName_clone += background.label;
-
-	
-	h_temp = (TH1F*)f_bkg->Get(hName);
-	if(!h_temp) cout << "BAD BKG HISTO: " << hName << endl;
-	h_clone = (TH1F*)h_temp->Clone(hName_clone);
-	
-	bkg_and_unc.first = h_clone;
-	
-	h_clone_unc = (TH1F*)h_clone->Clone(hName_clone+"__unc");
-	if( (int)sysList[iVar].size()==1 ){
-	  bkg_and_unc.second = h_clone_unc;
-	}
-	else{
-	  
-	  for(int iSys=0; iSys<(int)sysList[iVar].size(); iSys+=2){
-	    
-	    // Get Up Variation
-	    if( isYieldPlot ){
-	      hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassification, reco_incl, sysList[iVar][iSys] );
-	    }
-	    else{
-	      hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassification, reco_incl, category, sysList[iVar][iSys] );
-	    }
-	    h_temp_up = (TH1F*)f_bkg->Get(hName);
-
-	    // Get Down Variation
-	    if( isYieldPlot ){
-	      hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassification, reco_incl, sysList[iVar][iSys+1] );
-	    }
-	    else{
-	      hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassification, reco_incl, category, sysList[iVar][iSys+1] );
-	    }
-	    h_temp_dn = (TH1F*)f_bkg->Get(hName);
-	    
-	    for(int iBin=1; iBin<=(int)h_temp_up->GetNbinsX(); iBin++){
-	      double nom_val    = h_clone_unc->GetBinContent(iBin);
-	      double nom_err    = h_clone_unc->GetBinError(iBin);
-	      double nom_err_sq = pow( nom_err, 2 );
-
-	      double up_val = h_temp_up->GetBinContent(iBin);
-	      double dn_val = h_temp_dn->GetBinContent(iBin);
-	      
-	      double max_diff = fabs(nom_val-up_val);
-	      max_diff = std::max( max_diff, fabs(nom_val-dn_val) );
-
-	      nom_err_sq += max_diff;
-	      nom_err     = sqrt(nom_err_sq);
-
-	      h_clone_unc->SetBinError(iBin,nom_err);
-	    } // end loop over bins
-		
-	  } // end loop over sys
-	  
-	  bkg_and_unc.second = h_clone_unc;
-
-	} // end if more than 1 systematic
-
-	bkg_histos.push_back(bkg_and_unc);
-
-	if(plotByGenDecay) bkg_titles.push_back(genClassification.title);
-	else{
-	  std::string bkg_title = "";
-	  bkg_title += background.title;
-	  if( genClassification.id!=genClassyInfo::k_incl ){
-	    bkg_title += ", ";
-	    bkg_title += genClassification.title;
+	  if( isYieldPlot ){
+	    hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassyInfo::genClassyUtil(sample_data.second), recoClassyList[iReco], sys_nominal );
 	  }
-	  bkg_titles.push_back(bkg_title);
+	  else{
+	    hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassyInfo::genClassyUtil(sample_data.second), recoClassyList[iReco], category, sys_nominal );
+	  }
+
+	  hName_clone = hName;
+	  hName_clone += "__data";
+
+	  h_temp = (TH1F*)f_data->Get(hName);
+	  if(!h_temp) cout << "BAD DATA HISTO: " << hName << endl;
+
+	  // Do rebin
+	  if( var_doRebin[iVar] ){
+	    h_data = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
+	    for(int iBin=1; iBin<(int)h_data->GetNbinsX(); iBin++){
+	      h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+	      h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+	    }
+	  }
+	  else{
+	    h_data = (TH1F*)h_temp->Clone(hName_clone);
+	  }
+	  //h_data = (TH1F*)h_temp->Clone(hName_clone);
+	  
 	}
 
-      } // end loop over files
+	// Backgrounds
+	std::vector<TFile*> bkg_files;
+	std::pair<TH1F*,TH1F*> bkg_and_unc;
+	std::vector< std::pair<TH1F*,TH1F*> > bkg_histos;
+	std::vector<std::string> bkg_titles;
+	for(int iBkg=0; iBkg<(int)bkgList.size(); iBkg++){
 
-      
-      // Signal
-      std::vector<TFile*> sig_files;
-      std::vector<TH1F*> sig_histos;
-      std::vector<std::string> sig_titles;
-      for(int iSig=0; iSig<(int)sigList.size(); iSig++){
+	  sampleInfo::sampleUtil background( bkgList[iBkg].first );
+	  genClassyInfo::genClassyUtil genClassification( bkgList[iBkg].second );
 
-	sampleInfo::sampleUtil signal( sigList[iSig].first );
+	  TString f_name = inDir;
+	  f_name += "h__";
+	  f_name += background.label;
+	  f_name += ".root";
+	  TFile *f_bkg = new TFile( f_name.Data(), "read" );
+	  bkg_files.push_back(f_bkg);
 
-	TString f_name = inDir;
-	f_name += "h__";
-	f_name += signal.label;
-	f_name += ".root";
-	TFile *f_sig = new TFile( f_name.Data(), "read" );
-	sig_files.push_back(f_sig);
-
-	if( isYieldPlot ){
-	  hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassyInfo::genClassyUtil(sigList[iSig].second), reco_incl, sys_nominal );
-	}
-	else{
-	  hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassyInfo::genClassyUtil(sigList[iSig].second), reco_incl, category, sys_nominal );
-	}
-	
-	if( signal.isSignalScan ){
-
-	  std::vector< std::pair< int, int > > massPtList;
-	  if( signal.id==sampleInfo::k_T2tt ) massPtList = T2tt_list;
-
-	  for(int iMassPt=0; iMassPt<(int)massPtList.size(); iMassPt++){
-	    
-	    int mStop = massPtList[iMassPt].first;
-	    int mLSP  = massPtList[iMassPt].second;
-	
-	    hName_clone = hName;
-	    hName_clone += "__mStop_";
-	    hName_clone += mStop;
-	    hName_clone += "__mLSP_";
-	    hName_clone += mLSP;
-
-	    h3_temp = (TH3D*)f_sig->Get(hName);
-	    if(!h3_temp) cout << "BAD SIG HISTO: " << hName << endl;
-	    TH1D *h1_temp  = histogramInfo::getProjectionZ( mStop, mLSP, h3_temp );
-	    
-	    if(!h1_temp) cout << "BAD SIG HISTO: " << hName << endl;
-	    h_clone = (TH1F*)h1_temp->Clone(hName_clone);
-	    sig_histos.push_back(h_clone);
-
-	    TString sig_title_temp = "";
-	    sig_title_temp += signal.title;
-	    sig_title_temp += " ";
-	    sig_title_temp += mStop;
-	    sig_title_temp += ", ";
-	    sig_title_temp += mLSP;
-	    std::string sig_title = sig_title_temp.Data();
-	    sig_titles.push_back( sig_title );
-
-	  } // end loop over mass points
-
-	} // end if signal scan
-	else{
+	  if( isYieldPlot ){
+	    hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassification, recoClassyList[iReco], sys_nominal );
+	  }
+	  else{
+	    hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassification, recoClassyList[iReco], category, sys_nominal );
+	  }
 
 	  hName_clone = hName;
 	  hName_clone += "__";
-	  hName_clone += signal.label;
+	  hName_clone += background.label;
+
 	
-	  h_temp = (TH1F*)f_sig->Get(hName);
-	  if(!h_temp) cout << "BAD SIG HISTO: " << hName << endl;
-	  h_clone = (TH1F*)h_temp->Clone(hName_clone);
-	  sig_histos.push_back(h_clone);
-	  sig_titles.push_back(signal.title);
-	}
+	  h_temp = (TH1F*)f_bkg->Get(hName);
+	  if(!h_temp) cout << "BAD BKG HISTO: " << hName << endl;
+
+	  // Do rebin
+	  if( var_doRebin[iVar] ){
+	    h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
+	    for(int iBin=1; iBin<(int)h_clone->GetNbinsX(); iBin++){
+	      h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+	      h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+	    }
+	  }
+	  else{
+	    h_clone = (TH1F*)h_temp->Clone(hName_clone);
+	  }
+	  //h_clone = (TH1F*)h_temp->Clone(hName_clone);
+	
+	  bkg_and_unc.first = h_clone;
+	
+	  h_clone_unc = (TH1F*)h_clone->Clone(hName_clone+"__unc");
+	  if( (int)sysList[iVar].size()==1 ){
+	    bkg_and_unc.second = h_clone_unc;
+	  }
+	  else{
+	  
+	    for(int iSys=0; iSys<(int)sysList[iVar].size(); iSys+=2){
+	    
+	      // Get Up Variation
+	      if( isYieldPlot ){
+		hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassification, recoClassyList[iReco], sysList[iVar][iSys] );
+	      }
+	      else{
+		hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassification, recoClassyList[iReco], category, sysList[iVar][iSys] );
+	      }
+	      h_temp_up = (TH1F*)f_bkg->Get(hName);
+
+	      hName_clone = hName;
+	      hName_clone += "__";
+	      hName_clone += background.label;
+	      hName_clone += "__";
+	      hName_clone += sysList[iVar][iSys].label;
+
+	      // Do rebin
+	      if( var_doRebin[iVar] ){
+		h_clone_up = (TH1F*)h_temp_up->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
+		for(int iBin=1; iBin<(int)h_clone_up->GetNbinsX(); iBin++){
+		  h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		  h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		}
+	      }
+	      else{
+		h_clone_up = (TH1F*)h_temp_up->Clone(hName_clone);
+	      }
+	      
+
+	      // Get Down Variation
+	      if( isYieldPlot ){
+		hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassification, recoClassyList[iReco], sysList[iVar][iSys+1] );
+	      }
+	      else{
+		hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassification, recoClassyList[iReco], category, sysList[iVar][iSys+1] );
+	      }
+	      h_temp_dn = (TH1F*)f_bkg->Get(hName);
+	    
+	      hName_clone = hName;
+	      hName_clone += "__";
+	      hName_clone += background.label;
+	      hName_clone += "__";
+	      hName_clone += sysList[iVar][iSys+1].label;
+
+	      // Do rebin
+	      if( var_doRebin[iVar] ){
+		h_clone_dn = (TH1F*)h_temp_dn->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
+		for(int iBin=1; iBin<(int)h_clone_dn->GetNbinsX(); iBin++){
+		  h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		  h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		}
+	      }
+	      else{
+		h_clone_dn = (TH1F*)h_temp_dn->Clone(hName_clone);
+	      }
+	      
+	      
+	      for(int iBin=1; iBin<=(int)h_clone_up->GetNbinsX(); iBin++){
+		double nom_val    = h_clone_unc->GetBinContent(iBin);
+		double nom_err    = h_clone_unc->GetBinError(iBin);
+		double nom_err_sq = pow( nom_err, 2 );
 		
-      } // end loop over signal samples
+		double up_val = h_clone_up->GetBinContent(iBin);
+		double dn_val = h_clone_dn->GetBinContent(iBin);
+	      
+		double max_diff = fabs(nom_val-up_val);
+		max_diff = std::max( max_diff, fabs(nom_val-dn_val) );
+
+		nom_err_sq += max_diff;
+		nom_err     = sqrt(nom_err_sq);
+
+		h_clone_unc->SetBinError(iBin,nom_err);
+	      } // end loop over bins
+		
+	    } // end loop over sys
+	  
+	    bkg_and_unc.second = h_clone_unc;
+
+	  } // end if more than 1 systematic
+
+	  bkg_histos.push_back(bkg_and_unc);
+
+	  if(plotByGenDecay) bkg_titles.push_back(genClassification.title);
+	  else{
+	    std::string bkg_title = "";
+	    bkg_title += background.title;
+	    if( genClassification.id!=genClassyInfo::k_incl ){
+	      bkg_title += ", ";
+	      bkg_title += genClassification.title;
+	    }
+	    bkg_titles.push_back(bkg_title);
+	  }
+
+	} // end loop over files
+
+      
+	// Signal
+	std::vector<TFile*> sig_files;
+	std::vector<TH1F*> sig_histos;
+	std::vector<std::string> sig_titles;
+	for(int iSig=0; iSig<(int)sigList.size(); iSig++){
+
+	  sampleInfo::sampleUtil signal( sigList[iSig].first );
+
+	  TString f_name = inDir;
+	  f_name += "h__";
+	  f_name += signal.label;
+	  f_name += ".root";
+	  TFile *f_sig = new TFile( f_name.Data(), "read" );
+	  sig_files.push_back(f_sig);
+
+	  if( isYieldPlot ){
+	    hName = histogramInfo::getYieldHistoLabel( var_list_label[iVar], genClassyInfo::genClassyUtil(sigList[iSig].second), recoClassyList[iReco], sys_nominal );
+	  }
+	  else{
+	    hName = histogramInfo::getHistoLabel( var_list_label[iVar], genClassyInfo::genClassyUtil(sigList[iSig].second), recoClassyList[iReco], category, sys_nominal );
+	  }
+	
+	  if( signal.isSignalScan ){
+
+	    std::vector< std::pair< double, double > > massPtList;
+	    if( signal.id==sampleInfo::k_T2tt ) massPtList = T2tt_list;
+
+	    for(int iMassPt=0; iMassPt<(int)massPtList.size(); iMassPt++){
+	    
+	      int mStop = massPtList[iMassPt].first;
+	      int mLSP  = massPtList[iMassPt].second;
+	
+	      hName_clone = hName;
+	      hName_clone += "__mStop_";
+	      hName_clone += mStop;
+	      hName_clone += "__mLSP_";
+	      hName_clone += mLSP;
+
+	      h3_temp = (TH3D*)f_sig->Get(hName);
+	      if(!h3_temp) cout << "BAD SIG HISTO: " << hName << endl;
+	      TH1D *h1_temp  = histogramInfo::getProjectionZ( mStop, mLSP, h3_temp );
+	    
+	      if(!h1_temp) cout << "BAD SIG HISTO: " << hName << endl;
+
+	      // Do rebin
+	      if( var_doRebin[iVar] ){
+		h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
+		for(int iBin=1; iBin<(int)h_clone->GetNbinsX(); iBin++){
+		  h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		  h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		}
+	      }
+	      else{
+		h_clone = (TH1F*)h_temp->Clone(hName_clone);
+	      }
+	      //h_clone = (TH1F*)h1_temp->Clone(hName_clone);
+	      sig_histos.push_back(h_clone);
+
+	      TString sig_title_temp = "";
+	      sig_title_temp += signal.title;
+	      sig_title_temp += " ";
+	      sig_title_temp += mStop;
+	      sig_title_temp += ", ";
+	      sig_title_temp += mLSP;
+	      std::string sig_title = sig_title_temp.Data();
+	      sig_titles.push_back( sig_title );
+
+	    } // end loop over mass points
+
+	  } // end if signal scan
+	  else{
+
+	    hName_clone = hName;
+	    hName_clone += "__";
+	    hName_clone += signal.label;
+	
+	    h_temp = (TH1F*)f_sig->Get(hName);
+	    if(!h_temp) cout << "BAD SIG HISTO: " << hName << endl;
+	    h_clone = (TH1F*)h_temp->Clone(hName_clone);
+	    sig_histos.push_back(h_clone);
+	    sig_titles.push_back(signal.title);
+	  }
+		
+	} // end loop over signal samples
       
       
-      // Option String, Log Scale Plot
-      std::string options = "";
+	// Option String, Log Scale Plot
+	std::string options = "";
 
-      options += "--outputName ";
-      options += outDir;
-      options += "data_MC_plot";
-      if(plotByGenDecay) options  += "__byGenDecayMode__";
-      else                options += "__byProductionMode__";
-      options += var_list_label[iVar];
-      options += "__";
-      options += category.label;
-      options += "__logScale";
-      options += outExt;
-      options += "  ";
+	options += "--outputName ";
+	options += outDir;
+	options += "data_MC_plot";
+	if(plotByGenDecay) options  += "__byGenDecayMode__";
+	else                options += "__byProductionMode__";
+	options += var_list_label[iVar];
+	options += "__category_";
+	options += category.label;
+	options += "__recoClassy_";
+	options += recoClassyList[iReco].label;
+	options += "__logScale";
+	if( var_doRebin[iVar] ) options += "__rebinned";
+	options += outExt;
+	options += "  ";
 
-      options += "--xAxisLabel ";
-      options += var_list_xaxis[iVar];
-      options += "  ";
+	options += "--xAxisLabel ";
+	options += var_list_xaxis[iVar];
+	options += "  ";
 
-      options += "--noXaxisUnit  ";
+	options += "--noXaxisUnit  ";
       
-      options += "--legendRight -0.12  ";
-      options += "--legendUp 0.05  ";
+	options += "--legendRight -0.12  ";
+	options += "--legendUp 0.05  ";
 
-      options += "--energy 13  ";
+	options += "--energy 13  ";
 
-      options += "--lumiPrec 1  ";
+	options += "--lumiPrec 1  ";
 
-      options += "--lumi ";
-      options += Form("%.1f  ", lumi);
+	options += "--lumi ";
+	options += Form("%.1f  ", lumi);
       
-      options += "--preserveBackgroundOrder  ";
-      options += "--preserveSignalOrder  ";
+	options += "--preserveBackgroundOrder  ";
+	options += "--preserveSignalOrder  ";
 
-      options += "--errHistAtBottom  ";
+	options += "--errHistAtBottom  ";
 
-      options += "--outOfFrame ";
+	options += "--outOfFrame ";
       
-      options += "--type Preliminary  ";
-      //options += "--type Simulation  ";
+	options += "--type Preliminary  ";
+	//options += "--type Simulation  ";
 
 
-      dataMCplotMaker(h_data, bkg_histos, bkg_titles, var_list_title[iVar], cat_title_for_subtitle, options, sig_histos, sig_titles, colors);
+	dataMCplotMaker(h_data, bkg_histos, bkg_titles, var_list_title[iVar], cat_title_for_subtitle, options, sig_histos, sig_titles, colors);
       
 
-      // Option String, Linear Scale Plot
-      options = "";
+	// Option String, Linear Scale Plot
+	options = "";
       
-      options += "--outputName ";
-      options += outDir;
-      options += "data_MC_plot";
-      if(plotByGenDecay) options  += "__byGenDecayMode__";
-      else                options += "__byProductionMode__";
-      options += var_list_label[iVar];
-      options += "__";
-      options += category.label;
-      options += "__linScale";
-      options += outExt;
-      options += "  ";
+	options += "--outputName ";
+	options += outDir;
+	options += "data_MC_plot";
+	if(plotByGenDecay) options  += "__byGenDecayMode__";
+	else                options += "__byProductionMode__";
+	options += var_list_label[iVar];
+	options += "__category_";
+	options += category.label;
+	options += "__recoClassy_";
+	options += recoClassyList[iReco].label;
+	options += "__linScale";
+	if( var_doRebin[iVar] ) options += "__rebinned";
+	options += outExt;
+	options += "  ";
       
-      options += "--xAxisLabel ";
-      options += var_list_xaxis[iVar];
-      options += "  ";
+	options += "--xAxisLabel ";
+	options += var_list_xaxis[iVar];
+	options += "  ";
 
-      options += "--noXaxisUnit ";
+	options += "--noXaxisUnit ";
       
-      options += "--legendRight -0.12  ";
-      options += "--legendUp 0.05  ";
+	options += "--legendRight -0.12  ";
+	options += "--legendUp 0.05  ";
 
-      options += "--energy 13  ";
+	options += "--energy 13  ";
 
-      options += "--lumiPrec 1  ";
+	options += "--lumiPrec 1  ";
       
-      options += "--lumi ";
-      options += Form("%.1f  ", lumi);
+	options += "--lumi ";
+	options += Form("%.1f  ", lumi);
       
-      options += "--preserveBackgroundOrder  ";
-      options += "--preserveSignalOrder  ";
+	options += "--preserveBackgroundOrder  ";
+	options += "--preserveSignalOrder  ";
 
-      options += "--errHistAtBottom  ";
+	options += "--errHistAtBottom  ";
 
-      options += "--outOfFrame ";
+	options += "--outOfFrame ";
 
-      options += "--isLinear ";
+	options += "--isLinear ";
 
-      options += "--yTitleOffset -0.3  ";
+	options += "--yTitleOffset -0.3  ";
       
-      options += "--type Preliminary  ";
-      //options += "--type Simulation  ";
+	options += "--type Preliminary  ";
+	//options += "--type Simulation  ";
       
-      dataMCplotMaker(h_data, bkg_histos, bkg_titles, var_list_title[iVar], cat_title_for_subtitle, options, sig_histos, sig_titles, colors);
+	dataMCplotMaker(h_data, bkg_histos, bkg_titles, var_list_title[iVar], cat_title_for_subtitle, options, sig_histos, sig_titles, colors);
 
 
 
-      //
-      // Clean up
-      //
-      if(plotData){
-	f_data->Close();
-	f_data->~TFile();
-      }
+	//
+	// Clean up
+	//
+	if(plotData){
+	  f_data->Close();
+	  f_data->~TFile();
+	}
       
-      for(int iBkg=0; iBkg<(int)bkg_files.size(); iBkg++){
-	bkg_files[iBkg]->Close();
-	bkg_files[iBkg]->~TFile();
-      }
+	for(int iBkg=0; iBkg<(int)bkg_files.size(); iBkg++){
+	  bkg_files[iBkg]->Close();
+	  bkg_files[iBkg]->~TFile();
+	}
       
-      for(int iSig=0; iSig<(int)sig_files.size(); iSig++){
-	sig_files[iSig]->Close();
-	sig_files[iSig]->~TFile();
-      }
+	for(int iSig=0; iSig<(int)sig_files.size(); iSig++){
+	  sig_files[iSig]->Close();
+	  sig_files[iSig]->~TFile();
+	}
 
-      //f_dummy->Close();
+	//f_dummy->Close();
 
      
-    } // end loop over categories
+      } // end loop over categories
 
+    } // end loop over recoClassyList
     
   } // end loop over vars
       
-
+  
 
   return;
 }

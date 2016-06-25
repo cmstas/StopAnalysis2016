@@ -52,9 +52,9 @@ selectionInfo::cutUtil::cutUtil( selectionInfo::ID cut ){
     break;
 
   case( k_goodVtx ):
-    label = "trigger_goodVtx";
-    title = "Trigger, Good Vertex";
-    tex   = "Trigger,~Good~Vertex";
+    label = "goodVtx";
+    title = "Good Vertex";
+    tex   = "Good~Vertex";
     break;
 
   case( k_ee1_selLep ):
@@ -367,9 +367,12 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
   case( k_trigger_diLep ):
     if( !babyAnalyzer.is_data() ) result = true;
     else{
-      if ( babyAnalyzer.HLT_DiEl() || 
-	   babyAnalyzer.HLT_DiMu() || 
-	   babyAnalyzer.HLT_MuE()     ) result = true;
+      if ( (babyAnalyzer.HLT_DiEl() &&
+	    abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==22) || 
+	   (babyAnalyzer.HLT_DiMu() &&
+	    abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==26) || 
+	   (babyAnalyzer.HLT_MuE()  &&
+	    abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==24)    ) result = true;
     }
     break;
 
@@ -400,19 +403,13 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     	(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTauVeto()) ) result = true;
   break;
 
-  //case( k_diLepton ):
-    //if( (babyAnalyzer.ngoodleps()>=2) ||
-    	//(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0) ||
-	//(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTrackVeto()) ) result = true;
-    //break;
-
   case( k_diLepton_bulkTTbar ):
     if( babyAnalyzer.lep1_p4().Pt()>30.0 && 
 	babyAnalyzer.lep2_p4().Pt()>15.0 &&
 	babyAnalyzer.lep1_MiniIso()<0.1 &&
 	babyAnalyzer.lep2_MiniIso()<0.1 &&
-	( (abs(babyAnalyzer.lep1_pdgid())==13 && babyAnalyzer.lep1_passTightID()) || (abs(babyAnalyzer.lep1_pdgid())==11 && fabs(babyAnalyzer.lep1_p4().Eta())<1.442 && babyAnalyzer.lep1_passMediumID()) ) &&
-	( (abs(babyAnalyzer.lep2_pdgid())==13 && babyAnalyzer.lep2_passTightID()) || (abs(babyAnalyzer.lep2_pdgid())==11 && fabs(babyAnalyzer.lep2_p4().Eta())<1.442 && babyAnalyzer.lep2_passMediumID()) )    ) result = true;
+	( (abs(babyAnalyzer.lep1_pdgid())==13 && babyAnalyzer.lep1_passTightID()) || (abs(babyAnalyzer.lep1_pdgid())==11 && fabs(babyAnalyzer.lep1_p4().Eta())<1.4442 && babyAnalyzer.lep1_passMediumID()) ) &&
+	( (abs(babyAnalyzer.lep2_pdgid())==13 && babyAnalyzer.lep2_passTightID()) || (abs(babyAnalyzer.lep2_pdgid())==11 && fabs(babyAnalyzer.lep2_p4().Eta())<1.4442 && babyAnalyzer.lep2_passMediumID()) )    ) result = true;
     break;
 
   case( k_oppSignLeptons ):
@@ -710,7 +707,7 @@ selectionInfo::vect_util selectionInfo::getCutList( analyzerInfo::ID analysis ){
     result.push_back( cutUtil(k_trackVeto) );
     result.push_back( cutUtil(k_tauVeto) );
     result.push_back( cutUtil(k_ge2_jets) );
-    result.push_back( cutUtil(k_ge1_bJets) );
+    result.push_back( cutUtil(k_ee0_bJets) );
     result.push_back( cutUtil(k_ge0p8_minDPhi) );
     break;
 

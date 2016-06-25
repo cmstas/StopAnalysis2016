@@ -50,9 +50,41 @@ int zeroOutNegativeYields(std::string f_input_dir){
   inclClassy_name += "__genClassy_";
   inclClassy_name += gen_incl.label;
 
+  // Get ee1lep genClassyInfo
+  genClassyInfo::genClassyUtil gen_ee1lep( genClassyInfo::k_ee1lep );
+  TString ee1lepClassy_name = "";
+  ee1lepClassy_name += "__genClassy_";
+  ee1lepClassy_name += gen_ee1lep.label;
+
+  // Get ee1lep_fromW genClassyInfo
+  genClassyInfo::genClassyUtil gen_ee1lep_fromW( genClassyInfo::k_ee1lep_fromW );
+  TString ee1lepFromWClassy_name = "";
+  ee1lepFromWClassy_name += "__genClassy_";
+  ee1lepFromWClassy_name += gen_ee1lep_fromW.label;
+  
+  // Get eel1ep_fromT genClassyInfo
+  genClassyInfo::genClassyUtil gen_ee1lep_fromT( genClassyInfo::k_ee1lep_fromTop );
+  TString ee1lepFromTClassy_name = "";
+  ee1lepFromTClassy_name += "__genClassy_";
+  ee1lepFromTClassy_name += gen_ee1lep_fromT.label;
+
+  // Get ge2lep genClassyInfo
+  genClassyInfo::genClassyUtil gen_ge2lep( genClassyInfo::k_ge2lep );
+  TString ge2lepClassy_name = "";
+  ge2lepClassy_name += "__genClassy_";
+  ge2lepClassy_name += gen_ge2lep.label;
+
+  // Get ZtoNuNu genClassyInfo
+  genClassyInfo::genClassyUtil gen_ZtoNuNu( genClassyInfo::k_ZtoNuNu );
+  TString ZtoNuNuClassy_name = "";
+  ZtoNuNuClassy_name += "__genClassy_";
+  ZtoNuNuClassy_name += gen_ZtoNuNu.label;
+
+
   // Get list of genClassy components to resum inclusive
   genClassyInfo::vect_id genComponentList;
-  genComponentList.push_back( genClassyInfo::k_ee1lep );
+  genComponentList.push_back( genClassyInfo::k_ee1lep_fromW );
+  genComponentList.push_back( genClassyInfo::k_ee1lep_fromTop );
   genComponentList.push_back( genClassyInfo::k_ge2lep );
   genComponentList.push_back( genClassyInfo::k_ZtoNuNu );
   
@@ -104,22 +136,103 @@ int zeroOutNegativeYields(std::string f_input_dir){
 	      foundNegCategory=true;
 	    }
 	  }
-	  if(foundNegCategory && !h_name.Contains(inclClassy_name)){
+
+	  // if ee1lep replace name with inclusive name
+	  if(foundNegCategory){
 	    nZeros++;
-	    h1_inclResumList.push_back(h_name);
-	  } // end if not an inclusive histogram
+
+	    if(h_name.Contains(ee1lepClassy_name) && !h_name.Contains(ee1lepFromWClassy_name) && !h_name.Contains(ee1lepFromTClassy_name)){
+	      TString replace_str = ee1lepClassy_name;
+	      TString h_name_incl = h_name;
+	      h_name_incl.ReplaceAll(ee1lepClassy_name,inclClassy_name);
+	      h1_inclResumList.push_back(h_name_incl);
+	    } // end if ee1lep
+
+	    // if ee1lepFromW replace name with inclusive name
+	    if(h_name.Contains(ee1lepFromWClassy_name)){
+	      TString replace_str = ee1lepFromWClassy_name;
+	      TString h_name_incl = h_name;
+	      h_name_incl.ReplaceAll(ee1lepFromWClassy_name,inclClassy_name);
+	      h1_inclResumList.push_back(h_name_incl);
+	    } // end if ee1lep_fromW
+
+	    // if ee1lepFromT replace name with inclusive name
+	    if(h_name.Contains(ee1lepFromTClassy_name)){
+	      TString replace_str = ee1lepFromTClassy_name;
+	      TString h_name_incl = h_name;
+	      h_name_incl.ReplaceAll(ee1lepFromTClassy_name,inclClassy_name);
+	      h1_inclResumList.push_back(h_name_incl);
+	    } // end if ee1lep_fromT
+	    
+	    // if ge2lep replace name with inclusive name
+	    if(h_name.Contains(ge2lepClassy_name)){
+	      TString replace_str = ge2lepClassy_name;
+	      TString h_name_incl = h_name;
+	      h_name_incl.ReplaceAll(ge2lepClassy_name,inclClassy_name);
+	      h1_inclResumList.push_back(h_name_incl);
+	    } // end if ge2lep
+
+	    // if ZtoNuNu replace name with inclusive name
+	    if(h_name.Contains(ZtoNuNuClassy_name)){
+	      TString replace_str = ZtoNuNuClassy_name;
+	      TString h_name_incl = h_name;
+	      h_name_incl.ReplaceAll(ZtoNuNuClassy_name,inclClassy_name);
+	      h1_inclResumList.push_back(h_name_incl);
+	    } // end if ZtoNuNu
 	  
-	}
-	// Else check if integral is negative
+	  } // end if foundNeg Category
+
+	} // end if yields
+
+	// Else if normal histogram, check if integral is negative
 	else if(h_clone->Integral(0,-1)<0.0){
 	  h_clone->Reset();
 	  nZeros++;
-	  if(!h_name.Contains(inclClassy_name)){
-	    h1_inclResumList.push_back(h_name);
-	  } // end if not an inclusive histogram
 
-	}
-      }
+	  // if ee1lep repalce name wiht inclusive name
+	  if(h_name.Contains(ee1lepClassy_name) && !h_name.Contains(ee1lepFromWClassy_name) && !h_name.Contains(ee1lepFromTClassy_name)){
+	    TString replace_str = ee1lepClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ee1lepClassy_name,inclClassy_name);
+	    h1_inclResumList.push_back(h_name_incl);
+	  } // end if ee1lep
+	  
+	  // if ee1lepFromW replace name with inclusive name
+	  if(h_name.Contains(ee1lepFromWClassy_name)){
+	    TString replace_str = ee1lepFromWClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ee1lepFromWClassy_name,inclClassy_name);
+	    h1_inclResumList.push_back(h_name_incl);
+	  } // end if ee1lep_fromW
+	  
+	  // if ee1lepFromT replace name with inclusive name
+	  if(h_name.Contains(ee1lepFromTClassy_name)){
+	    TString replace_str = ee1lepFromTClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ee1lepFromTClassy_name,inclClassy_name);
+	    h1_inclResumList.push_back(h_name_incl);
+	  } // end if ee1lep_fromT
+	    
+	  // if ge2lep replace name with inclusive name
+	  if(h_name.Contains(ge2lepClassy_name)){
+	    TString replace_str = ge2lepClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ge2lepClassy_name,inclClassy_name);
+	    h1_inclResumList.push_back(h_name_incl);
+	  } // end if ge2lep
+
+	  // if ZtoNuNu replace name with inclusive name
+	  if(h_name.Contains(ZtoNuNuClassy_name)){
+	    TString replace_str = ZtoNuNuClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ZtoNuNuClassy_name,inclClassy_name);
+	    h1_inclResumList.push_back(h_name_incl);
+	  } // end if ZtoNuNu
+
+	  
+	} // end if integral <0.0
+	
+      } // end if TH1D
 
       if(cl->InheritsFrom("TH2D")){
 	nHists++;
@@ -133,13 +246,54 @@ int zeroOutNegativeYields(std::string f_input_dir){
 	if(h_clone->Integral(0,-1)<0.0){
 	  h_clone->Reset();
 	  nZeros++;
-	  if(!h_name.Contains(inclClassy_name)){
-	    h2_inclResumList.push_back(h_name);
-	  } // end if not an inclusive histogram
-	}
-      }
+
+	  // if ee1lep repalce name wiht inclusive name
+	  if(h_name.Contains(ee1lepClassy_name) && !h_name.Contains(ee1lepFromWClassy_name) && !h_name.Contains(ee1lepFromTClassy_name)){
+	    TString replace_str = ee1lepClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ee1lepClassy_name,inclClassy_name);
+	    h2_inclResumList.push_back(h_name_incl);
+	  } // end if ee1lep
+	  
+	  // if ee1lepFromW replace name with inclusive name
+	  if(h_name.Contains(ee1lepFromWClassy_name)){
+	    TString replace_str = ee1lepFromWClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ee1lepFromWClassy_name,inclClassy_name);
+	    h2_inclResumList.push_back(h_name_incl);
+	  } // end if ee1lep_fromW
+	  
+	  // if ee1lepFromT replace name with inclusive name
+	  if(h_name.Contains(ee1lepFromTClassy_name)){
+	    TString replace_str = ee1lepFromTClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ee1lepFromTClassy_name,inclClassy_name);
+	    h2_inclResumList.push_back(h_name_incl);
+	  } // end if ee1lep_fromT
+	    
+	  // if ge2lep replace name with inclusive name
+	  if(h_name.Contains(ge2lepClassy_name)){
+	    TString replace_str = ge2lepClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ge2lepClassy_name,inclClassy_name);
+	    h2_inclResumList.push_back(h_name_incl);
+	  } // end if ge2lep
+
+	  // if ZtoNuNu replace name with inclusive name
+	  if(h_name.Contains(ZtoNuNuClassy_name)){
+	    TString replace_str = ZtoNuNuClassy_name;
+	    TString h_name_incl = h_name;
+	    h_name_incl.ReplaceAll(ZtoNuNuClassy_name,inclClassy_name);
+	    h2_inclResumList.push_back(h_name_incl);
+	  } // end if ZtoNuNu
+
+
+	 
+	} // end if negative integral
+
+      } // end if TH2D
       
-    }
+    } // end while loop over TKeys
     
     f_out->Write();
     f_out->Close();
@@ -174,15 +328,15 @@ int zeroOutNegativeYields(std::string f_input_dir){
 
 	TString h_name_component = h_incl->GetName();
 	h_name_component.ReplaceAll(inclClassy_name, replace_str);
-
+	
 	TH1D *h_component = (TH1D*)f_out->Get(h_name_component);
-		
+	
 	h_incl->Add(h_component);
       } // end loop over components
 
     } // end loop over h1 to resum
 
-
+    
     // TH2D
     for(int iH2=0; iH2<(int)h2_inclResumList.size(); iH2++){
       
@@ -206,7 +360,7 @@ int zeroOutNegativeYields(std::string f_input_dir){
       } // end loop over components
 
     } // end loop over h2 to resum
-  
+    
     
     f_out->Write();
     f_out->Close();

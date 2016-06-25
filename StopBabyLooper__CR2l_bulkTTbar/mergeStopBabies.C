@@ -190,7 +190,7 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
 
   // Rare
   addSet.first = sampleInfo::k_rare;
-  addSet.second.push_back( mergeUtil(sampleInfo::k_TTW) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_TTV) );
   //addSet.second.push_back( mergeUtil(sampleInfo::k_tZq) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_diBoson) );
   addList.push_back(addSet);
