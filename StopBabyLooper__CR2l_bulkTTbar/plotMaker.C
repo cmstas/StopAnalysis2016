@@ -39,7 +39,7 @@ void plotMaker( bool plotByGenDecay=true ){
   TString outExt = ".pdf";
   
   //double lumi    = 5.0; // for studies
-  double lumi    = 2.6; // 2016
+  double lumi    = 3.99; // 2016
   
   double sig_SF  = 1.0;
 

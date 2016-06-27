@@ -34,7 +34,7 @@ int bkgEstimate_diLepton(){
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 10.0/2.6; // rescale to new lumi
+  //double rescale = 10.0/3.99; // rescale to new lumi
 
   TString yield_base = "yields";
 
@@ -124,8 +124,8 @@ int bkgEstimate_diLepton(){
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_250to325met ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_325toInfmet ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_250to350met ) );
-  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_350toInfmet ) );
-  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_350toInfmet ) );
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_350to450met ) );
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_450toInfmet ) );
 
   
   bool oneTF = true;
@@ -820,7 +820,7 @@ int bkgEstimate_diLepton(){
     //
     if(oneTF){
       fprintf(uncFile, "\\hline \n");
-      fprintf(uncFile, "Total Uncertainties & %.2f\\%% & & & %.2f\\%% & & %.2f\\%% & %.2f\\%% ",(100*CR_data_cr2sr_error/CR_data_cr2sr_yield), (100*tf_cr2sr_err/tf_cr2sr), (100*tf_srBin_err/tf_srBin), (100*sr_estimate_error/sr_estimate) );
+      fprintf(uncFile, "Total Uncertainties & %.2f\\%% & & & %.2f\\%% & %.2f\\%% ",(100*CR_data_cr2sr_error/CR_data_cr2sr_yield), (100*tf_cr2sr_err/tf_cr2sr), (100*sr_estimate_error/sr_estimate) );
     }
     else{
       fprintf(uncFile, "\\hline \n");

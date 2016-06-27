@@ -31,7 +31,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 10.0/2.6; // rescale to new lumi
+  //double rescale = 10.0/3.99; // rescale to new lumi
 
   
   //
