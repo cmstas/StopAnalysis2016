@@ -61,7 +61,7 @@ int stopBabyLooper(){
   sampleInfo::vect_id sampleList;
   sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
-  //sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ); 
+  //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
   //
@@ -437,7 +437,122 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
       h1_met = new histogramInfo::h1_Util( f_output, "met", "MET", 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
     }
 
+
+    //
+    // lep eta
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_lep_eta = NULL;
+    histogramInfo::h1_Util *h1_scan_lep_eta[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "lep_eta__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "lepton #eta, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_lep_eta[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 24, -2.4, 2.4, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_lep_eta = new histogramInfo::h1_Util( f_output, "lep_eta", "lepton #eta", 24, -2.4, 2.4, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+    //
+    // el eta
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_el_eta = NULL;
+    histogramInfo::h1_Util *h1_scan_el_eta[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "el_eta__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "electron #eta, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_el_eta[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 24, -2.4, 2.4, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_el_eta = new histogramInfo::h1_Util( f_output, "el_eta", "electron #eta", 24, -2.4, 2.4, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+    //
+    // mu eta
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_mu_eta = NULL;
+    histogramInfo::h1_Util *h1_scan_mu_eta[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "mu_eta__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "muon #eta, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_mu_eta[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 24, -2.4, 2.4, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_mu_eta = new histogramInfo::h1_Util( f_output, "mu_eta", "muon #eta", 24, -2.4, 2.4, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+
+    TH1D *h1__recoLep_pt_type = new TH1D("h1__recoLep_pt_type", "reco lepton pT, flavour", 5, 0.0, 5.0);
+    h1__recoLep_pt_type->SetDirectory(f_output);
+    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(1,"el, pT<45");
+    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(2,"el, pT>45");
+    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(3,"mu, pT<30");
+    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(4,"mu, pT>30");
+    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(5,"sum");
     
+
+
+    TH2D *h2__recoLep_vs_genLep = new TH2D("h2__recoLep_vs_genLep", "reco lep flavour vs gen lep flavour;reco lep; gen lep", 2, 0.0, 2.0, 3, 0.0, 3.0 );
+    h2__recoLep_vs_genLep->SetDirectory(f_output);
+    h2__recoLep_vs_genLep->GetXaxis()->SetBinLabel(1, "el");
+    h2__recoLep_vs_genLep->GetXaxis()->SetBinLabel(2, "mu");
+    h2__recoLep_vs_genLep->GetYaxis()->SetBinLabel(1, "el");
+    h2__recoLep_vs_genLep->GetYaxis()->SetBinLabel(2, "mu");
+    h2__recoLep_vs_genLep->GetYaxis()->SetBinLabel(3, "tau");
+
     
     //
     // Event Counters
@@ -537,6 +652,14 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	systematicInfo::vect_util_wgt sysWgtsList;
 	sysWgtsList = systematicInfo::getSystematicWeightsFromList( systematicList, wgtInfo );
 
+	double nominal_wgt = scaleToLumi_wgt;
+	for( int iSys=0; iSys<(int)sysWgtsList.size(); iSys++ ){
+	  if( sysWgtsList[iSys].first.id == systematicInfo::k_nominal ){
+	    nominal_wgt = sysWgtsList[iSys].second;
+	    break;
+	  }
+	}
+
 
 	//
 	// Check gen classifications that pass for this event
@@ -585,6 +708,29 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	//
 	// Fill Histograms
 	//
+	if( ngoodjets()>=4 &&
+	    pfmet()>=250.0 &&
+	    pfmet()<325.0     ){
+	  
+	  h1__recoLep_pt_type->Fill( "sum", nominal_wgt );
+
+	  if( abs(lep1_pdgid())==11 && lep1_p4().Pt()<45.0 ){
+	    h1__recoLep_pt_type->Fill("el, pT<45", nominal_wgt);
+	  }
+	  if( abs(lep1_pdgid())==11 && lep1_p4().Pt()>=45.0 ){
+	    h1__recoLep_pt_type->Fill("el, pT>45", nominal_wgt);
+	  }
+
+	  
+	  if( abs(lep1_pdgid())==13 && lep1_p4().Pt()<30.0 ){
+	    h1__recoLep_pt_type->Fill("mu, pT<30", nominal_wgt);
+	  }
+	  if( abs(lep1_pdgid())==13 && lep1_p4().Pt()>=30.0 ){
+	    h1__recoLep_pt_type->Fill("mu, pT>30", nominal_wgt);
+	  }
+
+	}   
+
 	
 	// Loop over systematics
 	for( int iSys=0; iSys<(int)sysWgtsList.size(); iSys++){
@@ -631,6 +777,19 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		    // met
 		    if( h1_scan_met[iMassPt]->histos[iHist] ) h1_scan_met[iMassPt]->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
 
+		    // lep1 eta
+		    if( h1_scan_lep_eta[iMassPt]->histos[iHist] ) h1_scan_lep_eta[iMassPt]->histos[iHist]->Fill( lep1_p4().Eta(), sysWgtsList[iSys].second );
+
+		    // el eta
+		    if( abs(lep1_pdgid())==11 ){
+		      if( h1_scan_el_eta[iMassPt]->histos[iHist] ) h1_scan_el_eta[iMassPt]->histos[iHist]->Fill( lep1_p4().Eta(), sysWgtsList[iSys].second );
+		    }
+
+		    // mu eta
+		    if( abs(lep1_pdgid())==13 ){
+		      if( h1_scan_mu_eta[iMassPt]->histos[iHist] ) h1_scan_mu_eta[iMassPt]->histos[iHist]->Fill( lep1_p4().Eta(), sysWgtsList[iSys].second );
+		    }
+
 
 		  } // end loop over mass points
 
@@ -671,6 +830,21 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		  // met
 		  if( h1_met->histos[iHist] ) h1_met->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
 
+
+		  // lep1 eta
+		  if( h1_lep_eta->histos[iHist] ) h1_lep_eta->histos[iHist]->Fill( lep1_p4().Eta(), sysWgtsList[iSys].second );
+
+
+		  // el eta
+		  if( abs(lep1_pdgid())==11 ){
+		    if( h1_el_eta->histos[iHist] ) h1_el_eta->histos[iHist]->Fill( lep1_p4().Eta(), sysWgtsList[iSys].second );
+		  }
+
+		  // mu eta
+		  if( abs(lep1_pdgid())==13 ){
+		    if( h1_mu_eta->histos[iHist] ) h1_mu_eta->histos[iHist]->Fill( lep1_p4().Eta(), sysWgtsList[iSys].second );
+		  }
+		  
 
 		} // end if not signal scan
 		

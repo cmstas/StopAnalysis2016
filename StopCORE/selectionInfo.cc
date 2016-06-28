@@ -167,7 +167,7 @@ selectionInfo::cutUtil::cutUtil( selectionInfo::ID cut ){
 
 //////////////////////////////////////////////////////////////////////
 
-selectionInfo::selectionUtil::selectionUtil( vect_util cuts, sampleInfo::ID sample_id ){
+selectionInfo::selectionUtil::selectionUtil( vect_util cuts, sampleInfo::ID sample_id, bool add2ndLepToMet ){
   
   v_cuts.clear();
   v_cuts = cuts;
@@ -181,6 +181,8 @@ selectionInfo::selectionUtil::selectionUtil( vect_util cuts, sampleInfo::ID samp
   vect_cutflow_nMinus1_sig.clear();
 
   sample_info = new sampleInfo::sampleUtil( sample_id );
+
+  addSecondLepToMet = add2ndLepToMet;
   
   if( sample_info->isData ){
     //std::cout << "    Loading bad event files" << std::endl;
@@ -322,6 +324,37 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
 
   bool result = false;
 
+  // If adding 2nd lepton to Met, recalculate appropriate vars
+  double met = babyAnalyzer.pfmet();
+  double met_phi = babyAnalyzer.pfmet_phi();
+  double dphi_metLep = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
+  double mt = babyAnalyzer.mt_met_lep();
+  double minDPhi_met_j1_j1 = babyAnalyzer.mindphi_met_j1_j2();
+  if( addSecondLepToMet ){
+
+    if( (babyAnalyzer.ngoodleps()>=2) ||
+    	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
+
+      double metX = met*TMath::Cos(met_phi);
+      double metY = met*TMath::Sin(met_phi);
+
+      metX += babyAnalyzer.lep2_p4().Px();
+      metY += babyAnalyzer.lep2_p4().Py();
+
+      met = sqrt( metX*metX + metY*metY );
+      met_phi = TMath::ACos( metY/metX );
+      dphi_metLep = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
+      mt = sqrt(2*babyAnalyzer.lep1_p4().pt()*met*(1-TMath::Cos(dphi_metLep)));
+
+      double minDPhi_met_j1 = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(0).Phi()));
+      double minDPhi_met_j2 = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(1).Phi()));
+      minDPhi_met_j1_j1 = std::min( minDPhi_met_j1, minDPhi_met_j2 );
+       
+    } // min if 2nd lepton exists
+  } // end if addSeocnLepToMet
+
+
+  // Switch Case
   switch( cut ){
 
   case( k_duplicateRemoval ):
@@ -396,11 +429,16 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     if( babyAnalyzer.PassTauVeto() ) result = true;
     break;
 	
+  //case( k_diLepton ):
+    //if( (babyAnalyzer.ngoodleps()==2 && babyAnalyzer.PassTrackVeto() && babyAnalyzer.PassTauVeto() ) ||
+    //	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()==2 && babyAnalyzer.lep2_p4().Pt()>10.0 && babyAnalyzer.PassTrackVeto() && babyAnalyzer.PassTauVeto()) ||
+    // 	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()==1 && (!babyAnalyzer.PassTrackVeto() || !babyAnalyzer.PassTauVeto()) )  ) result = true;
+  //break;
+
   case( k_diLepton ):
     if( (babyAnalyzer.ngoodleps()>=2) ||
-    	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0) ||
-    	(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTrackVeto()) ||
-    	(babyAnalyzer.ngoodleps()==1 && !babyAnalyzer.PassTauVeto()) ) result = true;
+    	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ||
+    	(babyAnalyzer.ngoodleps()==1 && (!babyAnalyzer.PassTrackVeto() || !babyAnalyzer.PassTauVeto()) )     ) result = true;
   break;
 
   case( k_diLepton_bulkTTbar ):
@@ -439,19 +477,19 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     break;
  
   case( k_ge50_met ):
-    if( babyAnalyzer.pfmet()>=50.0 ) result = true;
+    if( met>=50.0 ) result = true;
     break;
 
   case( k_ge250_met ):
-    if( babyAnalyzer.pfmet()>=250.0 ) result = true;
+    if( met>=250.0 ) result = true;
     break;
 
   case( k_ge150_mt ):
-    if( babyAnalyzer.mt_met_lep()>=150.0 ) result = true;
+    if( mt>=150.0 ) result = true;
     break;
 
   case( k_ge0p8_minDPhi ):
-    if( babyAnalyzer.mindphi_met_j1_j2()>=0.8 ) result = true;
+    if(minDPhi_met_j1_j1>=0.8 ) result = true;
     break;
 
   default:

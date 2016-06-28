@@ -39,7 +39,7 @@ void plotMaker( bool plotByGenDecay=true ){
   TString outExt = ".pdf";
   
   //double lumi    = 5.0; // for studies
-  double lumi    = 3.99; // 2016
+  double lumi    = 2.6; // 2016
   
   double sig_SF  = 1.0;
 
@@ -352,7 +352,28 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBins.push_back(xRebins_met);
   var_rebin_xBinsSF.push_back(xRebinsSF_met);
 
+
+  // Plot MT
+  var_list_label.push_back( "mt" );
+  var_list_title.push_back( "MT" );
+  var_list_xaxis.push_back( "MT [GeV]" );
   
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
   
   //
   // Loop over files and grab histograms

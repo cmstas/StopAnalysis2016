@@ -55,7 +55,7 @@ int stopBabyLooper(){
   sampleInfo::vect_id sampleList;
   sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
-  //sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
+  //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
   //
@@ -167,7 +167,8 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     // Declare Selection Object
     //
     cout << "    Loading selectorUtil" << endl << endl;
-    selectionInfo::selectionUtil selector( cutList, sample.id );
+    bool add2ndLeptonToMet = true;
+    selectionInfo::selectionUtil selector( cutList, sample.id, add2ndLeptonToMet );
     selector.setupCutflowHistos( f_output );
 
 
@@ -404,7 +405,53 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     }
 
 
+
+    //
+    // MT
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_mt = NULL;
+    histogramInfo::h1_Util *h1_scan_mt[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "mt__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "MT, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_mt[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_mt = new histogramInfo::h1_Util( f_output, "mt", "MT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+
+    TH2D *h2__lep1_vs_secondLepType = new TH2D("h2__lep1_vs_secondLepType", "leading lepton reco vs seocnd lepton reco", 2, 0.0, 2.0, 5, 0.0, 5.0);
+    h2__lep1_vs_secondLepType->SetDirectory(f_output);
+    h2__lep1_vs_secondLepType->GetXaxis()->SetBinLabel(1, "el");
+    h2__lep1_vs_secondLepType->GetXaxis()->SetBinLabel(2, "mu");
+    h2__lep1_vs_secondLepType->GetYaxis()->SetBinLabel(1, "good el");
+    h2__lep1_vs_secondLepType->GetYaxis()->SetBinLabel(2, "good mu");
+    h2__lep1_vs_secondLepType->GetYaxis()->SetBinLabel(3, "veto el");
+    h2__lep1_vs_secondLepType->GetYaxis()->SetBinLabel(4, "veto mu");
+    h2__lep1_vs_secondLepType->GetYaxis()->SetBinLabel(5, "isoTrk || pfTau");
     
+
+
     //
     // Event Counters
     //
@@ -502,6 +549,15 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	//
 	systematicInfo::vect_util_wgt sysWgtsList;
 	sysWgtsList = systematicInfo::getSystematicWeightsFromList( systematicList, wgtInfo );
+	
+	double nominal_wgt = scaleToLumi_wgt;
+	for( int iSys=0; iSys<(int)sysWgtsList.size(); iSys++ ){
+	  if( sysWgtsList[iSys].first.id == systematicInfo::k_nominal ){
+	    nominal_wgt = sysWgtsList[iSys].second;
+	    break;
+	  }
+	}
+
 
 
 	//
@@ -522,18 +578,100 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	// Check categories that pass for this event
 	//
 	categoryInfo::vect_util_passBool passCatList;
-	passCatList = categoryInfo::passCategoriesFromList( catList, true );
+	passCatList = categoryInfo::passCategoriesFromList( catList, true, add2ndLeptonToMet );
 
 	
 	//
 	// Compute Event Variables
 	//
 
+	// If adding 2nd lepton to Met, recalculate appropriate vars
+	double met = pfmet();
+	double met_phi = pfmet_phi();
+	double dphi_metLep = TMath::ACos(TMath::Cos(met_phi - lep1_p4().Phi()));
+	double mt = mt_met_lep();
+	double minDPhi_met_j1_j1 = mindphi_met_j1_j2();
+	if( add2ndLeptonToMet ){
+	  
+	  if( (ngoodleps()>=2) ||
+	      (ngoodleps()==1 && nvetoleps()>=2 && lep2_p4().Pt()>10.0 ) ){
+	    
+	    double metX = met*TMath::Cos(met_phi);
+	    double metY = met*TMath::Sin(met_phi);
+	    
+	    metX += lep2_p4().Px();
+	    metY += lep2_p4().Py();
+	    
+	    met = sqrt( metX*metX + metY*metY );
+	    met_phi = TMath::ACos( metY/metX );
+	    dphi_metLep = TMath::ACos(TMath::Cos(met_phi - lep1_p4().Phi()));
+	    mt = sqrt(2*lep1_p4().pt()*met*(1-TMath::Cos(dphi_metLep)));
+	    
+	    double minDPhi_met_j1 = TMath::ACos(TMath::Cos(met_phi - ak4pfjets_p4().at(0).Phi()));
+	    double minDPhi_met_j2 = TMath::ACos(TMath::Cos(met_phi - ak4pfjets_p4().at(1).Phi()));
+	    minDPhi_met_j1_j1 = std::min( minDPhi_met_j1, minDPhi_met_j2 );
+	    
+	  } // min if 2nd lepton exists
+	} // end if addSeocnLepToMet
+
 
 
 	//
 	// Fill Histograms
 	//
+	if( ngoodjets()>=4 &&
+	    met>=250.0    ){
+	  
+	  if( abs(lep1_pdgid())==11 ){
+	    
+	    if( abs(lep2_pdgid())==11 && ngoodleps()==2 ){
+	      h2__lep1_vs_secondLepType->Fill( "el", "good el", nominal_wgt );
+	    }
+	    
+	    else if( abs(lep2_pdgid())==11 && ngoodleps()==1 && nvetoleps()>=2 ){
+	      h2__lep1_vs_secondLepType->Fill( "el", "veto el", nominal_wgt );
+	    }
+	    
+	    else if( abs(lep2_pdgid())==13 && ngoodleps()==2 ){
+	      h2__lep1_vs_secondLepType->Fill( "el", "good mu", nominal_wgt );
+	    }
+
+	    else if( abs(lep2_pdgid())==13 && ngoodleps()==1 && nvetoleps()>=2 ){
+	      h2__lep1_vs_secondLepType->Fill( "el", "veto mu", nominal_wgt );
+	    }
+	    
+	    else if( !PassTrackVeto() || !PassTauVeto() ){
+	      h2__lep1_vs_secondLepType->Fill( "el", "isoTrk || pfTau", nominal_wgt );
+	    }
+
+	  }
+
+	  if( abs(lep1_pdgid())==13 ){
+	    
+	    if( abs(lep2_pdgid())==11 && ngoodleps()==2 ){
+	      h2__lep1_vs_secondLepType->Fill( "mu", "good el", nominal_wgt );
+	    }
+	    
+	    else if( abs(lep2_pdgid())==11 && ngoodleps()==1 && nvetoleps()>=2 ){
+	      h2__lep1_vs_secondLepType->Fill( "mu", "veto el", nominal_wgt );
+	    }
+	    
+	    else if( abs(lep2_pdgid())==13 && ngoodleps()==2 ){
+	      h2__lep1_vs_secondLepType->Fill( "mu", "good mu", nominal_wgt );
+	    }
+
+	    else if( abs(lep2_pdgid())==13 && ngoodleps()==1 && nvetoleps()>=2 ){
+	      h2__lep1_vs_secondLepType->Fill( "mu", "veto mu", nominal_wgt );
+	    }
+	    
+	    else if( !PassTrackVeto() || !PassTauVeto() ){
+	      h2__lep1_vs_secondLepType->Fill( "mu", "isoTrk || pfTau", nominal_wgt );
+	    }
+
+	  }
+
+	}
+
 	
 	// Loop over systematics
 	for( int iSys=0; iSys<(int)sysWgtsList.size(); iSys++){
@@ -578,7 +716,11 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		    if( h1_scan_mt2w[iMassPt]->histos[iHist] ) h1_scan_mt2w[iMassPt]->histos[iHist]->Fill( MT2W(), sysWgtsList[iSys].second );
 
 		    // met
-		    if( h1_scan_met[iMassPt]->histos[iHist] ) h1_scan_met[iMassPt]->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+		    if( h1_scan_met[iMassPt]->histos[iHist] ) h1_scan_met[iMassPt]->histos[iHist]->Fill( met, sysWgtsList[iSys].second );
+
+		    // mt
+		    if( h1_scan_mt[iMassPt]->histos[iHist] ) h1_scan_mt[iMassPt]->histos[iHist]->Fill( mt, sysWgtsList[iSys].second );
+
 
 		  } // end loop over mass points
 
@@ -599,8 +741,11 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		  if( h1_mt2w->histos[iHist] ) h1_mt2w->histos[iHist]->Fill( MT2W(), sysWgtsList[iSys].second );
 		  
 		  // met
-		  if( h1_met->histos[iHist] ) h1_met->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+		  if( h1_met->histos[iHist] ) h1_met->histos[iHist]->Fill( met, sysWgtsList[iSys].second );
 
+		  // mt
+		  if( h1_mt->histos[iHist] ) h1_mt->histos[iHist]->Fill( mt, sysWgtsList[iSys].second );
+		  
 		}
 		
 		

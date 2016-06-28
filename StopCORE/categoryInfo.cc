@@ -342,10 +342,30 @@ categoryInfo::categoryUtil::categoryUtil( categoryInfo::ID category ){
 
 //////////////////////////////////////////////////////////////////////
 
-bool categoryInfo::passCategory( categoryInfo::ID category ){
+bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet ){
 
   bool result = false;
 
+  // If adding 2nd lepton to met, recalculate appropriate vars
+  double met = babyAnalyzer.pfmet();
+  double met_phi = babyAnalyzer.pfmet_phi();
+  if( add2ndLepToMet ){
+    if( (babyAnalyzer.ngoodleps()>=2) ||
+    	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
+
+      double metX = met*TMath::Cos(met_phi);
+      double metY = met*TMath::Sin(met_phi);
+
+      metX += babyAnalyzer.lep2_p4().Px();
+      metY += babyAnalyzer.lep2_p4().Py();
+
+      met = sqrt( metX*metX + metY*metY );
+
+    } // end if 2nd lepton to add met to
+  } // end if add 2nd lepton to emt
+
+
+  // Switch case
   switch( category ){
 
   case( k_incl ):
@@ -377,13 +397,13 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
 
   case( k_ee2jets_250to350met ):
     if( babyAnalyzer.ngoodjets()==2 &&
-	babyAnalyzer.pfmet()>=250.0 &&
-	babyAnalyzer.pfmet()<350       ) result = true;
+	met>=250.0 &&
+	met<350       ) result = true;
     break;
 
   case( k_ee2jets_350toInfmet ):
     if( babyAnalyzer.ngoodjets()==2 &&
-	babyAnalyzer.pfmet()>=350.0     ) result = true;
+	met>=350.0     ) result = true;
     break; 
 
   case( k_ee2jets_ge6p4modTop ):
@@ -394,14 +414,14 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
   case( k_ee2jets_ge6p4modTop_250to350met ):
     if( babyAnalyzer.ngoodjets()==2 &&
 	babyAnalyzer.topnessMod()>=6.4 &&
-	babyAnalyzer.pfmet()>=250.0 &&
-	babyAnalyzer.pfmet()<350           ) result = true;
+	met>=250.0 &&
+	met<350           ) result = true;
     break;
 
   case( k_ee2jets_ge6p4modTop_350toInfmet ):
     if( babyAnalyzer.ngoodjets()==2 &&
 	babyAnalyzer.topnessMod()>=6.4 &&
-	babyAnalyzer.pfmet()>=350.0        ) result = true;
+	met>=350.0        ) result = true;
     break;
 
   case( k_ge3jets ):
@@ -424,13 +444,13 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
 
   case( k_ee3jets_250to350met ):
     if( babyAnalyzer.ngoodjets()==3 &&
-	babyAnalyzer.pfmet()>=250.0 &&
-	babyAnalyzer.pfmet()<350           ) result = true;
+	met>=250.0 &&
+	met<350           ) result = true;
     break;
 
   case( k_ee3jets_350toInfmet ):
     if( babyAnalyzer.ngoodjets()==3 &&
-	babyAnalyzer.pfmet()>=350.0    ) result = true;
+	met>=350.0    ) result = true;
     break;
 
   case( k_ee3jets_lt200mt2w ):
@@ -446,14 +466,14 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
   case( k_ee3jets_ge200mt2w_250to350met ):
     if( babyAnalyzer.ngoodjets()==3 &&
 	babyAnalyzer.MT2W()>=200.0 && 
-	babyAnalyzer.pfmet()>=250.0 &&
-	babyAnalyzer.pfmet()<350        ) result = true;
+	met>=250.0 &&
+	met<350        ) result = true;
     break;
 
   case( k_ee3jets_ge200mt2w_350toInfmet ):
     if( babyAnalyzer.ngoodjets()==3 &&
 	babyAnalyzer.MT2W()>=200.0 && 
-	babyAnalyzer.pfmet()>=350.0    ) result = true;
+	met>=350.0    ) result = true;
     break;
 
   case( k_ge4jets ):
@@ -462,30 +482,30 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
     
   case( k_ge4jets_250to325met ):
     if( babyAnalyzer.ngoodjets()>=4 &&
-	babyAnalyzer.pfmet()>=250.0 &&
-	babyAnalyzer.pfmet()<325.0       ) result = true;
+	met>=250.0 &&
+	met<325.0       ) result = true;
     break;
 
   case( k_ge4jets_325toInfmet ):
     if( babyAnalyzer.ngoodjets()>=4 &&
-	babyAnalyzer.pfmet()>=325.0    ) result = true;
+	met>=325.0    ) result = true;
     break;
 
   case( k_ge4jets_250to350met ):
     if( babyAnalyzer.ngoodjets()>=4 &&
-	babyAnalyzer.pfmet()>=250.0 &&
-	babyAnalyzer.pfmet()<350.0       ) result = true;
+	met>=250.0 &&
+	met<350.0       ) result = true;
     break;
 
   case( k_ge4jets_350to450met ):
     if( babyAnalyzer.ngoodjets()>=4 &&
-	babyAnalyzer.pfmet()>=350.0 &&
-	babyAnalyzer.pfmet()<450.0       ) result = true;
+	met>=350.0 &&
+	met<450.0       ) result = true;
     break;
 
   case( k_ge4jets_450toInfmet ):
     if( babyAnalyzer.ngoodjets()>=4 &&
-	babyAnalyzer.pfmet()>=450.0    ) result = true;
+	met>=450.0    ) result = true;
     break;
 
   case( k_ge4jets_lt200mt2w ):
@@ -496,14 +516,14 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
   case( k_ge4jets_lt200mt2w_250to325met ):
     if( babyAnalyzer.ngoodjets()>=4 && 
 	babyAnalyzer.MT2W()<200.0 &&
-	babyAnalyzer.pfmet()>=250.0 &&
-	babyAnalyzer.pfmet()<325.0     ) result = true;
+	met>=250.0 &&
+	met<325.0     ) result = true;
     break;
 
   case( k_ge4jets_lt200mt2w_325toInfmet ):
     if( babyAnalyzer.ngoodjets()>=4 && 
 	babyAnalyzer.MT2W()<200.0 &&
-	babyAnalyzer.pfmet()>=325.0    ) result = true;
+	met>=325.0    ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w ):
@@ -514,27 +534,27 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
   case( k_ge4jets_ge200mt2w_250to350met ):
     if( babyAnalyzer.ngoodjets()>=4 && 
 	babyAnalyzer.MT2W()>=200.0 &&
-	babyAnalyzer.pfmet()>=250.0 &&
-	babyAnalyzer.pfmet()<350.0     ) result = true;
+	met>=250.0 &&
+	met<350.0     ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w_350to450met ):
     if( babyAnalyzer.ngoodjets()>=4 && 
 	babyAnalyzer.MT2W()>=200.0 &&
-	babyAnalyzer.pfmet()>=350.0 &&
-	babyAnalyzer.pfmet()<450.0     ) result = true;
+	met>=350.0 &&
+	met<450.0     ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w_450toInfmet ):
     if( babyAnalyzer.ngoodjets()>=4 && 
 	babyAnalyzer.MT2W()>=200.0 &&
-	babyAnalyzer.pfmet()>=450.0    ) result = true;
+	met>=450.0    ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w_350toInfmet ):
     if( babyAnalyzer.ngoodjets()>=4 && 
 	babyAnalyzer.MT2W()>=200.0 &&
-	babyAnalyzer.pfmet()>=350.0    ) result = true;
+	met>=350.0    ) result = true;
     break;
 
   case( k_ge5jets ):
@@ -544,61 +564,61 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
   case( k_ge1btags_ge50met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=1 &&
-	babyAnalyzer.pfmet()>=50.0      ) result = true;
+	met>=50.0      ) result = true;
     break;
 
   case( k_ge1btags_ge100met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=1 &&
-	babyAnalyzer.pfmet()>=100.0     ) result = true;
+	met>=100.0     ) result = true;
     break;
 
   case( k_ge1btags_ge150met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=1 &&
-	babyAnalyzer.pfmet()>=150.0     ) result = true;
+	met>=150.0     ) result = true;
     break;
     
   case( k_ge1btags_ge200met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=1 &&
-	babyAnalyzer.pfmet()>=200.0     ) result = true;
+	met>=200.0     ) result = true;
     break;
 
   case( k_ge1btags_ge250met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=1 &&
-	babyAnalyzer.pfmet()>=250.0     ) result = true;
+	met>=250.0     ) result = true;
     break;
 
   case( k_ge2btags_ge50met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=2 &&
-	babyAnalyzer.pfmet()>=50.0     ) result = true;
+	met>=50.0     ) result = true;
     break;
 
   case( k_ge2btags_ge100met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=2 &&
-	babyAnalyzer.pfmet()>=100.0     ) result = true;
+	met>=100.0     ) result = true;
     break;
 
   case( k_ge2btags_ge150met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=2 &&
-	babyAnalyzer.pfmet()>=150.0     ) result = true;
+	met>=150.0     ) result = true;
     break;
     
   case( k_ge2btags_ge200met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=2 &&
-	babyAnalyzer.pfmet()>=200.0     ) result = true;
+	met>=200.0     ) result = true;
     break;
 
   case( k_ge2btags_ge250met ):
     if( babyAnalyzer.ngoodjets()>=2 &&
 	babyAnalyzer.ngoodbtags()>=2 &&
-	babyAnalyzer.pfmet()>=250.0     ) result = true;
+	met>=250.0     ) result = true;
     break;
 
   default:
@@ -613,7 +633,7 @@ bool categoryInfo::passCategory( categoryInfo::ID category ){
 
 //////////////////////////////////////////////////////////////////////
 
-categoryInfo::vect_util_passBool categoryInfo::passCategoriesFromList( vect_util categoryList, bool onlyReturnTrue ){
+categoryInfo::vect_util_passBool categoryInfo::passCategoriesFromList( vect_util categoryList, bool onlyReturnTrue, bool add2ndLepToMet ){
 
   vect_util_passBool result;
 
@@ -621,7 +641,7 @@ categoryInfo::vect_util_passBool categoryInfo::passCategoriesFromList( vect_util
 
     pair_util_passBool temp_result;
     temp_result.first  = categoryList[iCat];
-    temp_result.second = passCategory( temp_result.first.id ) ? true : false;
+    temp_result.second = passCategory( temp_result.first.id, add2ndLepToMet ) ? true : false;
     if( onlyReturnTrue ){
       if( temp_result.second ) result.push_back( temp_result );
     }

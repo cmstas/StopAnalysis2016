@@ -96,6 +96,7 @@ namespace stop_1l {
 	const int &ph_ngoodbtags() { return babyAnalyzer.ph_ngoodbtags(); }
 	const float &filt_met() { return babyAnalyzer.filt_met(); }
 	const float &hardgenpt() { return babyAnalyzer.hardgenpt(); }
+	const float &filt_badChargedCandidateFilter() { return babyAnalyzer.filt_badChargedCandidateFilter(); }
 	const int &lep1_pdgid() { return babyAnalyzer.lep1_pdgid(); }
 	const int &lep1_production_type() { return babyAnalyzer.lep1_production_type(); }
 	const float &lep1_MiniIso() { return babyAnalyzer.lep1_MiniIso(); }

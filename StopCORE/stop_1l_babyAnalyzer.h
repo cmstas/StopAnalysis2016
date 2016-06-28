@@ -303,6 +303,9 @@ protected:
 	float	hardgenpt_;
 	TBranch *hardgenpt_branch;
 	bool hardgenpt_isLoaded;
+	float	filt_badChargedCandidateFilter_;
+	TBranch *filt_badChargedCandidateFilter_branch;
+	bool filt_badChargedCandidateFilter_isLoaded;
 	int	lep1_pdgid_;
 	TBranch *lep1_pdgid_branch;
 	bool lep1_pdgid_isLoaded;
@@ -1356,6 +1359,11 @@ void Init(TTree *tree) {
 		hardgenpt_branch = tree->GetBranch("hardgenpt");
 		if (hardgenpt_branch) {hardgenpt_branch->SetAddress(&hardgenpt_);}
 	}
+	filt_badChargedCandidateFilter_branch = 0;
+	if (tree->GetBranch("filt_badChargedCandidateFilter") != 0) {
+		filt_badChargedCandidateFilter_branch = tree->GetBranch("filt_badChargedCandidateFilter");
+		if (filt_badChargedCandidateFilter_branch) {filt_badChargedCandidateFilter_branch->SetAddress(&filt_badChargedCandidateFilter_);}
+	}
 	lep1_pdgid_branch = 0;
 	if (tree->GetBranch("lep1_pdgid") != 0) {
 		lep1_pdgid_branch = tree->GetBranch("lep1_pdgid");
@@ -2082,6 +2090,7 @@ void GetEntry(unsigned int idx)
 		ph_ngoodbtags_isLoaded = false;
 		filt_met_isLoaded = false;
 		hardgenpt_isLoaded = false;
+		filt_badChargedCandidateFilter_isLoaded = false;
 		lep1_pdgid_isLoaded = false;
 		lep1_production_type_isLoaded = false;
 		lep1_MiniIso_isLoaded = false;
@@ -2332,6 +2341,7 @@ void LoadAllBranches()
 	if (ph_ngoodbtags_branch != 0) ph_ngoodbtags();
 	if (filt_met_branch != 0) filt_met();
 	if (hardgenpt_branch != 0) hardgenpt();
+	if (filt_badChargedCandidateFilter_branch != 0) filt_badChargedCandidateFilter();
 	if (lep1_pdgid_branch != 0) lep1_pdgid();
 	if (lep1_production_type_branch != 0) lep1_production_type();
 	if (lep1_MiniIso_branch != 0) lep1_MiniIso();
@@ -3718,6 +3728,19 @@ void LoadAllBranches()
 			hardgenpt_isLoaded = true;
 		}
 		return hardgenpt_;
+	}
+	float &filt_badChargedCandidateFilter()
+	{
+		if (not filt_badChargedCandidateFilter_isLoaded) {
+			if (filt_badChargedCandidateFilter_branch != 0) {
+				filt_badChargedCandidateFilter_branch->GetEntry(index);
+			} else { 
+				printf("branch filt_badChargedCandidateFilter_branch does not exist!\n");
+				exit(1);
+			}
+			filt_badChargedCandidateFilter_isLoaded = true;
+		}
+		return filt_badChargedCandidateFilter_;
 	}
 	int &lep1_pdgid()
 	{
@@ -5792,6 +5815,7 @@ namespace stop_1l {
 	const int &ph_ngoodbtags();
 	const float &filt_met();
 	const float &hardgenpt();
+	const float &filt_badChargedCandidateFilter();
 	const int &lep1_pdgid();
 	const int &lep1_production_type();
 	const float &lep1_MiniIso();

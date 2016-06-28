@@ -89,6 +89,8 @@ namespace selectionInfo{
 
       sampleInfo::sampleUtil *sample_info;
 
+      bool addSecondLepToMet;
+
       eventFilter metFilterTxt; 
       
       TH1D *h_cutflow;
@@ -99,7 +101,7 @@ namespace selectionInfo{
       TH3D *h_cutflow_sig_wgt;
       std::vector< TH3D* > vect_cutflow_nMinus1_sig;
 
-      selectionUtil( vect_util selection, sampleInfo::ID sample );
+      selectionUtil( vect_util selection, sampleInfo::ID sample, bool add2ndLepToMet=false );
       ~selectionUtil();
 
       void setupCutflowHistos( TFile *f_out );  

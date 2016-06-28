@@ -101,8 +101,8 @@ namespace categoryInfo{
   //
   // NAMESPACE FUNCTIONS
   //
-  bool passCategory( categoryInfo::ID category );
-  vect_util_passBool passCategoriesFromList( vect_util categoryList, bool onlyReturnTrue );
+  bool passCategory( categoryInfo::ID category, bool add2ndLepToMet=false );
+  vect_util_passBool passCategoriesFromList( vect_util categoryList, bool onlyReturnTrue, bool add2ndLepToMet=false );
   vect_util getCategoryList( analyzerInfo::ID analysis );
 
 }; // end class def
