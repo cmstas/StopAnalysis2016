@@ -588,7 +588,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	// If adding 2nd lepton to Met, recalculate appropriate vars
 	double met = pfmet();
 	double met_phi = pfmet_phi();
-	double dphi_metLep = TMath::ACos(TMath::Cos(met_phi - lep1_p4().Phi()));
+	double dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
 	double mt = mt_met_lep();
 	double minDPhi_met_j1_j1 = mindphi_met_j1_j2();
 	if( add2ndLeptonToMet ){
@@ -596,19 +596,19 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	  if( (ngoodleps()>=2) ||
 	      (ngoodleps()==1 && nvetoleps()>=2 && lep2_p4().Pt()>10.0 ) ){
 	    
-	    double metX = met*TMath::Cos(met_phi);
-	    double metY = met*TMath::Sin(met_phi);
+	    double metX = met*std::cos(met_phi);
+	    double metY = met*std::sin(met_phi);
 	    
 	    metX += lep2_p4().Px();
 	    metY += lep2_p4().Py();
 	    
 	    met = sqrt( metX*metX + metY*metY );
-	    met_phi = TMath::ACos( metY/metX );
-	    dphi_metLep = TMath::ACos(TMath::Cos(met_phi - lep1_p4().Phi()));
-	    mt = sqrt(2*lep1_p4().pt()*met*(1-TMath::Cos(dphi_metLep)));
+	    met_phi = std::atan2( metY, metX );
+	    dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
+	    mt = sqrt(2*lep1_p4().pt()*met*(1-std::cos(dphi_metLep)));
 	    
-	    double minDPhi_met_j1 = TMath::ACos(TMath::Cos(met_phi - ak4pfjets_p4().at(0).Phi()));
-	    double minDPhi_met_j2 = TMath::ACos(TMath::Cos(met_phi - ak4pfjets_p4().at(1).Phi()));
+	    double minDPhi_met_j1 = std::acos(std::cos(met_phi - ak4pfjets_p4().at(0).Phi()));
+	    double minDPhi_met_j2 = std::acos(std::cos(met_phi - ak4pfjets_p4().at(1).Phi()));
 	    minDPhi_met_j1_j1 = std::min( minDPhi_met_j1, minDPhi_met_j2 );
 	    
 	  } // min if 2nd lepton exists
@@ -688,7 +688,6 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		int iYieldHist = histogramInfo::getYieldHistoIndex( sysWgtsList[iSys].first.id, passGenClassyList[iGen].first.id, passRecoClassyList[iReco].first.id );
 		int iHist      = histogramInfo::getHistoIndex( sysWgtsList[iSys].first.id, passGenClassyList[iGen].first.id, passRecoClassyList[iReco].first.id, passCatList[iCat].first.id );
 		
-  		
 		//
 		// Fill Histograms
 		//

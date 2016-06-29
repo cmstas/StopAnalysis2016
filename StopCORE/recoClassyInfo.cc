@@ -161,13 +161,15 @@ bool recoClassyInfo::passRecoClassy( recoClassyInfo::ID recoClassy ){
   
   case( k_2lep_1selLep_1vetoLep ):
     if( babyAnalyzer.ngoodleps()==1 &&
-	babyAnalyzer.nvetoleps()>=2    ) result = true;
+	babyAnalyzer.nvetoleps()>=2 &&
+	babyAnalyzer.lep2_p4().Pt()>10 ) result = true;
     break;
 
   case( k_2lep_2selOrVetoLep ):
     if( (babyAnalyzer.ngoodleps()>=2)     ||
 	(babyAnalyzer.ngoodleps()==1 &&
-	 babyAnalyzer.nvetoleps()>=2    )    )  result = true;
+	 babyAnalyzer.nvetoleps()>=2 && 
+	 babyAnalyzer.lep2_p4().Pt()>10 )    )  result = true;
     break;
       
   case( k_2lep_1selLep_1isoTrackOrPfTau ):

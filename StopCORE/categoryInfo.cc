@@ -357,14 +357,14 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
     if( (babyAnalyzer.ngoodleps()>=2) ||
     	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
 
-      double metX = met*TMath::Cos(met_phi);
-      double metY = met*TMath::Sin(met_phi);
+      double metX = met*std::cos(met_phi);
+      double metY = met*std::sin(met_phi);
 
       metX += babyAnalyzer.lep2_p4().Px();
       metY += babyAnalyzer.lep2_p4().Py();
 
       met = sqrt( metX*metX + metY*metY );
-      met_phi = atan2(metY, metX);
+      met_phi = std::atan2(metY, metX);
       
       //
       // first, we need to sort jets by CSV value
@@ -402,6 +402,13 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
     } // end if 2nd lepton to add met to
   } // end if add 2nd lepton to emt
 
+  //std::cout << "In cateogry.cc" << std::endl;
+  //std::cout << "  Evt, Run, Ls = " << babyAnalyzer.evt() << ", " << babyAnalyzer.run() << ", " << babyAnalyzer.ls() << std::endl;
+  //std::cout << "    MET = " << met << std::endl;
+  //std::cout << "    MET_phi = " << met_phi << std::endl;
+  //std::cout << "    MopTopness = " << topness << std::endl;
+  //std::cout << "    MT2W = " << mt2w << std::endl;
+  
 
   // Switch case
   switch( category ){

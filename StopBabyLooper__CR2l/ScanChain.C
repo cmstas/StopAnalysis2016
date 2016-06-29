@@ -4,6 +4,7 @@
 // C++
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 // ROOT
 #include "TBenchmark.h"
@@ -17,6 +18,8 @@
 
 // stop_1l_babyAnalyzer
 #include "../StopCORE/stop_1l_babyAnalyzer.h"
+#include "../StopBabyMaker/stop_variables/mt2w.h"
+#include "../StopBabyMaker/stop_variables/topness.h"
 #include "../../CORE/Tools/dorky/dorky.h"
 
 using namespace std;
@@ -26,6 +29,7 @@ int getRegionIndex (int njets, float modtop, float mt2w, float met);
 double getLostLepTransferFactor (int njets, float modtop, float mt2w, float met);
 double getLostLepOnlyLepTransferFactor (int njets, float modtop, float mt2w, float met);
 double getWJetsTransferFactor (int njets, float modtop, float mt2w, float met);
+bool sortByCSV ( std::pair<int, double>& p1, std::pair<int, double>& p2) { return p1.second > p2.second; }
 
 int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFilePrefix = "test") {
 
@@ -33,34 +37,39 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
   bool remove_lep_from_met = true;
   bool use_only_e_or_mu = true;
   
+  if (use_only_e_or_mu)
+    cout << "only using e and mu for LL background estimate!" << endl;
+  if (remove_lep_from_met)
+    cout << "remove pt of second lepton from all objects involving MET!" << endl;    
+  
   //
   // current integrated lumi in /fb
   //
-  double lumi = 2.67;
+  double lumi = 2.6;
+  // double lumi = 3.99;
   
   // Benchmark
   TBenchmark *bmark = new TBenchmark();
   bmark->Start("benchmark");
 
 
-  double tt2l_sr_cnt[13];
-  double tt2l_cr_cnt[13];
-  double tt2l_tf[13];
-  double tt2l_cr_onlyLep_cnt[13];
-  double tt2l_ll_bkgd_est[13];
-  double wjets_sr_cnt[13];
-  double wjets_cr_cnt[13];
-  double wjets_tf[13];
-  double wjets_bkgd_est[13];
-  double rare_bkgd_est[13];
-  double tt1l_bkgd_est[13];
-  double wjets_cont[13];
-  int bad_index_cnt[6];
-  int sr_cnt[13][3];
-  int cr2l_cnt[13][5];
-  int cr0b_cnt[13][3];  
-  static const unsigned int nregions = 13;
-  for (unsigned int idx = 0; idx < 13; idx++)
+  double tt2l_sr_cnt[15];
+  double tt2l_cr_cnt[15];
+  double tt2l_tf[15];
+  double tt2l_cr_onlyLep_cnt[15];
+  double tt2l_ll_bkgd_est[15];
+  double wjets_sr_cnt[15];
+  double wjets_cr_cnt[15];
+  double wjets_tf[15];
+  double wjets_bkgd_est[15];
+  double rare_bkgd_est[15];
+  double tt1l_bkgd_est[15];
+  double wjets_cont[15];
+  int sr_cnt[15][3];
+  int cr2l_cnt[15][5];
+  int cr0b_cnt[15][3];  
+  static const unsigned int nregions = 15;
+  for (unsigned int idx = 0; idx < nregions; idx++)
   {
     tt2l_sr_cnt[idx] = 0;
     tt2l_cr_cnt[idx] = 0;
@@ -73,8 +82,6 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
     wjets_cont[idx] = 0;
     tt2l_tf[idx] = 0;
     wjets_tf[idx] = 0;
-    if (idx < 6)
-      bad_index_cnt[idx] = 0;
     for (unsigned int jidx = 0; jidx < 5; jidx++) {
       if (jidx < 3) {
         sr_cnt[idx][jidx] = 0;
@@ -136,7 +143,8 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
     unsigned int nEventsTree = tree->GetEntriesFast();
 
     bool is_wjets = false;
-    bool is_wjets_nupt = false;
+    bool is_wnjets_nupt = false;
+    bool is_wnjets = false;    
     bool is_rare = false;
     bool is_tt1l = false;
     bool tf_calc = false;
@@ -149,16 +157,24 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
       ++nEventsTotal;
 
       if (event == 0) {
-        if (babyAnalyzer.dataset().find("WJetsToLNu") != std::string::npos  ||
-            babyAnalyzer.dataset().find("W1JetsToLNu") != std::string::npos ||
-            babyAnalyzer.dataset().find("W2JetsToLNu") != std::string::npos ||
-            babyAnalyzer.dataset().find("W3JetsToLNu") != std::string::npos ||
-            babyAnalyzer.dataset().find("W4JetsToLNu") != std::string::npos) {
-
-          is_wjets = true;
-          if (babyAnalyzer.dataset().find("NuPt-200") != std::string::npos) 
-        }
+        if (babyAnalyzer.dataset().find("WJetsToLNu") != std::string::npos) is_wjets = true;
         else is_wjets = false;
+        
+        if (babyAnalyzer.dataset().find("NuPt-200") != std::string::npos) {
+          is_wnjets_nupt = true;
+          is_wnjets = false;
+        }
+        else if (babyAnalyzer.dataset().find("W1JetsToLNu") != std::string::npos ||
+                 babyAnalyzer.dataset().find("W2JetsToLNu") != std::string::npos ||
+                 babyAnalyzer.dataset().find("W3JetsToLNu") != std::string::npos ||
+                 babyAnalyzer.dataset().find("W4JetsToLNu") != std::string::npos) {
+          is_wnjets = true;
+          is_wnjets_nupt = false;
+        }
+        else {
+          is_wnjets = false;
+          is_wnjets_nupt = false;
+        }
 
         if (babyAnalyzer.dataset().find("TTZ") != std::string::npos ||
             babyAnalyzer.dataset().find("WZTo1L3Nu") != std::string::npos) is_rare = true;
@@ -172,8 +188,10 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
             for (unsigned int idx = 0; idx < nregions; idx++) {
               if (tt2l_cr_cnt[idx] > 0.00001)
                 tt2l_tf[idx] = tt2l_sr_cnt[idx] / tt2l_cr_cnt[idx];
-              if (wjets_cr_cnt[idx] > 0.00001)            
-                wjets_tf[idx] = wjets_sr_cnt[idx] / wjets_cr_cnt[idx];            
+              if (wjets_cr_cnt[idx] > 0.00001) {
+                wjets_tf[idx] = wjets_sr_cnt[idx] / wjets_cr_cnt[idx];
+                wjets_cont[idx] = wjets_cr_cnt[idx] / (wjets_cr_cnt[idx] + wjets_cont[idx]);
+              }
             }
             tf_calc = true;
           }
@@ -185,6 +203,8 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
 
       // Analysis Code
 
+      if (is_wnjets && babyAnalyzer.genmet() > 200.) continue;
+      
       bool passes_met_filter = false;
       bool passes_met_or_1l_trigger = false;
       bool passes_good_vtx = false;
@@ -222,7 +242,6 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
       passes_preselection = (passes_met_filter &&
                              passes_met_or_1l_trigger &&
                              passes_good_vtx &&
-                             passes_minDphi &&
                              passes_ge2jets &&
                              passes_ge1_selLep);
       
@@ -239,14 +258,18 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
         is_dilep = true;
         is_dilep_emu = true;
       }
-      else if (babyAnalyzer.ngoodleps() == 1 && babyAnalyzer.nvetoleps() >= 2 && babyAnalyzer.lep2_p4().Pt()>10) is_dilep = true;
-      else if (babyAnalyzer.ngoodleps() == 1 && !babyAnalyzer.PassTrackVeto()) is_dilep = true;
+      else if (babyAnalyzer.ngoodleps() == 1 && babyAnalyzer.nvetoleps() >= 2 && babyAnalyzer.lep2_p4().Pt()>10) {
+        is_dilep = true;
+        is_dilep_emu = true;
+      }
+      else if (babyAnalyzer.ngoodleps() == 1 && !babyAnalyzer.PassTrackVeto() ) is_dilep = true;
       else if (babyAnalyzer.ngoodleps() == 1 && !babyAnalyzer.PassTauVeto()) is_dilep = true;
 
       double met = babyAnalyzer.pfmet();
+      double met_phi = babyAnalyzer.pfmet_phi();
       if (is_dilep && remove_lep_from_met) {
-        double pfmet_x = babyAnalyzer.pfmet() * TMath::Cos(babyAnalyzer.pfmet_phi());
-        double pfmet_y = babyAnalyzer.pfmet() * TMath::Sin(babyAnalyzer.pfmet_phi());
+        double pfmet_x = babyAnalyzer.pfmet() * std::cos(babyAnalyzer.pfmet_phi());
+        double pfmet_y = babyAnalyzer.pfmet() * std::sin(babyAnalyzer.pfmet_phi());
 
         double remove_x = 0.;
         double remove_y = 0.;
@@ -257,19 +280,35 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
 
         pfmet_x += remove_x;
         pfmet_y += remove_y;
-        double new_pfmet = TMath::Sqrt(pfmet_x*pfmet_x + pfmet_y*pfmet_y);
-        double new_pfmet_phi = TMath::ACos(pfmet_y/pfmet_x);
-        double dphi = TMath::ACos(TMath::Cos(new_pfmet_phi - babyAnalyzer.lep1_p4().phi()));        
+        double new_pfmet = std::sqrt(pfmet_x*pfmet_x + pfmet_y*pfmet_y);
         if (new_pfmet < 150.) continue;
-        double new_mt = TMath::Sqrt(2*babyAnalyzer.lep1_p4().pt()*new_pfmet*(1 - TMath::Cos(dphi)));
+        double new_pfmet_phi = std::atan2(pfmet_y,pfmet_x);
+        double dphi = std::acos(std::cos(new_pfmet_phi - babyAnalyzer.lep1_p4().phi()));        
+        double new_mt = std::sqrt(2*babyAnalyzer.lep1_p4().pt()*new_pfmet*(1 - std::cos(dphi)));
         if (new_mt < 150) continue;
         met = new_pfmet;
+        met_phi = new_pfmet_phi;
+
+        double dphi1 = std::acos(std::cos(new_pfmet_phi - babyAnalyzer.ak4pfjets_p4().at(0).phi()));
+        double dphi2 = std::acos(std::cos(new_pfmet_phi - babyAnalyzer.ak4pfjets_p4().at(1).phi()));
+        double dphi_min = std::min(dphi1, dphi2);
+        if (dphi_min < 0.8) continue;
+      
+	//std::cout << "  Evt, Run, Ls = " << babyAnalyzer.evt() << ", " << babyAnalyzer.run() << ", " << babyAnalyzer.ls() << std::endl;
+	//std::cout << "    MET = " << new_pfmet << std::endl;
+	//std::cout << "    MET_phi = " << new_pfmet_phi << std::endl;
+	//std::cout << "    MT = " << new_mt << std::endl;
+	//std::cout << "    minDPhiJ1J2 = " << dphi_min << std::endl;
+      
       }
       else {
         if (babyAnalyzer.pfmet() < 150) continue;
         if (babyAnalyzer.mt_met_lep() < 150) continue;
+        if (babyAnalyzer.mindphi_met_j1_j2() < 0.8) continue;
         ++passes_met_mt;
       }
+
+      
       
       //
       // check if it passes the SR selection
@@ -289,20 +328,68 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
       if (use_only_e_or_mu) passes_tt2l_CR_preselection = (passes_preselection && passes_ge1btag && is_dilep_emu);
       bool passes_wjets_CR_preselection = (passes_preselection && passes_ee1_selLep && passes_ee0_vetoLep && passes_trackVeto && passes_tauVeto && (babyAnalyzer.ngoodbtags() == 0));
       
+      double mt2w = babyAnalyzer.MT2W();
+      double topness = babyAnalyzer.topnessMod();
+      if ((is_dilep || is_dilep_emu) && remove_lep_from_met) {
+        //
+        // first, we need to sort jets by CSV value
+        //
+        std::vector<std::pair<int, double> > v_idx_csv;
+        for (unsigned int idx = 0; idx < babyAnalyzer.ak4pfjets_p4().size(); idx++) {
+          v_idx_csv.push_back(std::make_pair(idx, babyAnalyzer.ak4pfjets_CSV().at(idx)));
+        }
+        std::sort(v_idx_csv.begin(), v_idx_csv.end(), sortByCSV);
+
+        //
+        // now get vector<LV> of b-jets and add-jets
+        //
+        std::vector<LorentzVector> mybjets;
+        std::vector<LorentzVector> addjets;        
+        for (auto p : v_idx_csv) {
+          if (babyAnalyzer.ak4pfjets_passMEDbtag().at(p.first))
+            mybjets.push_back(babyAnalyzer.ak4pfjets_p4().at(p.first));
+          else if (mybjets.size() <=1 && (mybjets.size() + addjets.size()) < 3)
+            addjets.push_back(babyAnalyzer.ak4pfjets_p4().at(p.first));                       
+        }
+               
+        //
+        // if == 2 jets, recalculate modified topness with new met
+        //
+        if (babyAnalyzer.ngoodjets() == 2)
+          topness = CalcTopness_(1, met, met_phi, babyAnalyzer.lep1_p4(), mybjets, addjets);
+        
+        //
+        // if >=3 jets, recalculate mt2w with new met
+        //
+        if (babyAnalyzer.ngoodjets() >= 3)   
+          mt2w = CalcMT2W_(mybjets, addjets, babyAnalyzer.lep1_p4(), met, met_phi);
+      }
+      
+      //std::cout << "  Evt, Run, Ls = " << babyAnalyzer.evt() << ", " << babyAnalyzer.run() << ", " << babyAnalyzer.ls() << std::endl;
+      //std::cout << "    Topness = " << topness << std::endl;
+      //std::cout << "    MT2W = " << mt2w << std::endl;
+      
+
       int index = getRegionIndex(babyAnalyzer.ngoodjets(),
-                                 babyAnalyzer.topnessMod(),
-                                 babyAnalyzer.MT2W(),
+                                 topness,
+                                 mt2w,
                                  met);
 
       ++passes_sr_or_cr_before;
 
       if (!(passes_SR_preselection || passes_tt2l_CR_preselection || passes_wjets_CR_preselection)) ++passes_sr_or_cr_after;
-      
-      if (index < 0 || index > 12) {
-        if (index > 12) bad_index_cnt[index-nregions] += 1;
-        if (index < 0) bad_index_cnt[5] += 1;
+
+        
+      if ( index < 0){
+	//cout << "NEGATIVE INDEX!" << endl;
+	//cout << "goodjets = " << babyAnalyzer.ngoodjets() << endl;
+	//cout << "topness = " << topness << endl;
+	//cout << "met = " << met << endl;
+	//cout << "mt2w = " << mt2w << endl;
         continue;
       }
+
+      //if( index==1 ) cout << "  Evt, Run, Ls = " << babyAnalyzer.evt() << ", " << babyAnalyzer.run() << ", " << babyAnalyzer.ls() << std::endl;
 
       double wgt = babyAnalyzer.scale1fb() * lumi;
       if (babyAnalyzer.is_data()) wgt = 1;
@@ -363,8 +450,79 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
             wjets_cont[index] += wgt;
         }
       }
-    }
-      
+
+      //
+      // now we want to check on if the event passes the selections of the ISR regions
+      //
+      index = -1;
+      if (babyAnalyzer.ak4pfjets_p4().at(0).pt() > 250 && !babyAnalyzer.ak4pfjets_passMEDbtag().at(0) && babyAnalyzer.ngoodjets() >= 5) {
+        if (met >= 250 && met < 350)
+          index = 13;
+        else if (met >= 350)
+          index = 14;
+        else
+          index = -1;
+      }
+      if (index == 13 || index == 14) {
+        if (babyAnalyzer.is_data()) {
+          if (passes_SR_preselection) {
+            sr_cnt[index][0] += wgt;
+            if (abs(babyAnalyzer.lep1_pdgid()) == 11) sr_cnt[index][1] += wgt;
+            else if (abs(babyAnalyzer.lep1_pdgid()) == 13) sr_cnt[index][2] += wgt;
+          }
+          else if (passes_tt2l_CR_preselection) {
+            cr2l_cnt[index][0] += wgt;
+            if (babyAnalyzer.ngoodleps() > 1 || (babyAnalyzer.ngoodleps() == 1 && babyAnalyzer.nvetoleps() > 1 && babyAnalyzer.lep2_p4().pt()>10)) {
+              if (abs(babyAnalyzer.lep2_pdgid()) == 11) cr2l_cnt[index][1] += wgt;
+              else if (abs(babyAnalyzer.lep2_pdgid()) == 13) cr2l_cnt[index][2] += wgt;
+            }
+            else if (babyAnalyzer.ngoodleps() == 1 && !passes_trackVeto) cr2l_cnt[index][3] += wgt;
+            else if (babyAnalyzer.ngoodleps() == 1 && !passes_tauVeto) cr2l_cnt[index][4] += wgt;
+          }
+          else if (passes_wjets_CR_preselection) {
+            cr0b_cnt[index][0] += wgt;
+            if (abs(babyAnalyzer.lep1_pdgid()) == 11) cr0b_cnt[index][1] += wgt;
+            else if (abs(babyAnalyzer.lep1_pdgid()) == 13) cr0b_cnt[index][2] += wgt;
+          }
+        }                    
+        else {
+          if (passes_SR_preselection) {
+            if (is_true_2l) {
+              tt2l_sr_cnt[index] += wgt;
+              h_tt2l_sr_cnt->Fill(index, wgt);
+            }
+            if (is_wjets)
+            {
+              wjets_sr_cnt[index] += wgt;
+              h_wjets_sr_cnt->Fill(index, wgt);
+            }
+            if (is_rare)
+              rare_bkgd_est[index] += wgt;
+            if (is_tt1l)
+              tt1l_bkgd_est[index] += wgt;
+            
+          }
+          else if (passes_tt2l_CR_preselection) {
+            tt2l_cr_cnt[index] += wgt;
+            h_tt2l_cr_cnt->Fill(index, wgt);
+
+            if (is_dilep_emu) {
+              tt2l_cr_onlyLep_cnt[index] += wgt;
+              h_tt2l_cr_onlyLep_cnt->Fill(index, wgt);
+            }
+          }
+          else if (passes_wjets_CR_preselection) {
+            if (is_wjets) {
+              wjets_cr_cnt[index] += wgt;
+              h_wjets_cr_cnt->Fill(index, wgt);
+            }
+            else
+              wjets_cont[index] += wgt;
+          }
+        }
+        
+      }
+    }      
     
     // Clean Up
     delete tree;
@@ -405,11 +563,11 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
 
   //
   // get wjets bkgd estimate
-  // [ (observed yield in 0b CR) - (contamination from MC)  ] * TFbtag
+  // [ (observed yield in 0b CR) * (contamination from MC)  ] * TFbtag
   //
   for (unsigned int idx = 0; idx < nregions; idx++) {
-    if (idx < 6 || idx > 8)
-      wjets_bkgd_est[idx] = (cr0b_cnt[idx][0] - wjets_cont[idx]) * wjets_tf[idx];
+    if (idx < 6 || (idx > 8 && idx < 13))
+      wjets_bkgd_est[idx] = cr0b_cnt[idx][0] * wjets_cont[idx] * wjets_tf[idx];
     else
       wjets_bkgd_est[idx] = wjets_sr_cnt[idx];
     tt2l_ll_bkgd_est[idx] = cr2l_cnt[idx][0] * tt2l_tf[idx];
@@ -426,22 +584,12 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
   cout << "# events passing SR or CR before: " << passes_sr_or_cr_before << endl;
   cout << "# events passing SR or CR after: " << passes_sr_or_cr_after << endl;  
   cout << endl;
-
-  cout << "counts of events failing different SR selections" << endl;
-  cout << endl;
-  cout << "Found " << bad_index_cnt[0] << " events with ==2 jets and modTop > 6.4 and MET < 250" << endl;
-  cout << "Found " << bad_index_cnt[1] << " events with ==3 jets and mt2w > 200 and MET < 250" << endl;
-  cout << "Found " << bad_index_cnt[2] << " events with >=4 jets and mt2w < 200 and MET < 250" << endl;
-  cout << "Found " << bad_index_cnt[3] << " events with >=4 jets and mt2w > 200 and MET < 250" << endl;
-  cout << "Found " << bad_index_cnt[4] << " == 2 jets and topMod < 6.4, or == 3 jets and mt2w < 200" << endl;    
-  cout << "Found " << bad_index_cnt[5] << " < 2 jets" << endl;
-  cout << endl;  
   
-  std::string names[13];
-  names[0] = "== 2 jets, 150 < MET < 350";
+  std::string names[nregions];
+  names[0] = "== 2 jets, 150 < MET < 250";
   names[1] = "== 2 jets, 250 < MET < 350";
   names[2] = "== 2 jets, MET > 350";
-  names[3] = "== 3 jets, 150 < MET < 350";
+  names[3] = "== 3 jets, 150 < MET < 250";
   names[4] = "== 3 jets, 250 < MET < 350";
   names[5] = "== 3 jets, MET > 350";
   names[6] = ">= 4 jets, mt2w < 200, 150 < MET < 250";
@@ -451,6 +599,8 @@ int ScanChain( TChain* chain, bool fast = true, int nEvents = -1, string skimFil
   names[10] = ">= 4 jets, mt2w > 200, 250 < MET < 350";
   names[11] = ">= 4 jets, mt2w > 200, 350 < MET < 450";
   names[12] = ">= 4 jets, mt2w > 200, MET > 450";
+  names[13] = ">= 5 jets, 250 < MET < 350";  
+  names[14] = ">= 5 jets, MET > 350";  
   
   cout << "table of counts for SR and CR for ttbar LL" << endl;
   cout << "region \t SR yield \t CR yield \t TF \t CR yield, e/mu only \t TF (e/mu)" << std::endl;
@@ -550,14 +700,14 @@ int getRegionIndex (int njets, float modtop, float mt2w, float met) {
     if (met >= 150 && met < 250) return 0;
     else if (met >= 250 && met < 350) return 1;
     else if (met >= 350) return 2;
-    else return 13;
+    else return -1;
   }
   else if (njets == 3 && mt2w >= 200)
   {
     if (met >= 150 && met < 250) return 3;
     else if (met >= 250 && met < 350) return 4;
     else if (met >= 350) return 5;
-    else return 14;    
+    else return -1;    
   }
   else if (njets >= 4)
   {
@@ -566,7 +716,7 @@ int getRegionIndex (int njets, float modtop, float mt2w, float met) {
       if (met >= 150 && met < 250) return 6;
       else if (met >= 250 && met < 325) return 7;
       else if (met >= 325) return 8;
-      else return 15;
+      else return -1;
     }
     else if (mt2w > 200)
     {
@@ -575,9 +725,9 @@ int getRegionIndex (int njets, float modtop, float mt2w, float met) {
       else if (met >= 350 && met < 450) return 11;
       else if (met >= 450) return 12;
     }
-    else return 16;
+    else return -1;
   }
-  else return 17;
+  else return -1;
   return -2;
 }
 

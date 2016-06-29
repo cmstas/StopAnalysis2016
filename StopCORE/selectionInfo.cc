@@ -327,31 +327,38 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
   // If adding 2nd lepton to Met, recalculate appropriate vars
   double met = babyAnalyzer.pfmet();
   double met_phi = babyAnalyzer.pfmet_phi();
-  double dphi_metLep = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
+  double dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
   double mt = babyAnalyzer.mt_met_lep();
-  double minDPhi_met_j1_j1 = babyAnalyzer.mindphi_met_j1_j2();
+  double minDPhi_met_j1_j2 = babyAnalyzer.mindphi_met_j1_j2();
   if( addSecondLepToMet ) {
 
     if( (babyAnalyzer.ngoodleps()>=2) ||
     	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
 
-      double metX = met*TMath::Cos(met_phi);
-      double metY = met*TMath::Sin(met_phi);
+      double metX = met*std::cos(met_phi);
+      double metY = met*std::sin(met_phi);
 
       metX += babyAnalyzer.lep2_p4().Px();
       metY += babyAnalyzer.lep2_p4().Py();
 
       met = sqrt( metX*metX + metY*metY );
-      met_phi = TMath::ATan2( metY, metX );
-      dphi_metLep = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
-      mt = sqrt(2*babyAnalyzer.lep1_p4().pt()*met*(1-TMath::Cos(dphi_metLep)));
+      met_phi = std::atan2( metY, metX );
+      dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
+      mt = std::sqrt(2*babyAnalyzer.lep1_p4().pt()*met*(1-std::cos(dphi_metLep)));
 
-      double minDPhi_met_j1 = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(0).Phi()));
-      double minDPhi_met_j2 = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(1).Phi()));
-      minDPhi_met_j1_j1 = std::min( minDPhi_met_j1, minDPhi_met_j2 );      
+      double minDPhi_met_j1 = std::acos(std::cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(0).Phi()));
+      double minDPhi_met_j2 = std::acos(std::cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(1).Phi()));
+      minDPhi_met_j1_j2 = std::min( minDPhi_met_j1, minDPhi_met_j2 );      
     } // min if 2nd lepton exists
-  } // end if addSeocnLepToMet
+  } // end if addSecondLepToMet
 
+  //std::cout << "In selection.cc" << std::endl;
+  //std::cout << "  Evt, Run, Ls = " << babyAnalyzer.evt() << ", " << babyAnalyzer.run() << ", " << babyAnalyzer.ls() << std::endl;
+  //std::cout << "    MET = " << met << std::endl;
+  //std::cout << "    MET_phi = " << met_phi << std::endl;
+  //std::cout << "    MT = " << mt << std::endl;
+  //std::cout << "    minDPhiJ1J2 = " << minDPhi_met_j1_j2 << std::endl;
+  
   // Switch Case
   switch( cut ){
 
@@ -433,11 +440,16 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     // 	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()==1 && (!babyAnalyzer.PassTrackVeto() || !babyAnalyzer.PassTauVeto()) )  ) result = true;
   //break;
 
+  //case( k_diLepton ):
+  //  if( (babyAnalyzer.ngoodleps()>=2) ||
+  //  	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ||
+  //  	(babyAnalyzer.ngoodleps()==1 && (!babyAnalyzer.PassTrackVeto() || !babyAnalyzer.PassTauVeto()) )     ) result = true;
+  //break;
+
   case( k_diLepton ):
     if( (babyAnalyzer.ngoodleps()>=2) ||
-    	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ||
-    	(babyAnalyzer.ngoodleps()==1 && (!babyAnalyzer.PassTrackVeto() || !babyAnalyzer.PassTauVeto()) )     ) result = true;
-  break;
+    	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ) result = true;
+    break;
 
   case( k_diLepton_bulkTTbar ):
     if( babyAnalyzer.lep1_p4().Pt()>30.0 && 
@@ -487,7 +499,7 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     break;
 
   case( k_ge0p8_minDPhi ):
-    if(minDPhi_met_j1_j1>=0.8 ) result = true;
+    if(minDPhi_met_j1_j2>=0.8 ) result = true;
     break;
 
   default:
