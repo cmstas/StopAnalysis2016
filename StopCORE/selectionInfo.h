@@ -118,7 +118,7 @@ namespace selectionInfo{
   //
   vect_util getCutList( analyzerInfo::ID analysis );
 
-    
+  bool sortByCSV (std::pair<int, double>& p1, std::pair<int, double>& p2);
 }; // end namespace def
 
 #endif

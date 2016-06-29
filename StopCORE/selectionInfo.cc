@@ -140,19 +140,19 @@ selectionInfo::cutUtil::cutUtil( selectionInfo::ID cut ){
     title = "MET>=250 GeV";
     tex   = "$MET\\ge50$~GeV";
     break;
-
+    
   case( k_ge150_mt ):
     label = "ge150_mt";
     title = "MT>=150 GeV";
     tex   = "$M_{T}>=150$~GeV";
     break;
-
+    
   case( k_ge0p8_minDPhi ):
     label = "ge0p8_minDPhi";
     title = "Min DeltaPhi(MET,j1,j2)>0.8";
     tex   = "Min~$\\Delta\\Phi$(MET,j1,j2)$>0.8$";
     break;
-
+    
   default:
     std::cout << "Could not find cut info from cut enum provided!" << std::endl;
     label = "NO CUT INFO FOUND FROM ENUM PROVIDED";
@@ -330,7 +330,7 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
   double dphi_metLep = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
   double mt = babyAnalyzer.mt_met_lep();
   double minDPhi_met_j1_j1 = babyAnalyzer.mindphi_met_j1_j2();
-  if( addSecondLepToMet ){
+  if( addSecondLepToMet ) {
 
     if( (babyAnalyzer.ngoodleps()>=2) ||
     	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
@@ -342,17 +342,15 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
       metY += babyAnalyzer.lep2_p4().Py();
 
       met = sqrt( metX*metX + metY*metY );
-      met_phi = TMath::ACos( metY/metX );
+      met_phi = TMath::ATan2( metY, metX );
       dphi_metLep = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
       mt = sqrt(2*babyAnalyzer.lep1_p4().pt()*met*(1-TMath::Cos(dphi_metLep)));
 
       double minDPhi_met_j1 = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(0).Phi()));
       double minDPhi_met_j2 = TMath::ACos(TMath::Cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(1).Phi()));
-      minDPhi_met_j1_j1 = std::min( minDPhi_met_j1, minDPhi_met_j2 );
-       
+      minDPhi_met_j1_j1 = std::min( minDPhi_met_j1, minDPhi_met_j2 );      
     } // min if 2nd lepton exists
   } // end if addSeocnLepToMet
-
 
   // Switch Case
   switch( cut ){

@@ -1,4 +1,6 @@
 #include "categoryInfo.h"
+#include "../StopBabyMaker/stop_variables/mt2w.h"
+#include "../StopBabyMaker/stop_variables/topness.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -349,6 +351,8 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
   // If adding 2nd lepton to met, recalculate appropriate vars
   double met = babyAnalyzer.pfmet();
   double met_phi = babyAnalyzer.pfmet_phi();
+  double mt2w = babyAnalyzer.MT2W();
+  double topness = babyAnalyzer.topnessMod();
   if( add2ndLepToMet ){
     if( (babyAnalyzer.ngoodleps()>=2) ||
     	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
@@ -360,7 +364,41 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
       metY += babyAnalyzer.lep2_p4().Py();
 
       met = sqrt( metX*metX + metY*metY );
-
+      met_phi = atan2(metY, metX);
+      
+      //
+      // first, we need to sort jets by CSV value
+      //
+      std::vector<std::pair<int, double> > v_idx_csv;
+      for (unsigned int idx = 0; idx < babyAnalyzer.ak4pfjets_p4().size(); idx++) {
+        v_idx_csv.push_back(std::make_pair(idx, babyAnalyzer.ak4pfjets_CSV().at(idx)));
+      }
+      std::sort(v_idx_csv.begin(), v_idx_csv.end(), categoryInfo::sortByCSV);
+      
+      //
+      // now get vector<LV> of b-jets and add-jets
+      //
+      std::vector<LorentzVector> mybjets;
+      std::vector<LorentzVector> addjets;        
+      for (auto p : v_idx_csv) {
+        if (babyAnalyzer.ak4pfjets_passMEDbtag().at(p.first))
+          mybjets.push_back(babyAnalyzer.ak4pfjets_p4().at(p.first));
+        else if (mybjets.size() <=1 && (mybjets.size() + addjets.size()) < 3)
+          addjets.push_back(babyAnalyzer.ak4pfjets_p4().at(p.first));                       
+      }
+      
+      //
+      // if == 2 jets, recalculate modified topness with new met
+      //
+      if (babyAnalyzer.ngoodjets() == 2)
+        topness = CalcTopness_(1, met, met_phi, babyAnalyzer.lep1_p4(), mybjets, addjets);
+      
+      //
+      // if >=3 jets, recalculate mt2w with new met
+      //
+      if (babyAnalyzer.ngoodjets() >= 3)   
+        mt2w = CalcMT2W_(mybjets, addjets, babyAnalyzer.lep1_p4(), met, met_phi);
+      
     } // end if 2nd lepton to add met to
   } // end if add 2nd lepton to emt
 
@@ -378,17 +416,17 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 
   case( k_ge2jets_ge6p4modTop ):
     if( babyAnalyzer.ngoodjets()>=2 && 
-	babyAnalyzer.topnessMod()>=6.4 ) result = true;
+	topness>=6.4 ) result = true;
     break;  
 
   case( k_ge2jets_lt200mt2w ):
     if( babyAnalyzer.ngoodjets()>=2 && 
-	babyAnalyzer.MT2W()<200.0      ) result = true;
+	mt2w<200.0      ) result = true;
     break;
 
   case( k_ge2jets_ge200mt2w ):
     if( babyAnalyzer.ngoodjets()>=2 && 
-	babyAnalyzer.MT2W()>=200.0      ) result = true;
+	mt2w>=200.0      ) result = true;
     break;  
 
   case( k_ee2jets ):
@@ -408,19 +446,19 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 
   case( k_ee2jets_ge6p4modTop ):
     if( babyAnalyzer.ngoodjets()==2 && 
-	babyAnalyzer.topnessMod()>=6.4 ) result = true;
+	topness>=6.4 ) result = true;
     break;
 
   case( k_ee2jets_ge6p4modTop_250to350met ):
     if( babyAnalyzer.ngoodjets()==2 &&
-	babyAnalyzer.topnessMod()>=6.4 &&
+	topness>=6.4 &&
 	met>=250.0 &&
 	met<350           ) result = true;
     break;
 
   case( k_ee2jets_ge6p4modTop_350toInfmet ):
     if( babyAnalyzer.ngoodjets()==2 &&
-	babyAnalyzer.topnessMod()>=6.4 &&
+	topness>=6.4 &&
 	met>=350.0        ) result = true;
     break;
 
@@ -430,12 +468,12 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 
   case( k_ge3jets_lt200mt2w ):
     if( babyAnalyzer.ngoodjets()>=3 && 
-	babyAnalyzer.MT2W()<200.0      ) result = true;
+	mt2w<200.0      ) result = true;
     break;
 
   case( k_ge3jets_ge200mt2w ):
     if( babyAnalyzer.ngoodjets()>=3 && 
-	babyAnalyzer.MT2W()>=200.0      ) result = true;
+	mt2w>=200.0      ) result = true;
     break;  
 
   case( k_ee3jets ):
@@ -455,24 +493,24 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 
   case( k_ee3jets_lt200mt2w ):
     if( babyAnalyzer.ngoodjets()==3 && 
-	babyAnalyzer.MT2W()<200.0      ) result = true;
+	mt2w<200.0      ) result = true;
     break;
 
   case( k_ee3jets_ge200mt2w ):
     if( babyAnalyzer.ngoodjets()==3 && 
-	babyAnalyzer.MT2W()>=200.0      ) result = true;
+	mt2w>=200.0      ) result = true;
     break;
 
   case( k_ee3jets_ge200mt2w_250to350met ):
     if( babyAnalyzer.ngoodjets()==3 &&
-	babyAnalyzer.MT2W()>=200.0 && 
+	mt2w>=200.0 && 
 	met>=250.0 &&
 	met<350        ) result = true;
     break;
 
   case( k_ee3jets_ge200mt2w_350toInfmet ):
     if( babyAnalyzer.ngoodjets()==3 &&
-	babyAnalyzer.MT2W()>=200.0 && 
+	mt2w>=200.0 && 
 	met>=350.0    ) result = true;
     break;
 
@@ -510,50 +548,50 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 
   case( k_ge4jets_lt200mt2w ):
     if( babyAnalyzer.ngoodjets()>=4 && 
-	babyAnalyzer.MT2W()<200.0      ) result = true;
+	mt2w<200.0      ) result = true;
     break;
 
   case( k_ge4jets_lt200mt2w_250to325met ):
     if( babyAnalyzer.ngoodjets()>=4 && 
-	babyAnalyzer.MT2W()<200.0 &&
+	mt2w<200.0 &&
 	met>=250.0 &&
 	met<325.0     ) result = true;
     break;
 
   case( k_ge4jets_lt200mt2w_325toInfmet ):
     if( babyAnalyzer.ngoodjets()>=4 && 
-	babyAnalyzer.MT2W()<200.0 &&
+	mt2w<200.0 &&
 	met>=325.0    ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w ):
     if( babyAnalyzer.ngoodjets()>=4 && 
-	babyAnalyzer.MT2W()>=200.0      ) result = true;
+	mt2w>=200.0      ) result = true;
     break;  
 
   case( k_ge4jets_ge200mt2w_250to350met ):
     if( babyAnalyzer.ngoodjets()>=4 && 
-	babyAnalyzer.MT2W()>=200.0 &&
+	mt2w>=200.0 &&
 	met>=250.0 &&
 	met<350.0     ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w_350to450met ):
     if( babyAnalyzer.ngoodjets()>=4 && 
-	babyAnalyzer.MT2W()>=200.0 &&
+	mt2w>=200.0 &&
 	met>=350.0 &&
 	met<450.0     ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w_450toInfmet ):
     if( babyAnalyzer.ngoodjets()>=4 && 
-	babyAnalyzer.MT2W()>=200.0 &&
+	mt2w>=200.0 &&
 	met>=450.0    ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w_350toInfmet ):
     if( babyAnalyzer.ngoodjets()>=4 && 
-	babyAnalyzer.MT2W()>=200.0 &&
+	mt2w>=200.0 &&
 	met>=350.0    ) result = true;
     break;
 
@@ -755,6 +793,10 @@ categoryInfo::vect_util categoryInfo::getCategoryList( analyzerInfo::ID analysis
 
   return result;
 
+}
+
+bool categoryInfo::sortByCSV(std::pair<int, double>& p1, std::pair<int, double>& p2) {
+  return (p1.second > p2.second);
 }
 
 //////////////////////////////////////////////////////////////////////

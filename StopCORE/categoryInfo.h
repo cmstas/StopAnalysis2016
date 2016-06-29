@@ -105,6 +105,7 @@ namespace categoryInfo{
   vect_util_passBool passCategoriesFromList( vect_util categoryList, bool onlyReturnTrue, bool add2ndLepToMet=false );
   vect_util getCategoryList( analyzerInfo::ID analysis );
 
+  bool sortByCSV (std::pair<int, double>& p1, std::pair<int, double>& p2);
 }; // end class def
 
 
