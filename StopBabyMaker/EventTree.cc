@@ -311,6 +311,7 @@ void EventTree::Reset ()
     HLT_SingleMu           = -9999.; 
     HLT_SingleEl           = -9999.;
     HLT_MET                = -9999.;
+    HLT_MET100_MHT100 = -9999.;
     HLT_DiEl               = -9999.;
     HLT_MuE                = -9999.;
     HLT_DiMu               = -9999.;
@@ -549,6 +550,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_SingleEl", &HLT_SingleEl );
     tree->Branch("HLT_SingleMu", &HLT_SingleMu );
     tree->Branch("HLT_MET", &HLT_MET);
+    tree->Branch("HLT_MET100_MHT100", &HLT_MET100_MHT100);
     tree->Branch("HLT_DiEl", &HLT_DiEl );
     tree->Branch("HLT_DiMu", &HLT_DiMu );
     tree->Branch("HLT_MuE", &HLT_MuE);
