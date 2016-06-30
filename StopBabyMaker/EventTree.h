@@ -76,6 +76,9 @@ public:
     float topness_lep2;
     float topnessMod_lep2;
 
+    float MT2W_rl;
+    float topnessMod_rl;
+
     float MT2_lb_b;
     float MT2_lb_b_lep2;
     float MT2_l_l;
@@ -95,6 +98,8 @@ public:
 
     float pfmet;
     float pfmet_phi;
+    float pfmet_rl;
+    float pfmet_phi_rl;
     float calomet;
     float calomet_phi;
 
@@ -121,8 +126,10 @@ public:
     float dR_lep_leadb;
     float dR_lep2_leadb;    
     float mindphi_met_j1_j2;
+    float mindphi_met_j1_j2_rl;
     float mt_met_lep;
     float mt_met_lep2;
+    float mt_met_lep_rl;
 
     float dphi_Wlep;
     float MET_over_sqrtHT;
