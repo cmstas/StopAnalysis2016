@@ -75,15 +75,18 @@ void EventTree::FillCommon (const std::string &root_file_name)
     is_data = evt_isRealData();
 
     // the recommended met filters //
+   if (is_data){  //safety for CMS3_V08-00-01
     if(!signal){
       if(nvtxs>0) filt_met = true;
       else filt_met = false;
       filt_met = filt_met*filt_cscBeamHalo()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso();
 
+      filt_badChargedCandidateFilter = badChargedCandidateFilter();
       filt_cscbeamhalo = filt_cscBeamHalo();
       filt_cscbeamhalo2015 = filt_cscBeamHalo2015();
-      filt_globaltighthalo2016 = filt_globalTightHalo2016();
-      filt_globalsupertighthalo2016 = filt_globalSuperTightHalo2016();
+      //not in miniaod yet 
+      //filt_globaltighthalo2016 = filt_globalTightHalo2016();
+      //filt_globalsupertighthalo2016 = filt_globalSuperTightHalo2016();
       filt_eebadsc = filt_eeBadSc();
       filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
       filt_ecallaser = filt_ecalLaser();
@@ -98,7 +101,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
     }
     filt_hbhenoise = filt_hbheNoise(); // hbheNoiseFilter_25ns();
     filt_hbheisonoise = filt_hbheNoiseIso();//hbheIsoNoiseFilter();
-   
+}   
     
     if (!is_data)
     {
@@ -414,7 +417,7 @@ void EventTree::Reset ()
      filt_trkPOG_logerr_tmc = false;
      filt_trkPOG_tmc = false;
      filt_trkPOG_tms = false;
-
+     filt_badChargedCandidateFilter = false;
     filt_met = false;
 
     nPhotons             = -9999;
@@ -600,12 +603,14 @@ void EventTree::SetExtraVariablesBranches (TTree* tree)
     tree->Branch("Mlb_lead_bdiscr", &Mlb_lead_bdiscr);
     tree->Branch("Mjjj", &Mjjj);
     tree->Branch("Mjjj_lep2", &Mjjj_lep2);
-    tree->Branch("calomet", &calomet);
-    tree->Branch("calomet_phi", &calomet_phi);  
+ //   tree->Branch("calomet", &calomet);
+ //   tree->Branch("calomet_phi", &calomet_phi);  
 }
 
 void EventTree::SetMETFilterBranches (TTree* tree)
 {
+    tree->Branch("calomet", &calomet);
+    tree->Branch("calomet_phi", &calomet_phi);
     tree->Branch("filt_cscbeamhalo", &filt_cscbeamhalo);
     tree->Branch("filt_cscbeamhalo2015", &filt_cscbeamhalo2015);
     tree->Branch("filt_globaltighthalo2016", &filt_globaltighthalo2016);
@@ -625,6 +630,7 @@ void EventTree::SetMETFilterBranches (TTree* tree)
     tree->Branch("filt_trkPOG_tmc", &filt_trkPOG_tmc);
     tree->Branch("filt_trkPOG_tms", &filt_trkPOG_tms);
     tree->Branch("firstGoodVtxIdx", &firstGoodVtxIdx);
+    tree->Branch("filt_badChargedCandidateFilter", &filt_badChargedCandidateFilter);
 }
 
 void EventTree::SetPhotonBranches (TTree* tree)

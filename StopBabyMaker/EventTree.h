@@ -120,7 +120,8 @@ public:
   float filt_trkPOG_logerr_tmc;
   float filt_trkPOG_tmc;
   float filt_trkPOG_tms;
-
+  float filt_badChargedCandidateFilter;
+  
   float dR_lep_leadb;
   float dR_lep2_leadb;    
   float mindphi_met_j1_j2;
@@ -171,8 +172,9 @@ public:
   float weight_PUup;
   float weight_PUdown;
   float hardgenpt;
+  
   //sparms
-//    vecs  sparms_comment;
+  //vecs  sparms_comment;
   vecs  sparms_names;
   vecd  sparms_values;
   int   sparms_subProcessId;
