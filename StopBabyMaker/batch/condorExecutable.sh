@@ -38,14 +38,14 @@ echo "G++ INFORMATION"
 g++ --version
 which g++
 
-CMSSW_VERSION=CMSSW_7_4_1_patch1
+CMSSW_VERSION=CMSSW_8_0_5_patch1
 
 export CMS_PATH=/cvmfs/cms.cern.ch
 echo "CMSENV"
-export SCRAM_ARCH=slc6_amd64_gcc491
+export SCRAM_ARCH=slc6_amd64_gcc530
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 OLDDIR=`pwd`
-cd /cvmfs/cms.cern.ch/slc6_amd64_gcc491/cms/cmssw-patch/$CMSSW_VERSION/src
+cd /cvmfs/cms.cern.ch/slc6_amd64_gcc530/cms/cmssw-patch/$CMSSW_VERSION/src
 eval `scramv1 runtime -sh`
 cd $OLDDIR
 

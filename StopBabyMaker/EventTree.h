@@ -76,8 +76,12 @@ public:
     float topness_lep2;
     float topnessMod_lep2;
 
+    float MT2W_rl;
+    float topnessMod_rl;
+
     float MT2_lb_b;
     float MT2_lb_b_lep2;
+    float MT2_l_l;
     float MT2_lb_b_mass;
     float MT2_lb_b_mass_lep2;
     float MT2_lb_bqq;
@@ -94,6 +98,8 @@ public:
 
     float pfmet;
     float pfmet_phi;
+    float pfmet_rl;
+    float pfmet_phi_rl;
     float calomet;
     float calomet_phi;
 
@@ -110,6 +116,7 @@ public:
     float filt_hbheisonoise;
     float filt_hcallaser;
     float filt_met;
+    float filt_badChargedCandidateFilter;
     float filt_trkfail;
     float filt_trkPOG;
     float filt_trkPOG_logerr_tmc;
@@ -119,8 +126,10 @@ public:
     float dR_lep_leadb;
     float dR_lep2_leadb;    
     float mindphi_met_j1_j2;
+    float mindphi_met_j1_j2_rl;
     float mt_met_lep;
     float mt_met_lep2;
+    float mt_met_lep_rl;
 
     float dphi_Wlep;
     float MET_over_sqrtHT;
@@ -148,6 +157,8 @@ public:
     float weight_btagsf_light_UP;
     float weight_btagsf_heavy_DN;
     float weight_btagsf_light_DN;
+    float weight_btagsf_fastsim_UP;
+    float weight_btagsf_fastsim_DN;
     float weight_lepSF;
     float weight_lepSF_up;
     float weight_lepSF_down;
@@ -188,6 +199,7 @@ public:
     int HLT_SingleMu; 
     int HLT_SingleEl;
     int HLT_MET;
+    int HLT_MET100_MHT100;
     int HLT_DiEl;
     int HLT_DiMu;
     int HLT_MuE;
@@ -226,6 +238,7 @@ public:
     float ph_topnessMod;
     float ph_MT2_lb_b_mass;
     float ph_MT2_lb_b;
+    float ph_MT2_l_l;
     float ph_MT2_lb_bqq_mass;
     float ph_MT2_lb_bqq;
     float ph_hadronic_top_chi2;
@@ -255,6 +268,7 @@ public:
     float Zll_topnessMod;
     float Zll_MT2_lb_b_mass;
     float Zll_MT2_lb_b;
+    float Zll_MT2_l_l;
     float Zll_MT2_lb_bqq_mass;
     float Zll_MT2_lb_bqq;
 
