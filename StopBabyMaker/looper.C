@@ -68,6 +68,10 @@ struct sortLepbypt{
   }
 };
 
+struct sortP4byPt {
+  bool operator () (const LorentzVector &lv1, const LorentzVector &lv2) { return lv1.pt() > lv2.pt(); }
+};
+
 bool CompareIndexValueGreatest(const std::pair<double, int>& firstElem, const std::pair<double, int>& secondElem) {
   return firstElem.first > secondElem.first;
 }
@@ -960,7 +964,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.pfmet = evt_pfmet();
 	StopEvt.pfmet_phi = evt_pfmetPhi();
       }
-
+      
       //
       //Lepton Variables
       //
@@ -1274,17 +1278,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	leadph = i;
       }
       StopEvt.ph_selectedidx = leadph;
-
-      //
-      // Event Variables
-      //
-
+      
       // MET & Leptons
       if(nVetoLeptons>0) StopEvt.mt_met_lep = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>1) StopEvt.mt_met_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>0) StopEvt.dphi_Wlep = DPhi_W_lep(StopEvt.pfmet, StopEvt.pfmet_phi, lep1.p4);
       if(jets.ak4pfjets_p4.size()> 0) StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
-
+      
       StopEvt.ak4pfjets_rho = evt_fixgridfastjet_all_rho();
 
       vector<int> jetIndexSortedCSV;
@@ -1749,8 +1749,70 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       } // end if not data      
 
-      
+      //
+      // Event Variables
+      //
 
+      //
+      // calculate new met variable with the 2nd lepton removed
+      float new_pfmet_x = StopEvt.pfmet * std::cos(StopEvt.pfmet_phi);
+      float new_pfmet_y = StopEvt.pfmet * std::sin(StopEvt.pfmet_phi);
+        
+      //
+      // remove the second lepton, iso track, or tau from the MET
+      //
+      if (nVetoLeptons > 1) {
+        new_pfmet_x += lep2.p4.px();
+        new_pfmet_y += lep2.p4.py();
+      }
+      else if (!StopEvt.PassTrackVeto) {
+        vecLorentzVector isotrk_p4s;
+        for (unsigned int idx = 0; idx < Tracks.isoTracks_isVetoTrack_v3.size(); idx++) {
+          if (!Tracks.isoTracks_isVetoTrack_v3.at(idx)) continue;
+          isotrk_p4s.push_back(Tracks.isoTracks_p4.at(idx));
+        }
+        if (isotrk_p4s.size() == 0) {
+          std::cout << "ERROR!!! Event fails iso track veto but no isolated track found!!!" << std::endl;
+        }
+        else {
+          std::sort(isotrk_p4s.begin(), isotrk_p4s.end(), sortP4byPt());
+          new_pfmet_x += isotrk_p4s.at(0).px();
+          new_pfmet_y += isotrk_p4s.at(0).py();
+        }
+      }
+      else if (!StopEvt.PassTauVeto) {
+        vecLorentzVector tau_p4s;
+        for (unsigned int idx = 0; idx < Taus.tau_isVetoTau.size(); idx++) {
+          if (!Taus.tau_isVetoTau.at(idx)) continue;
+          tau_p4s.push_back(Taus.tau_p4.at(idx));
+        }
+        if (tau_p4s.size() == 0) {
+          std::cout << "ERROR!!! Event fails tau veto but no tau found!!!" << std::endl;
+        }
+        else {
+          std::sort(tau_p4s.begin(), tau_p4s.end(), sortP4byPt());
+          new_pfmet_x += tau_p4s.at(0).px();
+          new_pfmet_y += tau_p4s.at(0).py();
+        }
+      }
+      else
+        ;
+
+      //
+      // calclate new met quantities
+      //
+      StopEvt.pfmet_rl     = std::sqrt(new_pfmet_x*new_pfmet_x + new_pfmet_y*new_pfmet_y);
+      StopEvt.pfmet_phi_rl = std::atan2(new_pfmet_y, new_pfmet_x);              
+
+      if (nVetoLeptons > 0) {
+        StopEvt.mt_met_lep_rl = calculateMt(lep1.p4, StopEvt.pfmet_rl, StopEvt.pfmet_phi_rl);
+        StopEvt.MT2W_rl = CalcMT2W_(mybjets,myaddjets,lep1.p4,StopEvt.pfmet_rl, StopEvt.pfmet_phi_rl);
+        StopEvt.topnessMod_rl = CalcTopness_(1,StopEvt.pfmet_rl,StopEvt.pfmet_phi_rl,lep1.p4,mybjets,myaddjets);
+      }
+      
+      StopEvt.mindphi_met_j1_j2_rl = getMinDphi(StopEvt.pfmet_phi_rl,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
+
+      
       //
       // Trigger Information
       //
