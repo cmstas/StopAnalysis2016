@@ -547,7 +547,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Set JSON file
   //
-  const char* json_file = "json_files/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt";
+  const char* json_file = "json_files/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt";
   set_goodrun_file_json(json_file);
   
   //
@@ -1771,6 +1771,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //std::cout << "[babymaker::looper]: filling HLT vars" << std::endl;
       //////////////// 2015 Run II  //////////////////////
       StopEvt.HLT_MET = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_HBHECleaned_v") || passHLTTriggerPattern("HLT_PFMET170_NotCleaned_v"); 
+      StopEvt.HLT_MET100_MHT100 = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v");
       StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele25_eta2p1_WPTight_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v") ||passHLTTriggerPattern("HLT_Ele27_eta2p1_WPLoose_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_eta2p1_WPTight_Gsf_v");
       StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_v") || passHLTTriggerPattern("HLT_IsoTkMu20_v") || passHLTTriggerPattern("HLT_IsoMu22_v") || passHLTTriggerPattern("HLT_IsoTkMu22_v") || passHLTTriggerPattern("HLT_IsoMu24_v") || passHLTTriggerPattern("HLT_IsoTkMu24_v");
       StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
