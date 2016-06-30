@@ -968,7 +968,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.pfmet = evt_pfmet();
 	StopEvt.pfmet_phi = evt_pfmetPhi();
       }
-
+      
       //
       //Lepton Variables
       //
@@ -1289,17 +1289,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	leadph = i;
       }
       StopEvt.ph_selectedidx = leadph;
-
-      //
-      // Event Variables
-      //
-
+      
       // MET & Leptons
       if(nVetoLeptons>0) StopEvt.mt_met_lep = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>1) StopEvt.mt_met_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>0) StopEvt.dphi_Wlep = DPhi_W_lep(StopEvt.pfmet, StopEvt.pfmet_phi, lep1.p4);
       if(jets.ak4pfjets_p4.size()> 0) StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
-
+      
       StopEvt.ak4pfjets_rho = evt_fixgridfastjet_all_rho();
 
       vector<int> jetIndexSortedCSV;
@@ -1826,6 +1822,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.mindphi_met_j1_j2_rl = getMinDphi(StopEvt.pfmet_phi_rl,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
       ///////////////////////////////////////////////////////// 
 
+      
       //
       // Trigger Information
       //
