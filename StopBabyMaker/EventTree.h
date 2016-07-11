@@ -117,6 +117,7 @@ public:
     float filt_hcallaser;
     float filt_met;
     float filt_badChargedCandidateFilter;
+    float filt_badMuonFilter;
     float filt_trkfail;
     float filt_trkPOG;
     float filt_trkPOG_logerr_tmc;

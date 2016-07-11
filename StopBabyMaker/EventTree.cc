@@ -79,14 +79,15 @@ void EventTree::FillCommon (const std::string &root_file_name)
     if(!signal){
       if(nvtxs>0) filt_met = true;
       else filt_met = false;
-      filt_met = filt_met*filt_cscBeamHalo()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso();
+      filt_met = filt_met*filt_globalTightHalo2016()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso();
 
+      filt_badMuonFilter = badMuonFilter(); 
       filt_badChargedCandidateFilter = badChargedCandidateFilter();
       filt_cscbeamhalo = filt_cscBeamHalo();
       filt_cscbeamhalo2015 = filt_cscBeamHalo2015();
       //not in miniaod yet 
-      //filt_globaltighthalo2016 = filt_globalTightHalo2016();
-      //filt_globalsupertighthalo2016 = filt_globalSuperTightHalo2016();
+      filt_globaltighthalo2016 = filt_globalTightHalo2016();
+      filt_globalsupertighthalo2016 = filt_globalSuperTightHalo2016();
       filt_eebadsc = filt_eeBadSc();
       filt_goodvtx = filt_goodVertices(); //not working but same as our 1goodvertex requirement
       filt_ecallaser = filt_ecalLaser();
@@ -421,6 +422,7 @@ void EventTree::Reset ()
      filt_trkPOG_tmc = false;
      filt_trkPOG_tms = false;
      filt_badChargedCandidateFilter = false;
+     filt_badMuonFilter = false;
 
     nPhotons             = -9999;
     ph_selectedidx       = -9999;
@@ -582,6 +584,9 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("filt_met", &filt_met);
     tree->Branch("hardgenpt", &hardgenpt);
     tree->Branch("filt_badChargedCandidateFilter", &filt_badChargedCandidateFilter);
+    tree->Branch("filt_badMuonFilter", &filt_badMuonFilter);
+    tree->Branch("calomet", &calomet);
+    tree->Branch("calomet_phi", &calomet_phi);
 }
 
 void EventTree::SetSecondLepBranches (TTree* tree)
@@ -618,8 +623,6 @@ void EventTree::SetExtraVariablesBranches (TTree* tree)
 
 void EventTree::SetMETFilterBranches (TTree* tree)
 {
-    tree->Branch("calomet", &calomet);
-    tree->Branch("calomet_phi", &calomet_phi);
     tree->Branch("filt_cscbeamhalo", &filt_cscbeamhalo);
     tree->Branch("filt_cscbeamhalo2015", &filt_cscbeamhalo2015);
     tree->Branch("filt_globaltighthalo2016", &filt_globaltighthalo2016);
