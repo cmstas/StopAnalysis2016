@@ -571,10 +571,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
     jetcorr_uncertainty_filename = "jecfiles/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
   } else if(isSignalFromFileName){
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Fastsim15_L1FastJet_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Fastsim15_L2Relative_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Fastsim15_L3Absolute_AK4PFchs.txt");
-    jetcorr_uncertainty_filename = "jecfiles/Fastsim15_Uncertainty_AK4PFchs.txt";
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_FastSimV1_L1FastJet_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_FastSimV1_L2Relative_AK4PFchs.txt");
+    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_FastSimV1_L3Absolute_AK4PFchs.txt");
+    jetcorr_uncertainty_filename = "jecfiles/Spring16_FastSimV1_Uncertainty_AK4PFchs.txt";
   }  
   else {
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt");
