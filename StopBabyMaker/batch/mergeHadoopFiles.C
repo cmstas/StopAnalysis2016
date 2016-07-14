@@ -2,6 +2,7 @@
 #include "TChain.h"
 #include "TFile.h"
 #include "TH1.h"
+#include "TH3D.h"
 #include "TString.h"
 
 #include <vector>
@@ -68,11 +69,11 @@ void mergeHadoopFiles(const TString& indir, const TString& sample, const TString
       
     } // end loop over histograms
     if( firstFile ){
-      TH3D *h_temp3D = (TH1D*)file.Get("h_counterSMS");
-      histos3D = (TH1D*)h_temp->Clone();
+      TH3D *h_temp3D = (TH3D*)file.Get("h_counterSMS");
+      histos3D = (TH3D*)h_temp3D->Clone();
       histos3D->SetDirectory(f_output);
     } else {
-      TH3D *h_temp3D = (TH1D*)file.Get("h_counterSMS");
+      TH3D *h_temp3D = (TH3D*)file.Get("h_counterSMS");
       histos3D->Add(h_temp3D);
     }
 
