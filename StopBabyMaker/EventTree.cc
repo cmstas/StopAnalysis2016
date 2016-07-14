@@ -75,17 +75,15 @@ void EventTree::FillCommon (const std::string &root_file_name)
     is_data = evt_isRealData();
 
     // the recommended met filters //
-   if (is_data){  //safety for CMS3_V08-00-01
     if(!signal){
       if(nvtxs>0) filt_met = true;
       else filt_met = false;
       filt_met = filt_met*filt_globalTightHalo2016()*filt_ecalTP()*filt_eeBadSc()*filt_hbheNoise()*filt_hbheNoiseIso();
 
-      filt_badMuonFilter = badMuonFilter(); 
+      if (is_data) filt_badMuonFilter = badMuonFilter(); //still some problems with MC
       filt_badChargedCandidateFilter = badChargedCandidateFilter();
       filt_cscbeamhalo = filt_cscBeamHalo();
       filt_cscbeamhalo2015 = filt_cscBeamHalo2015();
-      //not in miniaod yet 
       filt_globaltighthalo2016 = filt_globalTightHalo2016();
       filt_globalsupertighthalo2016 = filt_globalSuperTightHalo2016();
       filt_eebadsc = filt_eeBadSc();
@@ -93,16 +91,15 @@ void EventTree::FillCommon (const std::string &root_file_name)
       filt_ecallaser = filt_ecalLaser();
       filt_ecaltp = filt_ecalTP();
       filt_hcallaser = filt_hcalLaser();
-//      filt_met = filt_metfilter();
       filt_trkfail = filt_trackingFailure();
       filt_trkPOG = filt_trkPOGFilters();
       filt_trkPOG_logerr_tmc = filt_trkPOG_logErrorTooManyClusters();
       filt_trkPOG_tmc =filt_trkPOG_manystripclus53X();
       filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
     }
+
     filt_hbhenoise = filt_hbheNoise(); // hbheNoiseFilter_25ns();
     filt_hbheisonoise = filt_hbheNoiseIso();//hbheIsoNoiseFilter();
-}   
     
     if (!is_data)
     {
@@ -122,6 +119,15 @@ void EventTree::FillCommon (const std::string &root_file_name)
       }
       genmet = gen_met();
       genmet_phi = gen_metPhi();
+
+      // calculate nupt
+         LorentzVector nup4 (0.,0.,0.,0.);
+         for(int iGen=0; iGen<(int)genps_p4().size(); iGen++){
+              if(!(abs(genps_id().at(iGen) ) ==12 || abs(genps_id().at(iGen) ) == 14 || abs(genps_id().at(iGen) ) ==16)) continue;
+                if(!genps_isHardProcess().at(iGen)) continue;
+                nup4=nup4+genps_p4().at(iGen);
+          }
+          nupt = nup4.pt();
      
        //calculate genht
          float _genht=0;
@@ -308,6 +314,7 @@ void EventTree::Reset ()
 
     genmet 	= -9999.;
     genmet_phi 	= -9999.;
+     nupt = -99999.;
     genht = -9999.;
     PassTrackVeto    = false;
 //    PassTrackVeto_v2 = false;
@@ -553,6 +560,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("mass_gluino", &mass_gluino);
     tree->Branch("genmet", &genmet);
     tree->Branch("genmet_phi", &genmet_phi);
+    tree->Branch("nupt", &nupt);
     tree->Branch("genht", &genht);
     tree->Branch("PassTrackVeto",&PassTrackVeto);
     tree->Branch("PassTauVeto",&PassTauVeto);
