@@ -99,6 +99,9 @@ void mergeHadoopFiles(const TString& indir, const TString& sample, const TString
       TFile *outFile = new TFile(iOutPath, "update");
 
       TH1D *h_temp[nHistos];
+      TH3D *h_temp_3D=NULL;
+      *h_temp_3D = (TH3D*)histos3D->Clone();
+      h_temp_3D->SetDirectory(outFile);
       for(int iHist=0; iHist<nHistos; iHist++) h_temp[iHist]=NULL;
 
       for(int iHist=0; iHist<nHistos; iHist++){
