@@ -1,37 +1,3 @@
-#####################################
-## Collection of 25ns Data samples ##
-#####################################
-##
-## Double EG ##
-SAMPLE
-Name data_double_eg_Run2016B_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016B_DoubleEG_MINIAOD_PromptReco-v2/merged/V08-00-04/
-
-## Double mu ##
-SAMPLE
-Name data_double_mu_Run2016B_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016B_DoubleMuon_MINIAOD_PromptReco-v2/merged/V08-00-04/
-## Muon EG ##
-
-SAMPLE
-Name data_muon_eg_Run2016B_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016B_MuonEG_MINIAOD_PromptReco-v2/merged/V08-00-04/
-
-## Single Electron ##
-SAMPLE
-Name data_single_electron_Run2016B_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016B_SingleElectron_MINIAOD_PromptReco-v2/merged/V08-00-04/
-
-## Single Muon ##
-SAMPLE
-Name data_single_muon_Run2016B_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016B_SingleMuon_MINIAOD_PromptReco-v2/merged/V08-00-04/
-
-## MET ##
-SAMPLE
-Name data_met_Run2016B_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016B_MET_MINIAOD_PromptReco-v2/merged/V08-00-04/
-
 ##################################################
 ### Collection of 25ns REPROCESSED Data Samples ##
 ##################################################
@@ -204,7 +170,7 @@ Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-400To600_Tu
 
 SAMPLE
 Name WJetsToLNu_HT600To800_madgraph_pythia8_25ns
-Path hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 SAMPLE
 Name WJetsToLNu_HT800To1200_madgraph_pythia8_25ns
