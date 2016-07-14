@@ -205,19 +205,19 @@ Name W4JetsToLNu_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/W4JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 SAMPLE
-Name W1JetsToLNu_madgraph_pythia8_25ns_nupT200
+Name W1JetsToLNu_nupT200_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/W1JetsToLNu_NuPt-200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 SAMPLE
-Name W2JetsToLNu_madgraph_pythia8_25ns_nupT200
+Name W2JetsToLNu_nupT200_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/W2JetsToLNu_NuPt-200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 SAMPLE
-Name W3JetsToLNu_madgraph_pythia8_25ns_nupT200
+Name W3JetsToLNu_nupT200_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/W3JetsToLNu_NuPt-200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 SAMPLE
-Name W4JetsToLNu_madgraph_pythia8_25ns_nupT200
+Name W4JetsToLNu_nupT200_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/W4JetsToLNu_NuPt-200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 ## diboson ##
