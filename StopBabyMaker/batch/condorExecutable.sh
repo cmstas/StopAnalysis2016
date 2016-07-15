@@ -87,11 +87,11 @@ echo ""
 ls -l `pwd`/${NAME}_${NUMBER}.root
 
 
-# Copy the output to the output directory via lcg-cp
+# Copy the output to the output directory via gfal-copy new
 RIGHT_NOW=`date +"%Y%m%d %H%M%S"`
 echo ""
 echo "*************************************"
-echo "  Copy output file with lcg-cp... "
+echo "  Copy output file with gfal-copy... "
 echo "    TIME = $RIGHT_NOW "
 echo "*************************************"
 echo ""
@@ -100,8 +100,8 @@ echo ""
 echo "copying.  LS is: "
 ls -l ${NAME}_${NUMBER}.root
 
-lcg-cp -b -D srmv2 --vo cms --connect-timeout 2400 --verbose file://`pwd`/${NAME}_${NUMBER}.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${COPYDIR}/${NAME}_${NUMBER}.root
-
+#gfal-copy -b -D srmv2 --vo cms --connect-timeout 2400 --verbose file://`pwd`/${NAME}_${NUMBER}.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${COPYDIR}/${NAME}_${NUMBER}.root
+gfal-copy -p -f -t 4200 --verbose file://`pwd`/${NAME}_${NUMBER}.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${COPYDIR}/${NAME}_${NUMBER}.root
 
 # Job Complete
 RIGHT_NOW=`date +"%Y%m%d %H%M%S"`

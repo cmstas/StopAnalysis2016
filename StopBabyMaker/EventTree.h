@@ -131,9 +131,62 @@ public:
   float mt_met_lep2;
   float mt_met_lep_rl;
 
-  float dphi_Wlep;
-  float MET_over_sqrtHT;
-  float ak4pfjets_rho;
+    float MT2_lb_b;
+    float MT2_lb_b_lep2;
+    float MT2_l_l;
+    float MT2_lb_b_mass;
+    float MT2_lb_b_mass_lep2;
+    float MT2_lb_bqq;
+    float MT2_lb_bqq_lep2;
+    float MT2_lb_bqq_mass;
+    float MT2_lb_bqq_mass_lep2;
+
+    float Mlb_closestb;
+    float Mlb_lead_bdiscr;
+    float Mlb_closestb_lep2;
+    float Mlb_lead_bdiscr_lep2;
+    float Mjjj;
+    float Mjjj_lep2;
+
+    float pfmet;
+    float pfmet_phi;
+    float pfmet_rl;
+    float pfmet_phi_rl;
+    float calomet;
+    float calomet_phi;
+
+    float filt_cscbeamhalo;
+    float filt_cscbeamhalo2015;
+    float filt_globaltighthalo2016;
+    float filt_globalsupertighthalo2016;
+    float filt_ecallaser;
+    float filt_ecaltp;
+    float filt_eebadsc;
+    float filt_goodvtx;
+    float filt_badevents;
+    float filt_hbhenoise;
+    float filt_hbheisonoise;
+    float filt_hcallaser;
+    float filt_met;
+    float filt_badChargedCandidateFilter;
+    float filt_badMuonFilter;
+    float filt_trkfail;
+    float filt_trkPOG;
+    float filt_trkPOG_logerr_tmc;
+    float filt_trkPOG_tmc;
+    float filt_trkPOG_tms;
+
+    float dR_lep_leadb;
+    float dR_lep2_leadb;    
+    float mindphi_met_j1_j2;
+    float mindphi_met_j1_j2_rl;
+    float mt_met_lep;
+    float mt_met_lep2;
+    float mt_met_lep_rl;
+
+    float dphi_Wlep;
+    float MET_over_sqrtHT;
+    float ak4pfjets_rho;
  
   bool is_data;
  
@@ -185,6 +238,7 @@ public:
     float mass_stop;
     float mass_gluino;       
  
+<<<<<<< HEAD
   //gen met
   float genmet;
   float genmet_phi;
@@ -193,6 +247,16 @@ public:
   //veto
   bool PassTrackVeto;
   bool PassTauVeto;
+=======
+    //gen met
+    float genmet;
+    float genmet_phi;
+    float genht;
+    float nupt;
+    //veto
+    bool PassTrackVeto;
+    bool PassTauVeto;
+>>>>>>> master
 
     //trigger
     //int  HLT_HT900;

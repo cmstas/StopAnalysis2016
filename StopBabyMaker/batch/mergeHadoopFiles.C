@@ -2,6 +2,7 @@
 #include "TChain.h"
 #include "TFile.h"
 #include "TH1.h"
+#include "TH3D.h"
 #include "TString.h"
 
 #include <vector>
@@ -35,6 +36,7 @@ void mergeHadoopFiles(const TString& indir, const TString& sample, const TString
   // Initialize pointers for each histogram
   TH1D *histos[nHistos];
   for(int iHist=0; iHist<nHistos; iHist++) histos[iHist]=NULL;
+  TH3D *histos3D=NULL;
 
   // Loop over input files, adding histograms
   bool firstFile=true;
@@ -66,6 +68,14 @@ void mergeHadoopFiles(const TString& indir, const TString& sample, const TString
       }
       
     } // end loop over histograms
+    if( firstFile ){
+      TH3D *h_temp3D = (TH3D*)file.Get("h_counterSMS");
+      histos3D = (TH3D*)h_temp3D->Clone();
+      histos3D->SetDirectory(f_output);
+    } else {
+      TH3D *h_temp3D = (TH3D*)file.Get("h_counterSMS");
+      histos3D->Add(h_temp3D);
+    }
 
     // Close input file
     file.Close();
@@ -89,6 +99,9 @@ void mergeHadoopFiles(const TString& indir, const TString& sample, const TString
       TFile *outFile = new TFile(iOutPath, "update");
 
       TH1D *h_temp[nHistos];
+      TH3D *h_temp_3D=NULL;
+      h_temp_3D = (TH3D*)histos3D->Clone();
+      h_temp_3D->SetDirectory(outFile);
       for(int iHist=0; iHist<nHistos; iHist++) h_temp[iHist]=NULL;
 
       for(int iHist=0; iHist<nHistos; iHist++){

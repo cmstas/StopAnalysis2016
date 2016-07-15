@@ -100,8 +100,8 @@ int main(int argc, char **argv){
   float phs_pt          = 20.0;
   float phs_eta         = 2.4;
 
-  bool filltaus_  =  false;
-  bool filltracks_  =  false;
+  bool filltaus_  =  true;
+  bool filltracks_  =  true;
   bool fillZll_  =  false;
   bool fillPhoton_  =  false;
   bool fillMETfilt_  =  false;
