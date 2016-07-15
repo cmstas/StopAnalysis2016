@@ -477,7 +477,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     hPUdown = (TH1D*)pileupfile->Get("puWeightDown");
   }
   
-  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 24, 0.5,24.5);
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 27, 0.5,27.5);
   counterhist->Sumw2();
   counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
   counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -503,11 +503,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(22,"NEvents");
   counterhist->GetXaxis()->SetBinLabel(23,"weight_btagsf_fastsim_UP");
   counterhist->GetXaxis()->SetBinLabel(24,"weight_btagsf_fastsim_DN");
+  counterhist->GetXaxis()->SetBinLabel(25,"weight_ISRnjets_nominal");
+  counterhist->GetXaxis()->SetBinLabel(26,"weight_ISRnjets_up");
+  counterhist->GetXaxis()->SetBinLabel(27,"weight_ISRnjets_down");
 
   TH3D* counterhistSig;
   TH2F* histNEvts;//count #evts per signal point
   if(isSignalFromFileName){//create histos only for signals
-    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 23, 0.5,23.5);//15000 bins!
+    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 26, 0.5,26.5);//15000 bins!
     counterhistSig->Sumw2();
     counterhistSig->GetZaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
     counterhistSig->GetZaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -532,6 +535,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     counterhistSig->GetZaxis()->SetBinLabel(21,"weight_ISR_down");
     counterhistSig->GetZaxis()->SetBinLabel(22,"weight_btagsf_fastsim_UP");
     counterhistSig->GetZaxis()->SetBinLabel(23,"weight_btagsf_fastsim_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(24,"weight_ISRnjets_nominal");
+    counterhistSig->GetZaxis()->SetBinLabel(25,"weight_ISRnjets_up");
+    counterhistSig->GetZaxis()->SetBinLabel(26,"weight_ISRnjets_down");
     histNEvts = new TH2F( "histNEvts", "h_histNEvts", 37,99,1024, 19,-1,474);//x=mStop, y=mLSP
     histNEvts->Sumw2();
   }
@@ -823,6 +829,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       bool istopevent = false;
       bool isWevent = false;
       bool isZevent = false;
+      vector<LorentzVector> genpnotISR; genpnotISR.clear();
 
       if(thisFile.Contains("DYJets") || thisFile.Contains("ZJets") ||
 	 thisFile.Contains("ZZ") || thisFile.Contains("WZ") ||
@@ -850,6 +857,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	      genps_fromHardProcessFinalState().at(genx) ||
 	      genps_isLastCopy().at(genx) ||
 	      genps_status().at(genx)==1 ){
+
+	    if(abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau || abs(genps_id().at(genx)) == pdg_b || abs(genps_id().at(genx)) == pdg_c || abs(genps_id().at(genx)) == pdg_s || abs(genps_id().at(genx)) == pdg_d ||abs(genps_id().at(genx)) == pdg_u ){//if have lepton or quark --> those could be matched to a jet
+	      int mother_idx = genps_idx_mother().at(genx);
+	      int mother_id = -999;
+	      if(mother_idx>=0) mother_id = abs(genps_id().at(mother_idx));
+	      if(mother_id==pdg_t || mother_id==pdg_W || mother_id==1000006 || mother_id==2000006 || mother_id==pdg_chi_1plus1 || mother_id==pdg_chi_2plus1){
+		genpnotISR.push_back(genps_p4().at(genx));
+	      }
+	    }
      	    
 	    if( abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau) gen_leps.FillCommon(genx);
 	    if( abs(genps_id().at(genx)) == pdg_numu || abs(genps_id().at(genx)) == pdg_nue || abs(genps_id().at(genx)) == pdg_nutau ) gen_nus.FillCommon(genx);
@@ -1241,7 +1257,40 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
         jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_err_heavy_UP, btagprob_err_heavy_DN, btagprob_err_light_UP,btagprob_err_light_DN,btagprob_err_FS_UP,btagprob_err_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
       }
+      if (!evt_isRealData()){
+	int NISRjets = 0;
+	int nonISRjets = 0;
+	for(unsigned int jix = 0; jix<jets.ak4pfjets_p4.size(); ++jix){
+	  bool ismatched = false;
+	  for(unsigned int gpix = 0; gpix<genpnotISR.size(); ++gpix){
+	    if(dRbetweenVectors(jets.ak4pfjets_p4[jix],genpnotISR[gpix])<=0.3){
+	      ismatched = true;
+	      break;
+	    }
+	  }
+	  if(!ismatched) ++NISRjets;
+	  else ++nonISRjets;
+	}
+	if(NISRjets     ==0){ StopEvt.weight_ISRnjets = 1.0000; StopEvt.weight_ISRnjets_UP = 1.0000; StopEvt.weight_ISRnjets_DN = 1.0000; }
+	else if(NISRjets==1){ StopEvt.weight_ISRnjets = 0.8820; StopEvt.weight_ISRnjets_UP = 0.9410; StopEvt.weight_ISRnjets_DN = 0.8230; }
+	else if(NISRjets==2){ StopEvt.weight_ISRnjets = 0.7920; StopEvt.weight_ISRnjets_UP = 0.8960; StopEvt.weight_ISRnjets_DN = 0.6880; }
+	else if(NISRjets==3){ StopEvt.weight_ISRnjets = 0.7020; StopEvt.weight_ISRnjets_UP = 0.8510; StopEvt.weight_ISRnjets_DN = 0.5530; }
+	else if(NISRjets==4){ StopEvt.weight_ISRnjets = 0.6480; StopEvt.weight_ISRnjets_UP = 0.8240; StopEvt.weight_ISRnjets_DN = 0.4720; }
+	else if(NISRjets==5){ StopEvt.weight_ISRnjets = 0.6010; StopEvt.weight_ISRnjets_UP = 0.8005; StopEvt.weight_ISRnjets_DN = 0.4015; }
+	else {                StopEvt.weight_ISRnjets = 0.5150; StopEvt.weight_ISRnjets_UP = 0.7575; StopEvt.weight_ISRnjets_DN = 0.2725; }
+	StopEvt.NISRjets = NISRjets;
+	StopEvt.NnonISRjets = nonISRjets;
 
+	counterhist->Fill(25,StopEvt.weight_ISRnjets);
+	counterhist->Fill(26,StopEvt.weight_ISRnjets_UP);
+	counterhist->Fill(27,StopEvt.weight_ISRnjets_DN);
+	if(isSignalFromFileName){
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,24,StopEvt.weight_ISRnjets);
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,25,StopEvt.weight_ISRnjets_UP);
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,26,StopEvt.weight_ISRnjets_DN);
+	}
+      }
+      
       // SAVE B TAGGING SF 
      if (!evt_isRealData() && skim_applyBtagSFs) {
         StopEvt.weight_btagsf = btagprob_data / btagprob_mc;
@@ -1287,6 +1336,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(jets.ngoodbtags < skim_nBJets) continue;
       nEvents_pass_skim_nBJets++;
 
+      bool fastsimfilt = false;
+      for(unsigned int jix = 0; jix<=jets.ak4pfjets_p4.size();++jix){
+	if(jets.ak4pfjets_p4[jix].Pt()<30) continue;
+	if(fabs(jets.ak4pfjets_p4[jix].Eta())>2.4) continue;
+	bool isgenmatch = false;
+	for(unsigned int gix = 0; gix<jets.ak4genjets_p4.size();++gix){
+	  if(dRbetweenVectors(jets.ak4genjets_p4[gix],jets.ak4pfjets_p4[jix])<0.3) { isgenmatch = true; break; }
+	}
+	if(isgenmatch) continue;
+	if(jets.ak4pfjets_chf[jix]>0.1) continue;
+	fastsimfilt = true;
+	break;
+      }
+      StopEvt.filt_fastsimjets = fastsimfilt;
 
       //
       // Photon Selection
@@ -1847,25 +1910,27 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       //std::cout << "[babymaker::looper]: filling HLT vars" << std::endl;
       //////////////// 2015 Run II  //////////////////////
-      StopEvt.HLT_MET = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_HBHECleaned_v") || passHLTTriggerPattern("HLT_PFMET170_NotCleaned_v"); 
-      StopEvt.HLT_MET100_MHT100 = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v");
-      StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele25_eta2p1_WPTight_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v") ||passHLTTriggerPattern("HLT_Ele27_eta2p1_WPLoose_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_eta2p1_WPTight_Gsf_v");
-      StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_v") || passHLTTriggerPattern("HLT_IsoTkMu20_v") || passHLTTriggerPattern("HLT_IsoMu22_v") || passHLTTriggerPattern("HLT_IsoTkMu22_v") || passHLTTriggerPattern("HLT_IsoMu24_v") || passHLTTriggerPattern("HLT_IsoTkMu24_v");
-      StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
-      StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
-      StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v"); 
-     //photons more complicated because of prescales
-      StopEvt.HLT_Photon90_CaloIdL_PFHT500 = passHLTTriggerPattern("HLT_Photon90_CaloIdL_PFHT500_v");
-      StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"));
-      StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
-      StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
-      StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
+      if(!isSignalFromFileName){
+	StopEvt.HLT_MET = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_HBHECleaned_v") || passHLTTriggerPattern("HLT_PFMET170_NotCleaned_v"); 
+	StopEvt.HLT_MET100_MHT100 = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v");
+	StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele25_eta2p1_WPTight_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v") ||passHLTTriggerPattern("HLT_Ele27_eta2p1_WPLoose_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_eta2p1_WPTight_Gsf_v");
+	StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_v") || passHLTTriggerPattern("HLT_IsoTkMu20_v") || passHLTTriggerPattern("HLT_IsoMu22_v") || passHLTTriggerPattern("HLT_IsoTkMu22_v") || passHLTTriggerPattern("HLT_IsoMu24_v") || passHLTTriggerPattern("HLT_IsoTkMu24_v");
+	StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
+	StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
+	StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v"); 
+	//photons more complicated because of prescales
+	StopEvt.HLT_Photon90_CaloIdL_PFHT500 = passHLTTriggerPattern("HLT_Photon90_CaloIdL_PFHT500_v");
+	StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"));
+	StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
+	StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
+	StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
+      }
 
      ///////////////////////////////////////////////////////////
 
