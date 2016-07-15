@@ -10,11 +10,13 @@ CORE_NAME=CORE
 CORE_PATH=$PWD/../../../
 CORE_DIR=${CORE_PATH}${CORE_NAME}
 
-COPY_NAME=stop_babies__CMS3_V080005__BabyMaker_V0800X_v5__20160714
+#COPY_NAME=stop_babies__CMS3_V080005__BabyMaker_V0800X_v5__20160714
+COPY_NAME=stop_babies__CMS3_V080005__BabyMaker_V0800X_v6__20160715
 COPY_PATH=/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/
 COPY_DIR=${COPY_PATH}${COPY_NAME}
 
-SCRATCH_NAME=temp_stopBabies__20160714
+#SCRATCH_NAME=temp_stopBabies__20160714
+SCRATCH_NAME=temp_stopBabies__20160715
 SCRATCH_PATH=/data/tmp/jgwood/
 SCRATCH_DIR=${SCRATCH_PATH}${SCRATCH_NAME}
 

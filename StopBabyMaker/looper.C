@@ -607,8 +607,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     //reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");  // sys up
     //reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");  // sys down
     //reader_light = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central");  // central
-   // reader_light_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
-   // reader_light_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
+    //reader_light_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
+    //reader_light_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
 
     // get btag efficiencies
     TFile* f_btag_eff;
@@ -619,10 +619,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     //if(!skim_isFastsim) f_btag_eff = new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
     //else f_btag_eff = new TFile("btagsf/btageff__SMS-T1bbbb-T1qqqq_fastsim.root");
     if(!skim_isFastsim){
-      f_btag_eff = new TFile("btagsf/bTagEffs_80X.root");
-      h_btag_eff_b_temp = (TH2D*) f_btag_eff->Get("eff_total_M_b");
-      h_btag_eff_c_temp = (TH2D*) f_btag_eff->Get("eff_total_M_c");
-      h_btag_eff_udsg_temp = (TH2D*) f_btag_eff->Get("eff_total_M_udsg");
+      //f_btag_eff = new TFile("btagsf/bTagEffs_80X.root");
+      //h_btag_eff_b_temp = (TH2D*) f_btag_eff->Get("eff_total_M_b");
+      //h_btag_eff_c_temp = (TH2D*) f_btag_eff->Get("eff_total_M_c");
+      //h_btag_eff_udsg_temp = (TH2D*) f_btag_eff->Get("eff_total_M_udsg");
+      f_btag_eff = new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
+      h_btag_eff_b_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_b");
+      h_btag_eff_c_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_c");
+      h_btag_eff_udsg_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
     }
     else{
       f_btag_eff = new TFile("btagsf/btageff__SMS-T1bbbb-T1qqqq_fastsim.root");
