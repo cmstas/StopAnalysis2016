@@ -169,6 +169,10 @@ Name WJetsToLNu_HT400To600_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 SAMPLE
+Name WJetsToLNu_HT400To600_madgraph_pythia8_ext1_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/V08-00-05/
+
+SAMPLE
 Name WJetsToLNu_HT600To800_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
@@ -187,6 +191,10 @@ Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-1200To2500_
 SAMPLE
 Name WJetsToLNu_HT2500ToInf_madgraph_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+
+SAMPLE
+Name WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/V08-00-05/
 
 SAMPLE
 Name W1JetsToLNu_madgraph_pythia8_25ns
@@ -323,4 +331,4 @@ Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/SMS-T2tt_mStop-500_mLSP-3
 
 SAMPLE
 Name T2tt_mStop_850_mLSP_100_25ns
-Path 	/hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/SMS-T2tt_mStop-850_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/SMS-T2tt_mStop-850_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
