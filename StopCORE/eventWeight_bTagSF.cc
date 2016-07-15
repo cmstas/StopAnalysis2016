@@ -8,6 +8,7 @@ eventWeight_bTagSF::eventWeight_bTagSF( bool isFastsim ){
 
   // 25s version of SFs
   calib           = new BTagCalibration("csvv2", "../../CORE/Tools/btagsf/data/run2_25ns/CSVv2.csv"); 
+  //calib           = new BTagCalibration("csvv2", "../../CORE/Tools/btagsf/data/run2_25ns/CSVv2_4invfb.csv"); 
   reader_heavy    = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "central"); // central, hf
   reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");      // sys up, hf
   reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");    // sys down, hf
@@ -17,6 +18,7 @@ eventWeight_bTagSF::eventWeight_bTagSF( bool isFastsim ){
   
   if( !sampleIsFastsim ) {
     f_btag_eff      = new TFile("../../CORE/Tools/btagsf/data/run2_25ns/btageff__ttbar_powheg_pythia8_25ns.root");
+    //f_btag_eff      = new TFile("../../CORE/Tools/btagsf/data/run2_25ns/bTagEffs_80X.root");
     h_btag_eff_b    = (TH2D*)f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_b");
     h_btag_eff_c    = (TH2D*)f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_c");
     h_btag_eff_udsg = (TH2D*)f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_udsg");

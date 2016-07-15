@@ -135,10 +135,16 @@ selectionInfo::cutUtil::cutUtil( selectionInfo::ID cut ){
     tex   = "$MET\\ge50$~GeV";
     break;
 
+  case( k_ge150_met ):
+    label = "ge150_met";
+    title = "MET>=150 GeV";
+    tex   = "$MET\\ge150$~GeV";
+    break;
+
   case( k_ge250_met ):
     label = "ge250_met";
     title = "MET>=250 GeV";
-    tex   = "$MET\\ge50$~GeV";
+    tex   = "$MET\\ge250$~GeV";
     break;
     
   case( k_ge150_mt ):
@@ -326,15 +332,17 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
 
   // If adding 2nd lepton to Met, recalculate appropriate vars
   double met = babyAnalyzer.pfmet();
-  double met_phi = babyAnalyzer.pfmet_phi();
-  double dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
+  //double met_phi = babyAnalyzer.pfmet_phi();
+  //double dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
   double mt = babyAnalyzer.mt_met_lep();
   double minDPhi_met_j1_j2 = babyAnalyzer.mindphi_met_j1_j2();
-  if( addSecondLepToMet ) {
 
+
+  if( addSecondLepToMet ) {
+    /*
     if( (babyAnalyzer.ngoodleps()>=2) ||
     	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
-
+      
       double metX = met*std::cos(met_phi);
       double metY = met*std::sin(met_phi);
 
@@ -349,8 +357,19 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
       double minDPhi_met_j1 = std::acos(std::cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(0).Phi()));
       double minDPhi_met_j2 = std::acos(std::cos(met_phi - babyAnalyzer.ak4pfjets_p4().at(1).Phi()));
       minDPhi_met_j1_j2 = std::min( minDPhi_met_j1, minDPhi_met_j2 );      
+
     } // min if 2nd lepton exists
+    */
+
+    // If adding 2nd lepton to Met, recalculate appropriate vars
+    met = babyAnalyzer.pfmet_rl();
+    //met_phi = babyAnalyzer.pfmet_phi_rl();
+    //dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
+    mt = babyAnalyzer.mt_met_lep_rl();
+    minDPhi_met_j1_j2 = babyAnalyzer.mindphi_met_j1_j2_rl();
+
   } // end if addSecondLepToMet
+
 
   //std::cout << "In selection.cc" << std::endl;
   //std::cout << "  Evt, Run, Ls = " << babyAnalyzer.evt() << ", " << babyAnalyzer.run() << ", " << babyAnalyzer.ls() << std::endl;
@@ -441,14 +460,14 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
   //break;
 
   //case( k_diLepton ):
-  //  if( (babyAnalyzer.ngoodleps()>=2) ||
-  //  	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ||
-  //  	(babyAnalyzer.ngoodleps()==1 && (!babyAnalyzer.PassTrackVeto() || !babyAnalyzer.PassTauVeto()) )     ) result = true;
-  //break;
+    //if( (babyAnalyzer.ngoodleps()>=2) ||
+    //(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ||
+    //	(babyAnalyzer.ngoodleps()==1 && (!babyAnalyzer.PassTrackVeto() || !babyAnalyzer.PassTauVeto()) )     ) result = true;
+    //break;
 
   case( k_diLepton ):
     if( (babyAnalyzer.ngoodleps()>=2) ||
-    	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ) result = true;
+  	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ) result = true;
     break;
 
   case( k_diLepton_bulkTTbar ):
@@ -488,6 +507,10 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
  
   case( k_ge50_met ):
     if( met>=50.0 ) result = true;
+    break;
+
+  case( k_ge150_met ):
+    if( met>=150.0 ) result = true;
     break;
 
   case( k_ge250_met ):
@@ -726,7 +749,8 @@ selectionInfo::vect_util selectionInfo::getCutList( analyzerInfo::ID analysis ){
     result.push_back( cutUtil(k_tauVeto) );
     result.push_back( cutUtil(k_ge2_jets) );
     result.push_back( cutUtil(k_ge1_bJets) );
-    result.push_back( cutUtil(k_ge250_met) );
+    //result.push_back( cutUtil(k_ge250_met) );
+    result.push_back( cutUtil(k_ge150_met) );
     result.push_back( cutUtil(k_ge150_mt) );
     result.push_back( cutUtil(k_ge0p8_minDPhi) );
     break;
@@ -741,7 +765,8 @@ selectionInfo::vect_util selectionInfo::getCutList( analyzerInfo::ID analysis ){
     result.push_back( cutUtil(k_tauVeto) );
     result.push_back( cutUtil(k_ge2_jets) );
     result.push_back( cutUtil(k_ee0_bJets) );
-    result.push_back( cutUtil(k_ge250_met) );
+    //result.push_back( cutUtil(k_ge250_met) );
+    result.push_back( cutUtil(k_ge150_met) );
     result.push_back( cutUtil(k_ge150_mt) );
     result.push_back( cutUtil(k_ge0p8_minDPhi) );
     break;
@@ -766,7 +791,8 @@ selectionInfo::vect_util selectionInfo::getCutList( analyzerInfo::ID analysis ){
     result.push_back( cutUtil(k_diLepton) );
     result.push_back( cutUtil(k_ge2_jets) );
     result.push_back( cutUtil(k_ge1_bJets) );
-    result.push_back( cutUtil(k_ge250_met) );
+    //result.push_back( cutUtil(k_ge250_met) );
+    result.push_back( cutUtil(k_ge150_met) );
     result.push_back( cutUtil(k_ge150_mt) );
     result.push_back( cutUtil(k_ge0p8_minDPhi) );
     break;

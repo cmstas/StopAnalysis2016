@@ -59,9 +59,9 @@ int stopBabyLooper(){
   // SampleList
   //
   sampleInfo::vect_id sampleList;
-  sampleList = sampleInfo::getSampleList( analysis ); 
+  //sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
-  //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
+  sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
   //
@@ -275,6 +275,47 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
       h1_yield = new histogramInfo::h1_Yield_Util( f_output, "yields", "Yields", genClassyList, recoClassyList, catList, systematicList );
     }
     
+
+
+    //
+    // Gen ttbar system pT
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_gen_ttbar_pt = NULL;
+    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge350met = NULL;
+    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge200mt2w = NULL;
+    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge200mt2w_ge350met = NULL;
+    bool sampleIsTTbar = false;
+    if( sample.id == sampleInfo::k_ttbar_powheg_pythia8 ||
+	sample.id == sampleInfo::k_ttbar_powheg_pythia8_ext3 ||
+	sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ||
+	sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 ||
+	sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 ||
+	sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 ||
+	sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8 ||
+	sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 ){
+      sampleIsTTbar = true;
+    }
+
+    if( sampleIsTTbar ){
+      
+      h1_gen_ttbar_pt = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_gen_ttbar_pt__ge350met = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge350met", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_gen_ttbar_pt__ge200mt2w = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge200mt2w", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_gen_ttbar_pt__ge200mt2w_ge350met = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge200mt2w_ge350met", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+
+    }
+
+
+
     
     //
     // nJets
@@ -307,34 +348,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     }
         
 
-
-    // Gen ttbar system pT
-    histogramInfo::h1_Util *h1_gen_ttbar_pt = NULL;
-    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge350met = NULL;
-    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge200mt2w = NULL;
-    histogramInfo::h1_Util *h1_gen_ttbar_pt__ge200mt2w_ge350met = NULL;
-    bool sampleIsTTbar = false;
-    if( sample.id == sampleInfo::k_ttbar_powheg_pythia8 ||
-	sample.id == sampleInfo::k_ttbar_powheg_pythia8_ext3 ||
-	sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ||
-	sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 ||
-	sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 ||
-	sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 ||
-	sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8 ||
-	sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 ){
-      sampleIsTTbar = true;
-    }
-
-    if( sampleIsTTbar ){
-      
-      h1_gen_ttbar_pt = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
-      h1_gen_ttbar_pt__ge350met = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge350met", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
-      h1_gen_ttbar_pt__ge200mt2w = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge200mt2w", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
-      h1_gen_ttbar_pt__ge200mt2w_ge350met = new histogramInfo::h1_Util( f_output, "gen_ttbar_pt__ge200mt2w_ge350met", "Gen t#bar{t}, system pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
-
-    }
-
-
+    
     //
     // modified Topness
     //
@@ -534,15 +548,67 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     }
 
 
-
-    TH1D *h1__recoLep_pt_type = new TH1D("h1__recoLep_pt_type", "reco lepton pT, flavour", 5, 0.0, 5.0);
-    h1__recoLep_pt_type->SetDirectory(f_output);
-    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(1,"el, pT<45");
-    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(2,"el, pT>45");
-    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(3,"mu, pT<30");
-    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(4,"mu, pT>30");
-    h1__recoLep_pt_type->GetXaxis()->SetBinLabel(5,"sum");
+    TH1D *h1__recoLep_pt_type_ee2j = new TH1D("h1__recoLep_pt_type_ee2j", "reco lepton pT, flavour, ==2 jets", 5, 0.0, 5.0);
+    h1__recoLep_pt_type_ee2j->SetDirectory(f_output);
+    h1__recoLep_pt_type_ee2j->GetXaxis()->SetBinLabel(1,"el, pT<45");
+    h1__recoLep_pt_type_ee2j->GetXaxis()->SetBinLabel(2,"el, pT>45");
+    h1__recoLep_pt_type_ee2j->GetXaxis()->SetBinLabel(3,"mu, pT<30");
+    h1__recoLep_pt_type_ee2j->GetXaxis()->SetBinLabel(4,"mu, pT>30");
+    h1__recoLep_pt_type_ee2j->GetXaxis()->SetBinLabel(5,"sum");
     
+
+    TH1D *h1__recoLep_pt_type_ge4j = new TH1D("h1__recoLep_pt_type_ge4j", "reco lepton pT, flavour, >=4jets, 250<MET<325", 5, 0.0, 5.0);
+    h1__recoLep_pt_type_ge4j->SetDirectory(f_output);
+    h1__recoLep_pt_type_ge4j->GetXaxis()->SetBinLabel(1,"el, pT<45");
+    h1__recoLep_pt_type_ge4j->GetXaxis()->SetBinLabel(2,"el, pT>45");
+    h1__recoLep_pt_type_ge4j->GetXaxis()->SetBinLabel(3,"mu, pT<30");
+    h1__recoLep_pt_type_ge4j->GetXaxis()->SetBinLabel(4,"mu, pT>30");
+    h1__recoLep_pt_type_ge4j->GetXaxis()->SetBinLabel(5,"sum");
+    
+
+
+    // Gen Matching DR requirement
+    double matched_lep_dr = 0.1;
+
+    TH1D *h1__lostLep_genId__ge2jets = new TH1D("h1__lostLep_genId__ge2jets", "Lost Lepton ID, MC truth", 7, 0, 7.0);
+    h1__lostLep_genId__ge2jets->SetDirectory(f_output);
+    h1__lostLep_genId__ge2jets->GetXaxis()->SetBinLabel(1, "ele");
+    h1__lostLep_genId__ge2jets->GetXaxis()->SetBinLabel(2, "mu");
+    h1__lostLep_genId__ge2jets->GetXaxis()->SetBinLabel(3, "lep tau, ele");
+    h1__lostLep_genId__ge2jets->GetXaxis()->SetBinLabel(4, "lep tau, mu");
+    h1__lostLep_genId__ge2jets->GetXaxis()->SetBinLabel(5, "had tau, 1 prong");
+    h1__lostLep_genId__ge2jets->GetXaxis()->SetBinLabel(6, "had tau, 3 prong");
+    h1__lostLep_genId__ge2jets->GetXaxis()->SetBinLabel(7, "\"other\" tau");
+
+    TH1D *h1__lostLep_genId__ee2jets = new TH1D("h1__lostLep_genId__ee2jets", "Lost Lepton ID, MC truth", 7, 0, 7.0);
+    h1__lostLep_genId__ee2jets->SetDirectory(f_output);
+    h1__lostLep_genId__ee2jets->GetXaxis()->SetBinLabel(1, "ele");
+    h1__lostLep_genId__ee2jets->GetXaxis()->SetBinLabel(2, "mu");
+    h1__lostLep_genId__ee2jets->GetXaxis()->SetBinLabel(3, "lep tau, ele");
+    h1__lostLep_genId__ee2jets->GetXaxis()->SetBinLabel(4, "lep tau, mu");
+    h1__lostLep_genId__ee2jets->GetXaxis()->SetBinLabel(5, "had tau, 1 prong");
+    h1__lostLep_genId__ee2jets->GetXaxis()->SetBinLabel(6, "had tau, 3 prong");
+    h1__lostLep_genId__ee2jets->GetXaxis()->SetBinLabel(7, "\"other\" tau");
+
+    TH1D *h1__lostLep_genId__ee3jets = new TH1D("h1__lostLep_genId__ee3jets", "Lost Lepton ID, MC truth", 7, 0, 7.0);
+    h1__lostLep_genId__ee3jets->SetDirectory(f_output);
+    h1__lostLep_genId__ee3jets->GetXaxis()->SetBinLabel(1, "ele");
+    h1__lostLep_genId__ee3jets->GetXaxis()->SetBinLabel(2, "mu");
+    h1__lostLep_genId__ee3jets->GetXaxis()->SetBinLabel(3, "lep tau, ele");
+    h1__lostLep_genId__ee3jets->GetXaxis()->SetBinLabel(4, "lep tau, mu");
+    h1__lostLep_genId__ee3jets->GetXaxis()->SetBinLabel(5, "had tau, 1 prong");
+    h1__lostLep_genId__ee3jets->GetXaxis()->SetBinLabel(6, "had tau, 3 prong");
+    h1__lostLep_genId__ee3jets->GetXaxis()->SetBinLabel(7, "\"other\" tau");
+
+    TH1D *h1__lostLep_genId__ge4jets = new TH1D("h1__lostLep_genId__ge4jets", "Lost Lepton ID, MC truth", 7, 0, 7.0);
+    h1__lostLep_genId__ge4jets->SetDirectory(f_output);
+    h1__lostLep_genId__ge4jets->GetXaxis()->SetBinLabel(1, "ele");
+    h1__lostLep_genId__ge4jets->GetXaxis()->SetBinLabel(2, "mu");
+    h1__lostLep_genId__ge4jets->GetXaxis()->SetBinLabel(3, "lep tau, ele");
+    h1__lostLep_genId__ge4jets->GetXaxis()->SetBinLabel(4, "lep tau, mu");
+    h1__lostLep_genId__ge4jets->GetXaxis()->SetBinLabel(5, "had tau, 1 prong");
+    h1__lostLep_genId__ge4jets->GetXaxis()->SetBinLabel(6, "had tau, 3 prong");
+    h1__lostLep_genId__ge4jets->GetXaxis()->SetBinLabel(7, "\"other\" tau");
 
 
     TH2D *h2__recoLep_vs_genLep = new TH2D("h2__recoLep_vs_genLep", "reco lep flavour vs gen lep flavour;reco lep; gen lep", 2, 0.0, 2.0, 3, 0.0, 3.0 );
@@ -705,31 +771,145 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	} // end if not data
 
 
+	// lost lepton id
+	
+	// match leading lepton first
+	if( !is_data() && is2lep() ){
+	  int genLep_matchedTo_selLep__idx = -1;
+	  for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
+	    if( abs(genleps_id().at(iGen)) != abs(lep1_pdgid()) ) continue;
+	    if( !genleps_isLastCopy().at(iGen) ) continue;
+	    if( !genleps_fromHardProcessFinalState().at(iGen) &&
+		!genleps_fromHardProcessDecayed().at(iGen)       ) continue;
+	    if( ROOT::Math::VectorUtil::DeltaR(genleps_p4().at(iGen), lep1_p4()) < matched_lep_dr ){
+	      genLep_matchedTo_selLep__idx = iGen;
+	      break;
+	    }
+	  }
+
+	  // If matched selected lepton, find lost gen lepton
+	  if( genLep_matchedTo_selLep__idx>0 ){
+
+	    int genLostLep__idx = -1;
+	    int genLostLep__id = -99;
+	    int genLostLep__tauDecay = -1;
+	    for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
+	      if( iGen == genLep_matchedTo_selLep__idx ) continue;
+	      if( !genleps_isLastCopy().at(iGen) ) continue;
+	      if( !genleps_fromHardProcessFinalState().at(iGen) &&
+		  !genleps_fromHardProcessDecayed().at(iGen)       ) continue;
+	      genLostLep__idx = iGen;
+	      genLostLep__id = genleps_id().at(iGen);
+	      genLostLep__tauDecay = genleps_gentaudecay().at(iGen);
+	    }
+
+	    // If found second lep
+	    if( genLostLep__idx>0 ){
+	      
+	      if( abs(genLostLep__id)==11 ){
+		h1__lostLep_genId__ge2jets->Fill("ele", nominal_wgt);
+		if( ngoodjets()==2 ) h1__lostLep_genId__ee2jets->Fill("ele", nominal_wgt);
+		if( ngoodjets()==3 ) h1__lostLep_genId__ee3jets->Fill("ele", nominal_wgt);
+		if( ngoodjets()>=4 ) h1__lostLep_genId__ge4jets->Fill("ele", nominal_wgt);
+	      }
+
+	      if( abs(genLostLep__id)==13 ){
+		h1__lostLep_genId__ge2jets->Fill("mu", nominal_wgt);
+		if( ngoodjets()==2 ) h1__lostLep_genId__ee2jets->Fill("mu", nominal_wgt);
+		if( ngoodjets()==3 ) h1__lostLep_genId__ee3jets->Fill("mu", nominal_wgt);
+		if( ngoodjets()>=4 ) h1__lostLep_genId__ge4jets->Fill("mu", nominal_wgt);
+	      }
+
+	      if( abs(genLostLep__id)==15 ){
+		if( genLostLep__tauDecay == 1 ){
+		  h1__lostLep_genId__ge2jets->Fill("lep tau, ele", nominal_wgt);
+		  if( ngoodjets()==2 ) h1__lostLep_genId__ee2jets->Fill("lep tau, ele", nominal_wgt);
+		  if( ngoodjets()==3 ) h1__lostLep_genId__ee3jets->Fill("lep tau, ele", nominal_wgt);
+		  if( ngoodjets()>=4 ) h1__lostLep_genId__ge4jets->Fill("lep tau, ele", nominal_wgt);
+		}
+		if( genLostLep__tauDecay == 2 ){
+		  h1__lostLep_genId__ge2jets->Fill("lep tau, mu", nominal_wgt);
+		  if( ngoodjets()==2 ) h1__lostLep_genId__ee2jets->Fill("lep tau, mu", nominal_wgt);
+		  if( ngoodjets()==3 ) h1__lostLep_genId__ee3jets->Fill("lep tau, mu", nominal_wgt);
+		  if( ngoodjets()>=4 ) h1__lostLep_genId__ge4jets->Fill("lep tau, mu", nominal_wgt);
+		}
+		if( genLostLep__tauDecay == 3 ){
+		  h1__lostLep_genId__ge2jets->Fill("had tau, 1 prong", nominal_wgt);
+		  if( ngoodjets()==2 ) h1__lostLep_genId__ee2jets->Fill("had tau, 1 prong", nominal_wgt);
+		  if( ngoodjets()==3 ) h1__lostLep_genId__ee3jets->Fill("had tau, 1 prong", nominal_wgt);
+		  if( ngoodjets()>=4 ) h1__lostLep_genId__ge4jets->Fill("had tau, 1 prong", nominal_wgt);
+		}
+		if( genLostLep__tauDecay == 4 ){
+		  h1__lostLep_genId__ge2jets->Fill("had tau, 3 prong", nominal_wgt);
+		  if( ngoodjets()==2 ) h1__lostLep_genId__ee2jets->Fill("had tau, 3 prong", nominal_wgt);
+		  if( ngoodjets()==3 ) h1__lostLep_genId__ee3jets->Fill("had tau, 3 prong", nominal_wgt);
+		  if( ngoodjets()>=4 ) h1__lostLep_genId__ge4jets->Fill("had tau, 3 prong", nominal_wgt);
+		}
+		if( genLostLep__tauDecay == 5 ){
+		  h1__lostLep_genId__ge2jets->Fill("\"other\" tau", nominal_wgt);
+		  if( ngoodjets()==2 ) h1__lostLep_genId__ee2jets->Fill("\"other\" tau", nominal_wgt);
+		  if( ngoodjets()==3 ) h1__lostLep_genId__ee3jets->Fill("\"other\" tau", nominal_wgt);
+		  if( ngoodjets()>=4 ) h1__lostLep_genId__ge4jets->Fill("\"other\" tau", nominal_wgt);
+		}
+		
+	      }
+
+	    } // end if found 2nd gen lep
+
+	  } // end if found first gen lep, matched to selected lepton
+
+	} // end if 2lep event
+
+
+
 	//
 	// Fill Histograms
 	//
-	if( ngoodjets()>=4 &&
-	    pfmet()>=250.0 &&
-	    pfmet()<325.0     ){
+	if( ngoodjets()==2 &&
+	    pfmet()>=250.0    ){
 	  
-	  h1__recoLep_pt_type->Fill( "sum", nominal_wgt );
+	  h1__recoLep_pt_type_ee2j->Fill( "sum", nominal_wgt );
 
 	  if( abs(lep1_pdgid())==11 && lep1_p4().Pt()<45.0 ){
-	    h1__recoLep_pt_type->Fill("el, pT<45", nominal_wgt);
+	    h1__recoLep_pt_type_ee2j->Fill("el, pT<45", nominal_wgt);
 	  }
 	  if( abs(lep1_pdgid())==11 && lep1_p4().Pt()>=45.0 ){
-	    h1__recoLep_pt_type->Fill("el, pT>45", nominal_wgt);
+	    h1__recoLep_pt_type_ee2j->Fill("el, pT>45", nominal_wgt);
 	  }
 
 	  
 	  if( abs(lep1_pdgid())==13 && lep1_p4().Pt()<30.0 ){
-	    h1__recoLep_pt_type->Fill("mu, pT<30", nominal_wgt);
+	    h1__recoLep_pt_type_ee2j->Fill("mu, pT<30", nominal_wgt);
 	  }
 	  if( abs(lep1_pdgid())==13 && lep1_p4().Pt()>=30.0 ){
-	    h1__recoLep_pt_type->Fill("mu, pT>30", nominal_wgt);
+	    h1__recoLep_pt_type_ee2j->Fill("mu, pT>30", nominal_wgt);
 	  }
 
-	}   
+	}
+
+	if( ngoodjets()>=4 &&
+	    pfmet()>=250.0 &&
+	    pfmet()<325.0     ){
+	  
+	  h1__recoLep_pt_type_ge4j->Fill( "sum", nominal_wgt );
+
+	  if( abs(lep1_pdgid())==11 && lep1_p4().Pt()<45.0 ){
+	    h1__recoLep_pt_type_ge4j->Fill("el, pT<45", nominal_wgt);
+	  }
+	  if( abs(lep1_pdgid())==11 && lep1_p4().Pt()>=45.0 ){
+	    h1__recoLep_pt_type_ge4j->Fill("el, pT>45", nominal_wgt);
+	  }
+
+	  
+	  if( abs(lep1_pdgid())==13 && lep1_p4().Pt()<30.0 ){
+	    h1__recoLep_pt_type_ge4j->Fill("mu, pT<30", nominal_wgt);
+	  }
+	  if( abs(lep1_pdgid())==13 && lep1_p4().Pt()>=30.0 ){
+	    h1__recoLep_pt_type_ge4j->Fill("mu, pT>30", nominal_wgt);
+	  }
+
+	}
+   
 
 	
 	// Loop over systematics

@@ -290,6 +290,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     histogramInfo::h1_Util *h1_jet1_pt = NULL;
     histogramInfo::h1_Util *h1_jet2_pt = NULL;
     histogramInfo::h1_Util *h1_jet_pt = NULL;
+    histogramInfo::h1_Util *h1_jet_pt_notJ1J2 = NULL;
     histogramInfo::h1_Util *h1_lep1lep2bb_pt = NULL;
     histogramInfo::h1_Util *h1_lep1lep2bbMet_pt = NULL;
     
@@ -332,7 +333,10 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
       cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
       cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
       cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
-     
+      cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+      cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+      cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
+      
       sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
       
 
@@ -363,19 +367,25 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
       //
       // Jet 1 pT
       //
-      h1_jet1_pt = new histogramInfo::h1_Util( f_output, "jet1_pt", "Leading jet pT", 12, 0.0, 300.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_jet1_pt = new histogramInfo::h1_Util( f_output, "jet1_pt", "Leading jet pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
 
 
       //
       // Jet 2 pT
       //
-      h1_jet2_pt = new histogramInfo::h1_Util( f_output, "jet2_pt", "Trailing jet pT", 12, 0.0, 300.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_jet2_pt = new histogramInfo::h1_Util( f_output, "jet2_pt", "Trailing jet pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
       
 
       //
       // All jet pT
       //
-      h1_jet_pt = new histogramInfo::h1_Util( f_output, "jet_pt", "Jet pT", 12, 0.0, 300.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      h1_jet_pt = new histogramInfo::h1_Util( f_output, "jet_pt", "Jet pT", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+
+      
+      //
+      // All jet pT, besides jet 1 and 2 
+      //
+      h1_jet_pt_notJ1J2 = new histogramInfo::h1_Util( f_output, "jet_pt_notJ1J2", "Jet pT, of all just besides 2 leading pT jets", 24, 0.0, 600.0, genClassyList, recoClassyList, cat_temp, sys_temp );
 
       
       //
@@ -807,6 +817,9 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		  if( h1_jet_pt->histos[iHist] ){
 		    for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
 		      h1_jet_pt->histos[iHist]->Fill( ak4pfjets_p4().at(iJet).Pt(), sysWgtsList[iSys].second );
+		      if( h1_jet_pt_notJ1J2->histos[iHist] ){
+			if( iJet!=0 && iJet!=1 ) h1_jet_pt_notJ1J2->histos[iHist]->Fill( ak4pfjets_p4().at(iJet).Pt(), sysWgtsList[iSys].second );
+		      }
 		    }
 		  }
 		  

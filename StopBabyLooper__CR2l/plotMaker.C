@@ -39,7 +39,7 @@ void plotMaker( bool plotByGenDecay=true ){
   TString outExt = ".pdf";
   
   //double lumi    = 5.0; // for studies
-  double lumi    = 2.6; // 2016
+  double lumi    = 7.65; // 2016
   
   double sig_SF  = 1.0;
 
@@ -372,6 +372,183 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_nBins.push_back(noRebin_nBins);
   var_rebin_xBins.push_back(noRebin_xBins);
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  
+  // Plot jet1 pT
+  var_list_label.push_back( "jet1_pt" );
+  var_list_title.push_back( "Leading Jet pT" );
+  var_list_xaxis.push_back( "jet pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // Plot jet2 pT
+  var_list_label.push_back( "jet2_pt" );
+  var_list_title.push_back( "Trailing Jet pT" );
+  var_list_xaxis.push_back( "jet pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+
+  // Plot jet pT
+  var_list_label.push_back( "jet_pt" );
+  var_list_title.push_back( "Jet pT" );
+  var_list_xaxis.push_back( "jet pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+
+  // Plot jet pT
+  var_list_label.push_back( "jet_pt_notJ1J2" );
+  var_list_title.push_back( "Jet pT, excluding 2 leading pT jets" );
+  var_list_xaxis.push_back( "jet pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // Plot lep1,2,b,b pT
+  var_list_label.push_back( "lep1lep2bb_pt" );
+  var_list_title.push_back( "lep1,2,b,b system pT" );
+  var_list_xaxis.push_back( "pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // Plot lep1,2,b,b pT, rebinned
+  var_list_label.push_back( "lep1lep2bb_pt" );
+  var_list_title.push_back( "lep1,2,b,b system pT" );
+  var_list_xaxis.push_back( "pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  const int nRebins_lep12bbPt = 8;
+  double xRebins_lep12bbPt[nRebins_lep12bbPt+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_lep12bbPt[nRebins_lep12bbPt]{   1.0,   1.0,   1.0,   1.0,   1.0,   0.5,  0.5,  0.33333  };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_lep12bbPt);
+  var_rebin_xBins.push_back(xRebins_lep12bbPt);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep12bbPt);
+
+
+  // Plot lep1,2,b,b,met pT
+  var_list_label.push_back( "lep1lep2bbMet_pt" );
+  var_list_title.push_back( "lep1,2,b,b,Met system pT" );
+  var_list_xaxis.push_back( "pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // Plot lep1,2,b,b,met pT
+  var_list_label.push_back( "lep1lep2bbMet_pt" );
+  var_list_title.push_back( "lep1,2,b,b,Met system pT" );
+  var_list_xaxis.push_back( "pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  const int nRebins_lep12bbMetPt = 8;
+  double xRebins_lep12bbMetPt[nRebins_lep12bbMetPt+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_lep12bbMetPt[nRebins_lep12bbMetPt]{   1.0,   1.0,   1.0,   1.0,   1.0,   0.5,  0.5,  0.33333  };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_lep12bbMetPt);
+  var_rebin_xBins.push_back(xRebins_lep12bbMetPt);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep12bbMetPt);
+
 
 
   

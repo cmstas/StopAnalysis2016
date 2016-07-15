@@ -18,7 +18,7 @@ namespace sampleInfo{
   //
   // Namespace utility vars
   //
-  const std::string baby_inputDir_nominal  = "/nfs-7/userdata/stopRun2/StopBabies__CMS3_V07-08-00-XX/StopBabyMaker__v8p0x_v2/";
+  const std::string baby_inputDir_nominal  = "/nfs-7/userdata/stopRun2/stop_babies__CMS3_V080005__BabyMaker_V0800X_v4__20160710/";
   const std::string baby_inputDir_jesUp    = "";
   const std::string baby_inputDir_jesDn    = "";
 
@@ -74,6 +74,14 @@ namespace sampleInfo{
 	   k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1,
 	   k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1,
 	   k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1,
+	   k_W1JetsToLNu,
+	   k_W2JetsToLNu,
+	   k_W3JetsToLNu,
+	   k_W4JetsToLNu,
+	   k_W1JetsToLNu_NuPt200,
+	   k_W2JetsToLNu_NuPt200,
+	   k_W3JetsToLNu_NuPt200,
+	   k_W4JetsToLNu_NuPt200,
 	   k_singleT,
 	   k_t_sch_4f_amcnlo_pythia8,
 	   k_t_tch_4f_powheg_pythia8,

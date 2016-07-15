@@ -39,7 +39,7 @@ void plotMaker( bool plotByGenDecay=true ){
   TString outExt = ".pdf";
   
   //double lumi    = 5.0; // for studies
-  double lumi    = 3.99; // 2016
+  double lumi    = 7.65; // 2016
   
   double sig_SF  = 1.0;
 
@@ -379,6 +379,7 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
@@ -400,6 +401,7 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
   
@@ -424,6 +426,9 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
@@ -445,6 +450,9 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
@@ -466,6 +474,34 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+
+  // Plot jet pT
+  var_list_label.push_back( "jet_pt_notJ1J2" );
+  var_list_title.push_back( "Jet pT, excluding 2 leading pT jets" );
+  var_list_xaxis.push_back( "jet pT [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
@@ -487,6 +523,9 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
@@ -508,6 +547,9 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
@@ -532,6 +574,9 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
@@ -553,6 +598,9 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge1btags_ge50met) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge2btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge50met) );
+  catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge1btags_ge250met) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 

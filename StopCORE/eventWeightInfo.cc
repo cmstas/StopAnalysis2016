@@ -9,8 +9,8 @@ eventWeightInfo::eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils, bool
 
   // Utilty Var Constants
   DR_MATCHED = 0.1;
-  //LUMI       = 3.99;
-  LUMI       = 2.67;
+  LUMI       = 7.65;
+  //LUMI       = 2.67;
   LUMI_ERR   = LUMI*0.05;
 
   // Initialize Switches for additional SFs
@@ -340,19 +340,19 @@ void eventWeightInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wgt_tr
   // DiElectron Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==22 ){
     sf_val = 0.876;
-    sf_err = 0.0208446;
+    sf_err = 0.0066;
   }
 
   // MuE Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==24 ){
-    sf_val = 0.876658;
-    sf_err = 0.0119753;
+    sf_val = 0.8834;
+    sf_err = 0.00877;
   }
 
   // DiMuon Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==26 ){
-    sf_val = 0.869464;
-    sf_err = 0.0162653;
+    sf_val = 0.8568;
+    sf_err = 0.00877;
   }
 
   // Calculate Scale Factor

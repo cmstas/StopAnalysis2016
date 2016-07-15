@@ -195,6 +195,12 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w );
   tableList.push_back( catList );
 
+  catList.clear();
+  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_150to250met );
+  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_150to250met );
+  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_150to250met );
+  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_150to250met );
+  tableList.push_back( catList );
 
 
   //

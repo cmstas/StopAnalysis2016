@@ -34,7 +34,7 @@ int bkgEstimate_diLepton(){
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 10.0/3.99; // rescale to new lumi
+  //double rescale = 10.0/7.65; // rescale to new lumi
 
   TString yield_base = "yields";
 
@@ -45,8 +45,8 @@ int bkgEstimate_diLepton(){
   //
   // recoClassy Type
   //
-  recoClassyInfo::recoClassyUtil recoClassyType_CR(recoClassyInfo::k_2lep_2selOrVetoLep);
-  //recoClassyInfo::recoClassyUtil recoClassyType_CR(recoClassyInfo::k_incl);
+  //recoClassyInfo::recoClassyUtil recoClassyType_CR(recoClassyInfo::k_2lep_2selOrVetoLep);
+  recoClassyInfo::recoClassyUtil recoClassyType_CR(recoClassyInfo::k_incl);
   recoClassyInfo::recoClassyUtil recoClassyType_SR(recoClassyInfo::k_incl);
  
  
@@ -100,6 +100,10 @@ int bkgEstimate_diLepton(){
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_250to350met ) );
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_350to450met ) );
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_450toInfmet) );
+  sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) );
+  sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee3jets_ge200mt2w_150to250met) );
+  sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_150to250met ) );
+  sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_150to250met ) );
   const int nSRs = (int)sr_cats.size();
 
 
@@ -116,7 +120,11 @@ int bkgEstimate_diLepton(){
   //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge3jets_ge200mt2w ) );
   //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge3jets_ge200mt2w ) );
   //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge3jets_ge200mt2w ) );
-
+  //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) );
+  //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee3jets_ge200mt2w_150to250met) );
+  //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_150to250met ) );
+  //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_150to250met ) );
+  
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_250to350met ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_350toInfmet ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee3jets_ge200mt2w_250to350met ) );
@@ -126,7 +134,11 @@ int bkgEstimate_diLepton(){
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_250to350met ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_350to450met ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_450toInfmet ) );
-
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) );
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee3jets_ge200mt2w_150to250met) );
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_150to250met ) );
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_150to250met ) );
+  
   
   bool oneTF = true;
   for(int iSR=0; iSR<nSRs; iSR++){
@@ -155,23 +167,52 @@ int bkgEstimate_diLepton(){
   //
   // Histograms for limit setting
   //
-  TH1D *h_SR[nSys];
-  h_SR[0] = new TH1D("CR2lyield", "CR2lyield", nSRs, 0.0, nSRs); // Nominal
+  const int nSys_histos = nSys + 4; // +2 for data stats up/down, +2 for mc status up/down
+  TH1D *h_SR[nSys_histos];
+  h_SR[0] = new TH1D("CR2l_yield", "CR2l_yield", nSRs, 0.0, nSRs); // Nominal
   for(int iCat=0; iCat<(int)nSRs; iCat++){
     h_SR[0]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].label.c_str() );
   }
   h_SR[0]->SetDirectory(f_out);
 
 
-  //
+  // data stats up
+  h_SR[1] = new TH1D("CR2l_dataStatsUp", "CR2l_dataStatsUp", nSRs, 0.0, nSRs); // Nominal
+  for(int iCat=0; iCat<(int)nSRs; iCat++){
+    h_SR[1]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].label.c_str() );
+  }
+  h_SR[1]->SetDirectory(f_out);
+
+  // data stats dn
+  h_SR[2] = new TH1D("CR2l_dataStatsDn", "CR2l_dataStatsDn", nSRs, 0.0, nSRs); // Nominal
+  for(int iCat=0; iCat<(int)nSRs; iCat++){
+    h_SR[2]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].label.c_str() );
+  }
+  h_SR[2]->SetDirectory(f_out);
+
+
+  // mc stats up
+  h_SR[3] = new TH1D("CR2l_mcStatsUp", "CR2l_mcStatsUp", nSRs, 0.0, nSRs); // Nominal
+  for(int iCat=0; iCat<(int)nSRs; iCat++){
+    h_SR[3]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].label.c_str() );
+  }
+  h_SR[3]->SetDirectory(f_out);
+
+  // mc stats dn
+  h_SR[4] = new TH1D("CR2l_mcStatsDn", "CR2l_mcStatsDn", nSRs, 0.0, nSRs); // Nominal
+  for(int iCat=0; iCat<(int)nSRs; iCat++){
+    h_SR[4]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].label.c_str() );
+  }
+  h_SR[4]->SetDirectory(f_out);
+
+
   // Systematics for limit setting
-  //
   for(int iSys=1; iSys<nSys; iSys++){
-    h_SR[iSys] = new TH1D(Form("CR2l_%s", systematicList[iSys].label.c_str()), Form("CR2l_%s",systematicList[iSys].label.c_str()), nSRs, 0.0, nSRs);   
+    h_SR[iSys+4] = new TH1D(Form("CR2l_%s", systematicList[iSys].label.c_str()), Form("CR2l_%s",systematicList[iSys].label.c_str()), nSRs, 0.0, nSRs);   
     for(int iCat=0; iCat<(int)nSRs; iCat++){
-      h_SR[iSys]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].label.c_str() );
+      h_SR[iSys+4]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].label.c_str() );
     }
-    h_SR[iSys]->SetDirectory(f_out);
+    h_SR[iSys+4]->SetDirectory(f_out);
   }
     
 
@@ -498,6 +539,17 @@ int bkgEstimate_diLepton(){
     uncMax_sr_estimate[0] = std::max( uncMax_sr_estimate[0], (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
     uncMin_sr_estimate[0] = std::min( uncMin_sr_estimate[0], (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
     
+
+
+    //
+    // Fill histograms for limit setting
+    //
+    h_SR[1]->SetBinContent( iSR+1, (CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin );
+    h_SR[1]->SetBinError( iSR+1, CR_data_cr2sr_error*tf_cr2sr*tf_srBin );
+    h_SR[2]->SetBinContent( iSR+1, (CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin );
+    h_SR[2]->SetBinError( iSR+1, CR_data_cr2sr_error*tf_cr2sr*tf_srBin );
+    
+
     
     //
     // Uncertainty File, MC Stats Up
@@ -533,6 +585,16 @@ int bkgEstimate_diLepton(){
     uncMin_tf_srBin[1] = std::min( uncMin_tf_srBin[1], (100*tf_srBin_err/tf_srBin) );
     uncMax_sr_estimate[1] = std::max( uncMax_sr_estimate[1], (100*sr_estimate_error_mc_stats/sr_estimate) );
     uncMin_sr_estimate[1] = std::min( uncMin_sr_estimate[1], (100*sr_estimate_error_mc_stats/sr_estimate) );
+
+
+    //
+    // Fill histograms for limit setting
+    //
+    h_SR[3]->SetBinContent( iSR+1, (sr_estimate+sr_estimate_error_mc_stats) );
+    h_SR[3]->SetBinError( iSR+1, sr_estimate_error_mc_stats );
+    h_SR[4]->SetBinContent( iSR+1, (sr_estimate-sr_estimate_error_mc_stats) );
+    h_SR[4]->SetBinError( iSR+1, sr_estimate_error_mc_stats );
+    
     
   
     //
@@ -775,10 +837,10 @@ int bkgEstimate_diLepton(){
       //
       // Fill histograms for limit setting
       //
-      h_SR[iSys]->SetBinContent( iSR+1, sr_estimate_up );
-      h_SR[iSys]->SetBinError( iSR+1, sr_estimate_up_statErr );
-      h_SR[iSys+1]->SetBinContent( iSR+1, sr_estimate_dn );
-      h_SR[iSys+1]->SetBinError( iSR+1, sr_estimate_dn_statErr );
+      h_SR[iSys+4]->SetBinContent( iSR+1, sr_estimate_up );
+      h_SR[iSys+4]->SetBinError( iSR+1, sr_estimate_up_statErr );
+      h_SR[iSys+5]->SetBinContent( iSR+1, sr_estimate_dn );
+      h_SR[iSys+5]->SetBinError( iSR+1, sr_estimate_dn_statErr );
     
       
       //
@@ -827,6 +889,9 @@ int bkgEstimate_diLepton(){
       fprintf(uncFile, "Total Uncertainties & %.2f\\%% & & & %.2f\\%% & & & %.2f\\%% ",(100*CR_data_cr2sr_error/CR_data_cr2sr_yield), (100*tf_cr2sr_err/tf_cr2sr), (100*sr_estimate_error/sr_estimate) );
     }
     fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \n");
+
+    h_SR[0]->SetBinError( iSR+1, sr_estimate_error );
+    
 
     //
     // Formatting for uncertainty tex file

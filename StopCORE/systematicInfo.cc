@@ -386,6 +386,8 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
   double wgt_WwidthDn = 1.0;
   double wgt_hfXSecUp = 1.0;
   double wgt_hfXSecDn = 1.0;
+  double wgt_pdfUp = 1.0;
+  double wgt_pdfDn = 1.0;
   double wgt_alphasUp = 1.0;
   double wgt_alphasDn = 1.0;
   double wgt_q2Up = 1.0;
@@ -519,9 +521,23 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
     break;
 
   case( k_pdfUp ):
+    if(evt_wgt->sample_info->isSignal){
+      wgt_pdfUp = (babyAnalyzer.pdf_up_weight())/(evt_wgt->h_sig_counter->GetBinContent(evt_wgt->mStop,evt_wgt->mLSP,10)/evt_wgt->nEvents);
+    }
+    else{
+      wgt_pdfUp = (babyAnalyzer.pdf_up_weight())/(evt_wgt->h_bkg_counter->GetBinContent(10)/evt_wgt->nEvents);
+    }
+    result *= wgt_pdfUp;
     break;
 
   case( k_pdfDown ):
+    if(evt_wgt->sample_info->isSignal){
+      wgt_pdfUp = (babyAnalyzer.pdf_up_weight())/(evt_wgt->h_sig_counter->GetBinContent(evt_wgt->mStop,evt_wgt->mLSP,11)/evt_wgt->nEvents);
+    }
+    else{
+      wgt_pdfDn = (babyAnalyzer.pdf_down_weight())/(evt_wgt->h_bkg_counter->GetBinContent(11)/evt_wgt->nEvents);
+    }
+    result *= wgt_pdfDn;
     break;
     
   case( k_alphasUp ):
@@ -889,8 +905,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList_forLimit_lostLepton(
   result.push_back( systematicUtil(k_metResDown) );
   result.push_back( systematicUtil(k_ttbarSysPtUp) );
   result.push_back( systematicUtil(k_ttbarSysPtDown) );
-  result.push_back( systematicUtil(k_pdfUp) );
-  result.push_back( systematicUtil(k_pdfDown) );
+  //result.push_back( systematicUtil(k_pdfUp) );
+  //result.push_back( systematicUtil(k_pdfDown) );
   result.push_back( systematicUtil(k_alphasUp) );
   result.push_back( systematicUtil(k_alphasDown) );
   result.push_back( systematicUtil(k_q2Up) );

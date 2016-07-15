@@ -8,6 +8,8 @@ namespace stop_1l {
 	const int &pu_nvtxs() { return babyAnalyzer.pu_nvtxs(); }
 	const float &pfmet() { return babyAnalyzer.pfmet(); }
 	const float &pfmet_phi() { return babyAnalyzer.pfmet_phi(); }
+	const float &pfmet_rl() { return babyAnalyzer.pfmet_rl(); }
+	const float &pfmet_phi_rl() { return babyAnalyzer.pfmet_phi_rl(); }
 	const float &scale1fb() { return babyAnalyzer.scale1fb(); }
 	const float &xsec() { return babyAnalyzer.xsec(); }
 	const float &xsec_uncert() { return babyAnalyzer.xsec_uncert(); }
@@ -31,8 +33,11 @@ namespace stop_1l {
 	const int &is1lepFromW() { return babyAnalyzer.is1lepFromW(); }
 	const int &is1lepFromTop() { return babyAnalyzer.is1lepFromTop(); }
 	const float &MT2W() { return babyAnalyzer.MT2W(); }
+	const float &MT2W_rl() { return babyAnalyzer.MT2W_rl(); }
 	const float &mindphi_met_j1_j2() { return babyAnalyzer.mindphi_met_j1_j2(); }
+	const float &mindphi_met_j1_j2_rl() { return babyAnalyzer.mindphi_met_j1_j2_rl(); }
 	const float &mt_met_lep() { return babyAnalyzer.mt_met_lep(); }
+	const float &mt_met_lep_rl() { return babyAnalyzer.mt_met_lep_rl(); }
 	const float &hadronic_top_chi2() { return babyAnalyzer.hadronic_top_chi2(); }
 	const float &ak4pfjets_rho() { return babyAnalyzer.ak4pfjets_rho(); }
 	const float &pdf_up_weight() { return babyAnalyzer.pdf_up_weight(); }
@@ -44,6 +49,8 @@ namespace stop_1l {
 	const float &weight_btagsf_light_UP() { return babyAnalyzer.weight_btagsf_light_UP(); }
 	const float &weight_btagsf_heavy_DN() { return babyAnalyzer.weight_btagsf_heavy_DN(); }
 	const float &weight_btagsf_light_DN() { return babyAnalyzer.weight_btagsf_light_DN(); }
+	const float &weight_btagsf_fastsim_UP() { return babyAnalyzer.weight_btagsf_fastsim_UP(); }
+	const float &weight_btagsf_fastsim_DN() { return babyAnalyzer.weight_btagsf_fastsim_DN(); }
 	const float &weight_lepSF() { return babyAnalyzer.weight_lepSF(); }
 	const float &weight_lepSF_up() { return babyAnalyzer.weight_lepSF_up(); }
 	const float &weight_lepSF_down() { return babyAnalyzer.weight_lepSF_down(); }
@@ -73,10 +80,12 @@ namespace stop_1l {
 	const bool &PassTauVeto() { return babyAnalyzer.PassTauVeto(); }
 	const float &topness() { return babyAnalyzer.topness(); }
 	const float &topnessMod() { return babyAnalyzer.topnessMod(); }
+	const float &topnessMod_rl() { return babyAnalyzer.topnessMod_rl(); }
 	const float &Mlb_closestb() { return babyAnalyzer.Mlb_closestb(); }
 	const int &HLT_SingleEl() { return babyAnalyzer.HLT_SingleEl(); }
 	const int &HLT_SingleMu() { return babyAnalyzer.HLT_SingleMu(); }
 	const int &HLT_MET() { return babyAnalyzer.HLT_MET(); }
+	const int &HLT_MET100_MHT100() { return babyAnalyzer.HLT_MET100_MHT100(); }
 	const int &HLT_DiEl() { return babyAnalyzer.HLT_DiEl(); }
 	const int &HLT_DiMu() { return babyAnalyzer.HLT_DiMu(); }
 	const int &HLT_MuE() { return babyAnalyzer.HLT_MuE(); }
@@ -97,6 +106,9 @@ namespace stop_1l {
 	const float &filt_met() { return babyAnalyzer.filt_met(); }
 	const float &hardgenpt() { return babyAnalyzer.hardgenpt(); }
 	const float &filt_badChargedCandidateFilter() { return babyAnalyzer.filt_badChargedCandidateFilter(); }
+	const float &filt_badMuonFilter() { return babyAnalyzer.filt_badMuonFilter(); }
+	const float &calomet() { return babyAnalyzer.calomet(); }
+	const float &calomet_phi() { return babyAnalyzer.calomet_phi(); }
 	const int &lep1_pdgid() { return babyAnalyzer.lep1_pdgid(); }
 	const int &lep1_production_type() { return babyAnalyzer.lep1_production_type(); }
 	const float &lep1_MiniIso() { return babyAnalyzer.lep1_MiniIso(); }
@@ -247,4 +259,24 @@ namespace stop_1l {
 	const vector<int> &gensusy_gmotherid() { return babyAnalyzer.gensusy_gmotherid(); }
 	const vector<int> &gensusy_gmotheridx() { return babyAnalyzer.gensusy_gmotheridx(); }
 	const vector<int> &gensusy_gmotherstatus() { return babyAnalyzer.gensusy_gmotherstatus(); }
+	const vector<TString> &tau_IDnames() { return babyAnalyzer.tau_IDnames(); }
+	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &tau_leadtrack_p4() { return babyAnalyzer.tau_leadtrack_p4(); }
+	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &tau_leadneutral_p4() { return babyAnalyzer.tau_leadneutral_p4(); }
+	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &tau_p4() { return babyAnalyzer.tau_p4(); }
+	const vector<vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > > &tau_isocand_p4() { return babyAnalyzer.tau_isocand_p4(); }
+	const vector<vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > > &tau_sigcand_p4() { return babyAnalyzer.tau_sigcand_p4(); }
+	const vector<vector<float> > &tau_ID() { return babyAnalyzer.tau_ID(); }
+	const vector<float> &tau_passID() { return babyAnalyzer.tau_passID(); }
+	const int &ngoodtaus() { return babyAnalyzer.ngoodtaus(); }
+	const vector<float> &tau_againstMuonTight() { return babyAnalyzer.tau_againstMuonTight(); }
+	const vector<float> &tau_againstElectronLoose() { return babyAnalyzer.tau_againstElectronLoose(); }
+	const vector<bool> &tau_isVetoTau() { return babyAnalyzer.tau_isVetoTau(); }
+	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &isoTracks_p4() { return babyAnalyzer.isoTracks_p4(); }
+	const vector<int> &isoTracks_charge() { return babyAnalyzer.isoTracks_charge(); }
+	const vector<float> &isoTracks_absIso() { return babyAnalyzer.isoTracks_absIso(); }
+	const vector<float> &isoTracks_dz() { return babyAnalyzer.isoTracks_dz(); }
+	const vector<int> &isoTracks_pdgId() { return babyAnalyzer.isoTracks_pdgId(); }
+	const vector<bool> &isoTracks_isVetoTrack() { return babyAnalyzer.isoTracks_isVetoTrack(); }
+	const vector<bool> &isoTracks_isVetoTrack_v2() { return babyAnalyzer.isoTracks_isVetoTrack_v2(); }
+	const vector<bool> &isoTracks_isVetoTrack_v3() { return babyAnalyzer.isoTracks_isVetoTrack_v3(); }
 }

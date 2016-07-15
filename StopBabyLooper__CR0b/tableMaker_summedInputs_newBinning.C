@@ -15,7 +15,7 @@
 #include "../StopCORE/systematicInfo.h"
 #include "../StopCORE/histogramInfo.h"
 
-int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::string f_out_name="Output/Tables/yields_summedInputs.tex", bool useZeroedAMCNLO=true ){
+int tableMaker_summedInputs_newBinning( std::string f_input_dir="Histos/Nominal/", std::string f_out_name="Output/Tables/yields_summedInputs_newBinning__CR0b.tex", bool useZeroedAMCNLO=true ){
 
   // Make a tex document where each page will have a table
   //   This table will be for a given systematic. 
@@ -31,13 +31,13 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 10.0/3.99; // rescale to new lumi
+  //double rescale = 10.0/7.65; // rescale to new lumi
 
   
   //
   // Analyzer Type
   //
-  analyzerInfo::ID analysis = analyzerInfo::k_CR0b;
+  analyzerInfo::ID analysis = analyzerInfo::k_CR2l;
 
   //
   // Sample List
@@ -148,8 +148,8 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   // Reco Classy List
   //
   recoClassyInfo::vect_util recoClassyList;
-  recoClassyList = recoClassyInfo::getRecoClassyList( analysis );
-  //recoClassyList.push_back( recoClassyInfo::recoClassyUntil(recoClassyInfo::k_incl) );
+  //recoClassyList = recoClassyInfo::getRecoClassyList( analysis );
+  recoClassyList.push_back( recoClassyInfo::recoClassyUtil(recoClassyInfo::k_incl) );
     
 
   //
@@ -159,49 +159,32 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   categoryInfo::vect_id catList;
 
   catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_250to350met );
-  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_350toInfmet );
-  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop );
+  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_350to450met );
+  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_450toInfmet );
   tableList.push_back( catList );
 
   catList.clear();
   catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_250to350met );
-  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_350toInfmet );
-  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w );
+  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_350to450met );
+  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_450to550met );
+  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_550toInfmet );
   tableList.push_back( catList );
 
   catList.clear();
-  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_250to325met );
-  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_325toInfmet );
-  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w );
+  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_250to350met );
+  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_350to450met );
+  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_450toInfmet );
   tableList.push_back( catList );
 
   catList.clear();
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_250to350met );
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_350to450met );
-  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_450toInfmet );
-  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w );
+  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_450to550met );
+  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_550to650met );
+  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_650toInfmet );
   tableList.push_back( catList );
 
-  catList.clear();
-  catList.push_back( categoryInfo::k_ee2jets );
-  catList.push_back( categoryInfo::k_ee3jets );
-  catList.push_back( categoryInfo::k_ge4jets );
-  tableList.push_back( catList );
-
-  catList.clear();
-  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop );
-  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w );
-  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w );
-  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w );
-  tableList.push_back( catList );
-
-  catList.clear();
-  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_150to250met );
-  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_150to250met );
-  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_150to250met );
-  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_150to250met );
-  tableList.push_back( catList );
-
+  
 
   //
   // Systematic List

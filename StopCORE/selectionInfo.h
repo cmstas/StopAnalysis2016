@@ -51,6 +51,7 @@ namespace selectionInfo{
 	   k_ee0_bJets,
 	   k_ge1_bJets,
 	   k_ge50_met,
+	   k_ge150_met,
 	   k_ge250_met,
 	   k_ge150_mt,
 	   k_ge0p8_minDPhi
