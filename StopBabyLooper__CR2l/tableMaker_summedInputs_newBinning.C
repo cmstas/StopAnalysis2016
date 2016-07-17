@@ -166,8 +166,9 @@ int tableMaker_summedInputs_newBinning( std::string f_input_dir="Histos/Nominal/
   catList.clear();
   catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_250to350met );
   catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_350to450met );
-  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_450to550met );
-  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_550toInfmet );
+  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_450toInfmet );
+  //catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_450to550met );
+  //catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_550toInfmet );
   tableList.push_back( catList );
 
   catList.clear();
@@ -180,8 +181,9 @@ int tableMaker_summedInputs_newBinning( std::string f_input_dir="Histos/Nominal/
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_250to350met );
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_350to450met );
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_450to550met );
-  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_550to650met );
-  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_650toInfmet );
+  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_550toInfmet );
+  //catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_550to650met );
+  //catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_650toInfmet );
   tableList.push_back( catList );
 
   

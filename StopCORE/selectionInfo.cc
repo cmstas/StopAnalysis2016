@@ -332,14 +332,14 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
 
   // If adding 2nd lepton to Met, recalculate appropriate vars
   double met = babyAnalyzer.pfmet();
-  //double met_phi = babyAnalyzer.pfmet_phi();
-  //double dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
+  double met_phi = babyAnalyzer.pfmet_phi();
+  double dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
   double mt = babyAnalyzer.mt_met_lep();
   double minDPhi_met_j1_j2 = babyAnalyzer.mindphi_met_j1_j2();
 
 
   if( addSecondLepToMet ) {
-    /*
+    
     if( (babyAnalyzer.ngoodleps()>=2) ||
     	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
       
@@ -359,14 +359,14 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
       minDPhi_met_j1_j2 = std::min( minDPhi_met_j1, minDPhi_met_j2 );      
 
     } // min if 2nd lepton exists
-    */
+    
 
     // If adding 2nd lepton to Met, recalculate appropriate vars
-    met = babyAnalyzer.pfmet_rl();
-    //met_phi = babyAnalyzer.pfmet_phi_rl();
-    //dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
-    mt = babyAnalyzer.mt_met_lep_rl();
-    minDPhi_met_j1_j2 = babyAnalyzer.mindphi_met_j1_j2_rl();
+    //met = babyAnalyzer.pfmet_rl();
+    ////met_phi = babyAnalyzer.pfmet_phi_rl();
+    ////dphi_metLep = std::acos(std::cos(met_phi - babyAnalyzer.lep1_p4().Phi()));
+    //mt = babyAnalyzer.mt_met_lep_rl();
+    //minDPhi_met_j1_j2 = babyAnalyzer.mindphi_met_j1_j2_rl();
 
   } // end if addSecondLepToMet
 

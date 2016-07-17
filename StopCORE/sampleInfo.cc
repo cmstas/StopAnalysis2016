@@ -937,8 +937,8 @@ sampleInfo::vect_id sampleInfo::getSampleList( analyzerInfo::ID analysis ){
     //result.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext3 );
     //result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
     result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
-    //result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
-    result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 );
+    result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
+    //result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 );
     result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1);
   
     // MC, DYJets

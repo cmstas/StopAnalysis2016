@@ -229,13 +229,13 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     // Get Event Weight Object
     //
     cout << "    Loading eventWeighInfo" << endl << endl;
-    bool bTagSF_fromFile = true;
+    bool bTagSF_fromFile = false;
     bool lepSF_fromFile  = true;
     eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile );
 
     // Switches for applying weights
     wgtInfo->apply_diLepTrigger_sf = true;
-    wgtInfo->apply_bTag_sf         = false;
+    wgtInfo->apply_bTag_sf         = true;
     wgtInfo->apply_lep_sf          = false;
     wgtInfo->apply_vetoLep_sf      = false;
     wgtInfo->apply_lepFS_sf        = false;

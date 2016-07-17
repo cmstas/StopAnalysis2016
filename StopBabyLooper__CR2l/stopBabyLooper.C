@@ -26,6 +26,8 @@
 #include "../StopCORE/systematicInfo.h"
 #include "../StopCORE/histogramInfo.h"
 
+#include "../StopBabyMaker/stop_variables/mt2w.h"
+#include "../StopBabyMaker/stop_variables/topness.h"
 
 using namespace std;
 using namespace tas;
@@ -214,7 +216,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
     // Switches for applying weights
     wgtInfo->apply_diLepTrigger_sf = false;
-    wgtInfo->apply_bTag_sf         = false;
+    wgtInfo->apply_bTag_sf         = true;
     wgtInfo->apply_lep_sf          = false;
     wgtInfo->apply_vetoLep_sf      = false;
     wgtInfo->apply_lepFS_sf        = false;
@@ -864,14 +866,14 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
 	// If adding 2nd lepton to Met, recalculate appropriate vars
 	double met = pfmet();
-	//double met_phi = pfmet_phi();
-	//double dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
+	double met_phi = pfmet_phi();
+	double dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
 	double mt = mt_met_lep();
 	double minDPhi_met_j1_j1 = mindphi_met_j1_j2();
 	double modTopness = topnessMod();
 	double mt2w = MT2W();
 	if( add2ndLeptonToMet ){
-	  /*
+	  
 	  if( (ngoodleps()>=2) ||
 	      (ngoodleps()==1 && nvetoleps()>=2 && lep2_p4().Pt()>10.0 ) ){
 	    
@@ -889,17 +891,51 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	    double minDPhi_met_j1 = std::acos(std::cos(met_phi - ak4pfjets_p4().at(0).Phi()));
 	    double minDPhi_met_j2 = std::acos(std::cos(met_phi - ak4pfjets_p4().at(1).Phi()));
 	    minDPhi_met_j1_j1 = std::min( minDPhi_met_j1, minDPhi_met_j2 );
-	    
-	  } // min if 2nd lepton exists
-	  */
+	   
+	    //
+	    // first, we need to sort jets by CSV value
+	    // 
+	    std::vector<std::pair<int, double> > v_idx_csv;
+	    for (unsigned int idx = 0; idx < babyAnalyzer.ak4pfjets_p4().size(); idx++) {
+	      v_idx_csv.push_back(std::make_pair(idx, babyAnalyzer.ak4pfjets_CSV().at(idx)));
+	    }
+	    std::sort(v_idx_csv.begin(), v_idx_csv.end(), categoryInfo::sortByCSV);
 
-	  met = pfmet_rl();
-	  //met_phi = pfmet_phi_rl();
-	  //dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
-	  mt = mt_met_lep_rl();
-	  minDPhi_met_j1_j1 = mindphi_met_j1_j2_rl();
-	  modTopness = topnessMod_rl();
-	  mt2w = MT2W_rl();
+	    //
+	    // now get vector<LV> of b-jets and add-jets
+	    // 
+	    std::vector<LorentzVector> mybjets;
+	    std::vector<LorentzVector> addjets;
+	    for (auto p : v_idx_csv) {
+	      if (babyAnalyzer.ak4pfjets_passMEDbtag().at(p.first))
+		mybjets.push_back(babyAnalyzer.ak4pfjets_p4().at(p.first));
+	      else if (mybjets.size() <=1 && (mybjets.size() + addjets.size()) < 3)
+		addjets.push_back(babyAnalyzer.ak4pfjets_p4().at(p.first));
+	    }
+	    
+	    // 
+	    // if == 2 jets, recalculate modified topness with new met
+	    //
+	    if (babyAnalyzer.ngoodjets() == 2)
+	      modTopness = CalcTopness_(1, met, met_phi, babyAnalyzer.lep1_p4(), mybjets, addjets);
+
+	    //
+	    // if >=3 jets, recalculate mt2w with new met
+	    // 
+	    if (babyAnalyzer.ngoodjets() >= 3)
+	      mt2w = CalcMT2W_(mybjets, addjets, babyAnalyzer.lep1_p4(), met, met_phi);
+	    
+  
+	  } // min if 2nd lepton exists
+	  
+
+	  //met = pfmet_rl();
+	  ////met_phi = pfmet_phi_rl();
+	  ////dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
+	  //mt = mt_met_lep_rl();
+	  //minDPhi_met_j1_j1 = mindphi_met_j1_j2_rl();
+	  //modTopness = topnessMod_rl();
+	  // mt2w = MT2W_rl();
 	} // end if addSeocnLepToMet
 
 

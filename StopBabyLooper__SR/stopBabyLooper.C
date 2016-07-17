@@ -59,9 +59,9 @@ int stopBabyLooper(){
   // SampleList
   //
   sampleInfo::vect_id sampleList;
-  //sampleList = sampleInfo::getSampleList( analysis ); 
+  sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
-  sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
   //
@@ -219,7 +219,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
     // Switches for applying weights
     wgtInfo->apply_diLepTrigger_sf = false;
-    wgtInfo->apply_bTag_sf         = false;
+    wgtInfo->apply_bTag_sf         = true;
     wgtInfo->apply_lep_sf          = false;
     wgtInfo->apply_vetoLep_sf      = false;
     wgtInfo->apply_lepFS_sf        = false;

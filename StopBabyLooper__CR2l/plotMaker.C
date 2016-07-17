@@ -324,7 +324,7 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
 
-  // Plot MET, rebinned
+  // Plot MET, rebinned, 2 jets
   var_list_label.push_back( "met" );
   var_list_title.push_back( "E_{T}^{miss}" );
   var_list_xaxis.push_back( "E_{T}^{miss} [GeV]" );
@@ -336,21 +336,120 @@ void plotMaker( bool plotByGenDecay=true ){
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  //const int nRebins_met = 8;
+  //double xRebins_met[nRebins_met+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
+  //double xRebinsSF_met[nRebins_met]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.714  };
+  const int nRebins_met_ee2j = 8;
+  double xRebins_met_ee2j[nRebins_met_ee2j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
+  double xRebinsSF_met_ee2j[nRebins_met_ee2j]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.0714  };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_met_ee2j);
+  var_rebin_xBins.push_back(xRebins_met_ee2j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_met_ee2j);
+
+
+  // Plot MET, rebinned, 3 jets
+  var_list_label.push_back( "met" );
+  var_list_title.push_back( "E_{T}^{miss}" );
+  var_list_xaxis.push_back( "E_{T}^{miss} [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  //const int nRebins_met = 8;
+  //double xRebins_met[nRebins_met+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
+  //double xRebinsSF_met[nRebins_met]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.714  };
+  const int nRebins_met_ee3j = 8;
+  double xRebins_met_ee3j[nRebins_met_ee3j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
+  double xRebinsSF_met_ee3j[nRebins_met_ee3j]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.0714  };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_met_ee3j);
+  var_rebin_xBins.push_back(xRebins_met_ee3j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_met_ee3j);
+
+  
+  // Plot MET, rebinned, >=4 jets, mt2w<200
+  var_list_label.push_back( "met" );
+  var_list_title.push_back( "E_{T}^{miss}" );
+  var_list_xaxis.push_back( "E_{T}^{miss} [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+  catList.push_back( catListPerPlot );
+  catListPerPlot.clear();
+
+  //const int nRebins_met = 8;
+  //double xRebins_met[nRebins_met+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
+  //double xRebinsSF_met[nRebins_met]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.714  };
+  const int nRebins_met_ge4j = 8;
+  double xRebins_met_ge4j[nRebins_met_ge4j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
+  double xRebinsSF_met_ge4j[nRebins_met_ge4j]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.0714  };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_met_ge4j);
+  var_rebin_xBins.push_back(xRebins_met_ge4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_met_ge4j);
+
+
+  // Plot MET, rebinned, mt2w>200
+  var_list_label.push_back( "met" );
+  var_list_title.push_back( "E_{T}^{miss}" );
+  var_list_xaxis.push_back( "E_{T}^{miss} [GeV]" );
+  
+  sysListPerPlot.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+  //catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
   catListPerPlot.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
   catList.push_back( catListPerPlot );
   catListPerPlot.clear();
 
-  const int nRebins_met = 8;
-  double xRebins_met[nRebins_met+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
-  double xRebinsSF_met[nRebins_met]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.714  };
+  //const int nRebins_met = 8;
+  //double xRebins_met[nRebins_met+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 800.0 };
+  //double xRebinsSF_met[nRebins_met]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.714  };
+  const int nRebins_met_ge4j_ge200mt2w = 9;
+  double xRebins_met_ge4j_ge200mt2w[nRebins_met_ge4j_ge200mt2w+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 550.0, 800.0 };
+  double xRebinsSF_met_ge4j_ge200mt2w[nRebins_met_ge4j_ge200mt2w]{   0.5,   0.5,   0.5,   0.5,   0.5,   0.25,  0.25,  0.25,  0.1  };
   var_doRebin.push_back(true);
-  var_rebin_nBins.push_back(nRebins_met);
-  var_rebin_xBins.push_back(xRebins_met);
-  var_rebin_xBinsSF.push_back(xRebinsSF_met);
+  var_rebin_nBins.push_back(nRebins_met_ge4j_ge200mt2w);
+  var_rebin_xBins.push_back(xRebins_met_ge4j_ge200mt2w);
+  var_rebin_xBinsSF.push_back(xRebinsSF_met_ge4j_ge200mt2w);
 
 
   // Plot MT
@@ -612,9 +711,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	  // Do rebin
 	  if( var_doRebin[iVar] ){
 	    h_data = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	    for(int iBin=1; iBin<(int)h_data->GetNbinsX(); iBin++){
-	      h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-	      h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+	    for(int iBin=1; iBin<=(int)h_data->GetNbinsX(); iBin++){
+	      h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 	    }
 	  }
 	  else{
@@ -659,9 +758,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	  // Do rebin
 	  if( var_doRebin[iVar] ){
 	    h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	    for(int iBin=1; iBin<(int)h_clone->GetNbinsX(); iBin++){
-	      h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-	      h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+	    for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
+	      h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 	    }
 	  }
 	  else{
@@ -697,9 +796,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	      // Do rebin
 	      if( var_doRebin[iVar] ){
 		h_clone_up = (TH1F*)h_temp_up->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-		for(int iBin=1; iBin<(int)h_clone_up->GetNbinsX(); iBin++){
-		  h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-		  h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		for(int iBin=1; iBin<=(int)h_clone_up->GetNbinsX(); iBin++){
+		  h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 		}
 	      }
 	      else{
@@ -725,9 +824,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	      // Do rebin
 	      if( var_doRebin[iVar] ){
 		h_clone_dn = (TH1F*)h_temp_dn->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-		for(int iBin=1; iBin<(int)h_clone_dn->GetNbinsX(); iBin++){
-		  h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-		  h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		for(int iBin=1; iBin<=(int)h_clone_dn->GetNbinsX(); iBin++){
+		  h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 		}
 	      }
 	      else{
@@ -821,9 +920,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	      // Do rebin
 	      if( var_doRebin[iVar] ){
 		h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-		for(int iBin=1; iBin<(int)h_clone->GetNbinsX(); iBin++){
-		  h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-		  h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
+		  h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 		}
 	      }
 	      else{

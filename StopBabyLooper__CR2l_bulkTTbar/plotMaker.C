@@ -673,9 +673,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	  // Do rebin
 	  if( var_doRebin[iVar] ){
 	    h_data = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	    for(int iBin=1; iBin<(int)h_data->GetNbinsX(); iBin++){
-	      h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-	      h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+	    for(int iBin=1; iBin<=(int)h_data->GetNbinsX(); iBin++){
+	      h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 	    }
 	  }
 	  else{
@@ -720,9 +720,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	  // Do rebin
 	  if( var_doRebin[iVar] ){
 	    h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	    for(int iBin=1; iBin<(int)h_clone->GetNbinsX(); iBin++){
-	      h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-	      h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+	    for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
+	      h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 	    }
 	  }
 	  else{
@@ -758,9 +758,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	      // Do rebin
 	      if( var_doRebin[iVar] ){
 		h_clone_up = (TH1F*)h_temp_up->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-		for(int iBin=1; iBin<(int)h_clone_up->GetNbinsX(); iBin++){
-		  h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-		  h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		for(int iBin=1; iBin<=(int)h_clone_up->GetNbinsX(); iBin++){
+		  h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 		}
 	      }
 	      else{
@@ -786,9 +786,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	      // Do rebin
 	      if( var_doRebin[iVar] ){
 		h_clone_dn = (TH1F*)h_temp_dn->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-		for(int iBin=1; iBin<(int)h_clone_dn->GetNbinsX(); iBin++){
-		  h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-		  h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		for(int iBin=1; iBin<=(int)h_clone_dn->GetNbinsX(); iBin++){
+		  h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 		}
 	      }
 	      else{
@@ -882,9 +882,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	      // Do rebin
 	      if( var_doRebin[iVar] ){
 		h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-		for(int iBin=1; iBin<(int)h_clone->GetNbinsX(); iBin++){
-		  h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin] );
-		  h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin] );
+		for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
+		  h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
 		}
 	      }
 	      else{

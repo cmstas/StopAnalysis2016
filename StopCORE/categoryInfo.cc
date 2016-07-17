@@ -190,6 +190,13 @@ categoryInfo::categoryUtil::categoryUtil( categoryInfo::ID category ){
     tex   = "$3$~jets,~MT2W$\\ge200$,~$350<MET<450$";
     break;
 
+  case( k_ee3jets_ge200mt2w_450toInfmet ):
+    id    = category;
+    label = "ee3jets_ge200mt2w_450toInfmet";
+    title = "3 jets, MT2W>=200, MET>450";
+    tex   = "$3$~jets,~MT2W$\\ge200$,~$MET>450$";
+    break;
+  
   case( k_ee3jets_ge200mt2w_450to550met ):
     id    = category;
     label = "ee3jets_ge200mt2w_450to550met";
@@ -351,6 +358,13 @@ categoryInfo::categoryUtil::categoryUtil( categoryInfo::ID category ){
     tex   = "$\\ge4$~jets,~MT2W$\\ge200$,~$450<MET<550$";
     break;
 
+  case( k_ge4jets_ge200mt2w_550toInfmet ):
+    id    = category;
+    label = "ge4jets_ge200mt2w_550toInfmet";
+    title = ">=4 jets, MT2W>=200, MET>550";
+    tex   = "$\\ge4$~jets,~MT2W$\\ge200$,~$MET>550$";
+    break;
+
   case( k_ge4jets_ge200mt2w_550to650met ):
     id    = category;
     label = "ge4jets_ge200mt2w_550to650met";
@@ -476,11 +490,11 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 
   // If adding 2nd lepton to met, recalculate appropriate vars
   double met = babyAnalyzer.pfmet();
-  //double met_phi = babyAnalyzer.pfmet_phi();
+  double met_phi = babyAnalyzer.pfmet_phi();
   double mt2w = babyAnalyzer.MT2W();
   double topness = babyAnalyzer.topnessMod();
   if( add2ndLepToMet ){
-    /*
+    
     if( (babyAnalyzer.ngoodleps()>=2) ||
     	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
 
@@ -527,12 +541,12 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
         mt2w = CalcMT2W_(mybjets, addjets, babyAnalyzer.lep1_p4(), met, met_phi);
       
     } // end if 2nd lepton to add met to
-    */
+    
 
-    met = babyAnalyzer.pfmet_rl();
-    //met_phi = babyAnalyzer.pfmet_phi_rl();
-    mt2w = babyAnalyzer.MT2W_rl();
-    topness = babyAnalyzer.topnessMod_rl();
+    //met = babyAnalyzer.pfmet_rl();
+    ////met_phi = babyAnalyzer.pfmet_phi_rl();
+    //mt2w = babyAnalyzer.MT2W_rl();
+    //topness = babyAnalyzer.topnessMod_rl();
 
   } // end if add 2nd lepton to emt
 
@@ -695,6 +709,12 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 	met<450        ) result = true;
     break;
 
+  case( k_ee3jets_ge200mt2w_450toInfmet ):
+    if( babyAnalyzer.ngoodjets()==3 &&
+	mt2w>=200.0 && 
+	met>=450.0    ) result = true;
+    break;
+
   case( k_ee3jets_ge200mt2w_450to550met ):
     if( babyAnalyzer.ngoodjets()==3 &&
 	mt2w>=200.0 && 
@@ -837,6 +857,12 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 	mt2w>=200.0 &&
 	met>=450.0 &&
 	met<550.0     ) result = true;
+    break;
+
+  case( k_ge4jets_ge200mt2w_550toInfmet ):
+    if( babyAnalyzer.ngoodjets()>=4 && 
+	mt2w>=200.0 &&
+	met>=550.0    ) result = true;
     break;
 
   case( k_ge4jets_ge200mt2w_550to650met ):
@@ -996,6 +1022,7 @@ categoryInfo::vect_util categoryInfo::getCategoryList( analyzerInfo::ID analysis
     result.push_back( categoryUtil(k_ee3jets_ge200mt2w_250to350met) );
     result.push_back( categoryUtil(k_ee3jets_ge200mt2w_350toInfmet) );
     result.push_back( categoryUtil(k_ee3jets_ge200mt2w_350to450met) );
+    result.push_back( categoryUtil(k_ee3jets_ge200mt2w_450toInfmet) );
     result.push_back( categoryUtil(k_ee3jets_ge200mt2w_450to550met) );
     result.push_back( categoryUtil(k_ee3jets_ge200mt2w_550toInfmet) );
     result.push_back( categoryUtil(k_ge4jets) );
@@ -1013,6 +1040,7 @@ categoryInfo::vect_util categoryInfo::getCategoryList( analyzerInfo::ID analysis
     result.push_back( categoryUtil(k_ge4jets_ge200mt2w_350toInfmet) );
     result.push_back( categoryUtil(k_ge4jets_ge200mt2w_450toInfmet) );
     result.push_back( categoryUtil(k_ge4jets_ge200mt2w_450to550met) );
+    result.push_back( categoryUtil(k_ge4jets_ge200mt2w_550toInfmet) );
     result.push_back( categoryUtil(k_ge4jets_ge200mt2w_550to650met) );
     result.push_back( categoryUtil(k_ge4jets_ge200mt2w_650toInfmet) );
     result.push_back( categoryUtil(k_ge5jets) );

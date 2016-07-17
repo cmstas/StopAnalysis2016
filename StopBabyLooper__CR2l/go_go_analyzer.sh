@@ -61,7 +61,7 @@ root -l -b -q head.C tableMaker_allInputs.C++'("Histos/Nominal/","Output/Tables/
 echo "Printing yields of summmed inputs..."
 echo ""
 root -l -b -q head.C tableMaker_summedInputs.C++'("Histos/Nominal/","Output/Tables/yields_summedInputs.tex")' >& Output/Log/tableMaker_summedInputs.log 
-
+root -l -b -q head.C tableMaker_summedInputs_newBinning.C++'("Histos/Nominal/","Output/Tables/yields_summedInputs_newBinning__CR2l.tex")' >& Output/Log/tableMaker_summedInputs_newBinning__CR2l.log
 
 # Calculate Uncertainties
 echo "Calculating Uncertainties..."
