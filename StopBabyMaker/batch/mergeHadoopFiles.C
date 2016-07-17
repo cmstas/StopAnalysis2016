@@ -3,6 +3,7 @@
 #include "TFile.h"
 #include "TH1.h"
 #include "TH3D.h"
+#include "TH2F.h"
 #include "TString.h"
 
 #include <vector>
@@ -37,7 +38,9 @@ void mergeHadoopFiles(const TString& indir, const TString& sample, const TString
   TH1D *histos[nHistos];
   for(int iHist=0; iHist<nHistos; iHist++) histos[iHist]=NULL;
   TH3D *histos3D=NULL;
-
+  TH2F *histos2D=NULL;
+  bool h3Dexists = false;
+  bool h2Dexists = false;
   // Loop over input files, adding histograms
   bool firstFile=true;
   TObjArray *listOfFiles = chain->GetListOfFiles();
@@ -69,14 +72,29 @@ void mergeHadoopFiles(const TString& indir, const TString& sample, const TString
       
     } // end loop over histograms
     if( firstFile ){
-      TH3D *h_temp3D = (TH3D*)file.Get("h_counterSMS");
-      histos3D = (TH3D*)h_temp3D->Clone();
-      histos3D->SetDirectory(f_output);
-    } else {
+      if(file.GetListOfKeys()->Contains("h_counterSMS")) {
+	cout << "3D file exists" << endl;
+	h3Dexists = true;
+	TH3D *h_temp3D = (TH3D*)file.Get("h_counterSMS");
+	histos3D = (TH3D*)h_temp3D->Clone();
+	histos3D->SetDirectory(f_output);
+      }
+    } else if(h3Dexists) {
       TH3D *h_temp3D = (TH3D*)file.Get("h_counterSMS");
       histos3D->Add(h_temp3D);
     }
-
+    if( firstFile ){
+      if(file.GetListOfKeys()->Contains("histNEvts")) {
+	cout << "2D file exists" << endl;
+	h2Dexists = true;
+	TH2F *h_temp2F = (TH2F*)file.Get("histNEvts");
+	histos2D = (TH2F*)h_temp2F->Clone();
+	histos2D->SetDirectory(f_output);
+      }
+    } else if(h2Dexists) {
+      TH2F *h_temp2F = (TH2F*)file.Get("histNEvts");
+      histos2D->Add(h_temp2F);
+    }
     // Close input file
     file.Close();
 
@@ -99,9 +117,16 @@ void mergeHadoopFiles(const TString& indir, const TString& sample, const TString
       TFile *outFile = new TFile(iOutPath, "update");
 
       TH1D *h_temp[nHistos];
-      TH3D *h_temp_3D=NULL;
-      h_temp_3D = (TH3D*)histos3D->Clone();
-      h_temp_3D->SetDirectory(outFile);
+      if(h3Dexists){
+	TH3D *h_temp_3D=NULL;
+	h_temp_3D = (TH3D*)histos3D->Clone();
+	h_temp_3D->SetDirectory(outFile);
+      }
+      if(h2Dexists){
+	TH2F *h_temp_2D=NULL;
+	h_temp_2D = (TH2F*)histos2D->Clone();
+	h_temp_2D->SetDirectory(outFile);
+      }
       for(int iHist=0; iHist<nHistos; iHist++) h_temp[iHist]=NULL;
 
       for(int iHist=0; iHist<nHistos; iHist++){
