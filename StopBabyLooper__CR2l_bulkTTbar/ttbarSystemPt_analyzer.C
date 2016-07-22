@@ -137,7 +137,13 @@ int ttbarSystemPt_analyzer(){
       h_temp = (TH1D*)f_allBkg->Get(h_name);
       h_allBkg = (TH1D*)h_temp->Clone(h_name+"_mc");
 
-      
+
+      cout << endl;
+      cout << "Overall: data = " << h_data->Integral(0,-1) << endl;
+      cout << "           mc = " << h_allBkg->Integral(0,-1) << endl;
+      cout << "      data/mc = " << h_data->Integral(0,-1)/h_allBkg->Integral(0,-1) << endl; 
+      cout << endl;
+
       // Grab overflow bin
       double overflow_data = h_data->GetBinContent(h_data->GetNbinsX()+1);
       double overflow_err_data = sqrt( overflow_data );
@@ -157,6 +163,7 @@ int ttbarSystemPt_analyzer(){
       //h_data->SetBinContent(iBin, h_data->GetBinContent(iBin)*xRebinsSF[iBin-1]);
       //h_allBkg->SetBinContent(iBin, h_allBkg->GetBinContent(iBin)*xRebinsSF[iBin-1]);
       //}
+
 
 
       // Get Overall Data/MC Norm

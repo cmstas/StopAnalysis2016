@@ -18,8 +18,10 @@ namespace sampleInfo{
   //
   // Namespace utility vars
   //
+  const std::string baby_inputDir_nominal = "/nfs-7/userdata/stopRun2/stop_babies__CMS3_V080005__BabyMaker_V0800X_v6__20160718__mergedWithHistos/"; // 7.65/fb with btag sfs, and includes vars adding lepton to met
+  //const std::string baby_inputDir_nominal  = "/hadoop/cms/store/user/jgwood/condor/stop_1l_babies/stop_babies__CMS3_V080005__BabyMaker_V0800X_v6__20160715/merged_files/";  // 7.65/fb with btag sfs, and includes vars adding lepton to met
+  //const std::string baby_inputDir_nominal  = "/nfs-6/userdata/mliu/onelepbabies/V80_7p65_v2/";  // 7.65/fb with btag sfs, from mia
   //const std::string baby_inputDir_nominal  = "/nfs-7/userdata/stopRun2/stop_babies__CMS3_V080005__BabyMaker_V0800X_v4__20160710/"; // 7.65/fb no btag sfs
-  const std::string baby_inputDir_nominal  = "/nfs-6/userdata/mliu/onelepbabies/V80_7p65_v2/";  // 7.65/fb with btag sfs
   const std::string baby_inputDir_jesUp    = "";
   const std::string baby_inputDir_jesDn    = "";
 

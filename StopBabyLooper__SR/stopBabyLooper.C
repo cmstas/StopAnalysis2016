@@ -453,6 +453,82 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
 
     //
+    // MET, gen lost lepton is e/mu
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_met_genLostLep = NULL;
+    histogramInfo::h1_Util *h1_scan_met_genLostLep[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "met_genLostLep__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "MET, gen lost lepton is e/mu, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_met_genLostLep[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_met_genLostLep = new histogramInfo::h1_Util( f_output, "met_genLostLep", "MET, gen lost lepton is e/mu", 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+    //
+    // MET, gen lost lepton is tau
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_met_genLostTau = NULL;
+    histogramInfo::h1_Util *h1_scan_met_genLostTau[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "met_genLostTau__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "MET, gen lost lepton is tau";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_met_genLostTau[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_met_genLostTau = new histogramInfo::h1_Util( f_output, "met_genLostTau", "MET, gen lost lepton is tau", 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+    //
     // lep eta
     //
     cat_temp.clear(); sys_temp.clear();
@@ -774,6 +850,9 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	// lost lepton id
 	
 	// match leading lepton first
+	int genLostLep__idx = -1;
+	int genLostLep__id = -99;
+	int genLostLep__tauDecay = -1;
 	if( !is_data() && is2lep() ){
 	  int genLep_matchedTo_selLep__idx = -1;
 	  for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
@@ -790,9 +869,6 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	  // If matched selected lepton, find lost gen lepton
 	  if( genLep_matchedTo_selLep__idx>0 ){
 
-	    int genLostLep__idx = -1;
-	    int genLostLep__id = -99;
-	    int genLostLep__tauDecay = -1;
 	    for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
 	      if( iGen == genLep_matchedTo_selLep__idx ) continue;
 	      if( !genleps_isLastCopy().at(iGen) ) continue;
@@ -957,6 +1033,16 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		    // met
 		    if( h1_scan_met[iMassPt]->histos[iHist] ) h1_scan_met[iMassPt]->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
 
+		    // met, genLostLep
+		    if(abs(genLostLep__id)==11 || abs(genLostLep__id)==13 ){ 
+		      if( h1_scan_met_genLostLep[iMassPt]->histos[iHist] ) h1_scan_met_genLostLep[iMassPt]->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+		    }
+
+		    // met, genLostTau
+		    if(abs(genLostLep__id)==15 ){ 
+		      if( h1_scan_met_genLostTau[iMassPt]->histos[iHist] ) h1_scan_met_genLostTau[iMassPt]->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+		    }
+		    
 		    // lep1 eta
 		    if( h1_scan_lep_eta[iMassPt]->histos[iHist] ) h1_scan_lep_eta[iMassPt]->histos[iHist]->Fill( lep1_p4().Eta(), sysWgtsList[iSys].second );
 
@@ -1010,6 +1096,15 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		  // met
 		  if( h1_met->histos[iHist] ) h1_met->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
 
+		  // met, genLostLep
+		  if(abs(genLostLep__id)==11 || abs(genLostLep__id)==13 ){ 
+		    if( h1_met_genLostLep->histos[iHist] ) h1_met_genLostLep->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+		  }
+
+		  // met, genLostTau
+		  if(abs(genLostLep__id)==15){ 
+		    if( h1_met_genLostTau->histos[iHist] ) h1_met_genLostTau->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+		  }
 
 		  // lep1 eta
 		  if( h1_lep_eta->histos[iHist] ) h1_lep_eta->histos[iHist]->Fill( lep1_p4().Eta(), sysWgtsList[iSys].second );

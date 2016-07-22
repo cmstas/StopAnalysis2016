@@ -75,6 +75,7 @@ namespace stop_1l {
 	const float &mass_gluino() { return babyAnalyzer.mass_gluino(); }
 	const float &genmet() { return babyAnalyzer.genmet(); }
 	const float &genmet_phi() { return babyAnalyzer.genmet_phi(); }
+	const float &nupt() { return babyAnalyzer.nupt(); }
 	const float &genht() { return babyAnalyzer.genht(); }
 	const bool &PassTrackVeto() { return babyAnalyzer.PassTrackVeto(); }
 	const bool &PassTauVeto() { return babyAnalyzer.PassTauVeto(); }

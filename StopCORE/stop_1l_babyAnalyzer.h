@@ -240,6 +240,9 @@ protected:
 	float	genmet_phi_;
 	TBranch *genmet_phi_branch;
 	bool genmet_phi_isLoaded;
+	float	nupt_;
+	TBranch *nupt_branch;
+	bool nupt_isLoaded;
 	float	genht_;
 	TBranch *genht_branch;
 	bool genht_isLoaded;
@@ -1370,6 +1373,11 @@ void Init(TTree *tree) {
 		genmet_phi_branch = tree->GetBranch("genmet_phi");
 		if (genmet_phi_branch) {genmet_phi_branch->SetAddress(&genmet_phi_);}
 	}
+	nupt_branch = 0;
+	if (tree->GetBranch("nupt") != 0) {
+		nupt_branch = tree->GetBranch("nupt");
+		if (nupt_branch) {nupt_branch->SetAddress(&nupt_);}
+	}
 	genht_branch = 0;
 	if (tree->GetBranch("genht") != 0) {
 		genht_branch = tree->GetBranch("genht");
@@ -2325,6 +2333,7 @@ void GetEntry(unsigned int idx)
 		mass_gluino_isLoaded = false;
 		genmet_isLoaded = false;
 		genmet_phi_isLoaded = false;
+		nupt_isLoaded = false;
 		genht_isLoaded = false;
 		PassTrackVeto_isLoaded = false;
 		PassTauVeto_isLoaded = false;
@@ -2608,6 +2617,7 @@ void LoadAllBranches()
 	if (mass_gluino_branch != 0) mass_gluino();
 	if (genmet_branch != 0) genmet();
 	if (genmet_phi_branch != 0) genmet_phi();
+	if (nupt_branch != 0) nupt();
 	if (genht_branch != 0) genht();
 	if (PassTrackVeto_branch != 0) PassTrackVeto();
 	if (PassTauVeto_branch != 0) PassTauVeto();
@@ -3775,6 +3785,19 @@ void LoadAllBranches()
 			genmet_phi_isLoaded = true;
 		}
 		return genmet_phi_;
+	}
+	float &nupt()
+	{
+		if (not nupt_isLoaded) {
+			if (nupt_branch != 0) {
+				nupt_branch->GetEntry(index);
+			} else { 
+				printf("branch nupt_branch does not exist!\n");
+				exit(1);
+			}
+			nupt_isLoaded = true;
+		}
+		return nupt_;
 	}
 	float &genht()
 	{
@@ -6530,6 +6553,7 @@ namespace stop_1l {
 	const float &mass_gluino();
 	const float &genmet();
 	const float &genmet_phi();
+	const float &nupt();
 	const float &genht();
 	const bool &PassTrackVeto();
 	const bool &PassTauVeto();

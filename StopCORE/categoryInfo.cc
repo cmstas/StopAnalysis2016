@@ -490,14 +490,14 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 
   // If adding 2nd lepton to met, recalculate appropriate vars
   double met = babyAnalyzer.pfmet();
-  double met_phi = babyAnalyzer.pfmet_phi();
+  //double met_phi = babyAnalyzer.pfmet_phi();
   double mt2w = babyAnalyzer.MT2W();
   double topness = babyAnalyzer.topnessMod();
   if( add2ndLepToMet ){
-    
+    /*
     if( (babyAnalyzer.ngoodleps()>=2) ||
     	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ){
-
+      
       double metX = met*std::cos(met_phi);
       double metY = met*std::sin(met_phi);
 
@@ -541,12 +541,12 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
         mt2w = CalcMT2W_(mybjets, addjets, babyAnalyzer.lep1_p4(), met, met_phi);
       
     } // end if 2nd lepton to add met to
+    */
     
-
-    //met = babyAnalyzer.pfmet_rl();
-    ////met_phi = babyAnalyzer.pfmet_phi_rl();
-    //mt2w = babyAnalyzer.MT2W_rl();
-    //topness = babyAnalyzer.topnessMod_rl();
+    met = babyAnalyzer.pfmet_rl();
+    //met_phi = babyAnalyzer.pfmet_phi_rl();
+    mt2w = babyAnalyzer.MT2W_rl();
+    topness = babyAnalyzer.topnessMod_rl();
 
   } // end if add 2nd lepton to emt
 

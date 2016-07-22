@@ -55,8 +55,8 @@ int stopBabyLooper(){
   // SampleList
   //
   sampleInfo::vect_id sampleList;
-  sampleList = sampleInfo::getSampleList( analysis ); 
-  //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
+  //sampleList = sampleInfo::getSampleList( analysis ); 
+  sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
@@ -443,6 +443,45 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     } // end if signal scan
     else{
       h1_met = new histogramInfo::h1_Util( f_output, "met", "MET", 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+    }
+
+
+
+    //
+    // pfMET
+    //
+    cat_temp.clear(); sys_temp.clear();
+
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
+    cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
+
+    sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+
+    histogramInfo::h1_Util *h1_pfmet = NULL;
+    histogramInfo::h1_Util *h1_scan_pfmet[ h_nMassPt ];
+    if( sample.isSignalScan ){
+
+      for(int iMassPt=0; iMassPt<(int)h_nMassPt; iMassPt++){
+	std::string h_name = "pfmet__";
+	h_name += "mStop_";  h_name += sample.massPtList[iMassPt].first;
+	h_name += "__mLSP_";  h_name += sample.massPtList[iMassPt].second;
+	
+	std::string h_title = "PFMET, ";
+	h_title += "mStop=";   h_title += sample.massPtList[iMassPt].first;
+	h_title += ", mLSP=";  h_title += sample.massPtList[iMassPt].second;
+
+	h1_scan_pfmet[iMassPt] = new histogramInfo::h1_Util( f_output, h_name, h_title, 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
+      } // end loop over mass points
+
+    } // end if signal scan
+    else{
+      h1_pfmet = new histogramInfo::h1_Util( f_output, "pfmet", "PFMET", 32, 0.0, 800.0, genClassyList, recoClassyList, cat_temp, sys_temp );
     }
 
 
@@ -866,14 +905,14 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
 	// If adding 2nd lepton to Met, recalculate appropriate vars
 	double met = pfmet();
-	double met_phi = pfmet_phi();
-	double dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
+	//double met_phi = pfmet_phi();
+	//double dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
 	double mt = mt_met_lep();
 	double minDPhi_met_j1_j1 = mindphi_met_j1_j2();
 	double modTopness = topnessMod();
 	double mt2w = MT2W();
 	if( add2ndLeptonToMet ){
-	  
+	  /*
 	  if( (ngoodleps()>=2) ||
 	      (ngoodleps()==1 && nvetoleps()>=2 && lep2_p4().Pt()>10.0 ) ){
 	    
@@ -927,15 +966,16 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	    
   
 	  } // min if 2nd lepton exists
-	  
+	  */
 
-	  //met = pfmet_rl();
-	  ////met_phi = pfmet_phi_rl();
-	  ////dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
-	  //mt = mt_met_lep_rl();
-	  //minDPhi_met_j1_j1 = mindphi_met_j1_j2_rl();
-	  //modTopness = topnessMod_rl();
-	  // mt2w = MT2W_rl();
+	  met = pfmet_rl();
+	  //met_phi = pfmet_phi_rl();
+	  //dphi_metLep = std::acos(std::cos(met_phi - lep1_p4().Phi()));
+	  mt = mt_met_lep_rl();
+	  minDPhi_met_j1_j1 = mindphi_met_j1_j2_rl();
+	  modTopness = topnessMod_rl();
+	  mt2w = MT2W_rl();
+
 	} // end if addSeocnLepToMet
 
 
@@ -1134,6 +1174,9 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		    // met
 		    if( h1_scan_met[iMassPt]->histos[iHist] ) h1_scan_met[iMassPt]->histos[iHist]->Fill( met, sysWgtsList[iSys].second );
 		    
+		    // pfmet
+		    if( h1_scan_pfmet[iMassPt]->histos[iHist] ) h1_scan_pfmet[iMassPt]->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
+		    
 		    // mt
 		    if( h1_scan_mt[iMassPt]->histos[iHist] ) h1_scan_mt[iMassPt]->histos[iHist]->Fill( mt, sysWgtsList[iSys].second );
 
@@ -1198,6 +1241,9 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 		  
 		  // met
 		  if( h1_met->histos[iHist] ) h1_met->histos[iHist]->Fill( met, sysWgtsList[iSys].second );
+
+		  // pfmet
+		  if( h1_pfmet->histos[iHist] ) h1_pfmet->histos[iHist]->Fill( pfmet(), sysWgtsList[iSys].second );
 
 		  // mt
 		  if( h1_mt->histos[iHist] ) h1_mt->histos[iHist]->Fill( mt, sysWgtsList[iSys].second );
