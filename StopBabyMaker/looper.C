@@ -557,7 +557,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Set JSON file
   //
-  const char* json_file = "json_files/Cert_271036-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt";
+  const char* json_file = "json_files/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt";
   set_goodrun_file_json(json_file);
   
   //
