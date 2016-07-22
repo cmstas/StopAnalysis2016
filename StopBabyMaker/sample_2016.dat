@@ -32,7 +32,7 @@ Name data_met_Run2016B_MINIAOD_PromptReco-v2re
 Path /hadoop/cms/store/group/snt/run2_data/Run2016B_MET_MINIAOD_PromptReco-v2/merged/V08-00-06/
 
 ##################################################
-### Collection of 25ns REPROCESSED Data Samples ##
+### Collection of 25ns Data Samples ##
 ##################################################
 ###
 SAMPLE
@@ -62,7 +62,37 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2016C_SingleMuon_MINIAOD_PromptRec
 ## MET ##
 SAMPLE
 Name data_met_Run2016C_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016C_SinglePhoton_MINIAOD_PromptReco-v2/merged/V08-00-07/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_MET_MINIAOD_PromptReco-v2/merged/V08-00-07/
+
+###
+SAMPLE
+Name data_double_eg_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleEG_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## Double mu ##
+SAMPLE
+Name data_double_mu_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleMuon_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## Muon EG ##
+SAMPLE
+Name data_muon_eg_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MuonEG_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## Single Electron ##
+SAMPLE
+Name data_single_electron_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_SingleElectron_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## Single Muon ##
+SAMPLE
+Name data_single_muon_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_SingleMuon_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## MET ##
+SAMPLE
+Name data_met_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MET_MINIAOD_PromptReco-v2/merged/V08-00-08/
 
 ##############################
 # Collection of 25ns samples #
