@@ -1237,12 +1237,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Jet Selection
        float btagprob_data = 1.;
        float btagprob_mc = 1.;
-       float btagprob_err_heavy_UP = 0.;
-       float btagprob_err_heavy_DN = 0.;
-       float btagprob_err_light_UP = 0.;
-       float btagprob_err_light_DN = 0.;
-       float btagprob_err_FS_UP = 0.;
-       float btagprob_err_FS_DN = 0.;
+       float btagprob_heavy_UP = 1.;
+       float btagprob_heavy_DN = 1.;
+       float btagprob_light_UP = 1.;
+       float btagprob_light_DN = 1.;
+       float btagprob_FS_UP = 1.;
+       float btagprob_FS_DN = 1.;
  
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
       // Get the jets overlapping with the selected leptons
@@ -1255,7 +1255,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	// Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
 	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_err_heavy_UP, btagprob_err_heavy_DN, btagprob_err_light_UP,btagprob_err_light_DN,btagprob_err_FS_UP,btagprob_err_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
+        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_heavy_UP, btagprob_heavy_DN, btagprob_light_UP,btagprob_light_DN,btagprob_FS_UP,btagprob_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
       }
       if (!evt_isRealData()){
 	int NISRjets = 0;
@@ -1294,13 +1294,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // SAVE B TAGGING SF 
      if (!evt_isRealData() && skim_applyBtagSFs) {
         StopEvt.weight_btagsf = btagprob_data / btagprob_mc;
-        StopEvt.weight_btagsf_heavy_UP = StopEvt.weight_btagsf + btagprob_err_heavy_UP*StopEvt.weight_btagsf;
-        StopEvt.weight_btagsf_light_UP = StopEvt.weight_btagsf + btagprob_err_light_UP*StopEvt.weight_btagsf;
-        StopEvt.weight_btagsf_heavy_DN = StopEvt.weight_btagsf - btagprob_err_heavy_DN*StopEvt.weight_btagsf;
-        StopEvt.weight_btagsf_light_DN = StopEvt.weight_btagsf - btagprob_err_light_DN*StopEvt.weight_btagsf;
- 	StopEvt.weight_btagsf_fastsim_UP = StopEvt.weight_btagsf + btagprob_err_FS_UP*StopEvt.weight_btagsf;
-        StopEvt.weight_btagsf_fastsim_DN = StopEvt.weight_btagsf - btagprob_err_FS_DN*StopEvt.weight_btagsf;
-      }
+	//StopEvt.weight_btagsf_heavy_UP = StopEvt.weight_btagsf + btagprob_err_heavy_UP*StopEvt.weight_btagsf;
+        //StopEvt.weight_btagsf_light_UP = StopEvt.weight_btagsf + btagprob_err_light_UP*StopEvt.weight_btagsf;
+        //StopEvt.weight_btagsf_heavy_DN = StopEvt.weight_btagsf - btagprob_err_heavy_DN*StopEvt.weight_btagsf;
+        //StopEvt.weight_btagsf_light_DN = StopEvt.weight_btagsf - btagprob_err_light_DN*StopEvt.weight_btagsf;
+ 	//StopEvt.weight_btagsf_fastsim_UP = StopEvt.weight_btagsf + btagprob_err_FS_UP*StopEvt.weight_btagsf;
+        //StopEvt.weight_btagsf_fastsim_DN = StopEvt.weight_btagsf - btagprob_err_FS_DN*StopEvt.weight_btagsf;
+        StopEvt.weight_btagsf_heavy_UP = btagprob_heavy_UP/btagprob_mc;
+        StopEvt.weight_btagsf_light_UP = btagprob_light_UP/btagprob_mc;
+        StopEvt.weight_btagsf_heavy_DN = btagprob_heavy_DN/btagprob_mc;
+        StopEvt.weight_btagsf_light_DN = btagprob_light_DN/btagprob_mc;
+	if(skim_isFastsim){
+	  StopEvt.weight_btagsf_fastsim_UP = btagprob_FS_UP/btagprob_mc;
+	  StopEvt.weight_btagsf_fastsim_DN = btagprob_FS_DN/btagprob_mc;
+	}
+     }
      // save the sum of weights for normalization offline to n-babies.
      // comment: this has to go before the skim_nBJets - else you create a bias
      if(!evt_isRealData() && skim_applyBtagSFs) {
@@ -1309,8 +1317,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhist->Fill(16,StopEvt.weight_btagsf_light_UP);
        counterhist->Fill(17,StopEvt.weight_btagsf_heavy_DN);
        counterhist->Fill(18,StopEvt.weight_btagsf_light_DN);
-       counterhist->Fill(23,StopEvt.weight_btagsf_fastsim_UP);
-       counterhist->Fill(24,StopEvt.weight_btagsf_fastsim_DN);
+       if(skim_isFastsim){
+	 counterhist->Fill(23,StopEvt.weight_btagsf_fastsim_UP);
+	 counterhist->Fill(24,StopEvt.weight_btagsf_fastsim_DN);
+       }
      }
      if(isSignalFromFileName && !evt_isRealData() && skim_applyBtagSFs){
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,14,StopEvt.weight_btagsf);
@@ -1318,8 +1328,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,16,StopEvt.weight_btagsf_light_UP);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,17,StopEvt.weight_btagsf_heavy_DN);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,18,StopEvt.weight_btagsf_light_DN);
-       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,22,StopEvt.weight_btagsf_fastsim_UP);
-       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,23,StopEvt.weight_btagsf_fastsim_DN);
+       if(skim_isFastsim){
+	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,22,StopEvt.weight_btagsf_fastsim_UP);
+	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,23,StopEvt.weight_btagsf_fastsim_DN);
+       }
      }
 
      // 
