@@ -38,7 +38,7 @@ public:
     void SetAK8Branches (TTree* tree);
     void SetAK4Branches (TTree* tree);
     void SetAliases (TTree* tree);
-    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_err_heavy_UP, float & btagprob_err_heavy_DN, float & btagprob_err_light_UP, float & btagprob_err_light_DN, float & btagprob_err_FS_UP, float & btagprob_err_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim);
+    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float & btagprob_heavy_DN, float & btagprob_light_UP, float & btagprob_light_DN, float & btagprob_FS_UP, float & btagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim);
     float getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFastsim);
 //FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx, unsigned int overlep2_idx);
     void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id);
