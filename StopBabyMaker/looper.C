@@ -406,7 +406,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     f_el_SF       = new TFile("lepsf/analysis2016/scaleFactors.root", "read");
     
     // Muon files
-    f_mu_SF_id    = new TFile("lepsf/analysis2016/MuonID_Z_RunBCD_prompt80X_7p65.root", "read");
+    //f_mu_SF_id    = new TFile("lepsf/analysis2016/MuonID_Z_RunBCD_prompt80X_7p65.root", "read");
+    f_mu_SF_id    = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
     f_mu_SF_iso   = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_MiniIsoTight_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc for this
     f_mu_SF_ip    = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_TightIP2D_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc for this
 
@@ -431,7 +432,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     f_mu_veto_FS_Ip  = new TFile("lepsf/analysis2016/sf_mu_tightIP2D.root", "read"); // double unc for this
 
     // Veto lepton reco efficiency files
-    f_vetoLep_eff = new TFile("lepsf/analysis2016/lepeff__ttbar_powheg_pythia8_25ns__SRcuts.root", "read");
+    f_vetoLep_eff = new TFile("lepsf/analysis2016/lepeff__ttbar_diLept_madgraph_pythia8_ext1_25ns__80x.root", "read");
 
 
     // Grab selected el histos
@@ -444,7 +445,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
 
     // Grab selected mu histos
-    TH2D *h_mu_SF_id_temp  = (TH2D*)f_mu_SF_id->Get("MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/pt_abseta_ratio");
+    //TH2D *h_mu_SF_id_temp  = (TH2D*)f_mu_SF_id->Get("MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/pt_abseta_ratio");
+    TH2D *h_mu_SF_id_temp  = (TH2D*)f_mu_SF_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0");
     TH2D *h_mu_SF_iso_temp = (TH2D*)f_mu_SF_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_Medium2016_pass");
     TH2D *h_mu_SF_ip_temp  = (TH2D*)f_mu_SF_ip->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_Medium2016_pass");
 
@@ -474,28 +476,33 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
     
     // Grab mc eff for veto lepton (for lost lepto SFs) histos
-    TH2D *h_el_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_rebin_Eff_el");
-    TH2D *h_mu_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_rebin_Eff_mu");
+    TH2D *h_el_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_Eff_el");
+    TH2D *h_mu_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_Eff_mu");
    
-
 
     // Get final fullsim, selected el, sfs
     TH2D *h_el_SF_id  = (TH2D*)h_el_SF_id_temp->Clone("h_el_SF_id");
     TH2D *h_el_SF_iso = (TH2D*)h_el_SF_iso_temp->Clone("h_el_SF_iso");
     h_el_SF = (TH2D*)h_el_SF_id->Clone("h_el_SF");
     h_el_SF->Multiply(h_el_SF_iso);
-
+    
     // Get final fullsim, veto el, sfs
     TH2D *h_el_SF_veto_id  = (TH2D*)h_el_SF_veto_id_temp->Clone("h_el_SF_veto_id");
     TH2D *h_el_SF_veto_iso = (TH2D*)h_el_SF_veto_iso_temp->Clone("h_el_SF_veto_iso");
     h_el_SF_veto = (TH2D*)h_el_SF_veto_id->Clone("h_el_SF_veto");
     h_el_SF_veto->Multiply(h_el_SF_veto_iso);
-
-
+    
+    
     // Get final fullsim, selected mu, sfs
     TH2D *h_mu_SF_id  = (TH2D*)h_mu_SF_id_temp->Clone("h_mu_SF_id");
     TH2D *h_mu_SF_iso = (TH2D*)h_mu_SF_iso_temp->Clone("h_mu_SF_iso");
     TH2D *h_mu_SF_ip  = (TH2D*)h_mu_SF_ip_temp->Clone("h_mu_SF_ip");
+    // Double unc. on selected muon id sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_SF_id->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_SF_id->GetNbinsY(); y++){
+	h_mu_SF_id->SetBinError(x,y,h_mu_SF_id->GetBinError(x,y)*2.0);
+      }
+    }
     // Double unc. on selected muon iso sfs, since not for our exact wp
     for(int x=1; x<=(int)h_mu_SF_iso->GetNbinsX(); x++){
       for(int y=1; y<=(int)h_mu_SF_iso->GetNbinsY(); y++){
@@ -511,7 +518,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     h_mu_SF = (TH2D*)h_mu_SF_id->Clone("h_mu_SF");
     h_mu_SF->Multiply(h_mu_SF_iso);
     h_mu_SF->Multiply(h_mu_SF_ip);
-
+    
     // Get final fullsim, veto mu, sfs
     TH2D *h_mu_SF_veto_id  = (TH2D*)h_mu_SF_veto_id_temp->Clone("h_mu_SF_veto_id");
     TH2D *h_mu_SF_veto_iso = (TH2D*)h_mu_SF_veto_iso_temp->Clone("h_mu_SF_veto_iso");
@@ -532,7 +539,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     TH3D* h_el_FS_Iso = (TH3D*)h_el_FS_Iso_temp->Clone("h_el_FS_Iso");
     h_el_FS = (TH3D*)h_el_FS_ID->Clone("h_el_FS");
     h_el_FS->Multiply(h_el_FS_Iso);
-
+    
     // Get final fullsim/fastsim, veto el, sfs
     TH3D* h_el_veto_FS_ID  = (TH3D*)h_el_veto_FS_ID_temp->Clone("h_el_veto_FS_ID");
     TH3D* h_el_veto_FS_Iso = (TH3D*)h_el_veto_FS_Iso_temp->Clone("h_el_veto_FS_Iso");
@@ -546,7 +553,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     }
     h_el_veto_FS = (TH3D*)h_el_veto_FS_ID->Clone("h_el_FS");
     h_el_veto_FS->Multiply(h_el_veto_FS_Iso);
-
+    
     // Get final fullsim/fastsim, selected mu, sfs
     TH3D* h_mu_FS_ID  = (TH3D*)h_mu_FS_ID_temp->Clone("h_mu_FS_ID");
     TH3D* h_mu_FS_Iso = (TH3D*)h_mu_FS_Iso_temp->Clone("h_mu_FS_Iso");
@@ -594,13 +601,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     h_mu_veto_FS = (TH3D*)h_mu_veto_FS_ID->Clone("h_mu_veto_FS");
     h_mu_veto_FS->Multiply(h_mu_veto_FS_Iso);
     h_mu_veto_FS->Multiply(h_mu_veto_FS_Ip);
-
+    
 
 
     // Lepton efficiencies for Lost Leptons
     h_el_vetoLepEff = (TH2D*)h_el_vetoLepEff_temp->Clone("h_el_vetoLepEff");
     h_mu_vetoLepEff = (TH2D*)h_mu_vetoLepEff_temp->Clone("h_mu_vetoLepEff");
-
     
     
     
@@ -707,7 +713,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     hPUdown = (TH1D*)pileupfile->Get("puWeightDown");
   }
   
-  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 27, 0.5,27.5);
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 36, 0.5,36.5);
   counterhist->Sumw2();
   counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
   counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -736,11 +742,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(25,"weight_ISRnjets_nominal");
   counterhist->GetXaxis()->SetBinLabel(26,"weight_ISRnjets_up");
   counterhist->GetXaxis()->SetBinLabel(27,"weight_ISRnjets_down");
-
+  counterhist->GetXaxis()->SetBinLabel(28,"weight_lepSF");
+  counterhist->GetXaxis()->SetBinLabel(29,"weight_lepSF_up");
+  counterhist->GetXaxis()->SetBinLabel(30,"weight_lepSF_down");
+  counterhist->GetXaxis()->SetBinLabel(31,"weight_vetoLepSF");
+  counterhist->GetXaxis()->SetBinLabel(32,"weight_vetoLepSF_up");
+  counterhist->GetXaxis()->SetBinLabel(33,"weight_vetoLepSF_down");
+  counterhist->GetXaxis()->SetBinLabel(34,"weight_lepSF_fastSim");
+  counterhist->GetXaxis()->SetBinLabel(35,"weight_lepSF_fastSim_up");
+  counterhist->GetXaxis()->SetBinLabel(36,"weight_lepSF_fastSim_down");
+  
   TH3D* counterhistSig;
   TH2F* histNEvts;//count #evts per signal point
   if(isSignalFromFileName){//create histos only for signals
-    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 26, 0.5,26.5);//15000 bins!
+    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 35, 0.5,35.5);//15000 bins!
     counterhistSig->Sumw2();
     counterhistSig->GetZaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
     counterhistSig->GetZaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -768,6 +783,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     counterhistSig->GetZaxis()->SetBinLabel(24,"weight_ISRnjets_nominal");
     counterhistSig->GetZaxis()->SetBinLabel(25,"weight_ISRnjets_up");
     counterhistSig->GetZaxis()->SetBinLabel(26,"weight_ISRnjets_down");
+    counterhistSig->GetZaxis()->SetBinLabel(27,"weight_lepSF");
+    counterhistSig->GetZaxis()->SetBinLabel(28,"weight_lepSF_up");
+    counterhistSig->GetZaxis()->SetBinLabel(29,"weight_lepSF_down");
+    counterhistSig->GetZaxis()->SetBinLabel(30,"weight_vetoLepSF");
+    counterhistSig->GetZaxis()->SetBinLabel(31,"weight_vetoLepSF_up");
+    counterhistSig->GetZaxis()->SetBinLabel(32,"weight_vetoLepSF_down");
+    counterhistSig->GetZaxis()->SetBinLabel(33,"weight_lepSF_fastSim");
+    counterhistSig->GetZaxis()->SetBinLabel(34,"weight_lepSF_fastSim_up");
+    counterhistSig->GetZaxis()->SetBinLabel(35,"weight_lepSF_fastSim_down");
+ 
     histNEvts = new TH2F( "histNEvts", "h_histNEvts", 37,99,1024, 19,-1,474);//x=mStop, y=mLSP
     histNEvts->Sumw2();
   }
@@ -1309,8 +1334,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
 
       // Lepton SFs
-      float lepSF_pt_cutoff = 100.0;
-      float lepSF_pt_min    = 10.0;
+      float lepSF_pt_cutoff = 99.999;
+      float lepSF_pt_min    = 10.001;
       
       double lepSF    = 1.0;
       double lepSF_Up = 1.0;
@@ -1321,8 +1346,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       double vetoLepSF_Dn = 1.0;
 
 
-      float lepSF_FS_pt_cutoff = 200.0;
-      //float lepSF_FS_pt_min    = 10.0;
+      float lepSF_FS_pt_cutoff = 199.999;
+      float lepSF_FS_pt_min    = 10.001;
 
       double lepSF_FS    = 1.0;
       double lepSF_FS_Up = 1.0;
@@ -1332,14 +1357,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(skim_applyLeptonSFs && !StopEvt.is_data && nVetoLeptons>0){
 	
 	if(abs(lep1.pdgid) == pdg_el){
-	  int binX = h_el_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()) );
+	  int binX = h_el_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()), lepSF_pt_min ) );
 	  int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
 	  lepSF    = h_el_SF->GetBinContent( binX, binY );
 	  lepSF_Up = lepSF + h_el_SF->GetBinError( binX, binY );
 	  lepSF_Dn = lepSF - h_el_SF->GetBinError( binX, binY );
 	  
 	  if(skim_isFastsim){
-	    int bin_FS  = h_el_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), fabs(lep1.p4.Eta()), StopEvt.pu_ntrue );
+	    int bin_FS  = h_el_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), lepSF_FS_pt_min ), fabs(lep1.p4.Eta()), StopEvt.pu_ntrue );
 	    lepSF_FS    = h_el_FS->GetBinContent(bin_FS);
 	    lepSF_FS_Up = lepSF_FS + h_el_FS->GetBinError(bin_FS);
 	    lepSF_FS_Dn = lepSF_FS + h_el_FS->GetBinError(bin_FS);
@@ -1348,14 +1373,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	}
 	
 	if(abs(lep1.pdgid) == pdg_mu){
-	  int binX = h_mu_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()) );
+	  int binX = h_mu_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()), lepSF_pt_min ) );
 	  int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
 	  lepSF    = h_mu_SF->GetBinContent( binX, binY );
 	  lepSF_Up = lepSF + h_mu_SF->GetBinError( binX, binY );
 	  lepSF_Dn = lepSF - h_mu_SF->GetBinError( binX, binY );
 	  
 	  if(skim_isFastsim){
-	    int bin_FS  = h_mu_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), fabs(lep1.p4.Eta()), StopEvt.pu_ntrue );
+	    int bin_FS  = h_mu_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), lepSF_FS_pt_min ), fabs(lep1.p4.Eta()), StopEvt.pu_ntrue );
 	    lepSF_FS    = h_mu_FS->GetBinContent(bin_FS);
 	    lepSF_FS_Up = lepSF_FS + h_mu_FS->GetBinError(bin_FS);
 	    lepSF_FS_Dn = lepSF_FS + h_mu_FS->GetBinError(bin_FS);
@@ -1371,28 +1396,28 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(abs(lep2.pdgid) == pdg_el){
 
 	  if(nGoodLeptons>1){
-	    int binX = h_el_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
+	    int binX = h_el_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
 	    int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
 	    lepSF    *= h_el_SF->GetBinContent( binX, binY );
 	    lepSF_Up *= ( lepSF + h_el_SF->GetBinError( binX, binY ) );
 	    lepSF_Dn *= ( lepSF - h_el_SF->GetBinError( binX, binY ) );
 	    
 	    if(skim_isFastsim){
-	      int bin_FS  = h_el_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
+	      int bin_FS  = h_el_FS->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
 	      lepSF_FS    *= h_el_FS->GetBinContent(bin_FS);
 	      lepSF_FS_Up *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
 	      lepSF_FS_Dn *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
 	    }
 	  } // end if 2 good electrons
 	  else{
-	    int binX = h_el_SF_veto->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
+	    int binX = h_el_SF_veto->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
 	    int binY = h_el_SF_veto->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
 	    lepSF    *= h_el_SF_veto->GetBinContent( binX, binY );
 	    lepSF_Up *= ( lepSF + h_el_SF_veto->GetBinError( binX, binY ) );
 	    lepSF_Dn *= ( lepSF - h_el_SF_veto->GetBinError( binX, binY ) );
 
 	    if(skim_isFastsim){
-	      int bin_FS  = h_el_veto_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
+	      int bin_FS  = h_el_veto_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), lepSF_FS_pt_min ), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
 	      lepSF_FS    *= h_el_veto_FS->GetBinContent(bin_FS);
 	      lepSF_FS_Up *= (lepSF_FS + h_el_veto_FS->GetBinError(bin_FS));
 	      lepSF_FS_Dn *= (lepSF_FS + h_el_veto_FS->GetBinError(bin_FS));
@@ -1405,14 +1430,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(abs(lep2.pdgid) == pdg_mu){
 
 	  if(nGoodLeptons>1){
-	    int binX = h_mu_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
+	    int binX = h_mu_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
 	    int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
 	    lepSF    *= h_mu_SF->GetBinContent( binX, binY );
 	    lepSF_Up *= ( lepSF + h_mu_SF->GetBinError( binX, binY ) );
 	    lepSF_Dn *= ( lepSF - h_mu_SF->GetBinError( binX, binY ) );
 	  	
 	    if(skim_isFastsim){
-	      int bin_FS  = h_mu_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
+	      int bin_FS  = h_mu_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), lepSF_FS_pt_min ), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
 	      lepSF_FS    *= h_mu_FS->GetBinContent(bin_FS);
 	      lepSF_FS_Up *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
 	      lepSF_FS_Dn *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
@@ -1420,14 +1445,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  } // end if 2 good leptons
 	  
 	  else{
-	    int binX = h_mu_SF_veto->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
+	    int binX = h_mu_SF_veto->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
 	    int binY = h_mu_SF_veto->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
 	    lepSF    *= h_mu_SF_veto->GetBinContent( binX, binY );
 	    lepSF_Up *= ( lepSF + h_mu_SF_veto->GetBinError( binX, binY ) );
 	    lepSF_Dn *= ( lepSF - h_mu_SF_veto->GetBinError( binX, binY ) );
 	    
 	    if(skim_isFastsim){
-	      int bin_FS  = h_mu_veto_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
+	      int bin_FS  = h_mu_veto_FS->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
 	      lepSF_FS    *= h_mu_veto_FS->GetBinContent(bin_FS);
 	      lepSF_FS_Up *= lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
 	      lepSF_FS_Dn *= lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
@@ -1496,7 +1521,42 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.weight_lepSF_fastSim      = lepSF_FS;
       StopEvt.weight_lepSF_fastSim_up   = lepSF_FS_Up;
       StopEvt.weight_lepSF_fastSim_down = lepSF_FS_Dn;
-      
+
+      // save the sum of weights for normalization offline to n-babies.
+      // comment: this has to go before the selection cuts - else you create a bias
+      if(!evt_isRealData() && skim_applyLeptonSFs) {
+       counterhist->Fill(28,StopEvt.weight_lepSF);
+       counterhist->Fill(29,StopEvt.weight_lepSF_up);
+       counterhist->Fill(30,StopEvt.weight_lepSF_down);
+      }
+      if(!evt_isRealData() && skim_applyVetoLeptonSFs){
+	counterhist->Fill(31,StopEvt.weight_vetoLepSF);
+	counterhist->Fill(32,StopEvt.weight_vetoLepSF_up);
+	counterhist->Fill(33,StopEvt.weight_vetoLepSF_down);
+      }
+      if(!evt_isRealData() && skim_applyLeptonSFs && skim_isFastsim){
+	counterhist->Fill(34,StopEvt.weight_lepSF_fastSim);
+	counterhist->Fill(35,StopEvt.weight_lepSF_fastSim_up);
+	counterhist->Fill(36,StopEvt.weight_lepSF_fastSim_down);
+      }
+
+      // Signal
+      if(isSignalFromFileName && !evt_isRealData() && skim_applyLeptonSFs) {
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,27,StopEvt.weight_lepSF);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,28,StopEvt.weight_lepSF_up);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,29,StopEvt.weight_lepSF_down);
+      }
+      if(isSignalFromFileName && !evt_isRealData() && skim_applyVetoLeptonSFs){
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,30,StopEvt.weight_vetoLepSF);
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,31,StopEvt.weight_vetoLepSF_up);
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,32,StopEvt.weight_vetoLepSF_down);
+      }
+      if(isSignalFromFileName && !evt_isRealData() && skim_applyLeptonSFs && skim_isFastsim){
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,33,StopEvt.weight_lepSF_fastSim);
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,34,StopEvt.weight_lepSF_fastSim_up);
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,35,StopEvt.weight_lepSF_fastSim_down);
+      }
+           
 
       //
       // Jet Selection
