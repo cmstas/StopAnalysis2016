@@ -96,10 +96,9 @@ void EventTree::FillCommon (const std::string &root_file_name)
       filt_trkPOG_logerr_tmc = filt_trkPOG_logErrorTooManyClusters();
       filt_trkPOG_tmc =filt_trkPOG_manystripclus53X();
       filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
+      filt_hbhenoise = filt_hbheNoise(); // hbheNoiseFilter_25ns();
+      filt_hbheisonoise = filt_hbheNoiseIso();//hbheIsoNoiseFilter();
     }
-
-    filt_hbhenoise = filt_hbheNoise(); // hbheNoiseFilter_25ns();
-    filt_hbheisonoise = filt_hbheNoiseIso();//hbheIsoNoiseFilter();
     
     if (!is_data)
     {
@@ -295,7 +294,13 @@ void EventTree::Reset ()
     weight_PUup    = -9999;
     weight_PUdown  = -9999;
     hardgenpt      = -9999.;
-
+    weight_ISRnjets     = -9999;
+    weight_ISRnjets_UP  = -9999;
+    weight_ISRnjets_DN  = -9999;
+    NISRjets            = -9999;
+    NnonISRjets         = -9999;
+    filt_fastsimjets    = false;
+    
     sparms_names.clear();
   /*  sparms_filterEfficiency	= -9999.;
     sparms_pdfScale		= -9999.;
@@ -550,6 +555,12 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("weight_PU", &weight_PU);
     tree->Branch("weight_PUup", &weight_PUup);
     tree->Branch("weight_PUdown", &weight_PUdown);
+    tree->Branch("weight_ISRnjets", &weight_ISRnjets);
+    tree->Branch("weight_ISRnjets_UP", &weight_ISRnjets_UP);
+    tree->Branch("weight_ISRnjets_DN", &weight_ISRnjets_DN);
+    tree->Branch("NISRjets", &NISRjets);
+    tree->Branch("NnonISRjets", &NnonISRjets);
+    tree->Branch("filt_fastsimjets", &filt_fastsimjets);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_values", &sparms_values);
     tree->Branch("sparms_subProcessId", &sparms_subProcessId);

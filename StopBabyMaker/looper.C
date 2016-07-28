@@ -346,70 +346,306 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Open lepton SF histos
   //
+
+  // Fullsim Electron file
   TFile *f_el_SF;
+
+  // Fullsim Muon files
   TFile *f_mu_SF_id;
   TFile *f_mu_SF_iso;
+  TFile *f_mu_SF_ip;
   TFile *f_mu_SF_veto_id;
   TFile *f_mu_SF_veto_iso;
+  TFile *f_mu_SF_veto_ip;
 
+  // Fullsim/Fastsim Electron files
   TFile *f_el_FS_ID;
   TFile *f_el_FS_Iso;
+  TFile *f_el_veto_FS_ID;
+  TFile *f_el_veto_FS_Iso;
+
+  // Fullsim/Fastsim Muon files
   TFile *f_mu_FS_ID;
   TFile *f_mu_FS_Iso;
+  TFile *f_mu_FS_Ip;
+  TFile *f_mu_veto_FS_ID;
+  TFile *f_mu_veto_FS_Iso;
+  TFile *f_mu_veto_FS_Ip;
 
+  // Lepton MC reco efficiency for veto lep IDs
   TFile *f_vetoLep_eff;
-  
+ 
+  // Final scale factor histograms for selected leptons
   TH2D *h_el_SF = NULL;
   TH2D *h_mu_SF = NULL;
+  
+  // Final scale factor histograms for veto leptons
   TH2D *h_el_SF_veto = NULL;
   TH2D *h_mu_SF_veto = NULL;
 
-  TH2D *h_el_FS = NULL;
-  TH2D *h_mu_FS = NULL;
+  // Final scale factor histograms for fastim/fullsim for selected leptons
+  TH3D *h_el_FS = NULL;
+  TH3D *h_mu_FS = NULL;
 
+  // Final scale factor histograms for fastim/fullsim for veto leptons
+  TH3D *h_el_veto_FS = NULL;
+  TH3D *h_mu_veto_FS = NULL;
+
+  // Final scale factor histograms for lost leptons
   TH2D *h_el_vetoLepEff = NULL;
   TH2D *h_mu_vetoLepEff = NULL;
-  
+
+  // Matching requirement for gen/reco leptons
   double matched_dr = 0.1;
   
   if( (skim_applyLeptonSFs || skim_applyVetoLeptonSFs) && !isDataFromFileName){
+
+    cout << "  Grabbing lepton scale factors " << endl;
+
+    // Electron file
+    f_el_SF       = new TFile("lepsf/analysis2016/scaleFactors.root", "read");
     
-    f_el_SF       = new TFile("lepsf/kinematicBinSFele.root", "read");
+    // Muon files
+    //f_mu_SF_id    = new TFile("lepsf/analysis2016/MuonID_Z_RunBCD_prompt80X_7p65.root", "read");
+    f_mu_SF_id    = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
+    f_mu_SF_iso   = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_MiniIsoTight_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc for this
+    f_mu_SF_ip    = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_TightIP2D_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc for this
 
-    f_mu_SF_id    = new TFile("lepsf/TnP_MuonID_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
-    f_mu_SF_iso   = new TFile("lepsf/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
+    f_mu_SF_veto_id  = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
+    f_mu_SF_veto_iso = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root", "read");
+    f_mu_SF_veto_ip  = new TFile("lepsf/analysis2016/TnP_MuonID_NUM_MediumIP2D_DENOM_LooseID_VAR_map_pt_eta.root", "read"); // double unc for this
 
-    f_mu_SF_veto_id  = new TFile("lepsf/TnP_MuonID_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
-    f_mu_SF_veto_iso = new TFile("lepsf/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
+    // Fastsim/Fullsim el files
+    f_el_FS_ID  = new TFile("lepsf/analysis2016/sf_el_mediumCB.root", "read");
+    f_el_FS_Iso = new TFile("lepsf/analysis2016/sf_el_mini01.root", "read");
+
+    f_el_veto_FS_ID  = new TFile("lepsf/analysis2016/sf_el_vetoCB.root", "read");
+    f_el_veto_FS_Iso = new TFile("lepsf/analysis2016/sf_el_mini01.root", "read"); // double unc for this
+
+    // Fastsim/Fullsim mu files
+    f_mu_FS_ID  = new TFile("lepsf/analysis2016/sf_mu_mediumID.root", "read"); // double unc for this
+    f_mu_FS_Iso = new TFile("lepsf/analysis2016/sf_mu_mini02.root", "read"); // double unc for this
+    f_mu_FS_Ip  = new TFile("lepsf/analysis2016/sf_mu_tightIP2D.root", "read"); // double unc for this
+
+    f_mu_veto_FS_ID  = new TFile("lepsf/analysis2016/sf_mu_looseID.root", "read");
+    f_mu_veto_FS_Iso = new TFile("lepsf/analysis2016/sf_mu_mini02.root", "read");
+    f_mu_veto_FS_Ip  = new TFile("lepsf/analysis2016/sf_mu_tightIP2D.root", "read"); // double unc for this
+
+    // Veto lepton reco efficiency files
+    f_vetoLep_eff = new TFile("lepsf/analysis2016/lepeff__ttbar_diLept_madgraph_pythia8_ext1_25ns__80x.root", "read");
+
+
+    // Grab selected el histos
+    TH2D *h_el_SF_id_temp  = (TH2D*)f_el_SF->Get("GsfElectronToMedium");
+    TH2D *h_el_SF_iso_temp = (TH2D*)f_el_SF->Get("MVAVLooseElectronToMini");
+
+    // Grab veto el histos
+    TH2D *h_el_SF_veto_id_temp  = (TH2D*)f_el_SF->Get("GsfElectronToVeto");
+    TH2D *h_el_SF_veto_iso_temp = (TH2D*)f_el_SF->Get("MVAVLooseElectronToMini2");
+
+
+    // Grab selected mu histos
+    //TH2D *h_mu_SF_id_temp  = (TH2D*)f_mu_SF_id->Get("MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/pt_abseta_ratio");
+    TH2D *h_mu_SF_id_temp  = (TH2D*)f_mu_SF_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0");
+    TH2D *h_mu_SF_iso_temp = (TH2D*)f_mu_SF_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_Medium2016_pass");
+    TH2D *h_mu_SF_ip_temp  = (TH2D*)f_mu_SF_ip->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_Medium2016_pass");
+
+    // Grab veto mu histos
+    TH2D *h_mu_SF_veto_id_temp  = (TH2D*)f_mu_SF_veto_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0");
+    TH2D *h_mu_SF_veto_iso_temp = (TH2D*)f_mu_SF_veto_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_PF_pass");
+    TH2D *h_mu_SF_veto_ip_temp  = (TH2D*)f_mu_SF_veto_ip->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_PF_pass");
+    
+
+    // Grab fastsim/fullsim selected el histos
+    TH3D *h_el_FS_ID_temp  = (TH3D*)f_el_FS_ID->Get("histo3D");
+    TH3D *h_el_FS_Iso_temp = (TH3D*)f_el_FS_Iso->Get("histo3D");
+
+    // Grab fastsim/fullsim veto el histos
+    TH3D *h_el_veto_FS_ID_temp  = (TH3D*)f_el_veto_FS_ID->Get("histo3D");
+    TH3D *h_el_veto_FS_Iso_temp = (TH3D*)f_el_veto_FS_Iso->Get("histo3D");
+    
+    // Grab fastsim/fullsim selected mu histos
+    TH3D *h_mu_FS_ID_temp  = (TH3D*)f_mu_FS_ID->Get("histo3D");
+    TH3D *h_mu_FS_Iso_temp = (TH3D*)f_mu_FS_Iso->Get("histo3D");
+    TH3D *h_mu_FS_Ip_temp  = (TH3D*)f_mu_FS_Ip->Get("histo3D");
+    
+    // Grab fastsim/fullsim veto mu histos
+    TH3D *h_mu_veto_FS_ID_temp  = (TH3D*)f_mu_veto_FS_ID->Get("histo3D");
+    TH3D *h_mu_veto_FS_Iso_temp = (TH3D*)f_mu_veto_FS_Iso->Get("histo3D");
+    TH3D *h_mu_veto_FS_Ip_temp  = (TH3D*)f_mu_veto_FS_Ip->Get("histo3D");
 
     
-    f_el_FS_ID       = new TFile("lepsf/sf_el_mediumCB.root", "read");
-    f_el_FS_Iso      = new TFile("lepsf/sf_el_mini01.root", "read");
+    // Grab mc eff for veto lepton (for lost lepto SFs) histos
+    TH2D *h_el_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_Eff_el");
+    TH2D *h_mu_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_Eff_mu");
+   
 
-    f_mu_FS_ID       = new TFile("lepsf/sf_mu_mediumID.root", "read");
-    f_mu_FS_Iso      = new TFile("lepsf/sf_mu_mini02.root", "read");
+    // Get final fullsim, selected el, sfs
+    TH2D *h_el_SF_id  = (TH2D*)h_el_SF_id_temp->Clone("h_el_SF_id");
+    TH2D *h_el_SF_iso = (TH2D*)h_el_SF_iso_temp->Clone("h_el_SF_iso");
+    h_el_SF = (TH2D*)h_el_SF_id->Clone("h_el_SF");
+    h_el_SF->Multiply(h_el_SF_iso);
     
-    f_vetoLep_eff = new TFile("lepsf/lepeff__ttbar_powheg_pythia8_25ns__SRcuts.root", "read");
+    // Get final fullsim, veto el, sfs
+    TH2D *h_el_SF_veto_id  = (TH2D*)h_el_SF_veto_id_temp->Clone("h_el_SF_veto_id");
+    TH2D *h_el_SF_veto_iso = (TH2D*)h_el_SF_veto_iso_temp->Clone("h_el_SF_veto_iso");
+    h_el_SF_veto = (TH2D*)h_el_SF_veto_id->Clone("h_el_SF_veto");
+    h_el_SF_veto->Multiply(h_el_SF_veto_iso);
+    
+    
+    // Get final fullsim, selected mu, sfs
+    TH2D *h_mu_SF_id  = (TH2D*)h_mu_SF_id_temp->Clone("h_mu_SF_id");
+    TH2D *h_mu_SF_iso = (TH2D*)h_mu_SF_iso_temp->Clone("h_mu_SF_iso");
+    TH2D *h_mu_SF_ip  = (TH2D*)h_mu_SF_ip_temp->Clone("h_mu_SF_ip");
+    // Double unc. on selected muon id sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_SF_id->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_SF_id->GetNbinsY(); y++){
+	h_mu_SF_id->SetBinError(x,y,h_mu_SF_id->GetBinError(x,y)*2.0);
+      }
+    }
+    // Double unc. on selected muon iso sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_SF_iso->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_SF_iso->GetNbinsY(); y++){
+	h_mu_SF_iso->SetBinError(x,y,h_mu_SF_iso->GetBinError(x,y)*2.0);
+      }
+    }
+    // Double unc. on selected muon ip sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_SF_ip->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_SF_ip->GetNbinsY(); y++){
+	h_mu_SF_ip->SetBinError(x,y,h_mu_SF_ip->GetBinError(x,y)*2.0);
+      }
+    }
+    h_mu_SF = (TH2D*)h_mu_SF_id->Clone("h_mu_SF");
+    h_mu_SF->Multiply(h_mu_SF_iso);
+    h_mu_SF->Multiply(h_mu_SF_ip);
+    
+    // Get final fullsim, veto mu, sfs
+    TH2D *h_mu_SF_veto_id  = (TH2D*)h_mu_SF_veto_id_temp->Clone("h_mu_SF_veto_id");
+    TH2D *h_mu_SF_veto_iso = (TH2D*)h_mu_SF_veto_iso_temp->Clone("h_mu_SF_veto_iso");
+    TH2D *h_mu_SF_veto_ip  = (TH2D*)h_mu_SF_veto_ip_temp->Clone("h_mu_SF_veto_ip");
+    // Double unc. on veto muon ip sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_SF_veto_ip->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_SF_veto_ip->GetNbinsY(); y++){
+	h_mu_SF_ip->SetBinError(x,y,h_mu_SF_veto_ip->GetBinError(x,y)*2.0);
+      }
+    }
+    h_mu_SF_veto = (TH2D*)h_mu_SF_veto_id->Clone("h_mu_SF_veto");
+    h_mu_SF_veto->Multiply(h_mu_SF_veto_iso);
+    h_mu_SF_veto->Multiply(h_mu_SF_veto_ip);
+    
+
+    // Get final fullsim/fastsim, selected el, sfs
+    TH3D* h_el_FS_ID  = (TH3D*)h_el_FS_ID_temp->Clone("h_el_FS_ID");
+    TH3D* h_el_FS_Iso = (TH3D*)h_el_FS_Iso_temp->Clone("h_el_FS_Iso");
+    h_el_FS = (TH3D*)h_el_FS_ID->Clone("h_el_FS");
+    h_el_FS->Multiply(h_el_FS_Iso);
+    
+    // Get final fullsim/fastsim, veto el, sfs
+    TH3D* h_el_veto_FS_ID  = (TH3D*)h_el_veto_FS_ID_temp->Clone("h_el_veto_FS_ID");
+    TH3D* h_el_veto_FS_Iso = (TH3D*)h_el_veto_FS_Iso_temp->Clone("h_el_veto_FS_Iso");
+    // Double unc. on veto electron FS iso sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_el_veto_FS_Iso->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_el_veto_FS_Iso->GetNbinsY(); y++){
+	for(int z=1; z<=(int)h_el_veto_FS_Iso->GetNbinsZ(); z++){
+	  h_el_veto_FS_Iso->SetBinError(x,y,z,h_el_veto_FS_Iso->GetBinError(x,y,z)*2.0);
+	}
+      }
+    }
+    h_el_veto_FS = (TH3D*)h_el_veto_FS_ID->Clone("h_el_FS");
+    h_el_veto_FS->Multiply(h_el_veto_FS_Iso);
+    
+    // Get final fullsim/fastsim, selected mu, sfs
+    TH3D* h_mu_FS_ID  = (TH3D*)h_mu_FS_ID_temp->Clone("h_mu_FS_ID");
+    TH3D* h_mu_FS_Iso = (TH3D*)h_mu_FS_Iso_temp->Clone("h_mu_FS_Iso");
+    TH3D* h_mu_FS_Ip  = (TH3D*)h_mu_FS_Ip_temp->Clone("h_mu_FS_Ip");
+    // Double unc. on selected muon FS id sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_FS_ID->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_FS_ID->GetNbinsY(); y++){
+	for(int z=1; z<=(int)h_mu_FS_ID->GetNbinsZ(); z++){
+	  h_mu_FS_ID->SetBinError(x,y,z,h_mu_FS_ID->GetBinError(x,y,z)*2.0);
+	}
+      }
+    }
+    // Double unc. on selected muon FS iso sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_FS_Iso->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_FS_Iso->GetNbinsY(); y++){
+	for(int z=1; z<=(int)h_mu_FS_Iso->GetNbinsZ(); z++){
+	  h_mu_FS_Iso->SetBinError(x,y,z,h_mu_FS_Iso->GetBinError(x,y,z)*2.0);
+	}
+      }
+    }
+    // Double unc. on selected muon FS ip sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_FS_Ip->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_FS_Ip->GetNbinsY(); y++){
+	for(int z=1; z<=(int)h_mu_FS_Ip->GetNbinsZ(); z++){
+	  h_mu_FS_Ip->SetBinError(x,y,z,h_mu_FS_Ip->GetBinError(x,y,z)*2.0);
+	}
+      }
+    }
+    h_mu_FS = (TH3D*)h_mu_FS_ID->Clone("h_mu_FS");
+    h_mu_FS->Multiply(h_mu_FS_Iso);
+    h_mu_FS->Multiply(h_mu_FS_Ip);
+    
+    // Get final fullsim/fastsim, veto mu, sfs
+    TH3D* h_mu_veto_FS_ID  = (TH3D*)h_mu_veto_FS_ID_temp->Clone("h_mu_veto_FS_ID");
+    TH3D* h_mu_veto_FS_Iso = (TH3D*)h_mu_veto_FS_Iso_temp->Clone("h_mu_veto_FS_Iso");
+    TH3D* h_mu_veto_FS_Ip  = (TH3D*)h_mu_veto_FS_Ip_temp->Clone("h_mu_veto_FS_Ip");
+    // Double unc. on selected muon FS ip sfs, since not for our exact wp
+    for(int x=1; x<=(int)h_mu_veto_FS_Ip->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_mu_veto_FS_Ip->GetNbinsY(); y++){
+	for(int z=1; z<=(int)h_mu_veto_FS_Ip->GetNbinsZ(); z++){
+	  h_mu_veto_FS_Ip->SetBinError(x,y,z,h_mu_veto_FS_Ip->GetBinError(x,y,z)*2.0);
+	}
+      }
+    }
+    h_mu_veto_FS = (TH3D*)h_mu_veto_FS_ID->Clone("h_mu_veto_FS");
+    h_mu_veto_FS->Multiply(h_mu_veto_FS_Iso);
+    h_mu_veto_FS->Multiply(h_mu_veto_FS_Ip);
+    
+
+
+    // Lepton efficiencies for Lost Leptons
+    h_el_vetoLepEff = (TH2D*)h_el_vetoLepEff_temp->Clone("h_el_vetoLepEff");
+    h_mu_vetoLepEff = (TH2D*)h_mu_vetoLepEff_temp->Clone("h_mu_vetoLepEff");
+    
+    
+    
+    /*
+    f_el_SF       = new TFile("lepsf/analysis2015/kinematicBinSFele.root", "read");
+
+    f_mu_SF_id    = new TFile("lepsf/analysis2015/TnP_MuonID_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
+    f_mu_SF_iso   = new TFile("lepsf/analysis2015/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
+
+    f_mu_SF_veto_id  = new TFile("lepsf/analysis2015/TnP_MuonID_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
+    f_mu_SF_veto_iso = new TFile("lepsf/analysis2015/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
 
     
-    TH2D *h_el_SF_id_temp      = (TH2D*)f_el_SF->Get("CutBasedMedium");
-    TH2D *h_el_SF_iso_temp     = (TH2D*)f_el_SF->Get("MiniIso0p1_vs_AbsEta");
+    f_el_FS_ID       = new TFile("lepsf/analysis2015/sf_el_mediumCB.root", "read");
+    f_el_FS_Iso      = new TFile("lepsf/analysis2015/sf_el_mini01.root", "read");
+
+    f_mu_FS_ID       = new TFile("lepsf/analysis2015/sf_mu_mediumID.root", "read");
+    f_mu_FS_Iso      = new TFile("lepsf/analysis2015/sf_mu_mini02.root", "read");
+    
+    f_vetoLep_eff = new TFile("lepsf/analysis2015/lepeff__ttbar_powheg_pythia8_25ns__SRcuts.root", "read");
+       
+    
+    TH2D *h_el_SF_id_temp       = (TH2D*)f_el_SF->Get("CutBasedMedium");
+    TH2D *h_el_SF_iso_temp      = (TH2D*)f_el_SF->Get("MiniIso0p1_vs_AbsEta");
+
     TH2D *h_el_SF_veto_id_temp  = (TH2D*)f_el_SF->Get("CutBasedVeto");
     TH2D *h_el_SF_veto_iso_temp = (TH2D*)f_el_SF->Get("MiniIso0p4_vs_AbsEta");
     
-    TH2D *h_mu_SF_id_temp      = (TH2D*)f_mu_SF_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_tag_IsoMu20_pass");
-    TH2D *h_mu_SF_iso_temp     = (TH2D*)f_mu_SF_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_PF_pass_&_tag_IsoMu20_pass");
-    
+    TH2D *h_mu_SF_id_temp   = (TH2D*)f_mu_SF_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_tag_IsoMu20_pass");
+    TH2D *h_mu_SF_iso_temp  = (TH2D*)f_mu_SF_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_PF_pass_&_tag_IsoMu20_pass");
+
     TH2D *h_mu_SF_veto_id_temp  = (TH2D*)f_mu_SF_veto_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_tag_IsoMu20_pass");
     TH2D *h_mu_SF_veto_iso_temp = (TH2D*)f_mu_SF_veto_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_PF_pass_&_tag_IsoMu20_pass");
     
-
     TH2D *h_el_FS_ID_temp  = (TH2D*)f_el_FS_ID->Get("histo2D");
     TH2D *h_el_FS_Iso_temp = (TH2D*)f_el_FS_Iso->Get("histo2D");
     
     TH2D *h_mu_FS_ID_temp  = (TH2D*)f_mu_FS_ID->Get("histo2D");
     TH2D *h_mu_FS_Iso_temp = (TH2D*)f_mu_FS_Iso->Get("histo2D");
-    
     
     TH2D *h_el_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_rebin_Eff_el");
     TH2D *h_mu_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_rebin_Eff_mu");
@@ -447,7 +683,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
     h_mu_SF_veto = (TH2D*)h_mu_SF_veto_id->Clone("h_mu_SF_veto");
     h_mu_SF_veto->Multiply(h_mu_SF_veto_iso);
-        
+    */
   }
   
 
@@ -477,7 +713,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     hPUdown = (TH1D*)pileupfile->Get("puWeightDown");
   }
   
-  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 24, 0.5,24.5);
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 36, 0.5,36.5);
   counterhist->Sumw2();
   counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
   counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -503,11 +739,23 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(22,"NEvents");
   counterhist->GetXaxis()->SetBinLabel(23,"weight_btagsf_fastsim_UP");
   counterhist->GetXaxis()->SetBinLabel(24,"weight_btagsf_fastsim_DN");
-
+  counterhist->GetXaxis()->SetBinLabel(25,"weight_ISRnjets_nominal");
+  counterhist->GetXaxis()->SetBinLabel(26,"weight_ISRnjets_up");
+  counterhist->GetXaxis()->SetBinLabel(27,"weight_ISRnjets_down");
+  counterhist->GetXaxis()->SetBinLabel(28,"weight_lepSF");
+  counterhist->GetXaxis()->SetBinLabel(29,"weight_lepSF_up");
+  counterhist->GetXaxis()->SetBinLabel(30,"weight_lepSF_down");
+  counterhist->GetXaxis()->SetBinLabel(31,"weight_vetoLepSF");
+  counterhist->GetXaxis()->SetBinLabel(32,"weight_vetoLepSF_up");
+  counterhist->GetXaxis()->SetBinLabel(33,"weight_vetoLepSF_down");
+  counterhist->GetXaxis()->SetBinLabel(34,"weight_lepSF_fastSim");
+  counterhist->GetXaxis()->SetBinLabel(35,"weight_lepSF_fastSim_up");
+  counterhist->GetXaxis()->SetBinLabel(36,"weight_lepSF_fastSim_down");
+  
   TH3D* counterhistSig;
   TH2F* histNEvts;//count #evts per signal point
   if(isSignalFromFileName){//create histos only for signals
-    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 23, 0.5,23.5);//15000 bins!
+    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 35, 0.5,35.5);//15000 bins!
     counterhistSig->Sumw2();
     counterhistSig->GetZaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
     counterhistSig->GetZaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -532,6 +780,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     counterhistSig->GetZaxis()->SetBinLabel(21,"weight_ISR_down");
     counterhistSig->GetZaxis()->SetBinLabel(22,"weight_btagsf_fastsim_UP");
     counterhistSig->GetZaxis()->SetBinLabel(23,"weight_btagsf_fastsim_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(24,"weight_ISRnjets_nominal");
+    counterhistSig->GetZaxis()->SetBinLabel(25,"weight_ISRnjets_up");
+    counterhistSig->GetZaxis()->SetBinLabel(26,"weight_ISRnjets_down");
+    counterhistSig->GetZaxis()->SetBinLabel(27,"weight_lepSF");
+    counterhistSig->GetZaxis()->SetBinLabel(28,"weight_lepSF_up");
+    counterhistSig->GetZaxis()->SetBinLabel(29,"weight_lepSF_down");
+    counterhistSig->GetZaxis()->SetBinLabel(30,"weight_vetoLepSF");
+    counterhistSig->GetZaxis()->SetBinLabel(31,"weight_vetoLepSF_up");
+    counterhistSig->GetZaxis()->SetBinLabel(32,"weight_vetoLepSF_down");
+    counterhistSig->GetZaxis()->SetBinLabel(33,"weight_lepSF_fastSim");
+    counterhistSig->GetZaxis()->SetBinLabel(34,"weight_lepSF_fastSim_up");
+    counterhistSig->GetZaxis()->SetBinLabel(35,"weight_lepSF_fastSim_down");
+ 
     histNEvts = new TH2F( "histNEvts", "h_histNEvts", 37,99,1024, 19,-1,474);//x=mStop, y=mLSP
     histNEvts->Sumw2();
   }
@@ -551,7 +812,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Set JSON file
   //
-  const char* json_file = "json_files/Cert_271036-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt";
+  const char* json_file = "json_files/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt";
   set_goodrun_file_json(json_file);
   
   //
@@ -823,6 +1084,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       bool istopevent = false;
       bool isWevent = false;
       bool isZevent = false;
+      vector<LorentzVector> genpnotISR; genpnotISR.clear();
 
       if(thisFile.Contains("DYJets") || thisFile.Contains("ZJets") ||
 	 thisFile.Contains("ZZ") || thisFile.Contains("WZ") ||
@@ -850,6 +1112,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	      genps_fromHardProcessFinalState().at(genx) ||
 	      genps_isLastCopy().at(genx) ||
 	      genps_status().at(genx)==1 ){
+
+	    if(abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau || abs(genps_id().at(genx)) == pdg_b || abs(genps_id().at(genx)) == pdg_c || abs(genps_id().at(genx)) == pdg_s || abs(genps_id().at(genx)) == pdg_d ||abs(genps_id().at(genx)) == pdg_u ){//if have lepton or quark --> those could be matched to a jet
+	      int mother_idx = genps_idx_mother().at(genx);
+	      int mother_id = -999;
+	      if(mother_idx>=0) mother_id = abs(genps_id().at(mother_idx));
+	      if(mother_id==pdg_t || mother_id==pdg_W || mother_id==1000006 || mother_id==2000006 || mother_id==pdg_chi_1plus1 || mother_id==pdg_chi_2plus1){
+		genpnotISR.push_back(genps_p4().at(genx));
+	      }
+	    }
      	    
 	    if( abs(genps_id().at(genx)) == pdg_el  ||  abs(genps_id().at(genx)) == pdg_mu || abs(genps_id().at(genx)) == pdg_tau) gen_leps.FillCommon(genx);
 	    if( abs(genps_id().at(genx)) == pdg_numu || abs(genps_id().at(genx)) == pdg_nue || abs(genps_id().at(genx)) == pdg_nutau ) gen_nus.FillCommon(genx);
@@ -1063,8 +1334,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
 
       // Lepton SFs
-      float lepSF_pt_cutoff = 100.0;
-      float lepSF_pt_min    = 10.0;
+      float lepSF_pt_cutoff = 99.999;
+      float lepSF_pt_min    = 10.001;
       
       double lepSF    = 1.0;
       double lepSF_Up = 1.0;
@@ -1075,8 +1346,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       double vetoLepSF_Dn = 1.0;
 
 
-      float lepSF_FS_pt_cutoff = 200.0;
-      float lepSF_FS_pt_min    = 10.0;
+      float lepSF_FS_pt_cutoff = 199.999;
+      float lepSF_FS_pt_min    = 10.001;
 
       double lepSF_FS    = 1.0;
       double lepSF_FS_Up = 1.0;
@@ -1086,14 +1357,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(skim_applyLeptonSFs && !StopEvt.is_data && nVetoLeptons>0){
 	
 	if(abs(lep1.pdgid) == pdg_el){
-	  int binX = h_el_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()) );
+	  int binX = h_el_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()), lepSF_pt_min ) );
 	  int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
 	  lepSF    = h_el_SF->GetBinContent( binX, binY );
 	  lepSF_Up = lepSF + h_el_SF->GetBinError( binX, binY );
 	  lepSF_Dn = lepSF - h_el_SF->GetBinError( binX, binY );
 	  
 	  if(skim_isFastsim){
-	    int bin_FS  = h_el_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), fabs(lep1.p4.Eta()) );
+	    int bin_FS  = h_el_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), lepSF_FS_pt_min ), fabs(lep1.p4.Eta()), StopEvt.pu_ntrue );
 	    lepSF_FS    = h_el_FS->GetBinContent(bin_FS);
 	    lepSF_FS_Up = lepSF_FS + h_el_FS->GetBinError(bin_FS);
 	    lepSF_FS_Dn = lepSF_FS + h_el_FS->GetBinError(bin_FS);
@@ -1102,14 +1373,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	}
 	
 	if(abs(lep1.pdgid) == pdg_mu){
-	  int binX = h_mu_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()) );
+	  int binX = h_mu_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()), lepSF_pt_min ) );
 	  int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
 	  lepSF    = h_mu_SF->GetBinContent( binX, binY );
 	  lepSF_Up = lepSF + h_mu_SF->GetBinError( binX, binY );
 	  lepSF_Dn = lepSF - h_mu_SF->GetBinError( binX, binY );
 	  
 	  if(skim_isFastsim){
-	    int bin_FS  = h_mu_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), fabs(lep1.p4.Eta()) );
+	    int bin_FS  = h_mu_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), lepSF_FS_pt_min ), fabs(lep1.p4.Eta()), StopEvt.pu_ntrue );
 	    lepSF_FS    = h_mu_FS->GetBinContent(bin_FS);
 	    lepSF_FS_Up = lepSF_FS + h_mu_FS->GetBinError(bin_FS);
 	    lepSF_FS_Dn = lepSF_FS + h_mu_FS->GetBinError(bin_FS);
@@ -1123,39 +1394,74 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if( skim_applyLeptonSFs && !StopEvt.is_data && nVetoLeptons>1 ){
 	
 	if(abs(lep2.pdgid) == pdg_el){
-	  
-	  int binX = h_el_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
-	  int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
-	  lepSF    *= h_el_SF->GetBinContent( binX, binY );
-	  lepSF_Up *= ( lepSF + h_el_SF->GetBinError( binX, binY ) );
-	  lepSF_Dn *= ( lepSF - h_el_SF->GetBinError( binX, binY ) );
-	  
-	  if(skim_isFastsim){
-	    int bin_FS  = h_el_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), fabs(lep2.p4.Eta()) );
-	    lepSF_FS    *= h_el_FS->GetBinContent(bin_FS);
-	    lepSF_FS_Up *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
-	    lepSF_FS_Dn *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
+
+	  if(nGoodLeptons>1){
+	    int binX = h_el_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
+	    int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	    lepSF    *= h_el_SF->GetBinContent( binX, binY );
+	    lepSF_Up *= ( lepSF + h_el_SF->GetBinError( binX, binY ) );
+	    lepSF_Dn *= ( lepSF - h_el_SF->GetBinError( binX, binY ) );
+	    
+	    if(skim_isFastsim){
+	      int bin_FS  = h_el_FS->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
+	      lepSF_FS    *= h_el_FS->GetBinContent(bin_FS);
+	      lepSF_FS_Up *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
+	      lepSF_FS_Dn *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
+	    }
+	  } // end if 2 good electrons
+	  else{
+	    int binX = h_el_SF_veto->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
+	    int binY = h_el_SF_veto->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	    lepSF    *= h_el_SF_veto->GetBinContent( binX, binY );
+	    lepSF_Up *= ( lepSF + h_el_SF_veto->GetBinError( binX, binY ) );
+	    lepSF_Dn *= ( lepSF - h_el_SF_veto->GetBinError( binX, binY ) );
+
+	    if(skim_isFastsim){
+	      int bin_FS  = h_el_veto_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), lepSF_FS_pt_min ), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
+	      lepSF_FS    *= h_el_veto_FS->GetBinContent(bin_FS);
+	      lepSF_FS_Up *= (lepSF_FS + h_el_veto_FS->GetBinError(bin_FS));
+	      lepSF_FS_Dn *= (lepSF_FS + h_el_veto_FS->GetBinError(bin_FS));
+	    }
 	  }
 
-	}
+	} // end if 2nd lep if el
 	
+
 	if(abs(lep2.pdgid) == pdg_mu){
-	  int binX = h_mu_SF->GetXaxis()->FindBin( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()) );
-	  int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
-	  lepSF    *= h_mu_SF->GetBinContent( binX, binY );
-	  lepSF_Up *= ( lepSF + h_mu_SF->GetBinError( binX, binY ) );
-	  lepSF_Dn *= ( lepSF - h_mu_SF->GetBinError( binX, binY ) );
-	}
-	
-	if(skim_isFastsim){
-	  int bin_FS  = h_mu_FS->FindBin( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), fabs(lep2.p4.Eta()) );
-	  lepSF_FS    *= h_mu_FS->GetBinContent(bin_FS);
-	  lepSF_FS_Up *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
-	  lepSF_FS_Dn *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
-	}
 
+	  if(nGoodLeptons>1){
+	    int binX = h_mu_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
+	    int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	    lepSF    *= h_mu_SF->GetBinContent( binX, binY );
+	    lepSF_Up *= ( lepSF + h_mu_SF->GetBinError( binX, binY ) );
+	    lepSF_Dn *= ( lepSF - h_mu_SF->GetBinError( binX, binY ) );
+	  	
+	    if(skim_isFastsim){
+	      int bin_FS  = h_mu_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), lepSF_FS_pt_min ), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
+	      lepSF_FS    *= h_mu_FS->GetBinContent(bin_FS);
+	      lepSF_FS_Up *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
+	      lepSF_FS_Dn *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
+	    }
+	  } // end if 2 good leptons
+	  
+	  else{
+	    int binX = h_mu_SF_veto->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
+	    int binY = h_mu_SF_veto->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	    lepSF    *= h_mu_SF_veto->GetBinContent( binX, binY );
+	    lepSF_Up *= ( lepSF + h_mu_SF_veto->GetBinError( binX, binY ) );
+	    lepSF_Dn *= ( lepSF - h_mu_SF_veto->GetBinError( binX, binY ) );
+	    
+	    if(skim_isFastsim){
+	      int bin_FS  = h_mu_veto_FS->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ), fabs(lep2.p4.Eta()), StopEvt.pu_ntrue );
+	      lepSF_FS    *= h_mu_veto_FS->GetBinContent(bin_FS);
+	      lepSF_FS_Up *= lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
+	      lepSF_FS_Dn *= lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
+	    }
+	  }
+	} // end if 2nd lep is mu
 
-      }
+      } // end if 2nd lepton reco lepton exists
+
       
       // If only 1 reco lepton, and is2lep event, then find lost gen lepton
       if( skim_applyVetoLeptonSFs && !StopEvt.is_data && nVetoLeptons==1 && StopEvt.is2lep ){
@@ -1215,18 +1521,53 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.weight_lepSF_fastSim      = lepSF_FS;
       StopEvt.weight_lepSF_fastSim_up   = lepSF_FS_Up;
       StopEvt.weight_lepSF_fastSim_down = lepSF_FS_Dn;
-      
+
+      // save the sum of weights for normalization offline to n-babies.
+      // comment: this has to go before the selection cuts - else you create a bias
+      if(!evt_isRealData() && skim_applyLeptonSFs) {
+       counterhist->Fill(28,StopEvt.weight_lepSF);
+       counterhist->Fill(29,StopEvt.weight_lepSF_up);
+       counterhist->Fill(30,StopEvt.weight_lepSF_down);
+      }
+      if(!evt_isRealData() && skim_applyVetoLeptonSFs){
+	counterhist->Fill(31,StopEvt.weight_vetoLepSF);
+	counterhist->Fill(32,StopEvt.weight_vetoLepSF_up);
+	counterhist->Fill(33,StopEvt.weight_vetoLepSF_down);
+      }
+      if(!evt_isRealData() && skim_applyLeptonSFs && skim_isFastsim){
+	counterhist->Fill(34,StopEvt.weight_lepSF_fastSim);
+	counterhist->Fill(35,StopEvt.weight_lepSF_fastSim_up);
+	counterhist->Fill(36,StopEvt.weight_lepSF_fastSim_down);
+      }
+
+      // Signal
+      if(isSignalFromFileName && !evt_isRealData() && skim_applyLeptonSFs) {
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,27,StopEvt.weight_lepSF);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,28,StopEvt.weight_lepSF_up);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,29,StopEvt.weight_lepSF_down);
+      }
+      if(isSignalFromFileName && !evt_isRealData() && skim_applyVetoLeptonSFs){
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,30,StopEvt.weight_vetoLepSF);
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,31,StopEvt.weight_vetoLepSF_up);
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,32,StopEvt.weight_vetoLepSF_down);
+      }
+      if(isSignalFromFileName && !evt_isRealData() && skim_applyLeptonSFs && skim_isFastsim){
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,33,StopEvt.weight_lepSF_fastSim);
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,34,StopEvt.weight_lepSF_fastSim_up);
+	counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,35,StopEvt.weight_lepSF_fastSim_down);
+      }
+           
 
       //
       // Jet Selection
        float btagprob_data = 1.;
        float btagprob_mc = 1.;
-       float btagprob_err_heavy_UP = 0.;
-       float btagprob_err_heavy_DN = 0.;
-       float btagprob_err_light_UP = 0.;
-       float btagprob_err_light_DN = 0.;
-       float btagprob_err_FS_UP = 0.;
-       float btagprob_err_FS_DN = 0.;
+       float btagprob_heavy_UP = 1.;
+       float btagprob_heavy_DN = 1.;
+       float btagprob_light_UP = 1.;
+       float btagprob_light_DN = 1.;
+       float btagprob_FS_UP = 1.;
+       float btagprob_FS_DN = 1.;
  
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
       // Get the jets overlapping with the selected leptons
@@ -1239,19 +1580,60 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	// Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
 	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_err_heavy_UP, btagprob_err_heavy_DN, btagprob_err_light_UP,btagprob_err_light_DN,btagprob_err_FS_UP,btagprob_err_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
+        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_heavy_UP, btagprob_heavy_DN, btagprob_light_UP,btagprob_light_DN,btagprob_FS_UP,btagprob_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
       }
+      if (!evt_isRealData()){
+	int NISRjets = 0;
+	int nonISRjets = 0;
+	for(unsigned int jix = 0; jix<jets.ak4pfjets_p4.size(); ++jix){
+	  bool ismatched = false;
+	  for(unsigned int gpix = 0; gpix<genpnotISR.size(); ++gpix){
+	    if(dRbetweenVectors(jets.ak4pfjets_p4[jix],genpnotISR[gpix])<=0.3){
+	      ismatched = true;
+	      break;
+	    }
+	  }
+	  if(!ismatched) ++NISRjets;
+	  else ++nonISRjets;
+	}
+	if(NISRjets     ==0){ StopEvt.weight_ISRnjets = 1.0000; StopEvt.weight_ISRnjets_UP = 1.0000; StopEvt.weight_ISRnjets_DN = 1.0000; }
+	else if(NISRjets==1){ StopEvt.weight_ISRnjets = 0.8820; StopEvt.weight_ISRnjets_UP = 0.9410; StopEvt.weight_ISRnjets_DN = 0.8230; }
+	else if(NISRjets==2){ StopEvt.weight_ISRnjets = 0.7920; StopEvt.weight_ISRnjets_UP = 0.8960; StopEvt.weight_ISRnjets_DN = 0.6880; }
+	else if(NISRjets==3){ StopEvt.weight_ISRnjets = 0.7020; StopEvt.weight_ISRnjets_UP = 0.8510; StopEvt.weight_ISRnjets_DN = 0.5530; }
+	else if(NISRjets==4){ StopEvt.weight_ISRnjets = 0.6480; StopEvt.weight_ISRnjets_UP = 0.8240; StopEvt.weight_ISRnjets_DN = 0.4720; }
+	else if(NISRjets==5){ StopEvt.weight_ISRnjets = 0.6010; StopEvt.weight_ISRnjets_UP = 0.8005; StopEvt.weight_ISRnjets_DN = 0.4015; }
+	else {                StopEvt.weight_ISRnjets = 0.5150; StopEvt.weight_ISRnjets_UP = 0.7575; StopEvt.weight_ISRnjets_DN = 0.2725; }
+	StopEvt.NISRjets = NISRjets;
+	StopEvt.NnonISRjets = nonISRjets;
 
+	counterhist->Fill(25,StopEvt.weight_ISRnjets);
+	counterhist->Fill(26,StopEvt.weight_ISRnjets_UP);
+	counterhist->Fill(27,StopEvt.weight_ISRnjets_DN);
+	if(isSignalFromFileName){
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,24,StopEvt.weight_ISRnjets);
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,25,StopEvt.weight_ISRnjets_UP);
+	  counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,26,StopEvt.weight_ISRnjets_DN);
+	}
+      }
+      
       // SAVE B TAGGING SF 
      if (!evt_isRealData() && skim_applyBtagSFs) {
         StopEvt.weight_btagsf = btagprob_data / btagprob_mc;
-        StopEvt.weight_btagsf_heavy_UP = StopEvt.weight_btagsf + btagprob_err_heavy_UP*StopEvt.weight_btagsf;
-        StopEvt.weight_btagsf_light_UP = StopEvt.weight_btagsf + btagprob_err_light_UP*StopEvt.weight_btagsf;
-        StopEvt.weight_btagsf_heavy_DN = StopEvt.weight_btagsf - btagprob_err_heavy_DN*StopEvt.weight_btagsf;
-        StopEvt.weight_btagsf_light_DN = StopEvt.weight_btagsf - btagprob_err_light_DN*StopEvt.weight_btagsf;
- 	StopEvt.weight_btagsf_fastsim_UP = StopEvt.weight_btagsf + btagprob_err_FS_UP*StopEvt.weight_btagsf;
-        StopEvt.weight_btagsf_fastsim_DN = StopEvt.weight_btagsf - btagprob_err_FS_DN*StopEvt.weight_btagsf;
-      }
+	//StopEvt.weight_btagsf_heavy_UP = StopEvt.weight_btagsf + btagprob_err_heavy_UP*StopEvt.weight_btagsf;
+        //StopEvt.weight_btagsf_light_UP = StopEvt.weight_btagsf + btagprob_err_light_UP*StopEvt.weight_btagsf;
+        //StopEvt.weight_btagsf_heavy_DN = StopEvt.weight_btagsf - btagprob_err_heavy_DN*StopEvt.weight_btagsf;
+        //StopEvt.weight_btagsf_light_DN = StopEvt.weight_btagsf - btagprob_err_light_DN*StopEvt.weight_btagsf;
+ 	//StopEvt.weight_btagsf_fastsim_UP = StopEvt.weight_btagsf + btagprob_err_FS_UP*StopEvt.weight_btagsf;
+        //StopEvt.weight_btagsf_fastsim_DN = StopEvt.weight_btagsf - btagprob_err_FS_DN*StopEvt.weight_btagsf;
+        StopEvt.weight_btagsf_heavy_UP = btagprob_heavy_UP/btagprob_mc;
+        StopEvt.weight_btagsf_light_UP = btagprob_light_UP/btagprob_mc;
+        StopEvt.weight_btagsf_heavy_DN = btagprob_heavy_DN/btagprob_mc;
+        StopEvt.weight_btagsf_light_DN = btagprob_light_DN/btagprob_mc;
+	if(skim_isFastsim){
+	  StopEvt.weight_btagsf_fastsim_UP = btagprob_FS_UP/btagprob_mc;
+	  StopEvt.weight_btagsf_fastsim_DN = btagprob_FS_DN/btagprob_mc;
+	}
+     }
      // save the sum of weights for normalization offline to n-babies.
      // comment: this has to go before the skim_nBJets - else you create a bias
      if(!evt_isRealData() && skim_applyBtagSFs) {
@@ -1260,8 +1642,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhist->Fill(16,StopEvt.weight_btagsf_light_UP);
        counterhist->Fill(17,StopEvt.weight_btagsf_heavy_DN);
        counterhist->Fill(18,StopEvt.weight_btagsf_light_DN);
-       counterhist->Fill(23,StopEvt.weight_btagsf_fastsim_UP);
-       counterhist->Fill(24,StopEvt.weight_btagsf_fastsim_DN);
+       if(skim_isFastsim){
+	 counterhist->Fill(23,StopEvt.weight_btagsf_fastsim_UP);
+	 counterhist->Fill(24,StopEvt.weight_btagsf_fastsim_DN);
+       }
      }
      if(isSignalFromFileName && !evt_isRealData() && skim_applyBtagSFs){
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,14,StopEvt.weight_btagsf);
@@ -1269,8 +1653,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,16,StopEvt.weight_btagsf_light_UP);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,17,StopEvt.weight_btagsf_heavy_DN);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,18,StopEvt.weight_btagsf_light_DN);
-       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,22,StopEvt.weight_btagsf_fastsim_UP);
-       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,23,StopEvt.weight_btagsf_fastsim_DN);
+       if(skim_isFastsim){
+	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,22,StopEvt.weight_btagsf_fastsim_UP);
+	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,23,StopEvt.weight_btagsf_fastsim_DN);
+       }
      }
 
      // 
@@ -1287,6 +1673,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(jets.ngoodbtags < skim_nBJets) continue;
       nEvents_pass_skim_nBJets++;
 
+      bool fastsimfilt = false;
+      for(unsigned int jix = 0; jix<=jets.ak4pfjets_p4.size();++jix){
+	if(jets.ak4pfjets_p4[jix].Pt()<30) continue;
+	if(fabs(jets.ak4pfjets_p4[jix].Eta())>2.4) continue;
+	bool isgenmatch = false;
+	for(unsigned int gix = 0; gix<jets.ak4genjets_p4.size();++gix){
+	  if(dRbetweenVectors(jets.ak4genjets_p4[gix],jets.ak4pfjets_p4[jix])<0.3) { isgenmatch = true; break; }
+	}
+	if(isgenmatch) continue;
+	if(jets.ak4pfjets_chf[jix]>0.1) continue;
+	fastsimfilt = true;
+	break;
+      }
+      StopEvt.filt_fastsimjets = fastsimfilt;
 
       //
       // Photon Selection
@@ -1844,25 +2244,27 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //
       //std::cout << "[babymaker::looper]: filling HLT vars" << std::endl;
       //////////////// 2015 Run II  //////////////////////
-      StopEvt.HLT_MET = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_HBHECleaned_v") || passHLTTriggerPattern("HLT_PFMET170_NotCleaned_v"); 
-      StopEvt.HLT_MET100_MHT100 = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v");
-      StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele25_eta2p1_WPTight_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v") ||passHLTTriggerPattern("HLT_Ele27_eta2p1_WPLoose_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_eta2p1_WPTight_Gsf_v");
-      StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_v") || passHLTTriggerPattern("HLT_IsoTkMu20_v") || passHLTTriggerPattern("HLT_IsoMu22_v") || passHLTTriggerPattern("HLT_IsoTkMu22_v") || passHLTTriggerPattern("HLT_IsoMu24_v") || passHLTTriggerPattern("HLT_IsoTkMu24_v");
-      StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
-      StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
-      StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v"); 
-     //photons more complicated because of prescales
-      StopEvt.HLT_Photon90_CaloIdL_PFHT500 = passHLTTriggerPattern("HLT_Photon90_CaloIdL_PFHT500_v");
-      StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v" ));
-      StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"));
-      StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
-      StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
-      StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
+      if(!isSignalFromFileName){
+	StopEvt.HLT_MET = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_HBHECleaned_v") || passHLTTriggerPattern("HLT_PFMET170_NotCleaned_v"); 
+	StopEvt.HLT_MET100_MHT100 = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v");
+	StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele25_eta2p1_WPTight_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v") ||passHLTTriggerPattern("HLT_Ele27_eta2p1_WPLoose_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_eta2p1_WPTight_Gsf_v");
+	StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_v") || passHLTTriggerPattern("HLT_IsoTkMu20_v") || passHLTTriggerPattern("HLT_IsoMu22_v") || passHLTTriggerPattern("HLT_IsoTkMu22_v") || passHLTTriggerPattern("HLT_IsoMu24_v") || passHLTTriggerPattern("HLT_IsoTkMu24_v");
+	StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
+	StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
+	StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v"); 
+	//photons more complicated because of prescales
+	StopEvt.HLT_Photon90_CaloIdL_PFHT500 = passHLTTriggerPattern("HLT_Photon90_CaloIdL_PFHT500_v");
+	StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"));
+	StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
+	StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
+	StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
+      }
 
      ///////////////////////////////////////////////////////////
 

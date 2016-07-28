@@ -227,6 +227,12 @@ public:
     float weight_PU;
     float weight_PUup;
     float weight_PUdown;
+    float weight_ISRnjets;
+    float weight_ISRnjets_UP;
+    float weight_ISRnjets_DN;
+    int   NISRjets;
+    int   NnonISRjets;
+    bool  filt_fastsimjets;
     float hardgenpt;
     //sparms
 //    vecs  sparms_comment;

@@ -32,7 +32,7 @@ Name data_met_Run2016B_MINIAOD_PromptReco-v2re
 Path /hadoop/cms/store/group/snt/run2_data/Run2016B_MET_MINIAOD_PromptReco-v2/merged/V08-00-06/
 
 ##################################################
-### Collection of 25ns REPROCESSED Data Samples ##
+### Collection of 25ns Data Samples ##
 ##################################################
 ###
 SAMPLE
@@ -62,7 +62,37 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2016C_SingleMuon_MINIAOD_PromptRec
 ## MET ##
 SAMPLE
 Name data_met_Run2016C_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016C_SinglePhoton_MINIAOD_PromptReco-v2/merged/V08-00-07/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_MET_MINIAOD_PromptReco-v2/merged/V08-00-07/
+
+###
+SAMPLE
+Name data_double_eg_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleEG_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## Double mu ##
+SAMPLE
+Name data_double_mu_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleMuon_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## Muon EG ##
+SAMPLE
+Name data_muon_eg_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MuonEG_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## Single Electron ##
+SAMPLE
+Name data_single_electron_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_SingleElectron_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## Single Muon ##
+SAMPLE
+Name data_single_muon_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_SingleMuon_MINIAOD_PromptReco-v2/merged/V08-00-08/
+
+## MET ##
+SAMPLE
+Name data_met_Run2016D_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MET_MINIAOD_PromptReco-v2/merged/V08-00-08/
 
 ##############################
 # Collection of 25ns samples #
@@ -332,3 +362,23 @@ Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/SMS-T2tt_mStop-500_mLSP-3
 SAMPLE
 Name T2tt_mStop_850_mLSP_100_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/SMS-T2tt_mStop-850_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+
+SAMPLE
+Name Signal_T2tt
+Path    /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2_fastsim/SMS-T2tt_mStop-150to250_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-09/
+
+SAMPLE
+Name Signal_T2tt
+Path    /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2_fastsim/SMS-T2tt_mStop-350to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-09/
+
+SAMPLE
+Name Signal_T2tt
+Path    /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2_fastsim/SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-09/
+
+SAMPLE
+Name Signal_T2tt
+Path    /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2_fastsim/SMS-T2tt_mStop-250to350_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-09/
+
+SAMPLE
+Name Signal_T2bW
+Path    /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2_fastsim/SMS-T2bW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-09/
