@@ -100,6 +100,7 @@ int bkgEstimate_diLepton(){
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_250to350met ) );
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_350to450met ) );
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_450toInfmet) );
+  sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets ) );
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) );
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee3jets_ge200mt2w_150to250met) );
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_150to250met ) );
@@ -134,6 +135,7 @@ int bkgEstimate_diLepton(){
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_250to350met ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_350to450met ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_450toInfmet ) );
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee3jets_ge200mt2w_150to250met) );
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_150to250met ) );

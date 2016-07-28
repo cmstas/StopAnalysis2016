@@ -893,8 +893,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList_forLimit_lostLepton(
   vect_util result;
   
   result.push_back( systematicUtil(k_nominal) );
-  //result.push_back( systematicUtil(k_JESUp) );
-  //result.push_back( systematicUtil(k_JESDown) );
+  result.push_back( systematicUtil(k_JESUp) );
+  result.push_back( systematicUtil(k_JESDown) );
   result.push_back( systematicUtil(k_bTagEffHFUp) );
   result.push_back( systematicUtil(k_bTagEffHFDown) );
   result.push_back( systematicUtil(k_bTagEffLFUp) );
@@ -911,8 +911,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList_forLimit_lostLepton(
   result.push_back( systematicUtil(k_alphasDown) );
   result.push_back( systematicUtil(k_q2Up) );
   result.push_back( systematicUtil(k_q2Down) );
-  result.push_back( systematicUtil(k_lumiUp) );
-  result.push_back( systematicUtil(k_lumiDown) );
+  //result.push_back( systematicUtil(k_lumiUp) );
+  //result.push_back( systematicUtil(k_lumiDown) );
 
   return result;
 }

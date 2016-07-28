@@ -39,13 +39,13 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
   temp_i_o.second = baby_outputDir_nominal;
   baby_i_o.push_back(temp_i_o);
   
-  //temp_i_o.first  = baby_inputDir_jesUp;
-  //temp_i_o.second = baby_outputDir_jesUp;
-  //baby_i_o.push_back(temp_i_o);
+  temp_i_o.first  = baby_inputDir_jesUp;
+  temp_i_o.second = baby_outputDir_jesUp;
+  baby_i_o.push_back(temp_i_o);
   
-  //temp_i_o.first  = baby_inputDir_jesDn;
-  //temp_i_o.second = baby_outputDir_jesDn;
-  //baby_i_o.push_back(temp_i_o);
+  temp_i_o.first  = baby_inputDir_jesDn;
+  temp_i_o.second = baby_outputDir_jesDn;
+  baby_i_o.push_back(temp_i_o);
 
   massPtList.clear();
   std::pair< double, double > massPt;

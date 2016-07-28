@@ -66,6 +66,12 @@ namespace stop_1l {
 	const float &weight_PU() { return babyAnalyzer.weight_PU(); }
 	const float &weight_PUup() { return babyAnalyzer.weight_PUup(); }
 	const float &weight_PUdown() { return babyAnalyzer.weight_PUdown(); }
+	const float &weight_ISRnjets() { return babyAnalyzer.weight_ISRnjets(); }
+	const float &weight_ISRnjets_UP() { return babyAnalyzer.weight_ISRnjets_UP(); }
+	const float &weight_ISRnjets_DN() { return babyAnalyzer.weight_ISRnjets_DN(); }
+	const int &NISRjets() { return babyAnalyzer.NISRjets(); }
+	const int &NnonISRjets() { return babyAnalyzer.NnonISRjets(); }
+	const bool &filt_fastsimjets() { return babyAnalyzer.filt_fastsimjets(); }
 	const vector<string> &sparms_names() { return babyAnalyzer.sparms_names(); }
 	const vector<float> &sparms_values() { return babyAnalyzer.sparms_values(); }
 	const int &sparms_subProcessId() { return babyAnalyzer.sparms_subProcessId(); }

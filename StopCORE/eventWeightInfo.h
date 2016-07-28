@@ -45,6 +45,10 @@ class eventWeightInfo{
   
   TFile *f_sig_xsec;
   TH1D *h_sig_xsec;
+  
+  // SR trigger efficiency histos
+  TFile *f_srTrigger_sf;
+  TH2D *h_srTrigger_sf;
 
   // bTag machinery
   bool useBTagSFs_fromUtils;
@@ -53,6 +57,9 @@ class eventWeightInfo{
   // Lepton SF machinery
   bool useLepSFs_fromUtils;
   eventWeight_lepSF *lepSFUtil;
+
+  // Lost lepton analyis uses met with 2nd lepton removed
+  bool add2ndLepToMet;
 
   // Variables to form baseline event weight
   int    nEvents;
@@ -70,6 +77,11 @@ class eventWeightInfo{
   double sf_diLepTrigger;
   double sf_diLepTrigger_up;
   double sf_diLepTrigger_dn;
+
+  bool   apply_srTrigger_sf;
+  double sf_srTrigger;
+  double sf_srTrigger_up;
+  double sf_srTrigger_dn;
 
   bool   apply_bTag_sf;
   double sf_bTag;
@@ -139,7 +151,7 @@ class eventWeightInfo{
   double sf_xsec_dn;
 
   
-  eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils=false, bool useLepSFUtils=false );
+  eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils=false, bool useLepSFUtils=false, bool use2ndLepToMet=false );
   ~eventWeightInfo();
 
   void getWeightHistogramFromBaby( TFile *sourceFile );
@@ -159,6 +171,8 @@ class eventWeightInfo{
   void getScaleToLumiWeight( double &wgt );
 
   void getDiLepTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
+
+  void getSRTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
 
   void getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn );
   

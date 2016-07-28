@@ -55,8 +55,8 @@ int stopBabyLooper(){
   // SampleList
   //
   sampleInfo::vect_id sampleList;
-  //sampleList = sampleInfo::getSampleList( analysis ); 
-  sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
+  sampleList = sampleInfo::getSampleList( analysis ); 
+  //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
@@ -169,7 +169,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     // Declare Selection Object
     //
     cout << "    Loading selectorUtil" << endl << endl;
-    bool add2ndLeptonToMet = true;
+    bool add2ndLeptonToMet = false;
     selectionInfo::selectionUtil selector( cutList, sample.id, add2ndLeptonToMet );
     selector.setupCutflowHistos( f_output );
 
@@ -210,19 +210,19 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     // Get Event Weight Object
     //
     cout << "    Loading eventWeighInfo" << endl << endl;
-    bool bTagSF_fromFile = true;
-    bool lepSF_fromFile  = true;
-    eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile );
+    bool bTagSF_fromFile = false;
+    bool lepSF_fromFile  = false;
+    eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile, add2ndLeptonToMet );
 
     // Switches for applying weights
     wgtInfo->apply_diLepTrigger_sf = false;
     wgtInfo->apply_bTag_sf         = true;
-    wgtInfo->apply_lep_sf          = false;
-    wgtInfo->apply_vetoLep_sf      = false;
+    wgtInfo->apply_lep_sf          = true;
+    wgtInfo->apply_vetoLep_sf      = true;
     wgtInfo->apply_lepFS_sf        = false;
     wgtInfo->apply_topPt_sf        = false; // true=sf, false=uncertainty
     wgtInfo->apply_metRes_sf       = true;
-    wgtInfo->apply_ttbarSysPt_sf   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
+    wgtInfo->apply_ttbarSysPt_sf   = true; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
     wgtInfo->apply_ISR_sf          = false; // only !=1.0 for signal
     wgtInfo->apply_sample_sf       = false; // only !=1.0 for some WJetsHT samps
 

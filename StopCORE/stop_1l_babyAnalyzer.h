@@ -213,6 +213,24 @@ protected:
 	float	weight_PUdown_;
 	TBranch *weight_PUdown_branch;
 	bool weight_PUdown_isLoaded;
+	float	weight_ISRnjets_;
+	TBranch *weight_ISRnjets_branch;
+	bool weight_ISRnjets_isLoaded;
+	float	weight_ISRnjets_UP_;
+	TBranch *weight_ISRnjets_UP_branch;
+	bool weight_ISRnjets_UP_isLoaded;
+	float	weight_ISRnjets_DN_;
+	TBranch *weight_ISRnjets_DN_branch;
+	bool weight_ISRnjets_DN_isLoaded;
+	int	NISRjets_;
+	TBranch *NISRjets_branch;
+	bool NISRjets_isLoaded;
+	int	NnonISRjets_;
+	TBranch *NnonISRjets_branch;
+	bool NnonISRjets_isLoaded;
+	bool	filt_fastsimjets_;
+	TBranch *filt_fastsimjets_branch;
+	bool filt_fastsimjets_isLoaded;
 	vector<string> *sparms_names_;
 	TBranch *sparms_names_branch;
 	bool sparms_names_isLoaded;
@@ -1328,6 +1346,36 @@ void Init(TTree *tree) {
 		weight_PUdown_branch = tree->GetBranch("weight_PUdown");
 		if (weight_PUdown_branch) {weight_PUdown_branch->SetAddress(&weight_PUdown_);}
 	}
+	weight_ISRnjets_branch = 0;
+	if (tree->GetBranch("weight_ISRnjets") != 0) {
+		weight_ISRnjets_branch = tree->GetBranch("weight_ISRnjets");
+		if (weight_ISRnjets_branch) {weight_ISRnjets_branch->SetAddress(&weight_ISRnjets_);}
+	}
+	weight_ISRnjets_UP_branch = 0;
+	if (tree->GetBranch("weight_ISRnjets_UP") != 0) {
+		weight_ISRnjets_UP_branch = tree->GetBranch("weight_ISRnjets_UP");
+		if (weight_ISRnjets_UP_branch) {weight_ISRnjets_UP_branch->SetAddress(&weight_ISRnjets_UP_);}
+	}
+	weight_ISRnjets_DN_branch = 0;
+	if (tree->GetBranch("weight_ISRnjets_DN") != 0) {
+		weight_ISRnjets_DN_branch = tree->GetBranch("weight_ISRnjets_DN");
+		if (weight_ISRnjets_DN_branch) {weight_ISRnjets_DN_branch->SetAddress(&weight_ISRnjets_DN_);}
+	}
+	NISRjets_branch = 0;
+	if (tree->GetBranch("NISRjets") != 0) {
+		NISRjets_branch = tree->GetBranch("NISRjets");
+		if (NISRjets_branch) {NISRjets_branch->SetAddress(&NISRjets_);}
+	}
+	NnonISRjets_branch = 0;
+	if (tree->GetBranch("NnonISRjets") != 0) {
+		NnonISRjets_branch = tree->GetBranch("NnonISRjets");
+		if (NnonISRjets_branch) {NnonISRjets_branch->SetAddress(&NnonISRjets_);}
+	}
+	filt_fastsimjets_branch = 0;
+	if (tree->GetBranch("filt_fastsimjets") != 0) {
+		filt_fastsimjets_branch = tree->GetBranch("filt_fastsimjets");
+		if (filt_fastsimjets_branch) {filt_fastsimjets_branch->SetAddress(&filt_fastsimjets_);}
+	}
 	sparms_names_branch = 0;
 	if (tree->GetBranch("sparms_names") != 0) {
 		sparms_names_branch = tree->GetBranch("sparms_names");
@@ -2324,6 +2372,12 @@ void GetEntry(unsigned int idx)
 		weight_PU_isLoaded = false;
 		weight_PUup_isLoaded = false;
 		weight_PUdown_isLoaded = false;
+		weight_ISRnjets_isLoaded = false;
+		weight_ISRnjets_UP_isLoaded = false;
+		weight_ISRnjets_DN_isLoaded = false;
+		NISRjets_isLoaded = false;
+		NnonISRjets_isLoaded = false;
+		filt_fastsimjets_isLoaded = false;
 		sparms_names_isLoaded = false;
 		sparms_values_isLoaded = false;
 		sparms_subProcessId_isLoaded = false;
@@ -2608,6 +2662,12 @@ void LoadAllBranches()
 	if (weight_PU_branch != 0) weight_PU();
 	if (weight_PUup_branch != 0) weight_PUup();
 	if (weight_PUdown_branch != 0) weight_PUdown();
+	if (weight_ISRnjets_branch != 0) weight_ISRnjets();
+	if (weight_ISRnjets_UP_branch != 0) weight_ISRnjets_UP();
+	if (weight_ISRnjets_DN_branch != 0) weight_ISRnjets_DN();
+	if (NISRjets_branch != 0) NISRjets();
+	if (NnonISRjets_branch != 0) NnonISRjets();
+	if (filt_fastsimjets_branch != 0) filt_fastsimjets();
 	if (sparms_names_branch != 0) sparms_names();
 	if (sparms_values_branch != 0) sparms_values();
 	if (sparms_subProcessId_branch != 0) sparms_subProcessId();
@@ -3668,6 +3728,84 @@ void LoadAllBranches()
 			weight_PUdown_isLoaded = true;
 		}
 		return weight_PUdown_;
+	}
+	float &weight_ISRnjets()
+	{
+		if (not weight_ISRnjets_isLoaded) {
+			if (weight_ISRnjets_branch != 0) {
+				weight_ISRnjets_branch->GetEntry(index);
+			} else { 
+				printf("branch weight_ISRnjets_branch does not exist!\n");
+				exit(1);
+			}
+			weight_ISRnjets_isLoaded = true;
+		}
+		return weight_ISRnjets_;
+	}
+	float &weight_ISRnjets_UP()
+	{
+		if (not weight_ISRnjets_UP_isLoaded) {
+			if (weight_ISRnjets_UP_branch != 0) {
+				weight_ISRnjets_UP_branch->GetEntry(index);
+			} else { 
+				printf("branch weight_ISRnjets_UP_branch does not exist!\n");
+				exit(1);
+			}
+			weight_ISRnjets_UP_isLoaded = true;
+		}
+		return weight_ISRnjets_UP_;
+	}
+	float &weight_ISRnjets_DN()
+	{
+		if (not weight_ISRnjets_DN_isLoaded) {
+			if (weight_ISRnjets_DN_branch != 0) {
+				weight_ISRnjets_DN_branch->GetEntry(index);
+			} else { 
+				printf("branch weight_ISRnjets_DN_branch does not exist!\n");
+				exit(1);
+			}
+			weight_ISRnjets_DN_isLoaded = true;
+		}
+		return weight_ISRnjets_DN_;
+	}
+	int &NISRjets()
+	{
+		if (not NISRjets_isLoaded) {
+			if (NISRjets_branch != 0) {
+				NISRjets_branch->GetEntry(index);
+			} else { 
+				printf("branch NISRjets_branch does not exist!\n");
+				exit(1);
+			}
+			NISRjets_isLoaded = true;
+		}
+		return NISRjets_;
+	}
+	int &NnonISRjets()
+	{
+		if (not NnonISRjets_isLoaded) {
+			if (NnonISRjets_branch != 0) {
+				NnonISRjets_branch->GetEntry(index);
+			} else { 
+				printf("branch NnonISRjets_branch does not exist!\n");
+				exit(1);
+			}
+			NnonISRjets_isLoaded = true;
+		}
+		return NnonISRjets_;
+	}
+	bool &	filt_fastsimjets()
+	{
+		if (not filt_fastsimjets_isLoaded) {
+			if (filt_fastsimjets_branch != 0) {
+				filt_fastsimjets_branch->GetEntry(index);
+			} else { 
+				printf("branch filt_fastsimjets_branch does not exist!\n");
+				exit(1);
+			}
+			filt_fastsimjets_isLoaded = true;
+		}
+		return filt_fastsimjets_;
 	}
 	const vector<string> &sparms_names()
 	{
@@ -6544,6 +6682,12 @@ namespace stop_1l {
 	const float &weight_PU();
 	const float &weight_PUup();
 	const float &weight_PUdown();
+	const float &weight_ISRnjets();
+	const float &weight_ISRnjets_UP();
+	const float &weight_ISRnjets_DN();
+	const int &NISRjets();
+	const int &NnonISRjets();
+	const bool &filt_fastsimjets();
 	const vector<string> &sparms_names();
 	const vector<float> &sparms_values();
 	const int &sparms_subProcessId();

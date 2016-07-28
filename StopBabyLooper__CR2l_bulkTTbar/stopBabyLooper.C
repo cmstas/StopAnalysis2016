@@ -230,17 +230,18 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     //
     cout << "    Loading eventWeighInfo" << endl << endl;
     bool bTagSF_fromFile = false;
-    bool lepSF_fromFile  = true;
-    eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile );
+    bool lepSF_fromFile  = false;
+    bool use2ndLepToMet  = false;
+    eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile, use2ndLepToMet );
 
     // Switches for applying weights
     wgtInfo->apply_diLepTrigger_sf = true;
     wgtInfo->apply_bTag_sf         = true;
-    wgtInfo->apply_lep_sf          = false;
-    wgtInfo->apply_vetoLep_sf      = false;
+    wgtInfo->apply_lep_sf          = true;
+    wgtInfo->apply_vetoLep_sf      = true;
     wgtInfo->apply_lepFS_sf        = false;
     wgtInfo->apply_topPt_sf        = false; // true=sf, false=uncertainty
-    wgtInfo->apply_metRes_sf       = true;
+    wgtInfo->apply_metRes_sf       = false;
     wgtInfo->apply_ttbarSysPt_sf   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
     wgtInfo->apply_ISR_sf          = false; // only !=1.0 for signal
     wgtInfo->apply_sample_sf       = false; // only !=1.0 for some WJetsHT samps
