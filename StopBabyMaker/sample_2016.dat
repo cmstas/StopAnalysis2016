@@ -329,6 +329,10 @@ Name TTWJetsToLNu_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 SAMPLE
+Name ttZJets_13TeV_madgraphMLM
+Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/ttZJets_13TeV_madgraphMLM_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+
+SAMPLE
 Name TTZToQQ_amcnlo_pythia8_25ns
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
