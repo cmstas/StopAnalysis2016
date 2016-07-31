@@ -404,30 +404,30 @@ void eventWeightInfo::getCR2lTriggerWeight( double &wgt_trigger, double &wgt_tri
 
   double lep_pt = babyAnalyzer.lep1_p4().Pt();
 
-  double max_met = 500.0;
-  double min_met = 250.0;
+  double max_met = 499.0;
+  double min_met = 251.0;
 
-  double max_lep = 200.0;
-  if(met>400.0) max_lep = 500.0;
-  double min_lep = 20.0;
+  double max_lep = 199.0;
+  if(met>401.0) max_lep = 499.0;
+  double min_lep = 21.0;
  
   // Blank spots on map
-  if( met>250.0 && met<276.0 && 
-      lep_pt>20.0 && lep_pt<30.0 ){
+  if( met>249.0 && met<276.0 && 
+      lep_pt>19.0 && lep_pt<30.1 ){
     sf_val = 0.93;
   }
-  else if( met>300.0 && met<350.0 &&
-	   lep_pt>20.0 && lep_pt<50.0 ){
+  else if( met>299.0 && met<351.0 &&
+	   lep_pt>19.0 && lep_pt<50.1 ){
     sf_val = 0.94;
   }
-  else if( met>350.0 &&
-	   lep_pt>30.0 && lep_pt<50.0 ){
+  else if( met>349.0 &&
+	   lep_pt>29.0 && lep_pt<50.1 ){
     sf_val = 0.95;
   }
   // Grab bin
   else{
-    int binX = h_cr2lTrigger_sf->FindBin( std::min( std::max(met,min_met), max_met ) );
-    int binY = h_cr2lTrigger_sf->FindBin( std::min( std::max(lep_pt,min_lep), max_lep ) );
+    int binX = h_cr2lTrigger_sf->GetXaxis()->FindBin( std::min( std::max(met,min_met), max_met ) );
+    int binY = h_cr2lTrigger_sf->GetYaxis()->FindBin( std::min( std::max(lep_pt,min_lep), max_lep ) );
     sf_val = h_cr2lTrigger_sf->GetBinContent( binX,binY );
   }
 

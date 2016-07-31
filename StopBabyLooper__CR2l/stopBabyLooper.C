@@ -55,8 +55,9 @@ int stopBabyLooper(){
   // SampleList
   //
   sampleInfo::vect_id sampleList;
-  sampleList = sampleInfo::getSampleList( analysis ); 
+  //sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
+  sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
@@ -749,7 +750,10 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     h2__lep1_vs_secondLepType_ge4j->GetYaxis()->SetBinLabel(3, "veto el");
     h2__lep1_vs_secondLepType_ge4j->GetYaxis()->SetBinLabel(4, "veto mu");
     h2__lep1_vs_secondLepType_ge4j->GetYaxis()->SetBinLabel(5, "isoTrk || pfTau");
-    
+
+
+    TH1D *h1_wgt_cr2lTriggerSF = new TH1D("h1_wgt_cr2lTriggerSF", "CR2l trigger eff SF", 100, -0.01, 1.01);
+    h1_wgt_cr2lTriggerSF->SetDirectory(f_output);
 
 
     //
@@ -1129,6 +1133,9 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
         double lep1lep2bbMet_pt = lep1lep2bbMet_TLV.Pt();
 
+
+
+	h1_wgt_cr2lTriggerSF->Fill( wgtInfo->sf_cr2lTrigger, nominal_wgt );
 
 	
 	// Loop over systematics
