@@ -169,7 +169,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     // Declare Selection Object
     //
     cout << "    Loading selectorUtil" << endl << endl;
-    bool add2ndLeptonToMet = false;
+    bool add2ndLeptonToMet = true;
     selectionInfo::selectionUtil selector( cutList, sample.id, add2ndLeptonToMet );
     selector.setupCutflowHistos( f_output );
 
@@ -216,6 +216,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
     // Switches for applying weights
     wgtInfo->apply_diLepTrigger_sf = false;
+    wgtInfo->apply_cr2lTrigger_sf  = true;
     wgtInfo->apply_bTag_sf         = true;
     wgtInfo->apply_lep_sf          = true;
     wgtInfo->apply_vetoLep_sf      = true;

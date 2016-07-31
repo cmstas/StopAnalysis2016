@@ -16,7 +16,7 @@ eventWeightInfo::eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils, bool
 
   // Initialize Switches for additional SFs
   apply_diLepTrigger_sf = false;
-  apply_srTrigger_sf    = false;
+  apply_cr2lTrigger_sf  = false;
   apply_bTag_sf         = false;
   apply_lep_sf          = false;
   apply_vetoLep_sf      = false;
@@ -42,7 +42,7 @@ eventWeightInfo::eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils, bool
   h_sig_counter = NULL;
   h_sig_counter_nEvents = NULL;
   h_bkg_counter = NULL;
-  h_srTrigger_sf = NULL;
+  h_cr2lTrigger_sf = NULL;
 
   // Get Signal XSection File
   if( sample_info->isSignal ){
@@ -52,8 +52,8 @@ eventWeightInfo::eventWeightInfo( sampleInfo::ID sample, bool useBTagUtils, bool
 
   // Get SR trigger histos
   if( !sample_info->isData ){
-    f_srTrigger_sf = new TFile("../StopCORE/inputs/trigger/triggerefficiency_2lCR.root","read");
-    h_srTrigger_sf = (TH2D*)f_srTrigger_sf->Get("twoDefficiencypass");
+    f_cr2lTrigger_sf = new TFile("../StopCORE/inputs/trigger/triggerefficiency_2lCR.root","read");
+    h_cr2lTrigger_sf = (TH2D*)f_cr2lTrigger_sf->Get("twoDefficiencypass");
   }
 
   // Initialize bTag SF machinery
@@ -81,6 +81,11 @@ eventWeightInfo::~eventWeightInfo(){
   
   if( !sample_info->isData && useLepSFs_fromUtils){
     delete lepSFUtil;
+  }
+
+  if( !sample_info->isData ){
+    f_cr2lTrigger_sf->Close();
+    delete f_cr2lTrigger_sf;
   }
   
   if( sample_info->isSignal ){
@@ -127,9 +132,9 @@ void eventWeightInfo::initializeWeights(){
   sf_diLepTrigger_up = 1.0;
   sf_diLepTrigger_dn = 1.0;
 
-  sf_srTrigger = 1.0;
-  sf_srTrigger_up = 1.0;
-  sf_srTrigger_dn = 1.0;
+  sf_cr2lTrigger = 1.0;
+  sf_cr2lTrigger_up = 1.0;
+  sf_cr2lTrigger_dn = 1.0;
   
   sf_bTag = 1.0;
   sf_bTagEffHF_up = 1.0;
@@ -224,7 +229,7 @@ void eventWeightInfo::getEventWeights(){
   getDiLepTriggerWeight( sf_diLepTrigger, sf_diLepTrigger_up, sf_diLepTrigger_dn );
 
   // get SR trigger sf
-  getSRTriggerWeight( sf_srTrigger, sf_srTrigger_up, sf_srTrigger_dn );
+  getCR2lTriggerWeight( sf_cr2lTrigger, sf_cr2lTrigger_up, sf_cr2lTrigger_dn );
   
   // btag
   getBTagWeight( sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn ); 
@@ -381,13 +386,13 @@ void eventWeightInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wgt_tr
 
 //////////////////////////////////////////////////////////////////////
 
-void eventWeightInfo::getSRTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn ){
+void eventWeightInfo::getCR2lTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn ){
 
   wgt_trigger = 1.0;
   wgt_trigger_up = 1.0;
   wgt_trigger_dn = 1.0;
 
-  if( !apply_srTrigger_sf ) return;
+  if( !apply_cr2lTrigger_sf ) return;
 
   if( sample_info->isData ) return;
 
@@ -421,14 +426,13 @@ void eventWeightInfo::getSRTriggerWeight( double &wgt_trigger, double &wgt_trigg
   }
   // Grab bin
   else{
-    int binX = h_srTrigger_sf->FindBin( std::min( std::max(met,min_met), max_met ) );
-    int binY = h_srTrigger_sf->FindBin( std::min( std::max(lep_pt,min_lep), max_lep ) );
-    sf_val = h_srTrigger_sf->GetBinContent( binX,binY );
+    int binX = h_cr2lTrigger_sf->FindBin( std::min( std::max(met,min_met), max_met ) );
+    int binY = h_cr2lTrigger_sf->FindBin( std::min( std::max(lep_pt,min_lep), max_lep ) );
+    sf_val = h_cr2lTrigger_sf->GetBinContent( binX,binY );
   }
 
   // 7% error for full coverage of trigger
-  sf_err = sf_val*0.07;
-
+  sf_err = 0.07;
  
   wgt_trigger = sf_val;
   wgt_trigger_up = sf_val + sf_err;
@@ -819,17 +823,17 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
 
     if( met>=250.0 && met<350.0 ){
       sf_val = 1.048;
-      sf_err = 0.007;
+      //sf_err = 0.007;
     }
 
     if( met>=350.0 && met<450.0 ){
       sf_val = 0.910;
-      sf_err = 0.014;
+      //sf_err = 0.014;
     }
 
     if( met>=450.0 ){
       sf_val = 0.776;
-      sf_err = 0.020;
+      //sf_err = 0.020;
     }
 
   } // end if nJets==2
@@ -838,22 +842,22 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
 
     if( met>=250.0 && met<350.0 ){
       sf_val = 1.076;
-      sf_err = 0.010;
+      //sf_err = 0.010;
     }
 
     if( met>=350.0 && met<450.0 ){
       sf_val = 0.928;
-      sf_err = 0.020;
+      //sf_err = 0.020;
     }
 
     if( met>=450.0 && met<550.0 ){
       sf_val = 0.808;
-      sf_err = 0.030;
+      //sf_err = 0.030;
     }
     
     if( met>=550.0 ){
       sf_val = 0.658;
-      sf_err = 0.031;
+      //sf_err = 0.031;
     }
 
   } // end if nJets==3
@@ -864,17 +868,17 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
 
       if( met>=250.0 && met<350.0 ){
 	sf_val = 1.076;
-	sf_err = 0.020;
+	//sf_err = 0.020;
       }
 
       if( met>=350.0 && met<450.0  ){
 	sf_val = 0.939;
-	sf_err = 0.023;
+	//sf_err = 0.023;
       }
 
       if( met>=450.0 ){
 	sf_val = 0.740;
-	sf_err = 0.026;
+	//sf_err = 0.026;
       }
 
     } // end if MT2W<200.0
@@ -883,27 +887,27 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
       
       if( met>=250.0 && met<350.0 ){
 	sf_val = 1.076;
-	sf_err = 0.020;
+	//sf_err = 0.020;
       }
 
       if( met>=350.0 && met<450.0  ){
 	sf_val = 0.939;
-	sf_err = 0.023;
+	//sf_err = 0.023;
       }
 
       if( met>=450.0 && met<550.0  ){
 	sf_val = 0.873;
-	sf_err = 0.037;
+	//sf_err = 0.037;
       }
 
       if( met>=550.0 && met<650.0  ){
 	sf_val = 0.747;
-	sf_err = 0.055;
+	//sf_err = 0.055;
       }
 
       if( met>=650.0 ){
 	sf_val = 0.564;
-	sf_err = 0.047;
+	//sf_err = 0.047;
       }
 
     } // end if MT2W>=200.0
@@ -911,6 +915,9 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
 
   } // end if nJets>=4
   
+
+  // 50% uncertainty on difference between no sf and applying it
+  sf_err = fabs(0.5*(1.0-sf_val));
 
   weight_metRes    = sf_val;
   weight_metRes_up = (sf_val + sf_err);

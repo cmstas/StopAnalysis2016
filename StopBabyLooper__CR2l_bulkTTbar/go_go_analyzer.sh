@@ -19,7 +19,7 @@ if [ ! -d Output/Log ]; then mkdir -p Output/Log; fi
 # Create Histograms of all samples
 echo "Creating Histograms..."
 echo ""
-root -l -b -q head.C stopBabyLooper.C++ >& Output/Log/stopBabyLooper.log 
+#root -l -b -q head.C stopBabyLooper.C++ >& Output/Log/stopBabyLooper.log 
 
 # Merge JESUp/Down with nominal
 #echo "Combining JES Up/Down with nominal..."

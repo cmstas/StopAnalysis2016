@@ -219,6 +219,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
     // Switches for applying weights
     wgtInfo->apply_diLepTrigger_sf = false;
+    wgtInfo->apply_cr2lTrigger_sf  = false;
     wgtInfo->apply_bTag_sf         = true;
     wgtInfo->apply_lep_sf          = true;
     wgtInfo->apply_vetoLep_sf      = true;

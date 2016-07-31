@@ -46,6 +46,22 @@ systematicInfo::systematicUtil::systematicUtil( systematicInfo::ID systematic ){
     hasOwnBabies = false;
     break;
 
+  case( k_cr2lTriggerUp ):
+    id          = systematic;
+    label       = "cr2lTriggerSFUp";
+    title       = "CR2l Trigger Scale Factor, Up";
+    tex         = "CR2l~Trigger~Scale~Factor,~Up";
+    hasOwnBabies = false;
+    break;
+
+  case( k_cr2lTriggerDown ):
+    id          = systematic;
+    label       = "cr2lTriggerSFDn";
+    title       = "CR2l Trigger Scale Factor, Down";
+    tex         = "CR2l~Trigger~Scale~Factor,~Down";
+    hasOwnBabies = false;
+    break;
+
   case( k_bTagEffHFUp ):
     id          = systematic;
     label       = "bTagEffHFUp";
@@ -335,6 +351,10 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
   // Apply diLepton Trigger scale factor
   double wgt_diLepTrigger = evt_wgt->sf_diLepTrigger;
   result *= wgt_diLepTrigger;
+
+  // Apply CR2l Trigger scale factor
+  double wgt_cr2lTrigger = evt_wgt->sf_cr2lTrigger;
+  result *= wgt_cr2lTrigger;
   
   // Apply bTag scale factor
   double wgt_bTag = evt_wgt->sf_bTag;
@@ -366,6 +386,8 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
 
   double wgt_diLepTriggerUp = 1.0;
   double wgt_diLepTriggerDn = 1.0;
+  double wgt_cr2lTriggerUp = 1.0;
+  double wgt_cr2lTriggerDn = 1.0;
   double wgt_bTagEffHFUp = 1.0;
   double wgt_bTagEffHFDn = 1.0;
   double wgt_bTagEffLFUp = 1.0;
@@ -418,6 +440,16 @@ double systematicInfo::getSystematicWeight( systematicInfo::ID systematic, event
   case( k_diLepTriggerDown ):
     wgt_diLepTriggerDn = (evt_wgt->sf_diLepTrigger_dn/evt_wgt->sf_diLepTrigger);
     result *= wgt_diLepTriggerDn;
+    break;
+
+  case( k_cr2lTriggerUp ):
+    wgt_cr2lTriggerUp = (evt_wgt->sf_cr2lTrigger_up/evt_wgt->sf_cr2lTrigger);
+    result *= wgt_cr2lTriggerUp;
+    break;
+
+  case( k_cr2lTriggerDown ):
+    wgt_cr2lTriggerDn = (evt_wgt->sf_cr2lTrigger_dn/evt_wgt->sf_cr2lTrigger);
+    result *= wgt_cr2lTriggerDn;
     break;
 
   case( k_bTagEffHFUp ):
@@ -677,6 +709,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList( analyzerInfo::ID an
     
   case( analyzerInfo::k_SR ):
     result.push_back( systematicUtil(k_nominal) );
+    result.push_back( systematicUtil(k_cr2lTriggerUp) );
+    result.push_back( systematicUtil(k_cr2lTriggerDown) );
     result.push_back( systematicUtil(k_bTagEffHFUp) );
     result.push_back( systematicUtil(k_bTagEffHFDown) );
     result.push_back( systematicUtil(k_bTagEffLFUp) );
@@ -789,6 +823,8 @@ systematicInfo::vect_util systematicInfo::getSystematicList( analyzerInfo::ID an
 
   case( analyzerInfo::k_CR2l ):
     result.push_back( systematicUtil(k_nominal) );
+    result.push_back( systematicUtil(k_cr2lTriggerUp) );
+    result.push_back( systematicUtil(k_cr2lTriggerDown) );
     result.push_back( systematicUtil(k_bTagEffHFUp) );
     result.push_back( systematicUtil(k_bTagEffHFDown) );
     result.push_back( systematicUtil(k_bTagEffLFUp) );
@@ -913,7 +949,9 @@ systematicInfo::vect_util systematicInfo::getSystematicList_forLimit_lostLepton(
   result.push_back( systematicUtil(k_q2Down) );
   //result.push_back( systematicUtil(k_lumiUp) );
   //result.push_back( systematicUtil(k_lumiDown) );
-
+  result.push_back( systematicUtil(k_cr2lTriggerUp) );
+  result.push_back( systematicUtil(k_cr2lTriggerDown) );
+    
   return result;
 }
 

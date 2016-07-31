@@ -26,6 +26,8 @@ namespace systematicInfo{
 	   k_JESDown,
 	   k_diLepTriggerUp,
 	   k_diLepTriggerDown,
+	   k_cr2lTriggerUp,
+	   k_cr2lTriggerDown,
 	   k_bTagEffHFUp,
 	   k_bTagEffHFDown,
 	   k_bTagEffLFUp,

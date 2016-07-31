@@ -47,8 +47,8 @@ class eventWeightInfo{
   TH1D *h_sig_xsec;
   
   // SR trigger efficiency histos
-  TFile *f_srTrigger_sf;
-  TH2D *h_srTrigger_sf;
+  TFile *f_cr2lTrigger_sf;
+  TH2D *h_cr2lTrigger_sf;
 
   // bTag machinery
   bool useBTagSFs_fromUtils;
@@ -78,10 +78,10 @@ class eventWeightInfo{
   double sf_diLepTrigger_up;
   double sf_diLepTrigger_dn;
 
-  bool   apply_srTrigger_sf;
-  double sf_srTrigger;
-  double sf_srTrigger_up;
-  double sf_srTrigger_dn;
+  bool   apply_cr2lTrigger_sf;
+  double sf_cr2lTrigger;
+  double sf_cr2lTrigger_up;
+  double sf_cr2lTrigger_dn;
 
   bool   apply_bTag_sf;
   double sf_bTag;
@@ -172,7 +172,7 @@ class eventWeightInfo{
 
   void getDiLepTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
 
-  void getSRTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
+  void getCR2lTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
 
   void getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn );
   
