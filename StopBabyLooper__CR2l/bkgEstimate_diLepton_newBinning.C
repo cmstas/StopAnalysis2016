@@ -106,8 +106,8 @@ int bkgEstimate_diLepton_newBinning(){
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_450to550met) );    // 13
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_550to650met) );    // 14
   sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_650toInfmet) );    // 15
-  //sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets ) ); // CR, MET>250, ==2j, incl modTop
-  //sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) ); // CR, MET Sideband, ==2j, modTop>6.4
+  sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets ) ); // CR, MET>250, ==2j, incl modTop
+  sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) ); // CR, MET Sideband, ==2j, modTop>6.4
   //sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee3jets_ge200mt2w_150to250met) );    // CR, MET Sideband, ==3j, mt2w>200
   //sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_150to250met ) );   // CR, MET Sideband, ==2j, mt2w<200
   //sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_150to250met ) );   // CR, MET Sideband, ==2j, mt2w>200
@@ -130,6 +130,8 @@ int bkgEstimate_diLepton_newBinning(){
   cat_metLabels.push_back("$450-550$"); cat_jetLabels.push_back("$\\ge4$j,~highDM");
   cat_metLabels.push_back("$550-650$"); cat_jetLabels.push_back("");
   cat_metLabels.push_back("$>650$"); cat_jetLabels.push_back("");
+  cat_metLabels.push_back("$>250$"); cat_jetLabels.push_back("$2j CRs");
+  cat_metLabels.push_back("$150-250$"); cat_jetLabels.push_back("");
   
 
   //
@@ -151,8 +153,8 @@ int bkgEstimate_diLepton_newBinning(){
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_450to550met ) );   // 13
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_550toInfmet ) );   // 14 - extrapolate
   cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_550toInfmet ) );   // 15 - extrapolate
-  //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets ) ); // CR, MET>250, ==2j, incl modTop
-  //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) ); // CR, MET Sideband, ==2j, modTop>6.4
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets ) ); // CR, MET>250, ==2j, incl modTop
+  cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee2jets_ge6p4modTop_150to250met ) ); // CR, MET Sideband, ==2j, modTop>6.4
   //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ee3jets_ge200mt2w_150to250met) );    // CR, MET Sideband, ==3j, mt2w>200
   //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_lt200mt2w_150to250met ) );   // CR, MET Sideband, >=4j, mt2w<200
   //cr2sr_cats.push_back( categoryInfo::categoryUtil( categoryInfo::k_ge4jets_ge200mt2w_150to250met ) );   // CR, MET Sideband, >=4j, mt2w>200
@@ -238,7 +240,7 @@ int bkgEstimate_diLepton_newBinning(){
   //
   // Make Tables
   //
-
+  
   // ROW=Categories, COL=DiLepton Estimate and Components, Simple
   FILE *yFile;
   texFile = outDir;
@@ -266,6 +268,29 @@ int bkgEstimate_diLepton_newBinning(){
     fprintf(yFile, "Category & $N_{Incl}^{CR}$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR}$ & $M_{MET,nJet~bin}^{SR}/M_{2\\ell}^{SR}$ & $N_{2\\ell,estimate}^{SR}$");
   }
   fprintf(yFile, "\\"); fprintf(yFile, "\\ \\hline \\hline \n");
+
+
+  // ROW=Categories, COL=DiLepton Estimate and Components, Simple, 1 TF
+  //FILE *yFile_1TF;
+  //texFile = outDir;
+  //texFile += "bkgEstimate_lostLepton__1TF__newBins.tex";
+  //yFile_1TF = fopen(texFile.Data(), "w");
+  
+  //cout << "Writing simple file of diLepton Estimates, with 1 TF, to file; " << endl;
+  //cout << "    " << texFile << endl;
+
+  //fprintf(yFile_1TF, "\\documentclass{article}\n");
+  //fprintf(yFile_1TF, "\\usepackage[landscape]{geometry}\n");
+  //fprintf(yFile_1TF, "\\usepackage{chngpage}\n\n");
+  //fprintf(yFile_1TF, "\\usepackage{graphicx} \n\n");
+  //fprintf(yFile_1TF, "\\begin{document}\n");
+  //fprintf(yFile_1TF, "\\tiny \n");  
+  //fprintf(yFile_1TF, "\\begin{table} \n");
+  //fprintf(yFile_1TF, "\\caption{ diLepton Background Estimate and Components, for each Signal Region } \n");
+  //fprintf(yFile_1TF, "\\scalebox{1.0}{ \n");
+  //fprintf(yFile_1TF, "\\begin{tabular}{|l|c|c|c|} \\hline \n");
+  //fprintf(yFile_1TF, "Signal Region & CR2l Yield & transfer factor & $N_{2\\ell,estimate}^{SR}$");
+  //fprintf(yFile_1TF, "\\"); fprintf(yFile_1TF, "\\ \\hline \\hline \n");
 
 
   
@@ -397,6 +422,8 @@ int bkgEstimate_diLepton_newBinning(){
     // Category Name for yield tables
     //
     fprintf(yFile, " %s & ", sr_cats[iSR].tex.c_str() );
+
+    //fprintf(yFile_1TF, " %s & ", sr_cats[iSR].tex.c_str() );
 
     
     //

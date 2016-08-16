@@ -55,9 +55,8 @@ int stopBabyLooper(){
   // SampleList
   //
   sampleInfo::vect_id sampleList;
-  //sampleList = sampleInfo::getSampleList( analysis ); 
+  sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
-  sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
@@ -730,7 +729,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 
     
 
-    TH2D *h2__lep1_vs_secondLepType_ee2j = new TH2D("h2__lep1_vs_secondLepType_ee2j", "leading lepton reco vs seocnd lepton reco, >=4 jets", 2, 0.0, 2.0, 5, 0.0, 5.0);
+    TH2D *h2__lep1_vs_secondLepType_ee2j = new TH2D("h2__lep1_vs_secondLepType_ee2j", "leading lepton reco vs seocnd lepton reco, >=4 jets", 2, 0.0, 2.0, 4, 0.0, 4.0);
     h2__lep1_vs_secondLepType_ee2j->SetDirectory(f_output);
     h2__lep1_vs_secondLepType_ee2j->GetXaxis()->SetBinLabel(1, "el");
     h2__lep1_vs_secondLepType_ee2j->GetXaxis()->SetBinLabel(2, "mu");
@@ -738,10 +737,10 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     h2__lep1_vs_secondLepType_ee2j->GetYaxis()->SetBinLabel(2, "good mu");
     h2__lep1_vs_secondLepType_ee2j->GetYaxis()->SetBinLabel(3, "veto el");
     h2__lep1_vs_secondLepType_ee2j->GetYaxis()->SetBinLabel(4, "veto mu");
-    h2__lep1_vs_secondLepType_ee2j->GetYaxis()->SetBinLabel(5, "isoTrk || pfTau");
+    //h2__lep1_vs_secondLepType_ee2j->GetYaxis()->SetBinLabel(4, "isoTrk || pfTau");
 
 
-    TH2D *h2__lep1_vs_secondLepType_ge4j = new TH2D("h2__lep1_vs_secondLepType_ge4j", "leading lepton reco vs seocnd lepton reco, >=4 jets", 2, 0.0, 2.0, 5, 0.0, 5.0);
+    TH2D *h2__lep1_vs_secondLepType_ge4j = new TH2D("h2__lep1_vs_secondLepType_ge4j", "leading lepton reco vs seocnd lepton reco, >=4 jets", 2, 0.0, 2.0, 4, 0.0, 4.0);
     h2__lep1_vs_secondLepType_ge4j->SetDirectory(f_output);
     h2__lep1_vs_secondLepType_ge4j->GetXaxis()->SetBinLabel(1, "el");
     h2__lep1_vs_secondLepType_ge4j->GetXaxis()->SetBinLabel(2, "mu");
@@ -749,7 +748,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     h2__lep1_vs_secondLepType_ge4j->GetYaxis()->SetBinLabel(2, "good mu");
     h2__lep1_vs_secondLepType_ge4j->GetYaxis()->SetBinLabel(3, "veto el");
     h2__lep1_vs_secondLepType_ge4j->GetYaxis()->SetBinLabel(4, "veto mu");
-    h2__lep1_vs_secondLepType_ge4j->GetYaxis()->SetBinLabel(5, "isoTrk || pfTau");
+    //h2__lep1_vs_secondLepType_ge4j->GetYaxis()->SetBinLabel(5, "isoTrk || pfTau");
 
 
     TH1D *h1_wgt_cr2lTriggerSF = new TH1D("h1_wgt_cr2lTriggerSF", "CR2l trigger eff SF", 100, -0.01, 1.01);
@@ -1010,7 +1009,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	    }
 	    
 	    else if( !PassTrackVeto() || !PassTauVeto() ){
-	      h2__lep1_vs_secondLepType_ee2j->Fill( "el", "isoTrk || pfTau", nominal_wgt );
+	      //h2__lep1_vs_secondLepType_ee2j->Fill( "el", "isoTrk || pfTau", nominal_wgt );
 	    }
 
 	  }
@@ -1034,7 +1033,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	    }
 	    
 	    else if( !PassTrackVeto() || !PassTauVeto() ){
-	      h2__lep1_vs_secondLepType_ee2j->Fill( "mu", "isoTrk || pfTau", nominal_wgt );
+	      //h2__lep1_vs_secondLepType_ee2j->Fill( "mu", "isoTrk || pfTau", nominal_wgt );
 	    }
 
 	  }
@@ -1064,7 +1063,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	    }
 	    
 	    else if( !PassTrackVeto() || !PassTauVeto() ){
-	      h2__lep1_vs_secondLepType_ge4j->Fill( "el", "isoTrk || pfTau", nominal_wgt );
+	      //h2__lep1_vs_secondLepType_ge4j->Fill( "el", "isoTrk || pfTau", nominal_wgt );
 	    }
 
 	  }
@@ -1088,7 +1087,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
 	    }
 	    
 	    else if( !PassTrackVeto() || !PassTauVeto() ){
-	      h2__lep1_vs_secondLepType_ge4j->Fill( "mu", "isoTrk || pfTau", nominal_wgt );
+	      //h2__lep1_vs_secondLepType_ge4j->Fill( "mu", "isoTrk || pfTau", nominal_wgt );
 	    }
 
 	  }

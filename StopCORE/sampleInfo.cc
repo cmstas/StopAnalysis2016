@@ -779,6 +779,14 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isAMCNLO = true;
     break;
 
+  case( k_ttZJets_13TeV_madgraphMLM ):
+    label = "ttZJets_13TeV_madgraphMLM";
+    title = "ttZJets, madgraphMLM";
+    tex   = "$t\\bar{t}+Z$,~madgraph";
+    inputBabies.push_back("ttZJets_13TeV_madgraphMLM*.root");
+    isAMCNLO = false;
+    break;
+
   case( k_tZq ):
     label = "tZq_25ns";
     title = "tZq";
@@ -989,7 +997,8 @@ sampleInfo::vect_id sampleInfo::getSampleList( analyzerInfo::ID analysis ){
     result.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
     result.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
     result.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
-  
+    result.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
+
     // MC, tZq
     //result.push_back( sampleInfo::k_tZq_ll_4f_amcnlo_pythia8 );
     //result.push_back( sampleInfo::k_tZq_nunu_4f_amcnlo_pythia8 );

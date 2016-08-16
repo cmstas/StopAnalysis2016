@@ -119,6 +119,7 @@ namespace sampleInfo{
 	   k_TTZ,
 	   k_TTZToQQ_amcnlo_pythia8,
 	   k_TTZToLLNuNu_m10_amcnlo_pythia8,
+	   k_ttZJets_13TeV_madgraphMLM,
 	   k_tZq,
 	   k_tZq_ll_4f_amcnlo_pythia8,
 	   k_tZq_nunu_4f_amcnlo_pythia8,

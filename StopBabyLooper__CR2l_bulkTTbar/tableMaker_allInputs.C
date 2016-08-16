@@ -90,6 +90,7 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_TTZ );
+  sampleList.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
   sampleList.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
   //sampleList.push_back( sampleInfo::k_tZq );
