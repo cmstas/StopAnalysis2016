@@ -20,64 +20,116 @@ typedef std::vector<bool> vecb;
 class EventTree
 {
 public:
-    // constructor/destructor
-    EventTree ();
-    EventTree (const std::string &prefix);
-    virtual ~EventTree (){}
+  // constructor/destructor
+  EventTree ();
+  EventTree (const std::string &prefix);
+  virtual ~EventTree (){}
  
-    void Reset ();
-    void SetBranches (TTree* tree);
-    void SetZllBranches (TTree* tree);
-    void SetPhotonBranches (TTree* tree);
-    void SetMETFilterBranches (TTree* tree);
-    void SetExtraVariablesBranches (TTree* tree);
-    void SetSecondLepBranches (TTree* tree);
-    void SetAliases (TTree* tree) const;
-    void FillCommon (const std::string &root_file_name = "");
-    void SetMetFilterEvents(); 
+  void Reset ();
+  void SetBranches (TTree* tree);
+  void SetZllBranches (TTree* tree);
+  void SetPhotonBranches (TTree* tree);
+  void SetMETFilterBranches (TTree* tree);
+  void SetExtraVariablesBranches (TTree* tree);
+  void SetSecondLepBranches (TTree* tree);
+  void SetAliases (TTree* tree) const;
+  void FillCommon (const std::string &root_file_name = "");
+  void SetMetFilterEvents(); 
 private:
-    std::string prefix_;
-      eventFilter metFilterTxt; 
+  std::string prefix_;
+  eventFilter metFilterTxt; 
 public:
-    // branch objects
-    unsigned int run;
-    unsigned int ls;
-    unsigned int evt;
-    int nvtxs;
+  // branch objects
+  unsigned int run;
+  unsigned int ls;
+  unsigned int evt;
+  int nvtxs;
 
-    int   firstGoodVtxIdx;
+  int   firstGoodVtxIdx;
 
-    unsigned int nEvents;
-    unsigned int nEvents_goodvtx;
-    unsigned int nEvents_MET30;
-    unsigned int nEvents_1goodlep;
-    unsigned int nEvents_2goodjets;
+  unsigned int nEvents;
+  unsigned int nEvents_goodvtx;
+  unsigned int nEvents_MET30;
+  unsigned int nEvents_1goodlep;
+  unsigned int nEvents_2goodjets;
 
-    int genlepsfromtop;
-    int genLepsHardProcess;                                                                                               
-    int genNusHardProcess;
+  int genlepsfromtop;
+  int genLepsHardProcess;                                                                                               
+  int genNusHardProcess;
 
-    int is0lep;
-    int is1lep;
-    int is2lep;
-    int isZtoNuNu;
+  int is0lep;
+  int is1lep;
+  int is2lep;
+  int isZtoNuNu;
 
-    int is1lepFromW;
-    int is1lepFromTop;
+  int is1lepFromW;
+  int is1lepFromTop;
 
-    int ngoodleps;
-    int nvetoleps;   
+  int ngoodleps;
+  int nvetoleps;   
  
-    float MT2W;
-    float hadronic_top_chi2;
-    float topness;
-    float topnessMod;
-    float MT2W_lep2;
-    float topness_lep2;
-    float topnessMod_lep2;
+  float MT2W;
+  float hadronic_top_chi2;
+  float topness;
+  float topnessMod;
+  float MT2W_lep2;
+  float topness_lep2;
+  float topnessMod_lep2;
+  
+  float MT2W_rl;
+  float topnessMod_rl;
+  
+  float MT2_lb_b;
+  float MT2_lb_b_lep2;
+  float MT2_l_l;
+  float MT2_lb_b_mass;
+  float MT2_lb_b_mass_lep2;
+  float MT2_lb_bqq;
+  float MT2_lb_bqq_lep2;
+  float MT2_lb_bqq_mass;
+  float MT2_lb_bqq_mass_lep2;
+  
+  float Mlb_closestb;
+  float Mlb_lead_bdiscr;
+  float Mlb_closestb_lep2;
+  float Mlb_lead_bdiscr_lep2;
+  float Mjjj;
+  float Mjjj_lep2;
 
-    float MT2W_rl;
-    float topnessMod_rl;
+  float pfmet;
+  float pfmet_phi;
+  float calomet;
+  float calomet_phi;
+  float pfmet_rl;
+  float pfmet_phi_rl;
+  
+  float filt_cscbeamhalo;
+  float filt_cscbeamhalo2015;
+  float filt_globaltighthalo2016;
+  float filt_globalsupertighthalo2016;
+  float filt_ecallaser;
+  float filt_ecaltp;
+  float filt_eebadsc;
+  float filt_goodvtx;
+  float filt_badevents;
+  float filt_hbhenoise;
+  float filt_hbheisonoise;
+  float filt_hcallaser;
+  float filt_met;
+  float filt_badChargedCandidateFilter;
+  float filt_trkfail;
+  float filt_trkPOG;
+  float filt_trkPOG_logerr_tmc;
+  float filt_trkPOG_tmc;
+  float filt_trkPOG_tms;
+  
+  float dR_lep_leadb;
+  float dR_lep2_leadb;    
+  float mindphi_met_j1_j2;
+  float mindphi_met_j1_j2_rl;
+  float mt_met_lep;
+  float mt_met_lep2;
+  float mt_met_lep_rl;
 
     float MT2_lb_b;
     float MT2_lb_b_lep2;
@@ -136,11 +188,11 @@ public:
     float MET_over_sqrtHT;
     float ak4pfjets_rho;
  
-    bool is_data;
+  bool is_data;
  
-    std::string dataset;
-    std::string filename;    
-    std::string cms3tag;
+  std::string dataset;
+  std::string filename;    
+  std::string cms3tag;
 
     //gen info//
     float scale1fb;
@@ -192,6 +244,16 @@ public:
     float mass_stop;
     float mass_gluino;       
  
+<<<<<<< HEAD
+  //gen met
+  float genmet;
+  float genmet_phi;
+  float genht;
+
+  //veto
+  bool PassTrackVeto;
+  bool PassTauVeto;
+=======
     //gen met
     float genmet;
     float genmet_phi;
@@ -200,6 +262,7 @@ public:
     //veto
     bool PassTrackVeto;
     bool PassTauVeto;
+>>>>>>> master
 
     //trigger
     //int  HLT_HT900;
@@ -211,21 +274,21 @@ public:
     int HLT_DiMu;
     int HLT_MuE;
 
-    int HLT_Photon90_CaloIdL_PFHT500;
-    int HLT_Photon22_R9Id90_HE10_IsoM;
-    int HLT_Photon30_R9Id90_HE10_IsoM;
-    int HLT_Photon36_R9Id90_HE10_IsoM;
-    int HLT_Photon50_R9Id90_HE10_IsoM;
-    int HLT_Photon75_R9Id90_HE10_IsoM; 
-    int HLT_Photon90_R9Id90_HE10_IsoM; 
-    int HLT_Photon120_R9Id90_HE10_IsoM;
-    int HLT_Photon165_R9Id90_HE10_IsoM;
-    int HLT_Photon175;
-    int HLT_Photon165_HE10;
+  int HLT_Photon90_CaloIdL_PFHT500;
+  int HLT_Photon22_R9Id90_HE10_IsoM;
+  int HLT_Photon30_R9Id90_HE10_IsoM;
+  int HLT_Photon36_R9Id90_HE10_IsoM;
+  int HLT_Photon50_R9Id90_HE10_IsoM;
+  int HLT_Photon75_R9Id90_HE10_IsoM; 
+  int HLT_Photon90_R9Id90_HE10_IsoM; 
+  int HLT_Photon120_R9Id90_HE10_IsoM;
+  int HLT_Photon165_R9Id90_HE10_IsoM;
+  int HLT_Photon175;
+  int HLT_Photon165_HE10;
 
-    //float pu_weight;
-    float lep_sf;
-    float btag_sf;
+  //float pu_weight;
+  float lep_sf;
+  float btag_sf;
 
     //photon addition
     int nPhotons;
@@ -281,60 +344,60 @@ public:
 
 
 /*obsolete
-    int   firstVtx_isfake;                                                                                               
-    float firstVtx_ndof;
-    float firstVtx_posRho;
-    float firstVtx_posZ;
-    LorentzVector  firstVtx_posp4;
-    int genLepsHardProcess;                                                                                               
-    int genNusHardProcess;
-    int nlooseleps;  
+  int   firstVtx_isfake;                                                                                               
+  float firstVtx_ndof;
+  float firstVtx_posRho;
+  float firstVtx_posZ;
+  LorentzVector  firstVtx_posp4;
+  int genLepsHardProcess;                                                                                               
+  int genNusHardProcess;
+  int nlooseleps;  
 
-    float sparms_filterEfficiency;
-    float sparms_pdfScale;
-    float sparms_pdfWeight1;
-    float sparms_pdfWeight2;
-    float sparms_weight;
-    float sparms_xsec;
-    int   sparms_subProcessId; 
-    bool PassTrackVeto_v2;
-    bool PassTrackVeto_v3;
-    float EA_all_rho;
-    float EA_allcalo_rho;                                                                                                  
-    float EA_centralcalo_rho;
-    float EA_centralchargedpileup_rho;
-    float EA_centralneutral_rho;
-    int HLT_MET170;
-    int HLT_MET120Btag;      
-    int HLT_MET120Mu5;
-    //new
-    int HLT_HT350MET120;
-    int HLT_DiEl_17_12;
-    int HLT_Mu8El17;
-    int HLT_Mu8El23;
-    int HLT_Mu17El12;
-    int HLT_Mu23El12;
-    int HLT_SingleElTight;
-    int HLT_SingleEl23;
-    int HLT_SingleEl27;
-    int HLT_SingleEl27Tight;
-    int HLT_SingleElHT200;
-    int HLT_SingleMuNoEta;
-    int HLT_SingleMuNoIso;
-    int HLT_SingleMuNoIsoNoEta;
-    int HLT_Mu6HT200MET125;
+  float sparms_filterEfficiency;
+  float sparms_pdfScale;
+  float sparms_pdfWeight1;
+  float sparms_pdfWeight2;
+  float sparms_weight;
+  float sparms_xsec;
+  int   sparms_subProcessId; 
+  bool PassTrackVeto_v2;
+  bool PassTrackVeto_v3;
+  float EA_all_rho;
+  float EA_allcalo_rho;                                                                                                  
+  float EA_centralcalo_rho;
+  float EA_centralchargedpileup_rho;
+  float EA_centralneutral_rho;
+  int HLT_MET170;
+  int HLT_MET120Btag;      
+  int HLT_MET120Mu5;
+  //new
+  int HLT_HT350MET120;
+  int HLT_DiEl_17_12;
+  int HLT_Mu8El17;
+  int HLT_Mu8El23;
+  int HLT_Mu17El12;
+  int HLT_Mu23El12;
+  int HLT_SingleElTight;
+  int HLT_SingleEl23;
+  int HLT_SingleEl27;
+  int HLT_SingleEl27Tight;
+  int HLT_SingleElHT200;
+  int HLT_SingleMuNoEta;
+  int HLT_SingleMuNoIso;
+  int HLT_SingleMuNoIsoNoEta;
+  int HLT_Mu6HT200MET125;
 
-    int HLT_HT350MET100;
-    int HLT_SingleMu17 ;
-    int HLT_SingleMu18 ;
-    int HLT_SingleMu20 ;
-    int HLT_SingleMu24 ;
+  int HLT_HT350MET100;
+  int HLT_SingleMu17 ;
+  int HLT_SingleMu18 ;
+  int HLT_SingleMu20 ;
+  int HLT_SingleMu24 ;
 
-    int HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight;
-    int HLT_MET90_MHT90_IDTight;
-    int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;
-    float HLT_SingleMu_eff;
-    float HLT_SingleEl_eff;
+  int HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight;
+  int HLT_MET90_MHT90_IDTight;
+  int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;
+  float HLT_SingleMu_eff;
+  float HLT_SingleEl_eff;
 */
     
 };

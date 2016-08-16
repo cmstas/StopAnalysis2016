@@ -239,7 +239,6 @@ void EventTree::Reset ()
     mt_met_lep_rl        = -9999.;
     hadronic_top_chi2    = -9999.; 
     is_data              = false;
-
     topness                = -9999.; 
     topness_lep2           = -9999.; 
     topnessMod             = -9999.; 
@@ -577,7 +576,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("PassTauVeto",&PassTauVeto);
     tree->Branch("topness", &topness); 
     tree->Branch("topnessMod", &topnessMod);
-    tree->Branch("topnessMod_rl", &topnessMod_rl);  
+    tree->Branch("topnessMod_rl", &topnessMod_rl);     
     tree->Branch("Mlb_closestb", &Mlb_closestb); 
     tree->Branch("HLT_SingleEl", &HLT_SingleEl );
     tree->Branch("HLT_SingleMu", &HLT_SingleMu );
