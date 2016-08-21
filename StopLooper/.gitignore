@@ -1,0 +1,14 @@
+# Ignore compiled code
+*.o
+*.so
+*.d
+*rdict.pcm
+#Ignore ~ files
+*~
+
+# Ignore screen files
+.display.screen
+
+# Ignore linkDef stuff
+LinkDef.cc
+LinkDef_out.*

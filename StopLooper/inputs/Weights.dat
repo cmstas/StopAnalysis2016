@@ -1,0 +1,50 @@
+#
+# general weights
+#
+Luminosity 2.26
+#
+# background uncertainties
+#
+K3 1.08 0.06
+K4  0.92 0.06
+DiNuPtMET250 1.054 0.043
+DiNuPtMET350 0.947 0.201
+DiNuPtMET450 0.729 0.320
+METresSR1 1.032 0.009
+METresSR2 0.913 0.024
+METresSR3 1.032 0.014
+METresSR4 0.928 0.030
+METresSR5 1.048 0.025
+METresSR6 0.944 0.029
+METresSR7 1.050 0.021
+METresSR8 0.910 0.051
+METresSR9 0.924 0.063
+RelNuPtSR1 0.0654
+RelNuPtSR2 0.1796
+RelNuPtSR3 0.1310
+RelNuPtSR4 0.1530
+RelNuPtSR7 0.1280
+RelNuPtSR8 0.1840
+RelNuPtSR9 0.2220
+RelWHFxsec 0.5
+RelWwidth 0.03
+Reltt1l 1.0
+#
+# CR --> SR scale factors for signal contamination
+#
+CR0b_1_1 0.0535
+CR0b_1_2 0.0201
+CR0b_2_3 0.0622
+CR0b_2_4 0.0596
+CR0b_3_7 0.0754
+CR0b_3_8 0.0448
+CR0b_3_9 0.0478
+CR2l_1_1 0.431
+CR2l_1_2 0.088
+CR2l_2_5 0.343
+CR2l_2_6 0.133
+CR2l_3_3 0.165
+CR2l_3_4 0.050
+CR2l_3_7 0.190
+CR2l_3_8 0.060
+CR2l_3_9 0.040
