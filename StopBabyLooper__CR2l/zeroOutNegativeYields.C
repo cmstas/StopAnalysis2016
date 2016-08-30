@@ -27,6 +27,8 @@ int zeroOutNegativeYields(std::string f_input_dir){
 
   // Get sample list
   sampleInfo::vect_id sampleList;
+  sampleList.push_back( sampleInfo::k_rare );
+  /*
   sampleList.push_back( sampleInfo::k_DYJetsToLL_m10To50_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_DYJetsToLL_m50_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_WJetsToLNu_amcnlo_pythia8 );
@@ -42,7 +44,7 @@ int zeroOutNegativeYields(std::string f_input_dir){
   sampleList.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
   //sampleList.push_back( sampleInfo::k_tZq_ll_4f_amcnlo_pythia8 );
   //sampleList.push_back( sampleInfo::k_tZq_nunu_4f_amcnlo_pythia8 );
-
+  */
 
   // Get Inclusive genClassyInfo
   genClassyInfo::genClassyUtil gen_incl( genClassyInfo::k_incl );

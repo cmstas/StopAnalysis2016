@@ -142,27 +142,34 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   categoryInfo::vect_id catList;
 
   catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_250to350met );
-  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_350toInfmet );
-  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop );
+  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_350to450met );
+  catList.push_back( categoryInfo::k_ee2jets_ge6p4modTop_450toInfmet );
   tableList.push_back( catList );
 
   catList.clear();
   catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_250to350met );
-  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_350toInfmet );
-  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w );
+  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_350to450met );
+  catList.push_back( categoryInfo::k_ee3jets_ge200mt2w_450toInfmet );
   tableList.push_back( catList );
 
   catList.clear();
-  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_250to325met );
-  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_325toInfmet );
-  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w );
+  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_250to350met );
+  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_350to450met );
+  catList.push_back( categoryInfo::k_ge4jets_lt200mt2w_450toInfmet );
   tableList.push_back( catList );
 
   catList.clear();
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_250to350met );
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_350to450met );
-  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_450toInfmet );
-  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w );
+  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_450to550met );
+  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_550to650met );
+  catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_650toInfmet );
+  tableList.push_back( catList );
+
+  catList.clear();
+  catList.push_back( categoryInfo::k_ge5jets_compM_250to350met );
+  catList.push_back( categoryInfo::k_ge5jets_compM_350to450met );
+  catList.push_back( categoryInfo::k_ge5jets_compM_450toInfmet );
   tableList.push_back( catList );
 
   catList.clear();

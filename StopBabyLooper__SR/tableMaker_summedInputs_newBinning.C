@@ -184,6 +184,11 @@ int tableMaker_summedInputs_newBinning( std::string f_input_dir="Histos/Nominal/
   catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_650toInfmet );
   tableList.push_back( catList );
 
+  catList.clear();
+  catList.push_back( categoryInfo::k_ge5jets_compM_250to350met );
+  catList.push_back( categoryInfo::k_ge5jets_compM_350to450met );
+  catList.push_back( categoryInfo::k_ge5jets_compM_450toInfmet );
+  tableList.push_back( catList );
   
 
   //

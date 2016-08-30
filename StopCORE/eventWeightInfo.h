@@ -43,10 +43,11 @@ class eventWeightInfo{
   TH2D *h_sig_counter_nEvents;
   TH3D *h_sig_counter;
   
+  // Signal X-Section file and histograms
   TFile *f_sig_xsec;
   TH1D *h_sig_xsec;
   
-  // SR trigger efficiency histos
+  // CR2l trigger efficiency histos
   TFile *f_cr2lTrigger_sf;
   TH2D *h_cr2lTrigger_sf;
 

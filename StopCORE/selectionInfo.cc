@@ -438,11 +438,15 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     break;
 
   case( k_ee1_selLep ):
-    if( babyAnalyzer.ngoodleps()==1 ) result = true;
+    if( (babyAnalyzer.ngoodleps()==1) ||
+	(babyAnalyzer.ngoodleps()>1 &&
+	 ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.lep1_p4(),babyAnalyzer.lep2_p4())<=0.01) ) result = true;
     break;
 
   case( k_ee0_vetoLep ):
-    if( babyAnalyzer.nvetoleps()==1 ) result = true;
+    if( (babyAnalyzer.nvetoleps()==1) || 
+	(babyAnalyzer.nvetoleps()>1 &&
+	 ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.lep1_p4(),babyAnalyzer.lep2_p4())<=0.01) ) result = true;
     break;
 
   case( k_trackVeto ):
@@ -465,9 +469,17 @@ bool selectionInfo::selectionUtil::passCut( selectionInfo::ID cut ){
     //	(babyAnalyzer.ngoodleps()==1 && (!babyAnalyzer.PassTrackVeto() || !babyAnalyzer.PassTauVeto()) )     ) result = true;
     //break;
 
+    // ICHEP
+  //case( k_diLepton ):
+  //if( (babyAnalyzer.ngoodleps()>=2) ||
+  //	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ) result = true;
+  //break;
+    
   case( k_diLepton ):
-    if( (babyAnalyzer.ngoodleps()>=2) ||
-  	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 ) ) result = true;
+    if( (babyAnalyzer.ngoodleps()>=2 &&
+	 ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.lep1_p4(),babyAnalyzer.lep2_p4())>0.01) ||
+  	(babyAnalyzer.ngoodleps()==1 && babyAnalyzer.nvetoleps()>=2 && babyAnalyzer.lep2_p4().Pt()>10.0 &&
+	 ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.lep1_p4(),babyAnalyzer.lep2_p4())>0.01) ) result = true;
     break;
 
   case( k_diLepton_bulkTTbar ):

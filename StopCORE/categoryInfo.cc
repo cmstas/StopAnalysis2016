@@ -386,6 +386,41 @@ categoryInfo::categoryUtil::categoryUtil( categoryInfo::ID category ){
     tex   = "$\\ge5$~jets";
     break;
 
+  case( k_ge5jets_compM ):
+    id    = category;
+    label = "ge5jets_compM";
+    title = ">=5 jets, compressedM";
+    tex   = "$\\ge5$~jets,~compressedM";
+    break;
+
+  case( k_ge5jets_compM_150to250met ):
+    id    = category;
+    label = "ge5jets_compM_150to250met";
+    title = ">=5 jets, compressedM, 150<MET<250";
+    tex   = "$\\ge5$~jets,~compressedM,~$150<MET<250$";
+    break;
+
+  case( k_ge5jets_compM_250to350met ):
+    id    = category;
+    label = "ge5jets_compM_250to350met";
+    title = ">=5 jets, compressedM, 250<MET<350";
+    tex   = "$\\ge5$~jets,~compressedM,~$250<MET<350$";
+    break;
+
+  case( k_ge5jets_compM_350to450met ):
+    id    = category;
+    label = "ge5jets_compM_350to450met";
+    title = ">=5 jets, compressedM, 350<MET<450";
+    tex   = "$\\ge5$~jets,~compressedM,~$350<MET<450$";
+    break;
+
+  case( k_ge5jets_compM_450toInfmet ):
+    id    = category;
+    label = "ge5jets_compM_450toInfmet";
+    title = ">=5 jets, compressedM, MET>450";
+    tex   = "$\\ge5$~jets,~compressedM,~$MET>450$";
+    break;
+
   case( k_ge1btags_ge50met ):
     id    = category;
     label = "ge1btags_ge50met";
@@ -877,10 +912,48 @@ bool categoryInfo::passCategory( categoryInfo::ID category, bool add2ndLepToMet 
 	mt2w>=200.0 &&
 	met>=650.0    ) result = true;
     break;
-
+    
   case( k_ge5jets ):
     if( babyAnalyzer.ngoodjets()>=5 &&
 	met>=250.0 ) result = true;
+    break;
+
+  case( k_ge5jets_compM ):
+    if( babyAnalyzer.ngoodjets()>=5 &&
+	met>=250.0 &&
+	babyAnalyzer.ak4pfjets_p4().at(0).Pt()>200.0 &&
+	!babyAnalyzer.ak4pfjets_passMEDbtag().at(0)      ) result = true;
+    break;
+
+  case( k_ge5jets_compM_150to250met ):
+    if( babyAnalyzer.ngoodjets()>=5 &&
+	met>=150.0 &&
+	met<250.0 &&
+	babyAnalyzer.ak4pfjets_p4().at(0).Pt()>200.0 &&
+	!babyAnalyzer.ak4pfjets_passMEDbtag().at(0)      ) result = true;
+    break;
+
+  case( k_ge5jets_compM_250to350met ):
+    if( babyAnalyzer.ngoodjets()>=5 &&
+	met>=250.0 &&
+	met<350.0 &&
+	babyAnalyzer.ak4pfjets_p4().at(0).Pt()>200.0 &&
+	!babyAnalyzer.ak4pfjets_passMEDbtag().at(0)      ) result = true;
+    break;
+
+  case( k_ge5jets_compM_350to450met ):
+    if( babyAnalyzer.ngoodjets()>=5 &&
+	met>=350.0 &&
+	met<450.0 &&
+	babyAnalyzer.ak4pfjets_p4().at(0).Pt()>200.0 &&
+	!babyAnalyzer.ak4pfjets_passMEDbtag().at(0)      ) result = true;
+    break;
+
+  case( k_ge5jets_compM_450toInfmet ):
+    if( babyAnalyzer.ngoodjets()>=5 &&
+	met>=450.0 &&
+	babyAnalyzer.ak4pfjets_p4().at(0).Pt()>200.0 &&
+	!babyAnalyzer.ak4pfjets_passMEDbtag().at(0)      ) result = true;
     break;
 
   case( k_ge1btags_ge50met ):
@@ -1044,6 +1117,11 @@ categoryInfo::vect_util categoryInfo::getCategoryList( analyzerInfo::ID analysis
     result.push_back( categoryUtil(k_ge4jets_ge200mt2w_550to650met) );
     result.push_back( categoryUtil(k_ge4jets_ge200mt2w_650toInfmet) );
     result.push_back( categoryUtil(k_ge5jets) );
+    result.push_back( categoryUtil(k_ge5jets_compM) );
+    result.push_back( categoryUtil(k_ge5jets_compM_150to250met) );
+    result.push_back( categoryUtil(k_ge5jets_compM_250to350met) );
+    result.push_back( categoryUtil(k_ge5jets_compM_350to450met) );
+    result.push_back( categoryUtil(k_ge5jets_compM_450toInfmet) );
     break;
 
   case( analyzerInfo::k_CR1l_bulkWJets ):

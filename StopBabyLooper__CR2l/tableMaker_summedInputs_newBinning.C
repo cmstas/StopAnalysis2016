@@ -78,7 +78,7 @@ int tableMaker_summedInputs_newBinning( std::string f_input_dir="Histos/Nominal/
   sample.first = sampleInfo::k_WJetsToLNu; 
   sample.second = genClassyInfo::k_incl;
   bkgList.push_back(sample);
-
+  /*
   sample.first = sampleInfo::k_diBoson; 
   sample.second = genClassyInfo::k_incl;
   bkgList.push_back(sample);
@@ -94,8 +94,12 @@ int tableMaker_summedInputs_newBinning( std::string f_input_dir="Histos/Nominal/
   sample.first = sampleInfo::k_tZq; 
   sample.second = genClassyInfo::k_incl;
   //bkgList.push_back(sample);
+  */
+  sample.first = sampleInfo::k_rare; 
+  sample.second = genClassyInfo::k_incl;
+  bkgList.push_back(sample);
 
-
+  
   std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > bkgList_byGen;
   sample.first = sampleInfo::k_allBkg; 
   sample.second = genClassyInfo::k_ee1lep_fromW;
@@ -186,6 +190,11 @@ int tableMaker_summedInputs_newBinning( std::string f_input_dir="Histos/Nominal/
   //catList.push_back( categoryInfo::k_ge4jets_ge200mt2w_650toInfmet );
   tableList.push_back( catList );
 
+  catList.clear();
+  catList.push_back( categoryInfo::k_ge5jets_compM_250to350met );
+  catList.push_back( categoryInfo::k_ge5jets_compM_350to450met );
+  catList.push_back( categoryInfo::k_ge5jets_compM_450toInfmet );
+  tableList.push_back( catList );
   
 
   //

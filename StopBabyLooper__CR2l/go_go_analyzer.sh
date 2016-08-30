@@ -23,9 +23,9 @@ echo ""
 root -l -b -q head.C stopBabyLooper.C++ >& Output/Log/stopBabyLooper.log 
 
 # Merge JESUp/Down with nominal
-echo "Combining JES Up/Down with nominal..."
-echo ""
-root -l -b -q head.C combineSystematics.C++ >& Output/Log/combineSystematics.log
+#echo "Combining JES Up/Down with nominal..."
+#echo ""
+#root -l -b -q head.C combineSystematics.C++ >& Output/Log/combineSystematics.log
 
 # If, necessary, scale samples (should be done in looper
 #echo "Scaling Samples..."

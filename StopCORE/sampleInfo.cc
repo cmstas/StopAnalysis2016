@@ -38,7 +38,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
   temp_i_o.first  = baby_inputDir_nominal;
   temp_i_o.second = baby_outputDir_nominal;
   baby_i_o.push_back(temp_i_o);
-  
+  /*
   temp_i_o.first  = baby_inputDir_jesUp;
   temp_i_o.second = baby_outputDir_jesUp;
   baby_i_o.push_back(temp_i_o);
@@ -46,7 +46,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
   temp_i_o.first  = baby_inputDir_jesDn;
   temp_i_o.second = baby_outputDir_jesDn;
   baby_i_o.push_back(temp_i_o);
-  
+  */
   massPtList.clear();
   std::pair< double, double > massPt;
   
@@ -576,16 +576,17 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     inputBabies.push_back("WZTo2L2Q_amcnlo_pythia8_25ns*.root");
     inputBabies.push_back("WZTo1LNu2Q_amcnlo_pythia8_25ns*.root");
     inputBabies.push_back("WZTo1L3Nu_amcnlo_pythia8_25ns*.root");
-    inputBabies.push_back("ZZTo4L_powheg_pythia8_25ns*.root");
+    //inputBabies.push_back("ZZTo4L_powheg_pythia8_25ns*.root");
     inputBabies.push_back("ZZTo2L2Q_amcnlo_pythia8_25ns*.root");
     inputBabies.push_back("ZZTo2L2Nu_powheg_pythia8_25ns*.root");
     inputBabies.push_back("ZZTo2Q2Nu_amcnlo_pythia8_25ns*.root");
     inputBabies.push_back("TTWJetsToLNu_amcnlo_pythia8_25ns*.root");
     inputBabies.push_back("TTWJetsToQQ_amcnlo_pythia8_25ns*.root");
-    inputBabies.push_back("TTZToQQ_amcnlo_pythia8_25ns*.root");
-    inputBabies.push_back("TTZToLLNuNu_M-10_amcnlo_pythia8_25ns*.root");
-    inputBabies.push_back("tZq_ll_4f_amcnlo_pythia8_25ns*.root");
-    inputBabies.push_back("tZq_nunu_4f_amcnlo_pythia8_25ns*.root");
+    //inputBabies.push_back("TTZToQQ_amcnlo_pythia8_25ns*.root");
+    //inputBabies.push_back("TTZToLLNuNu_M-10_amcnlo_pythia8_25ns*.root");
+    inputBabies.push_back("ttZJets_13TeV_madgraphMLM*.root");
+    //inputBabies.push_back("tZq_ll_4f_amcnlo_pythia8_25ns*.root");
+    //inputBabies.push_back("tZq_nunu_4f_amcnlo_pythia8_25ns*.root");
     break;
 
   case( k_diBoson ):
@@ -759,8 +760,9 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "TTZ_25ns";
     title = "TTZ";
     tex   = "$t\\bar{t}+Z$";
-    inputBabies.push_back("TTZToQQ_amcnlo_pythia8_25ns*.root");
-    inputBabies.push_back("TTZToLLNuNu_M-10_amcnlo_pythia8_25ns*.root");
+    inputBabies.push_back("ttZJets_13TeV_madgraphMLM*.root");
+    //inputBabies.push_back("TTZToQQ_amcnlo_pythia8_25ns*.root");
+    //inputBabies.push_back("TTZToLLNuNu_M-10_amcnlo_pythia8_25ns*.root");
     break;
 
   case( k_TTZToQQ_amcnlo_pythia8 ):

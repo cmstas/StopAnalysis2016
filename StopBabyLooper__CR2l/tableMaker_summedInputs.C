@@ -78,7 +78,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   sample.first = sampleInfo::k_WJetsToLNu; 
   sample.second = genClassyInfo::k_incl;
   bkgList.push_back(sample);
-
+  /*
   sample.first = sampleInfo::k_diBoson; 
   sample.second = genClassyInfo::k_incl;
   bkgList.push_back(sample);
@@ -94,7 +94,10 @@ int tableMaker_summedInputs( std::string f_input_dir="Histos/Nominal/", std::str
   sample.first = sampleInfo::k_tZq; 
   sample.second = genClassyInfo::k_incl;
   //bkgList.push_back(sample);
-
+  */
+  sample.first = sampleInfo::k_rare; 
+  sample.second = genClassyInfo::k_incl;
+  bkgList.push_back(sample);
 
   std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > bkgList_byGen;
   sample.first = sampleInfo::k_allBkg; 

@@ -822,17 +822,20 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
   if( babyAnalyzer.ngoodjets()==2 ){
 
     if( met>=250.0 && met<350.0 ){
-      sf_val = 1.048;
+      sf_val = 1.080;
+      //sf_val = 1.048;
       //sf_err = 0.007;
     }
 
     if( met>=350.0 && met<450.0 ){
-      sf_val = 0.910;
+      sf_val = 0.895;
+      //sf_val = 0.910;
       //sf_err = 0.014;
     }
 
     if( met>=450.0 ){
-      sf_val = 0.776;
+      sf_val = 0.679;
+      //sf_val = 0.776;
       //sf_err = 0.020;
     }
 
@@ -841,22 +844,26 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
   if( babyAnalyzer.ngoodjets()==3 ){
 
     if( met>=250.0 && met<350.0 ){
-      sf_val = 1.076;
+      sf_val = 1.066;
+      //sf_val = 1.076;
       //sf_err = 0.010;
     }
 
     if( met>=350.0 && met<450.0 ){
-      sf_val = 0.928;
+      sf_val = 0.976;
+      //sf_val = 0.928;
       //sf_err = 0.020;
     }
 
     if( met>=450.0 && met<550.0 ){
-      sf_val = 0.808;
+      sf_val = 0.784;
+      //sf_val = 0.808;
       //sf_err = 0.030;
     }
     
     if( met>=550.0 ){
-      sf_val = 0.658;
+      sf_val = 0.664;
+      //sf_val = 0.658;
       //sf_err = 0.031;
     }
 
@@ -867,17 +874,20 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
     if( babyAnalyzer.MT2W()<200.0 ){
 
       if( met>=250.0 && met<350.0 ){
-	sf_val = 1.076;
+	sf_val = 1.080;
+	//sf_val = 1.076;
 	//sf_err = 0.020;
       }
 
       if( met>=350.0 && met<450.0  ){
-	sf_val = 0.939;
+	sf_val = 0.935;
+	//sf_val = 0.939;
 	//sf_err = 0.023;
       }
 
       if( met>=450.0 ){
-	sf_val = 0.740;
+	sf_val = 0.766;
+	//sf_val = 0.740;
 	//sf_err = 0.026;
       }
 
@@ -886,27 +896,32 @@ void eventWeightInfo::getMetResWeight( double &weight_metRes, double &weight_met
     if( babyAnalyzer.MT2W()>=200.0 ){
       
       if( met>=250.0 && met<350.0 ){
-	sf_val = 1.076;
+	sf_val = 1.080;
+	//sf_val = 1.076;
 	//sf_err = 0.020;
       }
 
       if( met>=350.0 && met<450.0  ){
-	sf_val = 0.939;
+	sf_val = 0.935;
+	//sf_val = 0.939;
 	//sf_err = 0.023;
       }
 
       if( met>=450.0 && met<550.0  ){
-	sf_val = 0.873;
+	sf_val = 0.866;
+	//sf_val = 0.873;
 	//sf_err = 0.037;
       }
 
       if( met>=550.0 && met<650.0  ){
-	sf_val = 0.747;
+	sf_val = 0.791;
+	//sf_val = 0.747;
 	//sf_err = 0.055;
       }
 
       if( met>=650.0 ){
-	sf_val = 0.564;
+	sf_val = 0.590;
+	//sf_val = 0.564;
 	//sf_err = 0.047;
       }
 

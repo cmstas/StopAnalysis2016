@@ -52,7 +52,7 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   // Get list of input samples
   std::vector< std::pair< sampleInfo::ID, std::vector< mergeUtil > > > addList;
   std::pair< sampleInfo::ID, std::vector< mergeUtil > > addSet;
-  
+  /*
   // ttbar
   addSet.first = sampleInfo::k_ttbar;
   //addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_powheg_pythia8_ext3) );
@@ -122,8 +122,8 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   addSet.second.push_back( mergeUtil(sampleInfo::k_DYJetsToLL) );
   addList.push_back(addSet);
   addSet.second.clear();
-
-
+  */
+  /*
   // TTW
   addSet.first = sampleInfo::k_TTW;
   addSet.second.push_back( mergeUtil(sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8,use_zeroed_samp,false) );
@@ -196,14 +196,15 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   addSet.second.push_back( mergeUtil(sampleInfo::k_diBoson) );
   addList.push_back(addSet);
   addSet.second.clear();
-
+  */
 
   // All background
   addSet.first = sampleInfo::k_allBkg;
   addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_singleT) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_VJets) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_rare) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_rare) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_rare,use_zeroed_samp,false) );
   addList.push_back(addSet);
   addSet.second.clear();
  

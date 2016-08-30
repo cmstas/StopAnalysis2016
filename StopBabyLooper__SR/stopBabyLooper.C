@@ -62,6 +62,8 @@ int stopBabyLooper(){
   sampleList = sampleInfo::getSampleList( analysis ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met_2016B );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
+  //sampleList.push_back(sampleInfo::k_ttZJets_13TeV_madgraphMLM);
+  //sampleList.push_back(sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8);
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
   //
@@ -218,6 +220,7 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     eventWeightInfo *wgtInfo = new eventWeightInfo( sample.id, bTagSF_fromFile, lepSF_fromFile );
 
     // Switches for applying weights
+    /*
     wgtInfo->apply_diLepTrigger_sf = false;
     wgtInfo->apply_cr2lTrigger_sf  = false;
     wgtInfo->apply_bTag_sf         = true;
@@ -227,6 +230,19 @@ int looper( analyzerInfo::ID analysis, sampleInfo::ID sample_id, int nEvents, bo
     wgtInfo->apply_topPt_sf        = false; // true=sf, false=uncertainty
     wgtInfo->apply_metRes_sf       = true;
     wgtInfo->apply_ttbarSysPt_sf   = true; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
+    wgtInfo->apply_ISR_sf          = false; // only !=1.0 for signal
+    wgtInfo->apply_sample_sf       = false; // only !=1.0 for some WJetsHT samps
+    */
+    // for dan synch
+    wgtInfo->apply_diLepTrigger_sf = false;
+    wgtInfo->apply_cr2lTrigger_sf  = false;
+    wgtInfo->apply_bTag_sf         = true;
+    wgtInfo->apply_lep_sf          = true;
+    wgtInfo->apply_vetoLep_sf      = true;
+    wgtInfo->apply_lepFS_sf        = false;
+    wgtInfo->apply_topPt_sf        = false; // true=sf, false=uncertainty
+    wgtInfo->apply_metRes_sf       = false;
+    wgtInfo->apply_ttbarSysPt_sf   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
     wgtInfo->apply_ISR_sf          = false; // only !=1.0 for signal
     wgtInfo->apply_sample_sf       = false; // only !=1.0 for some WJetsHT samps
     

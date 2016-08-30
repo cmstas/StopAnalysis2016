@@ -84,9 +84,14 @@ namespace systematicInfo{
       std::string        tex;
       bool               hasOwnBabies;
 
+      // Creation/Annihiliation Operators
       systematicUtil(){};
       systematicUtil( systematicInfo::ID systematic );
       ~systematicUtil(){};
+      
+      // Pointer to function that returns weights
+      //double (*systematicInfo::evtWgt)();
+      
   };
 
 
@@ -97,14 +102,18 @@ namespace systematicInfo{
   typedef std::pair< systematicInfo::systematicUtil, double > pair_util_wgt;
   typedef std::vector< std::pair< systematicInfo::systematicUtil, double > > vect_util_wgt;
 
+
   //
   // Namespace functions
   //
+      
   double getSystematicWeight( systematicInfo::ID systematic, eventWeightInfo *evt_wgt );
   
   vect_util_wgt getSystematicWeightsFromList( vect_util systematicList, eventWeightInfo *evt_wgt );
   
   vect_util getSystematicList( analyzerInfo::ID analysis, bool sample_isFastsim, bool sample_isSignal );
+  //vect_util getSystematicList_bySample()( analyzerInfo::ID analysis, bool sample_isFastsim, bool sample_isSignal );
+  //vect_util getSystematicList_byRegion()( analyzerInfo::ID analysis, bool sample_isFastsim, bool sample_isSignal );
   
   vect_util getSystematicList_all();
   vect_util getSystematicList_forLimit_lostLepton();
