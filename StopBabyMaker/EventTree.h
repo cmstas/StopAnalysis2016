@@ -66,6 +66,7 @@ public:
     int is1lepFromTop;
 
     int ngoodleps;
+    int nlooseleps;  
     int nvetoleps;   
  
     float MT2W;
@@ -78,6 +79,15 @@ public:
 
     float MT2W_rl;
     float topnessMod_rl;
+    float MT2W_rl_jup;
+    float topnessMod_rl_jup;
+    float MT2W_rl_jdown;
+    float topnessMod_rl_jdown;
+
+    float MT2W_jup;
+    float topnessMod_jup;
+    float MT2W_jdown;
+    float topnessMod_jdown;
 
     float MT2_lb_b;
     float MT2_lb_b_lep2;
@@ -98,8 +108,16 @@ public:
 
     float pfmet;
     float pfmet_phi;
+    float pfmet_jup;
+    float pfmet_phi_jup;
+    float pfmet_jdown;
+    float pfmet_phi_jdown;
     float pfmet_rl;
     float pfmet_phi_rl;
+    float pfmet_rl_jup;
+    float pfmet_phi_rl_jup;
+    float pfmet_rl_jdown;
+    float pfmet_phi_rl_jdown;
     float calomet;
     float calomet_phi;
 
@@ -128,9 +146,17 @@ public:
     float dR_lep2_leadb;    
     float mindphi_met_j1_j2;
     float mindphi_met_j1_j2_rl;
+    float mindphi_met_j1_j2_rl_jup;
+    float mindphi_met_j1_j2_rl_jdown;
+    float mindphi_met_j1_j2_jup;
+    float mindphi_met_j1_j2_jdown;
     float mt_met_lep;
     float mt_met_lep2;
     float mt_met_lep_rl;
+    float mt_met_lep_rl_jup;
+    float mt_met_lep_rl_jdown;
+    float mt_met_lep_jup;
+    float mt_met_lep_jdown;
 
     float dphi_Wlep;
     float MET_over_sqrtHT;
@@ -279,63 +305,6 @@ public:
     float Zll_MT2_lb_bqq_mass;
     float Zll_MT2_lb_bqq;
 
-
-/*obsolete
-    int   firstVtx_isfake;                                                                                               
-    float firstVtx_ndof;
-    float firstVtx_posRho;
-    float firstVtx_posZ;
-    LorentzVector  firstVtx_posp4;
-    int genLepsHardProcess;                                                                                               
-    int genNusHardProcess;
-    int nlooseleps;  
-
-    float sparms_filterEfficiency;
-    float sparms_pdfScale;
-    float sparms_pdfWeight1;
-    float sparms_pdfWeight2;
-    float sparms_weight;
-    float sparms_xsec;
-    int   sparms_subProcessId; 
-    bool PassTrackVeto_v2;
-    bool PassTrackVeto_v3;
-    float EA_all_rho;
-    float EA_allcalo_rho;                                                                                                  
-    float EA_centralcalo_rho;
-    float EA_centralchargedpileup_rho;
-    float EA_centralneutral_rho;
-    int HLT_MET170;
-    int HLT_MET120Btag;      
-    int HLT_MET120Mu5;
-    //new
-    int HLT_HT350MET120;
-    int HLT_DiEl_17_12;
-    int HLT_Mu8El17;
-    int HLT_Mu8El23;
-    int HLT_Mu17El12;
-    int HLT_Mu23El12;
-    int HLT_SingleElTight;
-    int HLT_SingleEl23;
-    int HLT_SingleEl27;
-    int HLT_SingleEl27Tight;
-    int HLT_SingleElHT200;
-    int HLT_SingleMuNoEta;
-    int HLT_SingleMuNoIso;
-    int HLT_SingleMuNoIsoNoEta;
-    int HLT_Mu6HT200MET125;
-
-    int HLT_HT350MET100;
-    int HLT_SingleMu17 ;
-    int HLT_SingleMu18 ;
-    int HLT_SingleMu20 ;
-    int HLT_SingleMu24 ;
-
-    int HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight;
-    int HLT_MET90_MHT90_IDTight;
-    int HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight;
-    float HLT_SingleMu_eff;
-    float HLT_SingleEl_eff;
-*/
     
 };
  
