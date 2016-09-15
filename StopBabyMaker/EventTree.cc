@@ -316,7 +316,9 @@ void EventTree::Reset ()
     weight_ISRnjets_DN  = -9999;
     NISRjets            = -9999;
     NnonISRjets         = -9999;
-    filt_fastsimjets    = false;
+    filt_fastsimjets       = false;
+    filt_fastsimjets_jup   = false;
+    filt_fastsimjets_jdown = false;
     
     sparms_names.clear();
   /*  sparms_filterEfficiency	= -9999.;
@@ -599,6 +601,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("NISRjets", &NISRjets);
     tree->Branch("NnonISRjets", &NnonISRjets);
     tree->Branch("filt_fastsimjets", &filt_fastsimjets);
+    tree->Branch("filt_fastsimjets_jup", &filt_fastsimjets_jup);
+    tree->Branch("filt_fastsimjets_jdown", &filt_fastsimjets_jdown);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_values", &sparms_values);
     tree->Branch("sparms_subProcessId", &sparms_subProcessId);

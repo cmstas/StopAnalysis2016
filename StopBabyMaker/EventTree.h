@@ -207,6 +207,8 @@ public:
     int   NISRjets;
     int   NnonISRjets;
     bool  filt_fastsimjets;
+    bool  filt_fastsimjets_jup;
+    bool  filt_fastsimjets_jdown;
     float hardgenpt;
     //sparms
 //    vecs  sparms_comment;

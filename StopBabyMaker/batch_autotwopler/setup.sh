@@ -6,7 +6,7 @@
 #
 ANALYSIS_NAME=Stop_1l
 
-BABY_VERSION=v10
+BABY_VERSION=v9
 
 TARBALL_NAME=forCondor_stopBabyMaker_80x
 
@@ -95,6 +95,8 @@ if [ ! -d $TARBALL_NAME ]; then
     cp -r $MAKER_DIR/jecfiles/ $CONDOR_DIR_NAME/$MAKER_NAME/
     cp -r $MAKER_DIR/btagsf/ $CONDOR_DIR_NAME/$MAKER_NAME/
     cp -r $MAKER_DIR/lepsf/ $CONDOR_DIR_NAME/$MAKER_NAME/
+
+    cp -r $BATCH_DIR/sweepRoot.C $CONDOR_DIR_NAME/$MAKER_NAME/
 
     cp -r $CORE_DIR/* $CONDOR_DIR_NAME/$CORE_NAME/
     

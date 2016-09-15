@@ -1,4 +1,6 @@
+#
 # Environment
+#
 if [ "$CMSSW_VER" == "CMSSW_8_0_5_patch1" ]; then CMSSW_VER=CMSSW_8_0_5; fi
 
 export SCRAM_ARCH=$SCRAM_VER
@@ -26,13 +28,32 @@ echo "EXE_ARGS=${EXE_ARGS[*]}"
 cd forCondor_stopBabyMaker_80x/StopBabyMaker/
 
 SAMPLE_NAME=${EXE_ARGS[0]}
+ISFASTSIM=false
+if [ ! -z ${EXE_ARGS[1]} ]; then
+  ISFASTSIM=${EXE_ARGS[1]}
+fi
+    
 
 echo " Running BabyMaker:"
-echo "    ./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ "
-./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./
-
+echo "    ./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2016.dat $ISFASTSIM"
+./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2016.dat $ISFASTSIM
 
 # Format output for gfal transfer
 mv ${SAMPLE_NAME}_${IMERGED}.root ${OUTPUT_NAMES[0]}
 
-cp ${OUTPUT_NAMES[0]} ${OUTPUT_NAMES[1]}
+# Perform Skim
+root -l -b -q skimBaby.C++'("'${OUTPUT_NAMES[0]}'", "'${OUTPUT_NAMES[1]}'")'
+
+
+#
+# Sweep Root
+#
+for output in ${OUTPUT_NAMES[@]}; do
+    RESULT=`root -l -b -q sweepRoot.C+'("'$output'")' | grep "result=" | sed s/result=//g`
+    echo "RESULT=$RESULT"
+    if [ "$RESULT" == "1" ]; then 
+	echo "$output failed sweepRoot...deleting..."
+	rm -rf $output
+    fi
+done
+
