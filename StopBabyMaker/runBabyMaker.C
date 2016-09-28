@@ -46,15 +46,41 @@ int main(int argc, char **argv){
   // Input sanitation
   //
   if(argc<2){
-    cout<<" runBabyMaker takes five arguments: ./runBabyMaker sample_name nevents file_number outpath samplelist" << endl;
-    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=-1 (-1=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/  samplelist=sample_2016.dat by default"<<endl;
+    cout<<" runBabyMaker takes six arguments: ./runBabyMaker sample_name nevents file_number outpath samplelist isFastSim" << endl;
+    cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=-1 (-1=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/, samplelist=sample_2016.dat, isFastSim=false by default"<<endl;
     return 0;
   }
+
+  //
+  // Use arguments to set run parameters
+  //
+  int nevents = -1;
+  if(argc>2) nevents = atoi(argv[2]);  
+  
+  int file=-1;
+  if(argc>3) file = atoi(argv[3]);
+  
+  char* dirpath = ".";
+  if(argc>4) dirpath = argv[4];
+  
+  //const char* filename = (file == -1 ? "*postprocess.root" : Form("%spostprocess.root"));
+  const char* filename = (file == -1 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
+  cout << filename << endl;
+  
+  const char* suffix = file == -1 ? "" : Form("_%i", file);
+
+  char *input = "sample_2016.dat";
+  if(argc>5) input = argv[5];
+
+  bool isFastsim = false;
+  if(argc>6) isFastsim = argv[6];
+
 
   //
   // Initialize looper
   //
   babyMaker *mylooper = new babyMaker();
+
 
   //
   // Skim Parameters 
@@ -90,7 +116,6 @@ int main(int argc, char **argv){
   bool applyBtagSFs = true; 
   bool applyLeptonSFs = true;
   bool applyVetoLeptonSFs = true;
-  bool isFastsim = false;
   bool apply2ndlepVeto =  false;
 
   float jet_ak8_pt      = 100.0;
@@ -135,28 +160,7 @@ int main(int argc, char **argv){
   //
   mylooper->setSkimVariables( nVtx, met, nGoodLeptons, goodLep_el_pt,  goodLep_el_eta,  goodLep_mu_pt,  goodLep_mu_eta, looseLep_el_pt, looseLep_el_eta, looseLep_mu_pt, looseLep_mu_eta, vetoLep_el_pt, vetoLep_el_eta, vetoLep_mu_pt, vetoLep_mu_eta, apply2ndlepVeto,nJets, jet_pt, jet_eta, jet_ak8_pt, jet_ak8_eta, nBJets,  nphs, phs_pt, phs_eta, applyJECfromFile, JES_central_up_down, applyLeptonSFs, applyVetoLeptonSFs, applyBtagSFs, isFastsim, filltaus_,  filltracks_,  fillZll_,  fillPhoton_, fillMETfilt_,  fill2ndlep_,  fillExtraEvtVar_,  fillAK4EF_,  fillAK4_Other_,  fillOverleps_,  fillAK4Synch_,  fillElID_,  fillIso_,  fillLepSynch_);
 
-  //
-  // Use arguments to set run parameters
-  //
-  int nevents = -1;
-  if(argc>2) nevents = atoi(argv[2]);  
   
-  int file=-1;
-  if(argc>3) file = atoi(argv[3]);
-
-  char* dirpath = ".";
-  if(argc>4) dirpath = argv[4];
-
-//const char* filename = (file == -1 ? "*postprocess.root" : Form("%spostprocess.root"));
-  const char* filename = (file == -1 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
-  cout << filename << endl;
-  
-  const char* suffix = file == -1 ? "" : Form("_%i", file);
-
-  char *input = "sample_2016.dat";
-  if(argc>5) input = argv[5];
-
-
   //
   // Intialize TChain, load samples
   //

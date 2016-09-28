@@ -34,7 +34,7 @@ void JetTree::InitBtagSFTool(TH2D* h_btag_eff_b_, TH2D* h_btag_eff_c_, TH2D* h_b
     h_btag_eff_b = h_btag_eff_b_;
     h_btag_eff_c = h_btag_eff_c_;
     h_btag_eff_udsg = h_btag_eff_udsg_;
-    std::cout << "loaded fullsim btag SFs" << std::endl;
+    std::cout << "loaded btag SFs" << std::endl;
     return;
 }
 

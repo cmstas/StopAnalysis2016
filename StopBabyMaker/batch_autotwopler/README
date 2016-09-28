@@ -1,0 +1,102 @@
+This is the new batch interface, which uses the NtupleTools/Autwopler/ framework.  Each sample has a single condor job submitted for each CMS3 file.  Once each job is complete, the sweepRoot.C script checks if the output is accetable (currently checks that file is not a zombie, but additional features can be added by user).  Then, when the sample is complete, the jobs are merged together.  To begin:
+
+1) edit setup.sh
+   
+   #
+   # CONFIGURATION VARS
+   #
+   ANALYSIS_NAME=Stop_1l  ## Any string to describe the analysis, it will be used in paths for output and log files
+
+   BABY_VERSION=v10 ## Any string to descrive the version, it will also be used in paths for output and log files
+
+   TARBALL_NAME=forCondor_stopBabyMaker_80x ## The name of the tarball to be used when sending files to condor node.  Note, if you change this, make sure it is also reflected in the condor_executable.sh, which still uses this as a hardcoded path to access the babyMaker
+
+   INSTRUCTIONS_FILE=instructions.txt       ## This is the file which determines which files to run over.  Currently, in this directory is both the full list of files that may be used for this analysis, and instructions_test.txt which only runs over ttW_lv, which currently has 3 CMS3 files and is a good test case for condor submission and merging, if using that, also need to edit batch.py for which instructions files to use
+   #INSTRUCTIONS_FILE=instructions_test.txt
+
+   EXECUTABLE_NAME=condor_executable.sh  ## This is the file that will run on the condor node, the current one in this directory runs the stopBabyMaker
+
+   MAKER_NAME=StopBabyMaker   ## Directory name that holds the babyMaker
+   MAKER_PATH=/home/users/jgwood/Stop_1Lepton/CMSSW_8_0_5_patch1/src/StopAnalysis/ ## Path to the $MAKER_NAME directory
+   MAKER_DIR=$MAKER_PATH/$MAKER_NAME/ ## Don't edit this
+
+   CORE_NAME=CORE  ## Directory name of CORE
+   CORE_PATH=/home/users/jgwood/Stop_1Lepton/CMSSW_8_0_5_patch1/src/ ## Path to CORE in your directory
+   CORE_DIR=$CORE_PATH/$CORE_NAME ## Don't edit this
+
+   //
+   Line 48
+   //
+   sed -i 's/campaign = "80X"/campaign = "80X_stopBabyMaker"/g' params.py  ## This is currently the only thing that needs to be maintained in NtupleTools/Autotwopler/, there is a switch case that sets the CMSSW and scram_architechture release.  This should not change unless we move away from 80x, then if so, it will be easy and quick to update
+
+
+
+2) (OPTIONAL) edit batch,py
+
+   # Configure Paramters
+   import params as p
+   p.scram_arch = "slc6_amd64_gcc530"  ## scram_architechture, shouldn't change unless we move from 80x
+   p.cmssw_ver = "CMSSW_8_0_5"  ## CMSSW release, also shouldnt change unless we move from 80x
+   p.sweepRoot_scripts = [ "sweepRoot.sh", "sweepRoot.C" ] ## shouldn't change unless you explicitly want to test something new
+   p.merging_scripts = [ "mergeScript.sh", "mergeHadoopFiles.C" ] ## shouldn't change unless you explitly want to test something new
+   p.exit_when_done = True ## in case you are crazy and want to leave the autotwopler sleeping forever
+
+   # Main
+   run.main(instructions="instructions.txt",params=p)   ## May need to edit instructions file if setting a different one in setup.sh
+
+
+
+3) (OPTIONAL) edit instructions.txt
+
+   # lines beginning with '#' are ignored  ## Use this to comment out samples that you don't want to run on.  Search and replace BABY with #BABY
+   #
+   #########################################################################
+   #
+   # ARGUMENTS:
+   #
+   #  BABY ANALYSIS VERSION DATASET TARBALL EXECUTABLE (NEVENTS=-1 OUTPUTNAMES=output.root EXTRA_ARGS="")
+   #    BABY - exact name needed, is a flag needed for Autotwopler
+   #    ANALYSIS - any string, will be used for paths created for output
+   #    VERSION - any string, will be used for paths created for output
+   #    DATASET - from twiki, will be used to find CMS3 paths and number
+   #    TARBALL - location of tarball of code to be unpacked and used
+   #    EXECUTABLE - location of condor executable for the analysis
+   #
+   #
+   #  OPTIONAL ARGS:
+   #    NEVENTS - number of events to run over
+   #    OUTPUTNAMES - name of output file, ending in .root, ie for a skim,
+   #                  they must be formated as: separated by commas without spaces:
+   #                  ie file1.root,file2.root,file3.root,
+   #    EXTRA_ARGS - any extra arguments that may be needed for running condor_executable.sh
+   #
+   #########################################################################
+
+
+   #############
+   ## Example ##
+   #############
+   #BABY ANALYSIS VERSION /TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root TTWJetsToLNu_amcnlo_pythia8_25ns
+
+
+
+4) Once steps 1)-3) are complete, then execute setup.sh.  If NtupleTools/ does not exist at the same directory level as StopAnalysis/, then it will checkout the master branch from github, else it will enter the directory and copy all scripts and macros from this current batch_autotwopler/ directory for use in the grid submission, sweepRooting, and merging.  Then, it will check for the existence of the tarball, if it doesn't, then it will copy the babyMaker, and CORE into a subdirectory, compile the code, then tar up the result for condor.    
+   . setup.sh
+
+  When the setup is complete you will see the following information printed:
+
+  [setup] dashboard is at: http://uaf-6.t2.ucsd.edu/~jgwood/AutoTwopler/  ## Dashboard will track progress of all samples on condor
+  [setup] Merged Babies and Log Files Written to: 
+  [setup]   /nfs-7/userdata/jgwood/tupler_babies/                         ## Log files will be /nfs-7/userdata/$USER/tupler_babies/$ANALYSIS/$VERSION/$SAMPLE/std_logs/
+  [setup] Unmerged Babies Written to:                                     ## Merged files will be /nfs-7/userdata/$USER/tupler_babies/merged/$ANALYSIS/$VERSION/
+  [setup]   /hadoop/cms/store/user/jgwood/AutoTwopler_babies/             ## Unmerged files will be /hadoop/cms/store/user/$USER/AutoTwopler_babies/$ANALYSIS_$VERSION/$SAMPLE/OUTPUT_NAME/output_$CMS3NUMBER.root
+  [setup] To launch jobs do: 
+  [setup]  . makeBabies.sh
+
+
+5) Open a screen and execute makeBabies.sh.  Remember, screen will not rememebr environment setup, so you will need to execute setup.sh again (or just start a screen session before starting setup.sh).  It will cd into NtupleTools/Autotwopler/ and execute batch.py.  Then return to batch_autotwopler/
+   screen
+   cmsenv  # Or whatever you have to do for this equivalence
+   . setup.sh # Should be very quick if executed outside of screen since tarball wont neeed ot be remade
+   . makeBabies.h # Money time
+   

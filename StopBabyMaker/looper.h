@@ -114,6 +114,8 @@ class babyMaker {
     LeptonTree lep2;
     PhotonTree ph;
     JetTree jets;
+    JetTree jets_jup;
+    JetTree jets_jdown;
     TauTree Taus;
     IsoTracksTree Tracks;  
     //GenParticleTree gen_els;

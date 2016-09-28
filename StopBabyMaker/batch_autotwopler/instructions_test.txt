@@ -1,0 +1,34 @@
+# lines beginning with '#' are ignored
+#
+# ARGUMENTS:
+#
+#  BABY ANALYSIS VERSION DATASET TARBALL EXECUTABLE (NEVENTS=-1 OUTPUTNAMES=output.root EXTRA_ARGS="")
+#    BABY - exact name needed, is a flag needed for Autotwopler
+#    ANALYSIS - any string, will be used for paths created for output
+#    VERSION - any string, will be used for paths created for output
+#    DATASET - from twiki, will be used to find CMS3 paths and number
+#    TARBALL - location of tarball of code to be unpacked and used
+#    EXECUTABLE - location of condor executable for the analysis
+#
+#
+#  OPTIONAL ARGS:
+#    NEVENTS - number of events to run over
+#    OUTPUTNAMES - name of output file, ending in .root, ie for a skim, 
+#                  they must be formated as: separated by commas without spaces: 
+#                  ie file1.root,file2.root,file3.root,
+#    EXTRA_ARGS - any extra arguments that may be needed for running condor_executable.sh,
+#                 all args should be comma sepearated with NO SPACES
+#                 here, the fist is required and is the name of the sample in sample_2016.dat,
+#                 the second is optional, is a flag if the sample is fastsim (default=false, add ",true" as second arg)
+#
+#########################################################################
+
+
+
+
+#############
+## Examples ##
+#############
+BABY ANALYSIS VERSION /TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root TTWJetsToLNu_amcnlo_pythia8_25ns
+
+BABY ANALYSIS VERSION /SMS-T2tt_mStop-150to250_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_150to250,true

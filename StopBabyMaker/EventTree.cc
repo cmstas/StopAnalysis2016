@@ -191,7 +191,7 @@ void EventTree::Reset ()
     evt = 0;
 
     ngoodleps      =  -9999;
-//    nlooseleps     =  -9999;
+    nlooseleps     =  -9999;
     nvetoleps      =  -9999;
     genlepsfromtop = -9999;
 
@@ -218,8 +218,16 @@ void EventTree::Reset ()
 */
     pfmet                = -9999.;
     pfmet_phi            = -9999.;
+    pfmet_jup            = -9999.;
+    pfmet_phi_jup        = -9999.;
+    pfmet_jdown          = -9999.;
+    pfmet_phi_jdown      = -9999.;
     pfmet_rl             = -9999.;
     pfmet_phi_rl         = -9999.;
+    pfmet_rl_jdown             = -9999.;
+    pfmet_phi_rl_jdown         = -9999.;
+    pfmet_rl_jup             = -9999.;
+    pfmet_phi_rl_jup         = -9999.;
     calomet              = -9999.;
     calomet_phi          = -9999.;
     scale1fb             = -9999.;
@@ -232,11 +240,17 @@ void EventTree::Reset ()
     MT2W                 = -9999.;
     MT2W_lep2            = -9999.;
     MT2W_rl              = -9999.;
+    MT2W_jup             = -9999.;
+    MT2W_jdown           = -9999.;
     mindphi_met_j1_j2    = -9999.;
     mindphi_met_j1_j2_rl = -9999.;
+    mindphi_met_j1_j2_jup= -9999.;
+    mindphi_met_j1_j2_jdown= -9999.;
     mt_met_lep           = -9999.;
     mt_met_lep2          = -9999.;
     mt_met_lep_rl        = -9999.;
+    mt_met_lep_jup       = -9999.;
+    mt_met_lep_jdown     = -9999.;
     hadronic_top_chi2    = -9999.; 
     is_data              = false;
 
@@ -245,6 +259,8 @@ void EventTree::Reset ()
     topnessMod             = -9999.; 
     topnessMod_lep2        = -9999.;
     topnessMod_rl          = -9999.;
+    topnessMod_jup         = -9999.;
+    topnessMod_jdown       = -9999.;
     MT2_lb_b               = -9999.; 
     MT2_lb_b_lep2          = -9999.; 
     MT2_lb_b_mass          = -9999.; 
@@ -280,8 +296,8 @@ void EventTree::Reset ()
     weight_btagsf_fastsim_UP = -9999;
     weight_btagsf_fastsim_DN = -9999;
     weight_lepSF      = -9999;
-    weight_lepSF_up   = -9999;
-    weight_lepSF_down = -9999;
+    weight_lepSF_up      = -9999;
+    weight_lepSF_down      = -9999;
     weight_vetoLepSF      = -9999;
     weight_vetoLepSF_up   = -9999;
     weight_vetoLepSF_down = -9999;
@@ -300,7 +316,9 @@ void EventTree::Reset ()
     weight_ISRnjets_DN  = -9999;
     NISRjets            = -9999;
     NnonISRjets         = -9999;
-    filt_fastsimjets    = false;
+    filt_fastsimjets       = false;
+    filt_fastsimjets_jup   = false;
+    filt_fastsimjets_jdown = false;
     
     sparms_names.clear();
   /*  sparms_filterEfficiency	= -9999.;
@@ -498,14 +516,23 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("pu_nvtxs", &pu_nvtxs);
     tree->Branch("pfmet", &pfmet);
     tree->Branch("pfmet_phi", &pfmet_phi);
+    tree->Branch("pfmet_jup", &pfmet_jup);
+    tree->Branch("pfmet_phi_jup", &pfmet_phi_jup);
+    tree->Branch("pfmet_jdown", &pfmet_jdown);
+    tree->Branch("pfmet_phi_jdown", &pfmet_phi_jdown);
     tree->Branch("pfmet_rl", &pfmet_rl);
     tree->Branch("pfmet_phi_rl", &pfmet_phi_rl);
+    tree->Branch("pfmet_rl_jup", &pfmet_rl_jup);
+    tree->Branch("pfmet_phi_rl_jup", &pfmet_phi_rl_jup);
+    tree->Branch("pfmet_rl_jdown", &pfmet_rl_jdown);
+    tree->Branch("pfmet_phi_rl_jdown", &pfmet_phi_rl_jdown);
     tree->Branch("scale1fb", &scale1fb);
     tree->Branch("xsec", &xsec);
     tree->Branch("xsec_uncert", &xsec_uncert);
     tree->Branch("kfactor", &kfactor);
     tree->Branch("pu_ntrue", &pu_ntrue);    
     tree->Branch("ngoodleps",&ngoodleps);
+    tree->Branch("nlooseleps",&nlooseleps);
     tree->Branch("nvetoleps",&nvetoleps);
     tree->Branch("is_data", &is_data);
     tree->Branch("dataset", &dataset);
@@ -528,6 +555,18 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("mindphi_met_j1_j2_rl", &mindphi_met_j1_j2_rl);
     tree->Branch("mt_met_lep", &mt_met_lep);
     tree->Branch("mt_met_lep_rl", &mt_met_lep_rl);
+    tree->Branch("MT2W_jup",&MT2W_jup);
+    tree->Branch("MT2W_rl_jup",&MT2W_rl_jup);
+    tree->Branch("mindphi_met_j1_j2_jup", &mindphi_met_j1_j2_jup);
+    tree->Branch("mindphi_met_j1_j2_rl_jup", &mindphi_met_j1_j2_rl_jup);
+    tree->Branch("mt_met_lep_jup", &mt_met_lep_jup);
+    tree->Branch("mt_met_lep_rl_jup", &mt_met_lep_rl_jup);
+    tree->Branch("MT2W_jdown",&MT2W_jdown);
+    tree->Branch("MT2W_rl_jdown",&MT2W_rl_jdown);
+    tree->Branch("mindphi_met_j1_j2_jdown", &mindphi_met_j1_j2_jdown);
+    tree->Branch("mindphi_met_j1_j2_rl_jdown", &mindphi_met_j1_j2_rl_jdown);
+    tree->Branch("mt_met_lep_jdown", &mt_met_lep_jdown);
+    tree->Branch("mt_met_lep_rl_jdown", &mt_met_lep_rl_jdown);
     tree->Branch("hadronic_top_chi2", &hadronic_top_chi2);
     tree->Branch("ak4pfjets_rho", &ak4pfjets_rho);
     tree->Branch("pdf_up_weight", &pdf_up_weight);
@@ -562,6 +601,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("NISRjets", &NISRjets);
     tree->Branch("NnonISRjets", &NnonISRjets);
     tree->Branch("filt_fastsimjets", &filt_fastsimjets);
+    tree->Branch("filt_fastsimjets_jup", &filt_fastsimjets_jup);
+    tree->Branch("filt_fastsimjets_jdown", &filt_fastsimjets_jdown);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_values", &sparms_values);
     tree->Branch("sparms_subProcessId", &sparms_subProcessId);
@@ -578,6 +619,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("topness", &topness); 
     tree->Branch("topnessMod", &topnessMod);
     tree->Branch("topnessMod_rl", &topnessMod_rl);  
+    tree->Branch("topnessMod_jup", &topnessMod_jup);
+    tree->Branch("topnessMod_rl_jup", &topnessMod_rl_jup);
+    tree->Branch("topnessMod_jdown", &topnessMod_jdown);
+    tree->Branch("topnessMod_rl_jdown", &topnessMod_rl_jdown);
     tree->Branch("Mlb_closestb", &Mlb_closestb); 
     tree->Branch("HLT_SingleEl", &HLT_SingleEl );
     tree->Branch("HLT_SingleMu", &HLT_SingleMu );
@@ -717,74 +762,3 @@ void EventTree::SetZllBranches (TTree* tree)
     tree->Branch("Zll_MT2_lb_bqq", &Zll_MT2_lb_bqq);
     tree->Branch("genlepsfromtop", &genlepsfromtop);
 }
-
-/*/obsolete branches///
-    tree->Branch("lep_sf", &lep_sf);
-    tree->Branch("btag_sf", &btag_sf);
-    tree->Branch("HLT_SingleEl_eff", &HLT_SingleEl_eff);
-    tree->Branch("HLT_SingleMu_eff", &HLT_SingleMu_eff); 
-    tree->Branch("HLT_MET170", &HLT_MET170 );
-    tree->Branch("HLT_MET120Btag", &HLT_MET120Btag );
-    tree->Branch("HLT_MET120Mu5", &HLT_MET120Mu5 );
-    tree->Branch("HLT_HT350MET120", &HLT_HT350MET120 );
-    tree->Branch("HLT_DiEl_17_12", &HLT_DiEl_17_12 );
-    tree->Branch("HLT_Mu8El17", &HLT_Mu8El17 );
-    tree->Branch("HLT_Mu8El23", &HLT_Mu8El23 );
-    tree->Branch("HLT_Mu17El12", &HLT_Mu17El12 );
-    tree->Branch("HLT_Mu23El12", &HLT_Mu23El12 );
-    tree->Branch("HLT_SingleEl23", &HLT_SingleEl23);
-    tree->Branch("HLT_SingleEl27", &HLT_SingleEl27 );
-    tree->Branch("HLT_SingleEl27Tight", &HLT_SingleEl27Tight );
-    tree->Branch("HLT_SingleElTight", &HLT_SingleElTight );
-    tree->Branch("HLT_SingleElHT200", &HLT_SingleElHT200 );
-    tree->Branch("HLT_SingleMuNoEta", &HLT_SingleMuNoEta );
-    tree->Branch("HLT_SingleMuNoIso", &HLT_SingleMuNoIso );
-    tree->Branch("HLT_SingleMuNoIsoNoEta", &HLT_SingleMuNoIsoNoEta );
-    tree->Branch("HLT_Mu6HT200MET100", &HLT_Mu6HT200MET125 );
-    tree->Branch("HLT_HT350MET100", &HLT_HT350MET100);
-    tree->Branch("HLT_SingleMu17", &HLT_SingleMu17);
-    tree->Branch("HLT_SingleMu18", &HLT_SingleMu18);
-    tree->Branch("HLT_SingleMu20", &HLT_SingleMu20);
-    tree->Branch("HLT_SingleMu24", &HLT_SingleMu24);
-    tree->Branch("HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight", &HLT_MonoCentPFJet80_METNoMu90_MHTNoMu90_IDTight);
-    tree->Branch("HLT_MET90_MHT90_IDTight", &HLT_MET90_MHT90_IDTight);
-    tree->Branch("HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight", &HLT_METNoMu90_NoiseCleaned_MHTNoMu90_IDTight);
-    tree->Branch("HLT_Photon90_CaloIdL_PFHT500", &HLT_Photon90_CaloIdL_PFHT500);
-    tree->Branch("HLT_Photon22_R9Id90_HE10_IsoM", &HLT_Photon22_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon30_R9Id90_HE10_IsoM", &HLT_Photon30_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon36_R9Id90_HE10_IsoM", &HLT_Photon36_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon50_R9Id90_HE10_IsoM", &HLT_Photon50_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon75_R9Id90_HE10_IsoM", &HLT_Photon75_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon90_R9Id90_HE10_IsoM", &HLT_Photon90_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon120_R9Id90_HE10_IsoM", &HLT_Photon120_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon165_R9Id90_HE10_IsoM", &HLT_Photon165_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon175", &HLT_Photon175);
-    tree->Branch("HLT_Photon165_HE10", &HLT_Photon165_HE10);
-
-    tree->Branch("EA_all_rho", &EA_all_rho);   
-    tree->Branch("EA_allcalo_rho", &EA_allcalo_rho); 
-    tree->Branch("EA_centralcalo_rho", &EA_centralcalo_rho); 
-    tree->Branch("EA_centralchargedpileup_rho", &EA_centralchargedpileup_rho); 
-    tree->Branch("EA_centralneutral_rho", &EA_centralneutral_rho); 
-    tree->Branch("filt_eff", &filt_eff);
-    tree->Branch("nlooseleps",&nlooseleps);
-    tree->Branch("genlepsfromtop", &genlepsfromtop);
-
-//dont need to save these but do need them in the event tree
-    tree->Branch("genLepsHardProcess", &genLepsHardProcess);
-    tree->Branch("genNusHardProcess", &genNusHardProcess);
-/////
-
-    tree->Branch("sparms_filterEfficiency", &sparms_filterEfficiency);
-    tree->Branch("sparms_pdfScale", &sparms_pdfScale);
-    tree->Branch("sparms_pdfWeight1", &sparms_pdfWeight1);
-    tree->Branch("sparms_pdfWeight2", &sparms_pdfWeight2);
-    tree->Branch("sparms_weight", &sparms_weight);
-
-    tree->Branch("firstGoodVtxIdx", &firstGoodVtxIdx);                                                                     
-    tree->Branch("firstVtx_isfake", &firstVtx_isfake);
-    tree->Branch("firstVtx_ndof", &firstVtx_ndof);
-    tree->Branch("firstVtx_posRho", &firstVtx_posRho);
-    tree->Branch("firstVtx_posZ", &firstVtx_posZ);
-    tree->Branch("firstVtx_posp4", &firstVtx_posp4);
-*/
