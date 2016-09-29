@@ -919,8 +919,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     f_btag_eff->Close(); 
  }    
    jets.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim); 
-   jets_jup.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim);   
-   jets_jdown.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim);
+   //jets_jup.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim);   
+  // jets_jdown.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim);
 
   //
   // File Loop
@@ -1682,7 +1682,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         // Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
         jets_jup.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
         jets_jup.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets_jup.FillCommon(idx_alloverlapjets_jup, jet_corrector_pfL1FastJetL2L3,btagprob_data_jup,btagprob_mc_jup,btagprob_heavy_UP_jup, btagprob_heavy_DN_jup, btagprob_light_UP_jup,btagprob_light_DN_jup,btagprob_FS_UP_jup,btagprob_FS_DN_jup,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,1, skim_applyBtagSFs, skim_isFastsim);
+        jets_jup.FillCommon(idx_alloverlapjets_jup, jet_corrector_pfL1FastJetL2L3,btagprob_data_jup,btagprob_mc_jup,btagprob_heavy_UP_jup, btagprob_heavy_DN_jup, btagprob_light_UP_jup,btagprob_light_DN_jup,btagprob_FS_UP_jup,btagprob_FS_DN_jup,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,1, false, skim_isFastsim);
 	
         //JEC down
         jet_overlep1_idx = -9999;
@@ -1693,7 +1693,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         // Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
         jets_jdown.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
         jets_jdown.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets_jdown.FillCommon(idx_alloverlapjets_jdown, jet_corrector_pfL1FastJetL2L3,btagprob_data_jdown,btagprob_mc_jdown,btagprob_heavy_UP_jdown, btagprob_heavy_DN_jdown, btagprob_light_UP_jdown,btagprob_light_DN_jdown,btagprob_FS_UP_jdown,btagprob_FS_DN_jdown,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,-1, skim_applyBtagSFs, skim_isFastsim);
+        jets_jdown.FillCommon(idx_alloverlapjets_jdown, jet_corrector_pfL1FastJetL2L3,btagprob_data_jdown,btagprob_mc_jdown,btagprob_heavy_UP_jdown, btagprob_heavy_DN_jdown, btagprob_light_UP_jdown,btagprob_light_DN_jdown,btagprob_FS_UP_jdown,btagprob_FS_DN_jdown,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,-1, false, skim_isFastsim);
       }
       if (!evt_isRealData()){
 	int NISRjets = 0;
@@ -1773,7 +1773,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,23,StopEvt.weight_btagsf_fastsim_DN);
        }
      }
-     
      // 
      // met Cut
       //
