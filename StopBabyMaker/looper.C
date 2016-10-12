@@ -828,6 +828,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Set JSON file
   //
+  bool applyjson = false;
   const char* json_file = "json_files/Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt";
   set_goodrun_file_json(json_file);
   
@@ -1009,7 +1010,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //////////////////////////////////////////
       // If data, check against good run list//
       /////////////////////////////////////////
-      if( evt_isRealData() && !goodrun(evt_run(), evt_lumiBlock()) ) continue;
+      if(applyjson){
+        if( evt_isRealData() && !goodrun(evt_run(), evt_lumiBlock()) ) continue;
+      }
       if( evt_isRealData() ) {
 	DorkyEventIdentifier id(evt_run(), evt_event(), evt_lumiBlock());
 	if (is_duplicate(id) ) continue;
