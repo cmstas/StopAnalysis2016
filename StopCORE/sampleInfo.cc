@@ -67,21 +67,10 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title  = "Data, single e/mu, MET";
     tex    = "Data,~single~$e/\\mu$,~MET";
     isData = true;
-    //baby_i_o.first = "/nfs-7/userdata/stopRun2/stop_babies__CMS3_V080005__BabyMaker_V0800X_v7__20160722/"; // ICHEP 2016 datset
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
     inputBabies.push_back("data_met*.root");
     inputBabies.push_back("data_single_electron*.root");
     inputBabies.push_back("data_single_muon*.root");
-    /*
-    inputBabies.push_back("data_met*2016B*.root");
-    inputBabies.push_back("data_single_electron*2016B*.root");
-    inputBabies.push_back("data_single_muon*2016B*.root");
-    inputBabies.push_back("data_met*2016C*.root");
-    inputBabies.push_back("data_single_electron*2016C*.root");
-    inputBabies.push_back("data_single_muon*2016C*.root");
-    inputBabies.push_back("data_met*2016D*.root");
-    inputBabies.push_back("data_single_electron*2016D*.root");
-    inputBabies.push_back("data_single_muon*2016D*.root");
-    */
     break;
 
   case( k_met ):
@@ -501,6 +490,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "t_tW_5f_powheg_pythia8_25ns";
     title = "single t, W-channel, powheg pythia8";
     tex   = "single $t,~t-W$-channel,~powheg~pythia8";
+    baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
     inputBabies.push_back("t_tW_5f_powheg_pythia8_25ns*.root");
     break;
 

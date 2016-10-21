@@ -20,7 +20,7 @@
 
 // sntCORE
 #include "../../CORE/Tools/dorky/dorky.cc"
-
+#include "../../CORE/Tools/goodrun.h"
 
 // stopCORE
 #include "../StopCORE/stop_1l_babyAnalyzer.cc"
@@ -47,6 +47,8 @@ bool analyzeFast_ = true;
 bool doSelection_SR_   = true;
 bool doSelection_CR0b_ = true;
 bool doSelection_CR2l_ = true;
+
+bool applyjson = true;
 
 bool add2ndLepToMet_ = true;
 bool inclTaus_CR2l_  = false;
@@ -91,9 +93,9 @@ int stopBabyLooper(){
   // Examples for Quick Tests
   //
   //sampleList.clear();
-  //sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 ); 
   //sampleList.push_back( sampleInfo::k_single_lepton_met );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 ); 
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
 
@@ -223,6 +225,14 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   else{
     h_cutflow_CR2l->GetXaxis()->SetBinLabel(4, ">=2 leptons (e/mu only)" );
   }
+  
+
+  //
+  // JSON File Tools
+  //
+  const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-282037_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"; // 29.53fb golden json
+  //const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"; // ICHEP 12.9fb SUS-16-028
+  if( sample.isData ) set_goodrun_file_json(json_file);
   
 
   //
@@ -779,19 +789,34 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       // Progress
       stop_1l_babyAnalyzer::progress( nEventsTotal, nEventsChain );
 
-
+      
       /////////////////////
       //                 //
       // Check Selection //
       //                 //
       /////////////////////
-   
+
+
+      // Check JSON
+      if( sample.isData && applyjson ){
+	if( !goodrun(run(),ls()) ) continue;
+      }
 	
       // Check duplicate event
       if( sample.isData ){
 	duplicate_removal::DorkyEventIdentifier id(run(), evt(), ls());
 	if( is_duplicate(id) ) continue;
       }
+
+      /*
+      if( pfmet()<50.0 ) continue;
+      if( sample.isData ){
+	if( (run()==274241 && ls()==646 && evt()==1082432237) ||
+	    (run()==276244 && ls()==619 && evt()==937740199)     ){
+	  cout << "PRINTEVENT: file=" << currentFile->GetTitle() << ", run=" << run() << ", ls=" << ls() << ", evt=" << evt() << ", ngoodleps=" << ngoodleps() << ", nvetoleps=" << nvetoleps() << ", lep1_pt=" << lep1_p4().Pt() << ", lep1_eta=" << lep1_p4().Eta() << ", lep1_phi=" << lep1_p4().Phi() << ", lep2_pt=" << lep2_p4().Pt() << ", lep2_eta=" << lep2_p4().Eta() << ", lep2_phi=" << lep2_p4().Phi()<<  ", met=" << pfmet() << ", met_rl=" << pfmet_rl() << endl;
+	}
+      }
+      */
 
       bool passAnyRegion = false;
 
@@ -1343,6 +1368,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    // All Others
 	    else{
 	      for(int iCat=0; iCat<(int)passCats_SR_ICHEP.size(); iCat++){
+		//if( sample.isData && passCats_SR_ICHEP[iCat]==7 ) cout << "run=" << run() << ", ls=" << ls() << ", evt=" << evt() << ", ngoodleps=" << ngoodleps() << ", nvetoleps=" << nvetoleps() << ", lep1_pt=" << lep1_p4().Pt() << ", lep1_eta=" << lep1_p4().Eta() << ", lep1_phi=" << lep1_p4().Phi() << ", lep2_pt=" << lep2_p4().Pt() << ", lep2_eta=" << lep2_p4().Eta() << ", lep2_phi=" << lep2_p4().Phi() << endl;
 		h_yields_ICHEP_CR2l[iHisto]->Fill( passCats_SR_ICHEP[iCat], wgt );
 	      }
 	    }

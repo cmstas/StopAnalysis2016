@@ -340,7 +340,7 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
   // Utilty Var Constants
   dr_matched = 0.1;
-  lumi       = 20.1; // Current lumi
+  lumi       = 29.53; // Current lumi
   //lumi       = 12.9; // ICHEP lumi
   lumi_err   = lumi*0.062; // 6.2% for ICHEP lumi uncertainty
 

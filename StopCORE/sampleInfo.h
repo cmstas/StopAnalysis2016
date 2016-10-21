@@ -15,10 +15,9 @@ namespace sampleInfo{
   //
   // NAMESPACE VARS
   //
-  const std::string baby_inputDir = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v8.0x_v10/skim/"; 
-  //const std::string baby_inputDir = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v8.0x_v10/output/"; 
+  const std::string baby_inputDir = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v11/skim/";
   
-  //const std::string baby_inputDir = "/nfs-7/userdata/stopRun2/stop_babies__CMS3_V080005__BabyMaker_V0800X_v8__20160729/"; // 12.9/fb with btag, ICHEP lep sfs
+  //const std::string baby_inputDir = "/nfs-7/userdata/stopRun2/analysis2016__SUS-16-028__12p9fb/stopBabies__v8.0.x_v8__20160729/Nominal/"; // 12.9/fb ICHEP results
   
   const std::string baby_outputDir = "Output/Histos/";
   

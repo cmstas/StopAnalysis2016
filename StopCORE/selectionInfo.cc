@@ -113,7 +113,7 @@ std::vector<bool> selectionInfo::get_selectionResults_SR(int jesType){
   if( babyAnalyzer.nvetoleps()==1 ) temp_result = true;
   result.push_back(temp_result);
   */
-
+  
   // 4) ==1 selected lepton
   temp_result=false;
   if( (babyAnalyzer.ngoodleps()==1) ||
@@ -128,8 +128,8 @@ if( (babyAnalyzer.nvetoleps()==1) ||
     (babyAnalyzer.nvetoleps()>1 &&
      ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.lep1_p4(),babyAnalyzer.lep2_p4())<=0.01) ) temp_result = true;
   result.push_back(temp_result);
-
-
+  
+  
   // 6) Track Veto
   temp_result=false;
   if( babyAnalyzer.PassTrackVeto() ) temp_result = true;
@@ -327,7 +327,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b(int jesType){
   if( babyAnalyzer.nvetoleps()==1 ) temp_result = true;
   result.push_back(temp_result);
   */
-
+  
   // 4) ==1 selected lepton
   temp_result=false;
   if( (babyAnalyzer.ngoodleps()==1) ||
@@ -342,7 +342,7 @@ if( (babyAnalyzer.nvetoleps()==1) ||
     (babyAnalyzer.nvetoleps()>1 &&
      ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.lep1_p4(),babyAnalyzer.lep2_p4())<=0.01) ) temp_result = true;
   result.push_back(temp_result);
-
+  
 
   // 6) Track Veto
   temp_result=false;
@@ -548,7 +548,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
   }
   result.push_back(temp_result);
   */
-
+  
   // 4) diLepton
   temp_result=false;
   if( inclTau ){
@@ -568,7 +568,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
 	 ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.lep1_p4(),babyAnalyzer.lep2_p4())>0.01) ) temp_result = true;
   }
   result.push_back(temp_result);
-
+  
 
   // 5) nGoodJets>=2
   temp_result=false;
