@@ -300,6 +300,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "WJetsToLNu_25ns";
     title = "W+Jets to LNu";
     tex   = "W+Jets$\\rightarrow\\ell\\nu$";
+    /*
     inputBabies.push_back("WJetsToLNu_HT100To200_madgraph_pythia8_ext1_25ns*.root");
     inputBabies.push_back("WJetsToLNu_HT200To400_madgraph_pythia8_ext1_25ns*.root");
     inputBabies.push_back("WJetsToLNu_HT400To600_madgraph_pythia8_25ns*.root");
@@ -307,6 +308,15 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     inputBabies.push_back("WJetsToLNu_HT800To1200_madgraph_pythia8_ext1_25ns*.root");
     inputBabies.push_back("WJetsToLNu_HT1200To2500_madgraph_pythia8_25ns*.root");
     inputBabies.push_back("WJetsToLNu_HT2500ToInf_madgraph_pythia8_25ns*.root");
+    */
+    inputBabies.push_back("W1JetsToLNu_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W2JetsToLNu_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W3JetsToLNu_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W4JetsToLNu_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W1JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W2JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W3JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W4JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
     break;
 
   case( k_WJetsToLNu_amcnlo_pythia8 ):
@@ -436,6 +446,77 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     inputBabies.push_back("WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1_25ns*.root");
     break;
 
+
+  case( k_WNJetsToLNu_madgraph_pythia8 ):
+    label = "WNJetsToLNu_madgraph_pythia8_25ns";
+    title = "W+1to4Jets to LNu, madgraph pythia8";
+    tex   = "W+1to4Jets$\\rightarrow\\ell\\nu$,~madgraph~pythia8";
+    inputBabies.push_back("W1JetsToLNu_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W2JetsToLNu_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W3JetsToLNu_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W4JetsToLNu_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W1JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W2JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W3JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    inputBabies.push_back("W4JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    break;
+
+  case( k_W1JetsToLNu_madgraph_pythia8 ):
+    label = "W1JetsToLNu_madgraph_pythia8_25ns";
+    title = "W+1Jets to LNu, madgraph pythia8";
+    tex   = "W+1Jets$\\rightarrow\\ell\\nu$,~madgraph~pythia8";
+    inputBabies.push_back("W1JetsToLNu_madgraph_pythia8_25ns*.root");
+    break;
+
+  case( k_W2JetsToLNu_madgraph_pythia8 ):
+    label = "W2JetsToLNu_madgraph_pythia8_25ns";
+    title = "W+2Jets to LNu, madgraph pythia8";
+    tex   = "W+2Jets$\\rightarrow\\ell\\nu$,~madgraph~pythia8";
+    inputBabies.push_back("W2JetsToLNu_madgraph_pythia8_25ns*.root");
+    break;
+
+  case( k_W3JetsToLNu_madgraph_pythia8 ):
+    label = "W3JetsToLNu_madgraph_pythia8_25ns";
+    title = "W+3Jets to LNu, madgraph pythia8";
+    tex   = "W+3Jets$\\rightarrow\\ell\\nu$,~madgraph~pythia8";
+    inputBabies.push_back("W3JetsToLNu_madgraph_pythia8_25ns*.root");
+    break;
+
+  case( k_W4JetsToLNu_madgraph_pythia8 ):
+    label = "W4JetsToLNu_madgraph_pythia8_25ns";
+    title = "W+4Jets to LNu, madgraph pythia8";
+    tex   = "W+4Jets$\\rightarrow\\ell\\nu$,~madgraph~pythia8";
+    inputBabies.push_back("W4JetsToLNu_madgraph_pythia8_25ns*.root");
+    break;
+
+  case( k_W1JetsToLNu_NuPt200_madgraph_pythia8 ):
+    label = "W1JetsToLNu_NuPt200_madgraph_pythia8_25ns";
+    title = "W+1Jets to LNu, Nu pT>200.0, madgraph pythia8";
+    tex   = "W+1Jets$\\rightarrow\\ell\\nu$,~$\\nu~p_{T}>200.0$,~madgraph~pythia8";
+    inputBabies.push_back("W1JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    break;
+
+  case( k_W2JetsToLNu_NuPt200_madgraph_pythia8 ):
+    label = "W2JetsToLNu_NuPt200_madgraph_pythia8_25ns";
+    title = "W+2Jets to LNu, Nu pT>200.0, madgraph pythia8";
+    tex   = "W+2Jets$\\rightarrow\\ell\\nu$,~$\\nu~p_{T}>200.0$,~madgraph~pythia8";
+    inputBabies.push_back("W2JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    break;
+
+  case( k_W3JetsToLNu_NuPt200_madgraph_pythia8 ):
+    label = "W3JetsToLNu_NuPt200_madgraph_pythia8_25ns";
+    title = "W+3Jets to LNu, Nu pT>200.0, madgraph pythia8";
+    tex   = "W+3Jets$\\rightarrow\\ell\\nu$,~$\\nu~p_{T}>200.0$,~madgraph~pythia8";
+    inputBabies.push_back("W3JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    break;
+
+  case( k_W4JetsToLNu_NuPt200_madgraph_pythia8 ):
+    label = "W4JetsToLNu_NuPt200_madgraph_pythia8_25ns";
+    title = "W+4Jets to LNu, Nu pT>200.0, madgraph pythia8";
+    tex   = "W+4Jets$\\rightarrow\\ell\\nu$,~$\\nu~p_{T}>200.0$,~madgraph~pythia8";
+    inputBabies.push_back("W4JetsToLNu_nupT200_madgraph_pythia8_25ns*.root");
+    break;
+
   case( k_singleT ):
     label = "singleT_25ns";
     title = "single t";
@@ -459,6 +540,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "t_tch_4f_powheg_pythia8_25ns";
     title = "single t, t-channel, powheg pythia8";
     tex   = "single $t$,~t-channel,~powheg~pythia8";
+    baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
     inputBabies.push_back("t_tch_4f_powheg_pythia8_25ns*.root");
     break;
 
@@ -466,6 +548,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "tbar_tch_4f_powheg_pythia8_25ns";
     title = "single tbar, t-channel, powheg pythia8";
     tex   = "single $\\bar{t}$,~t-channel,~powheg~pythia8";
+    baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
     inputBabies.push_back("tbar_tch_4f_powheg_pythia8_25ns*.root");
     break;
 
@@ -840,11 +923,19 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
   result.push_back( sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1 );
   result.push_back( sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 );
   result.push_back( sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 );
-  
+  result.push_back( sampleInfo::k_W1JetsToLNu_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W2JetsToLNu_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W3JetsToLNu_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W4JetsToLNu_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8 );
+
   // MC, single t
   result.push_back( sampleInfo::k_t_sch_4f_amcnlo_pythia8 );
-  //result.push_back( sampleInfo::k_t_tch_4f_powheg_pythia8 );
-  //result.push_back( sampleInfo::k_tbar_tch_4f_powheg_pythia8 );
+  result.push_back( sampleInfo::k_t_tch_4f_powheg_pythia8 );
+  result.push_back( sampleInfo::k_tbar_tch_4f_powheg_pythia8 );
   result.push_back( sampleInfo::k_t_tW_5f_powheg_pythia8 );
   result.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8 );
     

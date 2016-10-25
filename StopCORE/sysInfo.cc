@@ -1411,6 +1411,37 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( sample_info->isData ) return;
   if( sample_info->isSignal ) return;
 
+  // ttbar, tW, and wJets only
+  if( sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_amcnlo_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WNJetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W1JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W2JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W3JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W4JetsToLNu_madgraph_pythia8 && 
+      sample_info->id != sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8    ) return;
+  
+
   if( babyAnalyzer.ngoodjets()==2 ){
 
     if( met>=250.0 && met<350.0 ){
@@ -1725,7 +1756,16 @@ void sysInfo::evtWgtInfo::getWJetsHFXSecSF( double &weight_hfXsec_up, double &we
       sample_info->id != sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 ) return;
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WNJetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W1JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W2JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W3JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W4JetsToLNu_madgraph_pythia8 && 
+      sample_info->id != sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8     ) return;
   
   if( !babyAnalyzer.is1lepFromW() ) return;
 

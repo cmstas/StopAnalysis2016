@@ -65,8 +65,8 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   // single t
   addSet.first = sampleInfo::k_singleT;
   addSet.second.push_back( mergeUtil(sampleInfo::k_t_sch_4f_amcnlo_pythia8,use_zeroed_samp,false) );
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_t_tch_4f_powheg_pythia8) );
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_tbar_tch_4f_powheg_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tch_4f_powheg_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_tbar_tch_4f_powheg_pythia8) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_t_tW_5f_powheg_pythia8) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_t_tbarW_5f_powheg_pythia8) );
   addList.push_back(addSet);
@@ -96,7 +96,7 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   addSet.second.clear();
  
 
-  // WJets, Madgraph Summed Samples
+  // WJets, Madgraph Ht Summed Samples
   addSet.first = sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8;
   addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1,false,use_rescaled_samp) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1,false,use_rescaled_samp) );
@@ -108,9 +108,23 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   addList.push_back(addSet);
   addSet.second.clear();
 
+  // WJets, Madgraph NParton Summed Samples
+  addSet.first = sampleInfo::k_WNJetsToLNu_madgraph_pythia8;
+  addSet.second.push_back( mergeUtil(sampleInfo::k_W1JetsToLNu_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_W2JetsToLNu_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_W3JetsToLNu_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_W4JetsToLNu_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8) );
+  addList.push_back(addSet);
+  addSet.second.clear();
+
   // WJets
   addSet.first = sampleInfo::k_WJetsToLNu;
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_WNJetsToLNu_madgraph_pythia8) );
   addList.push_back(addSet);
   addSet.second.clear();
 

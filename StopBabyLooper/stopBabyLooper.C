@@ -42,7 +42,7 @@ using namespace stop_1l;
 //                          //
 //////////////////////////////
 
-bool analyzeFast_ = true;
+bool analyzeFast_ = false;
 
 bool doSelection_SR_   = true;
 bool doSelection_CR0b_ = true;
@@ -534,18 +534,21 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
     hName += "__SR";
     hName += gen_sys_name;
     h_nJets_SR[iGen] = new TH1D( hName, "Number of Selected Jets;nJets", 11, -0.5, 10.5);
+    h_nJets_SR[iGen]->SetDirectory(f_output);
 
     // CR0b
     hName = "h_nJets";
     hName += "__CR0b";
     hName += gen_sys_name;
     h_nJets_CR0b[iGen] = new TH1D( hName, "Number of Selected Jets;nJets", 11, -0.5, 10.5);
+    h_nJets_CR0b[iGen]->SetDirectory(f_output);
 
     // CR2l
     hName = "h_nJets";
     hName += "__CR2l";
     hName += gen_sys_name;
     h_nJets_CR2l[iGen] = new TH1D( hName, "Number of Selected Jets;nJets", 11, -0.5, 10.5);
+    h_nJets_CR2l[iGen]->SetDirectory(f_output);
 
         
     //
@@ -808,15 +811,13 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	if( is_duplicate(id) ) continue;
       }
 
-      /*
-      if( pfmet()<50.0 ) continue;
-      if( sample.isData ){
-	if( (run()==274241 && ls()==646 && evt()==1082432237) ||
-	    (run()==276244 && ls()==619 && evt()==937740199)     ){
-	  cout << "PRINTEVENT: file=" << currentFile->GetTitle() << ", run=" << run() << ", ls=" << ls() << ", evt=" << evt() << ", ngoodleps=" << ngoodleps() << ", nvetoleps=" << nvetoleps() << ", lep1_pt=" << lep1_p4().Pt() << ", lep1_eta=" << lep1_p4().Eta() << ", lep1_phi=" << lep1_p4().Phi() << ", lep2_pt=" << lep2_p4().Pt() << ", lep2_eta=" << lep2_p4().Eta() << ", lep2_phi=" << lep2_p4().Phi()<<  ", met=" << pfmet() << ", met_rl=" << pfmet_rl() << endl;
-	}
+      // Check WNJets genPt
+      if( sample.id == sampleInfo::k_W1JetsToLNu_madgraph_pythia8 ||
+	  sample.id == sampleInfo::k_W2JetsToLNu_madgraph_pythia8 ||
+	  sample.id == sampleInfo::k_W3JetsToLNu_madgraph_pythia8 ||
+	  sample.id == sampleInfo::k_W4JetsToLNu_madgraph_pythia8    ){
+	if( genmet()>200.0 ) continue;
       }
-      */
 
       bool passAnyRegion = false;
 

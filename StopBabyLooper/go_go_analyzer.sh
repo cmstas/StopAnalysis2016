@@ -59,16 +59,16 @@ root -l -b -q head.C tableMaker_summedInputs.C++'("Output/Histos/","Output/Table
 #echo ""
 #root -l -b -q head.C calcErrors.C++ >& Output/Log/calcErrors.log
 
-# Make plots - NEEDS TO BE UPDATED FOR NEW STOPCORE
-#echo "Making Plots..."
-#echo ""
-#root -l -b -q head.C plotMaker.C++ >& Output/Log/plotMaker_byGenDecay.log
-#root -l -b -q head.C plotMaker.C++'(false)' >& Output/Log/plotMaker_byProduction.log
+# Make plots 
+echo "Making Plots..."
+echo ""
+root -l -b -q head.C plotMaker.C++ >& Output/Log/plotMaker_byGenDecay.log
+root -l -b -q head.C plotMaker.C++'(false)' >& Output/Log/plotMaker_byProduction.log
 
-# Background Estimates - SHOULD BE WORKING, NEEDS VALIDATION
-#echo "Calculating DiLepton Background Estimate..."
-#echo ""
-#root -l -b -q head.C bkgEstimate_diLepton.C++ >& Output/Log/bkgEstimate_diLepton.log
+# Background Estimates 
+echo "Calculating DiLepton Background Estimate..."
+echo ""
+root -l -b -q head.C bkgEstimate_diLepton.C++ >& Output/Log/bkgEstimate_diLepton.log
 
 # Create pdfs of latex files
 echo "Converting Tex to PDF"

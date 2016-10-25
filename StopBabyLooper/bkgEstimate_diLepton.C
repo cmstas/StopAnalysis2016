@@ -15,9 +15,42 @@
 
 
 //
+// Utility Class
+//
+class bkgEstUtil{
+
+public:
+  TString hName_base;
+
+  vector<int> SR_bins;
+  vector<int> CR_bins;
+  
+  vector<TString> regionName;
+  vector<TString> regionName_short;
+  vector<TString> binName;
+
+  bkgEstUtil(){};
+  ~bkgEstUtil(){};
+};
+
+
+//
+// Helper Function
+//
+void printLatexHeader( FILE *file ){
+  fprintf(file, "\\documentclass{article}\n");
+  fprintf(file, "\\usepackage[landscape]{geometry}\n");
+  fprintf(file, "\\usepackage{chngpage}\n");
+  fprintf(file, "\\usepackage{graphicx} \n");
+  fprintf(file, "\n");
+  fprintf(file, "\\begin{document}\n");
+  fprintf(file, "\\tiny \n");  
+}
+
+//
 // Main
 //
-int bkgEstimate_diLepton_newBinning(){
+int bkgEstimate_diLepton(){
 
 
   TH1::SetDefaultSumw2();
@@ -28,144 +61,37 @@ int bkgEstimate_diLepton_newBinning(){
   //
   // Configuration Variables
   //
-  bool usePsuedoData = false;
+  bool doRescale     = false; // also triggers using psuedo-data, ie sum of allBkg
+  double rescale     = 1.0; // use lumi from stopCORE
+  //double rescale     = 40.0/29.53; // rescale to new lumi
 
-  bool doRescale = false;
-  double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 10.0/7.65; // rescale to new lumi
-
-  TString yield_base = "yields";
-
-  TString texFile = "";
-
+  TString regionName_SR = "SR";
+  TString regionName_CR = "CR2l";
   
-
+   
   //
   // Open Files
   //
   TString inDir  = "Output/Histos/";
   TString outDir = "Output/BkgEstimate/";
-  
 
-  //
-  // Signal Region
-  //
-  TFile *f_SR = new TFile(inDir+"allBkg_25ns.root", "read");
-  genClassyInfo::Util genClassy_MC_SR( genClassyInfo::k_ge2lep );
-      
+  TFile *f_SR_mc = new TFile(inDir+"allBkg_25ns.root", "read");
+  genClassyInfo::Util genClassy_SR_MC( genClassyInfo::k_ge2lep );
 
-  //
-  // diLepton CR Region
-  //
-  TFile *f_CR = new TFile(inDir+"allBkg_25ns.root", "read");
-  genClassyInfo::Util genClassy_MC_CR( genClassyInfo::k_incl );
+  TFile *f_CR_mc = new TFile(inDir+"allBkg_25ns.root", "read");
+  genClassyInfo::Util genClassy_CR_MC( genClassyInfo::k_incl );
   
-  
-  //
-  // diLepton data
-  //
-  TFile *f_data_CR = NULL;
-  genClassyInfo::Util genClassy_data_CR( genClassyInfo::k_incl );
-  if( usePsuedoData ){
-    f_data_CR= new TFile(inDir+"allBkg_25ns.root", "read");
+  TFile *f_CR_data = NULL;
+  genClassyInfo::Util genClassy_CR_data( genClassyInfo::k_incl );
+  if( doRescale ){
+    f_CR_data= new TFile(inDir+"allBkg_25ns.root", "read");
   }
   else{
-    f_data_CR = new TFile(inDir+"data_single_lepton_met.root", "read");
+    f_CR_data = new TFile(inDir+"data_single_lepton_met.root", "read");
   }
   
 
- 
-  //
-  // Histogram Base Name
-  //
-  TString hNameBase = "h_yields_SR_ICHEP";
-
-  TString regionName_SR = "SR";
-  TString regionName_CR = "CR2l";
-  
-  //
-  // Signal Region Categories
-  //
-  std::vector<TString> sr_cats;
-  sr_cats.push_back( "ee2jets_ge6p4modTop_250to350met" ); // 1
-  sr_cats.push_back( "ee2jets_ge6p4modTop_350to450met" ); // 2
-  sr_cats.push_back( "ee2jets_ge6p4modTop_450toInfmet" ); // 3
-  sr_cats.push_back( "ee3jets_ge200mt2w_250to350met" );   // 4
-  sr_cats.push_back( "ee3jets_ge200mt2w_350to450met" );   // 5
-  sr_cats.push_back( "ee3jets_ge200mt2w_450to550met" );   // 6
-  sr_cats.push_back( "ee3jets_ge200mt2w_550toInfmet" );   // 7
-  sr_cats.push_back( "ge4jets_lt200mt2w_250to350met" );   // 8
-  sr_cats.push_back( "ge4jets_lt200mt2w_350to450met" );   // 9
-  sr_cats.push_back( "ge4jets_lt200mt2w_450toInfmet" );   // 10
-  sr_cats.push_back( "ge4jets_ge200mt2w_250to350met" );   // 11
-  sr_cats.push_back( "ge4jets_ge200mt2w_350to450met" );   // 12
-  sr_cats.push_back( "ge4jets_ge200mt2w_450to550met" );   // 13
-  sr_cats.push_back( "ge4jets_ge200mt2w_550to650met" );   // 14
-  sr_cats.push_back( "ge4jets_ge200mt2w_650toInfmet" );   // 15
-  sr_cats.push_back( "ee2jets" );                         // CR, MET>250, ==2j, incl modTop
-  sr_cats.push_back( "ee2jets_ge6p4modTop_150to250met" ); // CR, MET Sideband, ==2j, modTop>6.4
-  //sr_cats.push_back( "ee3jets_ge200mt2w_150to250met) ); // CR, MET Sideband, ==3j, mt2w>200
-  //sr_cats.push_back( "ge4jets_lt200mt2w_150to250met" ); // CR, MET Sideband, ==2j, mt2w<200
-  //sr_cats.push_back( "ge4jets_ge200mt2w_150to250met" ); // CR, MET Sideband, ==2j, mt2w>200
-  const int nSRs = (int)sr_cats.size();
-
-
-  std::vector<TString> cat_metLabels, cat_jetLabels;
-  cat_metLabels.push_back("$250-350$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$350-450$"); cat_jetLabels.push_back("2j");
-  cat_metLabels.push_back("$>450$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$250-350$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$350-450$"); cat_jetLabels.push_back("3j");
-  cat_metLabels.push_back("$450-550$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$>550$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$250-350$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$350-450$"); cat_jetLabels.push_back("$\\ge4$j,~lowDM");
-  cat_metLabels.push_back("$>450$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$250-350$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$350-450$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$450-550$"); cat_jetLabels.push_back("$\\ge4$j,~highDM");
-  cat_metLabels.push_back("$550-650$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$>650$"); cat_jetLabels.push_back("");
-  cat_metLabels.push_back("$>250$"); cat_jetLabels.push_back("$2j CRs");
-  cat_metLabels.push_back("$150-250$"); cat_jetLabels.push_back("");
-  
-
-  //
-  // Signal Region to Control Region Cateogries
-  //
-  std::vector<TString> cr2sr_cats;
-  cr2sr_cats.push_back( "ee2jets_ge6p4modTop_250to350met" ); // 1
-  cr2sr_cats.push_back( "ee2jets_ge6p4modTop_350to450met" ); // 2
-  cr2sr_cats.push_back( "ee2jets_ge6p4modTop_450toInfmet" ); // 3
-  cr2sr_cats.push_back( "ee3jets_ge200mt2w_250to350met" );   // 4
-  cr2sr_cats.push_back( "ee3jets_ge200mt2w_350to450met" );   // 5
-  cr2sr_cats.push_back( "ee3jets_ge200mt2w_450toInfmet" );   // 6 - extrapolate
-  cr2sr_cats.push_back( "ee3jets_ge200mt2w_450toInfmet" );   // 7 - extrapolate
-  cr2sr_cats.push_back( "ge4jets_lt200mt2w_250to350met" );   // 8
-  cr2sr_cats.push_back( "ge4jets_lt200mt2w_350to450met" );   // 9
-  cr2sr_cats.push_back( "ge4jets_lt200mt2w_450toInfmet" );   // 10
-  cr2sr_cats.push_back( "ge4jets_ge200mt2w_250to350met" );   // 11
-  cr2sr_cats.push_back( "ge4jets_ge200mt2w_350to450met" );   // 12
-  cr2sr_cats.push_back( "ge4jets_ge200mt2w_450to550met" );   // 13
-  cr2sr_cats.push_back( "ge4jets_ge200mt2w_550toInfmet" );   // 14 - extrapolate
-  cr2sr_cats.push_back( "ge4jets_ge200mt2w_550toInfmet" );   // 15 - extrapolate
-  cr2sr_cats.push_back( "ee2jets" );                         // CR, MET>250, ==2j, incl modTop
-  cr2sr_cats.push_back( "ee2jets_ge6p4modTop_150to250met" ); // CR, MET Sideband, ==2j, modTop>6.4
-  //cr2sr_cats.push_back( "ee3jets_ge200mt2w_150to250met" ); // CR, MET Sideband, ==3j, mt2w>200
-  //cr2sr_cats.push_back( "ge4jets_lt200mt2w_150to250met" ); // CR, MET Sideband, >=4j, mt2w<200
-  //cr2sr_cats.push_back( "ge4jets_ge200mt2w_150to250met" ); // CR, MET Sideband, >=4j, mt2w>200
-  
-
-  bool oneTF = true;
-  for(int iSR=0; iSR<nSRs; iSR++){
-    if( sr_cats[iSR] != cr2sr_cats[iSR] ){
-      oneTF = false;
-      break;
-    }
-  }
-
-   
-
+    
   //
   // Systematics
   //
@@ -187,863 +113,1241 @@ int bkgEstimate_diLepton_newBinning(){
   systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtDown) );
   //systematicList.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
   //systematicList.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_q2Up) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  //systematicList.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //systematicList.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //systematicList.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //systematicList.push_back( sysInfo::Util(sysInfo::k_q2Down) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerDown) );
-
+  
   const int nSys = (int)systematicList.size();
-
-  
-  //
-  // Output file for ratio
-  //
-  TFile  *f_out = new TFile(outDir+"bkgEstimate_diLepton__newBins.root", "recreate");
-
-
-  //
-  // Histograms for limit setting
-  //
-  const int nSys_histos = nSys + 4; // +2 for data stats up/down, +2 for mc status up/down
-  TH1D *h_SR[nSys_histos];
-  h_SR[0] = new TH1D("CR2l_yield", "CR2l_yield", nSRs, 0.0, nSRs); // Nominal
-  for(int iCat=0; iCat<(int)nSRs; iCat++){
-    h_SR[0]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].Data() );
-  }
-  h_SR[0]->SetDirectory(f_out);
-
-
-  // data stats up
-  h_SR[1] = new TH1D("CR2l_dataStatsUp", "CR2l_dataStatsUp", nSRs, 0.0, nSRs); // Nominal
-  for(int iCat=0; iCat<(int)nSRs; iCat++){
-    h_SR[1]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].Data() );
-  }
-  h_SR[1]->SetDirectory(f_out);
-
-  // data stats dn
-  h_SR[2] = new TH1D("CR2l_dataStatsDn", "CR2l_dataStatsDn", nSRs, 0.0, nSRs); // Nominal
-  for(int iCat=0; iCat<(int)nSRs; iCat++){
-    h_SR[2]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].Data() );
-  }
-  h_SR[2]->SetDirectory(f_out);
-
-
-  // mc stats up
-  h_SR[3] = new TH1D("CR2l_mcStatsUp", "CR2l_mcStatsUp", nSRs, 0.0, nSRs); // Nominal
-  for(int iCat=0; iCat<(int)nSRs; iCat++){
-    h_SR[3]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].Data() );
-  }
-  h_SR[3]->SetDirectory(f_out);
-
-  // mc stats dn
-  h_SR[4] = new TH1D("CR2l_mcStatsDn", "CR2l_mcStatsDn", nSRs, 0.0, nSRs); // Nominal
-  for(int iCat=0; iCat<(int)nSRs; iCat++){
-    h_SR[4]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].Data() );
-  }
-  h_SR[4]->SetDirectory(f_out);
-
-
-  // Systematics for limit setting
-  for(int iSys=1; iSys<nSys; iSys++){
-    h_SR[iSys+4] = new TH1D(Form("CR2l_%s", systematicList[iSys].label.c_str()), Form("CR2l_%s",systematicList[iSys].label.c_str()), nSRs, 0.0, nSRs);   
-    for(int iCat=0; iCat<(int)nSRs; iCat++){
-      h_SR[iSys+4]->GetXaxis()->SetBinLabel( iCat+1, sr_cats[iCat].Data() );
-    }
-    h_SR[iSys+4]->SetDirectory(f_out);
-  }
-    
-
-
-  //
-  // Make Tables
-  //
-  
-  // ROW=Categories, COL=DiLepton Estimate and Components, Simple
-  FILE *yFile;
-  texFile = outDir;
-  texFile += "bkgEstimate_lostLepton__newBins.tex";
-  yFile = fopen(texFile.Data(), "w");
-  
-  cout << "Writing simple file of diLepton Estimates to file; " << endl;
-  cout << "    " << texFile << endl;
-
-  fprintf(yFile, "\\documentclass{article}\n");
-  fprintf(yFile, "\\usepackage[landscape]{geometry}\n");
-  fprintf(yFile, "\\usepackage{chngpage}\n\n");
-  fprintf(yFile, "\\usepackage{graphicx} \n\n");
-  fprintf(yFile, "\\begin{document}\n");
-  fprintf(yFile, "\\tiny \n");  
-  fprintf(yFile, "\\begin{table} \n");
-  fprintf(yFile, "\\caption{ diLepton Background Estimate and Components, for each Signal Region } \n");
-  fprintf(yFile, "\\scalebox{1.0}{ \n");
-  if(oneTF){
-    fprintf(yFile, "\\begin{tabular}{|l|c|c|c|} \\hline \n");
-    fprintf(yFile, "Category & $N_{Incl}^{CR}$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR}$ & $N_{2\\ell,estimate}^{SR}$");
-  }
-  else{
-    fprintf(yFile, "\\begin{tabular}{|l|c|c|c|c|} \\hline \n");
-    fprintf(yFile, "Category & $N_{Incl}^{CR}$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR}$ & $M_{MET,nJet~bin}^{SR}/M_{2\\ell}^{SR}$ & $N_{2\\ell,estimate}^{SR}$");
-  }
-  fprintf(yFile, "\\"); fprintf(yFile, "\\ \\hline \\hline \n");
-
-
-  // ROW=Categories, COL=DiLepton Estimate and Components, Simple, 1 TF
-  //FILE *yFile_1TF;
-  //texFile = outDir;
-  //texFile += "bkgEstimate_lostLepton__1TF__newBins.tex";
-  //yFile_1TF = fopen(texFile.Data(), "w");
-  
-  //cout << "Writing simple file of diLepton Estimates, with 1 TF, to file; " << endl;
-  //cout << "    " << texFile << endl;
-
-  //fprintf(yFile_1TF, "\\documentclass{article}\n");
-  //fprintf(yFile_1TF, "\\usepackage[landscape]{geometry}\n");
-  //fprintf(yFile_1TF, "\\usepackage{chngpage}\n\n");
-  //fprintf(yFile_1TF, "\\usepackage{graphicx} \n\n");
-  //fprintf(yFile_1TF, "\\begin{document}\n");
-  //fprintf(yFile_1TF, "\\tiny \n");  
-  //fprintf(yFile_1TF, "\\begin{table} \n");
-  //fprintf(yFile_1TF, "\\caption{ diLepton Background Estimate and Components, for each Signal Region } \n");
-  //fprintf(yFile_1TF, "\\scalebox{1.0}{ \n");
-  //fprintf(yFile_1TF, "\\begin{tabular}{|l|c|c|c|} \\hline \n");
-  //fprintf(yFile_1TF, "Signal Region & CR2l Yield & transfer factor & $N_{2\\ell,estimate}^{SR}$");
-  //fprintf(yFile_1TF, "\\"); fprintf(yFile_1TF, "\\ \\hline \\hline \n");
-
-
-  
-  // ROW=Uncertainties, COL=DiLepton Estimate and Components, Summary
-  FILE *uncFileSummary;
-  TString uncFileSummaryName = outDir;
-  uncFileSummaryName += "bkgEstimate_lostLepton__uncertaintyTable__summary__newBins.tex";
-  uncFileSummary = fopen(uncFileSummaryName.Data(), "w");
-  
-  cout << "Writing table of diLepton uncertainties to: " << endl;
-  cout << "    " << uncFileSummaryName << endl;
-
-  fprintf(uncFileSummary, "\\documentclass{article}\n");
-  fprintf(uncFileSummary, "\\usepackage[landscape]{geometry}\n");
-  fprintf(uncFileSummary, "\\usepackage{chngpage}\n\n");
-  fprintf(uncFileSummary, "\\usepackage{graphicx} \n\n");
-  fprintf(uncFileSummary, "\\begin{document}\n");
-  fprintf(uncFileSummary, "\\tiny \n"); 
-  fprintf(uncFileSummary, "\\begin{table} \n");
-  fprintf(uncFileSummary, "\\caption{ Summary of diLepton Background Estimate Uncertainties } \n");
-  fprintf(uncFileSummary, "\\scalebox{0.7}{ \n");
-  if(oneTF){
-    fprintf(uncFileSummary, "\\begin{tabular}{|l|c|c|c|} \\hline \n");
-    fprintf(uncFileSummary, "Systematic & $N_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR},~(\\%%)$ & $N_{2\\ell,estimate}^{SR},~(\\%%)$ ");
-  }
-  else{
-    fprintf(uncFileSummary, "\\begin{tabular}{|l|c|c|c|c|} \\hline \n");
-    fprintf(uncFileSummary, "Systematic & $N_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR},~(\\%%)$ & $M_{MET,nJet~bin}^{SR}/M_{2\\ell}^{SR},~(\\%%)$ & $N_{2\\ell,estimate}^{SR},~(\\%%)$ ");
-  }
-  fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \\hline \n");
-
-
-  const int nSys_unique = ((nSys-1)/2) + 3; // -1 for nominal, +1 for data stats, +1 for mc stats, +1 for total uncertainty
-  double uncMax_cr_data_cr2sr[nSys_unique]; 
-  double uncMin_cr_data_cr2sr[nSys_unique];
-  double uncMax_tf_cr2sr[nSys_unique]; 
-  double uncMin_tf_cr2sr[nSys_unique];
-  double uncMax_tf_srBin[nSys_unique]; 
-  double uncMin_tf_srBin[nSys_unique];
-  double uncMax_sr_estimate[nSys_unique]; 
-  double uncMin_sr_estimate[nSys_unique];
-  for(int iSys=0; iSys<nSys_unique; iSys++){
-    uncMax_cr_data_cr2sr[iSys] = 0.0;
-    uncMin_cr_data_cr2sr[iSys] = 999.9;
-    uncMax_tf_cr2sr[iSys] = 0.0;
-    uncMin_tf_cr2sr[iSys] = 999.9;
-    uncMax_tf_srBin[iSys] = 0.0;
-    uncMin_tf_srBin[iSys] = 999.9;
-    uncMax_sr_estimate[iSys] = 0.0;
-    uncMin_sr_estimate[iSys] = 999.9;
-  }
-
-
-  //
-  // Uncertainty table for each category
-  //
-  
-  // ROW=Uncertainties, COL=DiLepton Estimate and Components
-  FILE *uncFile = NULL;
-  TString uncFileName = outDir;
-  uncFileName += "bkgEstimate_lostLepton__uncertaintyTable__byCategory__newBins.tex";
-  uncFile = fopen(uncFileName.Data(), "w");
-
-  cout << "Writing table of diLepton uncertainties to: " << endl;
-  cout << "    " << uncFileName << endl;
-  
-  fprintf(uncFile, "\\documentclass{article}\n");
-  fprintf(uncFile, "\\usepackage[landscape]{geometry}\n");
-  fprintf(uncFile, "\\usepackage{chngpage}\n\n");
-  fprintf(uncFile, "\\usepackage{graphicx} \n\n");
-  fprintf(uncFile, "\\begin{document}\n");
-  fprintf(uncFile, "\\tiny \n"); 
-  
-
-  
-  //
-  // Uncertainty summary table ROWS=systematics, COLS=cats
-  //
-  
-  double cats_vs_sys[nSRs][nSys_unique];
-  for(int iCat=0; iCat<nSRs; iCat++){
-    for(int iSys=0; iSys<nSys_unique; iSys++){
-      cats_vs_sys[iCat][iSys] = 0.0;
-    }
-  }
-  
-  FILE *uncFileSummaryV2 = NULL;
-  TString uncFileSummaryV2Name = outDir;
-  uncFileSummaryV2Name += "bkgEstimate_lostLepton__uncertaintyTable__summary__byCategory__newBins.tex";
-  uncFileSummaryV2 = fopen(uncFileSummaryV2Name.Data(), "w");
-
-  cout << "Writing table of diLepton uncertainties summary by cats to: " << endl;
-  cout << "    " << uncFileSummaryV2Name << endl;
-  
-  fprintf(uncFileSummaryV2, "\\documentclass{article}\n");
-  fprintf(uncFileSummaryV2, "\\usepackage[landscape]{geometry}\n");
-  fprintf(uncFileSummaryV2, "\\usepackage{chngpage}\n\n");
-  fprintf(uncFileSummaryV2, "\\usepackage{graphicx} \n\n");
-  fprintf(uncFileSummaryV2, "\\begin{document}\n");
-  //fprintf(uncFileSummaryV2, "\\tiny \n");
-  fprintf(uncFileSummaryV2, "\\begin{table} \n");
-  fprintf(uncFileSummaryV2, "\\scalebox{0.3}{ \n");
-  fprintf(uncFileSummaryV2, "\\begin{tabular}{|l|");
-  for(int iCat=0; iCat<nSRs; iCat++){
-    fprintf(uncFileSummaryV2, "c|");
-  }
-  fprintf(uncFileSummaryV2, "} \\hline \n");
-  
-  fprintf(uncFileSummaryV2, "Systematic ");
-  for(int iCat=0; iCat<nSRs; iCat++){
-    fprintf(uncFileSummaryV2, " & %s ", cat_jetLabels[iCat].Data());
-  }
-  fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\  \n");
-  for(int iCat=0; iCat<nSRs; iCat++){
-    fprintf(uncFileSummaryV2, " & %s ", cat_metLabels[iCat].Data());
-  }
-  fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \\hline \\hline  \n");
-  
-
-
-  //
-  // Loop over categories to get Inclusive CR yields
-  //
-  TH1D *h_temp = NULL;
-  TString hName = "";
-  for(int iSR=0; iSR<(int)sr_cats.size(); iSR++){
-    
-    //
-    // Category Name for yield tables
-    //
-    fprintf(yFile, " %s & ", sr_cats[iSR].Data() );
-
-    //fprintf(yFile_1TF, " %s & ", sr_cats[iSR].Data() );
-
-    
-    //
-    // Cateogry infor for uncertainty table
-    //
-    fprintf(uncFile, "\\begin{table} \n");
-    fprintf(uncFile, "\\caption{ diLepton Background Estimate Uncertainties, for %s } \n", sr_cats[iSR].Data());
-    fprintf(uncFile, "\\scalebox{0.6}{ \n");
-    if(oneTF){
-      fprintf(uncFile, "\\begin{tabular}{|l|c|c|c|c|c|} \\hline \n");
-      fprintf(uncFile, "Systematic & $N_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR},~(\\%%)$ & $M_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR},~(\\%%)$ & $N_{2\\ell,estimate}^{SR},~(\\%%)$ ");
-    }
-    else{
-      fprintf(uncFile, "\\begin{tabular}{|l|c|c|c|c|c|c|c|} \\hline \n");
-      fprintf(uncFile, "Systematic & $N_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR},~(\\%%)$ & $M_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR},~(\\%%)$ & $M_{MET,nJet~bin}^{SR},~(\\%%)$ & $M_{MET,nJet~bin}^{SR}/M_{2\\ell}^{SR},~(\\%%)$ & $N_{2\\ell,estimate}^{SR},~(\\%%)$ ");
-    }
-    fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \\hline \n");
-    
-    //
-    // Get yields, begin calculation for this cateogry
-    //
-    
-    
-    //
-    // SR, category bin 
-    //
-    //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, nominal_sys );
-    hName = hNameBase;
-    hName += "__";
-    hName += regionName_SR;
-    hName += "__genClassy_";
-    hName += genClassy_MC_SR.label;
-    hName += "__systematic_";
-    hName += nominal_sys.label;
-    
-    h_temp = (TH1D*)f_SR->Get(hName);
-    if(!h_temp) cout << "BAD SR CATEGORY BIN HISTO: " << hName << endl;
-    
-    double SR_bin_yield = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( sr_cats[iSR].Data() ) );
-    double SR_bin_error = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( sr_cats[iSR].Data() ) );
-    
-    if(doRescale){
-      SR_bin_error *= rescale;
-      SR_bin_yield *= rescale;
-    }
-    
-    
-    //
-    // SR, mc, cr2sr bin
-    //
-    //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, nominal_sys );
-    hName = hNameBase;
-    hName += "__";
-    hName += regionName_SR;
-    hName += "__genClassy_";
-    hName += genClassy_MC_SR.label;
-    hName += "__systematic_";
-    hName += nominal_sys.label;
-    
-    h_temp = (TH1D*)f_SR->Get(hName);
-    if(!h_temp) cout << "BAD SR CRtoSR bin HISTO: " << hName << endl;
-    
-    double SR_cr2sr_yield = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-    double SR_cr2sr_error = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-    int SR_cr2sr_nEntries = h_temp->GetEntries();
-
-    if(doRescale){
-      SR_cr2sr_error *= rescale;
-      SR_cr2sr_yield *= rescale;
-    }
-    
-    
-    //
-    // CR, mc, cr2sr bin
-    //
-    //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType_CR, nominal_sys );
-    hName = hNameBase;
-    hName += "__";
-    hName += regionName_CR;
-    hName += "__genClassy_";
-    hName += genClassy_MC_CR.label;
-    hName += "__systematic_";
-    hName += nominal_sys.label;
-
-    h_temp = (TH1D*)f_CR->Get(hName);
-    if(!h_temp) cout << "BAD MC CR CRtoSR bin HISTO: " << hName << endl;
-    
-    double CR_cr2sr_yield = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-    double CR_cr2sr_error = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-    
-    if(doRescale){
-      CR_cr2sr_error *= rescale;
-      CR_cr2sr_yield *= rescale;
-    }
-    
-
-    //
-    // CR, data, cr2sr bin
-    //
-    //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_data_CR, recoClassyType_CR, nominal_sys );
-    hName = hNameBase;
-    hName += "__";
-    hName += regionName_CR;
-    hName += "__genClassy_";
-    hName += genClassy_data_CR.label;
-    hName += "__systematic_";
-    hName += nominal_sys.label;
-    
-    h_temp = (TH1D*)f_data_CR->Get(hName);
-    if(!h_temp) cout << "BAD DATA CR CRtoSR bin HISTO: " << hName << endl;
-    
-    double CR_data_cr2sr_yield = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-    double CR_data_cr2sr_error = sqrt( CR_data_cr2sr_yield );
-
-    if(doRescale){
-      CR_data_cr2sr_yield *= rescale;
-      CR_data_cr2sr_error = sqrt( CR_data_cr2sr_yield );
-      
-    }
-    
-    
-
-    // Transfer Factor SR/CR
-    double tf_cr2sr = 1.0;
-    double tf_cr2sr_err = 0.0;
-    double tf_cr2sr_statErr = 0.0;
-    
-    // Transfer Factor SR_bin/SR_cr2sr
-    double tf_srBin = 1.0;
-    double tf_srBin_err = 0.0;
-    double tf_srBin_statErr = 0.0;
-
-    // Signal Region Estimate
-    double sr_estimate = 0.0;
-    double sr_estimate_error = 0.0;
-    double sr_estimate_error_mc_stats = 0.0;
-
-
-    if(oneTF){
-
-      // Transfer Factor SR/CR
-      if(CR_cr2sr_yield>0.0){
-	tf_cr2sr = SR_cr2sr_yield/CR_cr2sr_yield;
-	tf_cr2sr_err = tf_cr2sr*sqrt( pow(CR_cr2sr_error/CR_cr2sr_yield, 2) + pow(SR_cr2sr_error/SR_cr2sr_yield, 2) ); // avoid double counting mc stats
-	tf_cr2sr_statErr = tf_cr2sr_err;
-      }
-    
-      // Signal Region Estimate
-      sr_estimate = CR_data_cr2sr_yield*tf_cr2sr;
-      sr_estimate_error = sr_estimate*sqrt( pow(CR_data_cr2sr_error/CR_data_cr2sr_yield, 2) + pow(tf_cr2sr_err/tf_cr2sr, 2) );
-      sr_estimate_error_mc_stats = sr_estimate*sqrt( pow(tf_cr2sr_err/tf_cr2sr, 2) );
-
-
-    }
-    else{
-
-      // Transfer Factor SR/CR
-      if(CR_cr2sr_yield>0.0){
-	tf_cr2sr = SR_cr2sr_yield/CR_cr2sr_yield;
-	tf_cr2sr_err = tf_cr2sr*sqrt( pow( CR_cr2sr_error/CR_cr2sr_yield, 2 ) ); // avoid double counting mc stats
-	tf_cr2sr_statErr = tf_cr2sr_err;
-      }
-    
-      // Transfer Factor SR_bin/SR_cr2sr
-      if(SR_cr2sr_yield>0.0){
-	tf_srBin = SR_bin_yield/SR_cr2sr_yield;
-	tf_srBin_err = sqrt( tf_srBin*(1-tf_srBin)/SR_cr2sr_nEntries ); // binomial errors since SR_bin_yield is a subset of SR_cr2sr_yield
-	tf_srBin_statErr = tf_srBin_err;
-      }
-
-      //
-      // Signal Region Estimate
-      //
-      sr_estimate = CR_data_cr2sr_yield*tf_cr2sr*tf_srBin;
-      sr_estimate_error = sr_estimate*sqrt( pow(CR_data_cr2sr_error/CR_data_cr2sr_yield, 2) + pow(tf_cr2sr_err/tf_cr2sr, 2) + pow(tf_srBin_err/tf_srBin, 2) );
-      sr_estimate_error_mc_stats = sr_estimate*sqrt( pow(tf_cr2sr_err/tf_cr2sr, 2) + pow(tf_srBin_err/tf_srBin, 2) );
-
-    }
-
-
-    
-    //
-    // Fill histograms for limit setting
-    //
-    h_SR[0]->SetBinContent( iSR+1, sr_estimate );
-    h_SR[0]->SetBinError( iSR+1, sr_estimate_error );
-    
-    
-    //
-    // Uncertainty File, Nominal Values
-    //
-    if(oneTF){
-      fprintf(uncFile, "Nominal & %.2f & %.2f & %.2f & %.2f & %.2f ", CR_data_cr2sr_yield, SR_cr2sr_yield, CR_cr2sr_yield, tf_cr2sr, sr_estimate );
-    }
-    else{
-      fprintf(uncFile, "Nominal & %.2f & %.2f & %.2f & %.2f & %.2f & %.2f & %.2f ", CR_data_cr2sr_yield, SR_cr2sr_yield, CR_cr2sr_yield, tf_cr2sr, SR_bin_yield, tf_srBin, sr_estimate );
-    }
-    fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \\hline \n"); 
  
-    
-    //
-    // Uncertainty File, Data Stats
-    //
-    if(oneTF){
-      fprintf(uncFile, "Data Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield+CR_data_cr2sr_error, (100*CR_data_cr2sr_error/CR_data_cr2sr_yield), SR_cr2sr_yield, 0.0, CR_cr2sr_yield, 0.0, tf_cr2sr, 0.0, (CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin, (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
-    }
-    else{
-      fprintf(uncFile, "Data Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield+CR_data_cr2sr_error, (100*CR_data_cr2sr_error/CR_data_cr2sr_yield), SR_cr2sr_yield, 0.0, CR_cr2sr_yield, 0.0, tf_cr2sr, 0.0, SR_bin_yield, 0.0, tf_srBin, 0.0, (CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin, (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
-    }
-    fprintf(uncFile, "\\"); fprintf(uncFile, "\\  \n"); 
 
 
-    if(oneTF){
-      fprintf(uncFile, "Data Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield-CR_data_cr2sr_error, (-100*CR_data_cr2sr_error/CR_data_cr2sr_yield), SR_cr2sr_yield, 0.0, CR_cr2sr_yield, 0.0, tf_cr2sr, 0.0, (CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin, (100*(((CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
-    }
-    else{
-      fprintf(uncFile, "Data Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield-CR_data_cr2sr_error, (-100*CR_data_cr2sr_error/CR_data_cr2sr_yield), SR_cr2sr_yield, 0.0, CR_cr2sr_yield, 0.0, tf_cr2sr, 0.0, SR_bin_yield, 0.0, tf_srBin, 0.0, (CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin, (100*(((CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
-    }
-    fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \n");
-
-
-    //
-    // Calc Min/Max uncertainty for data stats
-    //
-    uncMax_cr_data_cr2sr[0] = std::max( uncMax_cr_data_cr2sr[0], (100*CR_data_cr2sr_error/CR_data_cr2sr_yield) );
-    uncMin_cr_data_cr2sr[0] = std::min( uncMin_cr_data_cr2sr[0], (100*CR_data_cr2sr_error/CR_data_cr2sr_yield) );
-    uncMax_tf_cr2sr[0] = std::max( uncMax_tf_cr2sr[0], 0.0 );
-    uncMin_tf_cr2sr[0] = std::min( uncMin_tf_cr2sr[0], 0.0 );
-    uncMax_tf_srBin[0] = std::max( uncMax_tf_srBin[0], 0.0 );
-    uncMin_tf_srBin[0] = std::min( uncMin_tf_srBin[0], 0.0 );
-    uncMax_sr_estimate[0] = std::max( uncMax_sr_estimate[0], (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
-    uncMin_sr_estimate[0] = std::min( uncMin_sr_estimate[0], (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
-    
-
-    //
-    // Calc SR estimate for this sys for this cat
-    //
-    
-    cats_vs_sys[iSR][0] = (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate;
-    
-
-    //
-    // Fill histograms for limit setting
-    //
-    h_SR[1]->SetBinContent( iSR+1, (CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin );
-    h_SR[1]->SetBinError( iSR+1, CR_data_cr2sr_error*tf_cr2sr*tf_srBin );
-    h_SR[2]->SetBinContent( iSR+1, (CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin );
-    h_SR[2]->SetBinError( iSR+1, CR_data_cr2sr_error*tf_cr2sr*tf_srBin );
-    
-
-    
-    //
-    // Uncertainty File, MC Stats Up
-    //
-    if(oneTF){
-      fprintf(uncFile, "MC Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield, 0.0, SR_cr2sr_yield+SR_cr2sr_error, (100*SR_cr2sr_error/SR_cr2sr_yield), CR_cr2sr_yield+CR_cr2sr_error, (100*CR_cr2sr_error/CR_cr2sr_yield), tf_cr2sr+tf_cr2sr_err, (100*tf_cr2sr_err/tf_cr2sr), sr_estimate+sr_estimate_error_mc_stats, (100*sr_estimate_error_mc_stats/sr_estimate) );
-    }
-    else{
-      fprintf(uncFile, "MC Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield, 0.0, SR_cr2sr_yield+SR_cr2sr_error, (100*SR_cr2sr_error/SR_cr2sr_yield), CR_cr2sr_yield+CR_cr2sr_error, (100*CR_cr2sr_error/CR_cr2sr_yield), tf_cr2sr+tf_cr2sr_err, (100*tf_cr2sr_err/tf_cr2sr), SR_bin_yield+SR_bin_error, (100*SR_bin_error/SR_bin_yield), tf_srBin+tf_srBin_err, (100*tf_srBin_err/tf_srBin), sr_estimate+sr_estimate_error_mc_stats, (100*sr_estimate_error_mc_stats/sr_estimate) );
-    }
-    fprintf(uncFile, "\\"); fprintf(uncFile, "\\  \n"); 
-
-    
-    if(oneTF){
-      fprintf(uncFile, "MC Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield, 0.0, SR_cr2sr_yield-SR_cr2sr_error, (-100*SR_cr2sr_error/SR_cr2sr_yield), CR_cr2sr_yield-CR_cr2sr_error, (-100*CR_cr2sr_error/CR_cr2sr_yield), tf_cr2sr-tf_cr2sr_err, (-100*tf_cr2sr_err/tf_cr2sr), sr_estimate-sr_estimate_error_mc_stats, (-100*sr_estimate_error_mc_stats/sr_estimate) );
-    }
-    else{
-      fprintf(uncFile, "MC Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield, 0.0, SR_cr2sr_yield-SR_cr2sr_error, (-100*SR_cr2sr_error/SR_cr2sr_yield), CR_cr2sr_yield-CR_cr2sr_error, (-100*CR_cr2sr_error/CR_cr2sr_yield), tf_cr2sr-tf_cr2sr_err, (-100*tf_cr2sr_err/tf_cr2sr), SR_bin_yield-SR_bin_error, (-100*SR_bin_error/SR_bin_yield), tf_srBin-tf_srBin_err, (-100*tf_srBin_err/tf_srBin), sr_estimate-sr_estimate_error_mc_stats, (-100*sr_estimate_error_mc_stats/sr_estimate) );
-    }
-    fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \n");
-
-    fprintf(uncFile, "\\hline \n");
-    
-    
-    //
-    // Calc Min/Max for MC Stats
-    //
-    uncMax_cr_data_cr2sr[1] = std::max( uncMax_cr_data_cr2sr[1], 0.0 );
-    uncMin_cr_data_cr2sr[1] = std::min( uncMin_cr_data_cr2sr[1], 0.0 );
-    uncMax_tf_cr2sr[1] = std::max( uncMax_tf_cr2sr[1], (100*tf_cr2sr_err/tf_cr2sr) );
-    uncMin_tf_cr2sr[1] = std::min( uncMin_tf_cr2sr[1], (100*tf_cr2sr_err/tf_cr2sr) );
-    uncMax_tf_srBin[1] = std::max( uncMax_tf_srBin[1], (100*tf_srBin_err/tf_srBin) );
-    uncMin_tf_srBin[1] = std::min( uncMin_tf_srBin[1], (100*tf_srBin_err/tf_srBin) );
-    uncMax_sr_estimate[1] = std::max( uncMax_sr_estimate[1], (100*sr_estimate_error_mc_stats/sr_estimate) );
-    uncMin_sr_estimate[1] = std::min( uncMin_sr_estimate[1], (100*sr_estimate_error_mc_stats/sr_estimate) );
-
-
-    //
-    // Calc SR estimate for this sys for this cat
-    //
-    
-    cats_vs_sys[iSR][1] = (100*sr_estimate_error_mc_stats/sr_estimate);
-    
-
-    //
-    // Fill histograms for limit setting
-    //
-    h_SR[3]->SetBinContent( iSR+1, (sr_estimate+sr_estimate_error_mc_stats) );
-    h_SR[3]->SetBinError( iSR+1, sr_estimate_error_mc_stats );
-    h_SR[4]->SetBinContent( iSR+1, (sr_estimate-sr_estimate_error_mc_stats) );
-    h_SR[4]->SetBinError( iSR+1, sr_estimate_error_mc_stats );
-    
-    
+  //
+  // List of scenarios for bkg estimates
+  //
+  std::vector<bkgEstUtil> v_bkgEst;
   
-    //
-    // Loop over systematics
-    //
-    int unique_sys = 2;
-    for(int iSys=1; iSys<(int)systematicList.size(); iSys+=2){
-      
-      //
-      // SR, category bin, up
-      //
-      //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, systematicList[iSys] );
-      hName = hNameBase;
-      hName += "__";
-      hName += regionName_SR;
-      hName += "__genClassy_";
-      hName += genClassy_MC_SR.label;
-      hName += "__systematic_";
-      hName += systematicList[iSys].label;
+  // ICHEP results
+  bkgEstUtil bkgEst_ICHEP;
+ 
+  bkgEst_ICHEP.hName_base = "h_yields_SR_ICHEP";
 
-      h_temp = (TH1D*)f_SR->Get(hName);
-      if(!h_temp) cout << "BAD SR CATEGORY BIN UP HISTO: " << hName << endl;
-      
-      double SR_bin_yield_up = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( sr_cats[iSR].Data() ) );
-      double SR_bin_error_up = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( sr_cats[iSR].Data() ) );
-      
-      if(doRescale){
-	SR_bin_error_up *= rescale;
-	SR_bin_yield_up *= rescale;
-      }
-      
-      
-      //
-      // SR, cr2sr bin, up
-      //
-      //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, systematicList[iSys] );
-      hName = hNameBase;
-      hName += "__";
-      hName += regionName_SR;
-      hName += "__genClassy_";
-      hName += genClassy_MC_SR.label;
-      hName += "__systematic_";
-      hName += systematicList[iSys].label;
-      
-      h_temp = (TH1D*)f_SR->Get(hName);
-      if(!h_temp) cout << "BAD SR INCL UP HISTO: " << hName << endl;
+  bkgEst_ICHEP.SR_bins.push_back(5);  bkgEst_ICHEP.CR_bins.push_back(5);  
+  bkgEst_ICHEP.regionName.push_back("$2$jets,~modifiedTopness$\\ge6.4$"); 
+  bkgEst_ICHEP.regionName_short.push_back("$2$jets"); 
+  bkgEst_ICHEP.binName.push_back("$250<MET<350$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(6);  bkgEst_ICHEP.CR_bins.push_back(6);  
+  bkgEst_ICHEP.regionName.push_back("$2$jets,~modifiedTopness$\\ge6.4$");
+  bkgEst_ICHEP.regionName_short.push_back("$2$jets"); 
+  bkgEst_ICHEP.binName.push_back("$350<MET<450$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(7);  bkgEst_ICHEP.CR_bins.push_back(7);  
+  bkgEst_ICHEP.regionName.push_back("$2$jets,~modifiedTopness$\\ge6.4$");  
+  bkgEst_ICHEP.regionName_short.push_back("$2$jets"); 
+  bkgEst_ICHEP.binName.push_back("$MET>450$");
+
+
+  bkgEst_ICHEP.SR_bins.push_back(11);  bkgEst_ICHEP.CR_bins.push_back(11);  
+  bkgEst_ICHEP.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP.binName.push_back("$250<MET<350$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(12);  bkgEst_ICHEP.CR_bins.push_back(12);  
+  bkgEst_ICHEP.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP.binName.push_back("$350<MET<450$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(14);  bkgEst_ICHEP.CR_bins.push_back(13); // Extrapolate
+  bkgEst_ICHEP.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP.binName.push_back("$450<MET<550$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(15);  bkgEst_ICHEP.CR_bins.push_back(13); // Extrapolate
+  bkgEst_ICHEP.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP.binName.push_back("$MET>550$");
+  
+
+  bkgEst_ICHEP.SR_bins.push_back(19);  bkgEst_ICHEP.CR_bins.push_back(19);  
+  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP.binName.push_back("$250<MET<350$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(20);  bkgEst_ICHEP.CR_bins.push_back(20);  
+  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP.binName.push_back("$350<MET<450$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(21);  bkgEst_ICHEP.CR_bins.push_back(21);  
+  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP.binName.push_back("$MET>450$");
+  
+
+  bkgEst_ICHEP.SR_bins.push_back(24);  bkgEst_ICHEP.CR_bins.push_back(24);  
+  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP.binName.push_back("$250<MET<350$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(25);  bkgEst_ICHEP.CR_bins.push_back(25);  
+  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP.binName.push_back("$350<MET<450$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(26);  bkgEst_ICHEP.CR_bins.push_back(26);  
+  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP.binName.push_back("$450<MET<550$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(28);  bkgEst_ICHEP.CR_bins.push_back(27);  // Extrapolate
+  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP.binName.push_back("$550<MET<650$");
+  
+  bkgEst_ICHEP.SR_bins.push_back(29);  bkgEst_ICHEP.CR_bins.push_back(27);  // Extrapolate
+  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP.binName.push_back("$MET>650$");
+  
+  
+  v_bkgEst.push_back( bkgEst_ICHEP );
+
+
+
+  // ICHEP results, exttened to 30fb
+  bkgEstUtil bkgEst_ICHEP_ext30fb;
+ 
+  bkgEst_ICHEP_ext30fb.hName_base = "h_yields_SR_ICHEP_ext30fb";
+
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(1);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(1);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~modifiedTopness$\\ge6.4$"); 
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$250<MET<350$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(2);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(2);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~modifiedTopness$\\ge6.4$");
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(3);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(3);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~modifiedTopness$\\ge6.4$");
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(4);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(22);  // Extrapolate
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~modifiedTopness$\\ge6.4$");
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(5);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(22);  // Extrapolate  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~modifiedTopness$\\ge6.4$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$MET>650$");
+
+
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(6);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(6);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$250<MET<350$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(7);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(7);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$350<MET<450$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(8);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(8); 
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(9);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(23); // Extrapolate
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
     
-      double SR_cr2sr_yield_up = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-      double SR_cr2sr_error_up = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-      int SR_cr2sr_nEntries_up = h_temp->GetEntries();
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(10);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(23); // Extrapolate
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$MET>650$");
+  
 
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(11);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(11);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$250<MET<350$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(12);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(12);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(13);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(13);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(14);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(24);  // Extrapolate
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(15);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(24);  // Extrapolate
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$MET>450$");
+  
+
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(16);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(16);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$250<MET<350$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(17);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(17);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$350<MET<450$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(18);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(18);  
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(19);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(25);  // Extrapolate
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
+
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(20);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(25);  // Extrapolate
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$650<MET<800$");
+  
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(21);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(25);  // Extrapolate
+  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
+  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
+  bkgEst_ICHEP_ext30fb.binName.push_back("$MET>800$");
+  
+  
+  v_bkgEst.push_back( bkgEst_ICHEP_ext30fb );
+  
+
+
+
+  // Dev, ext30fb,  mlb
+  bkgEstUtil bkgEst_ext30fb_mlb;
+ 
+  bkgEst_ext30fb_mlb.hName_base = "h_yields_SR_dev_ext30fb_mlb_v1";
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(1);  bkgEst_ext30fb_mlb.CR_bins.push_back(1);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(2);  bkgEst_ext30fb_mlb.CR_bins.push_back(2);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(3);  bkgEst_ext30fb_mlb.CR_bins.push_back(3);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(4);  bkgEst_ext30fb_mlb.CR_bins.push_back(4);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
+  
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(5);  bkgEst_ext30fb_mlb.CR_bins.push_back(5);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(6);  bkgEst_ext30fb_mlb.CR_bins.push_back(6);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(7);  bkgEst_ext30fb_mlb.CR_bins.push_back(30);  // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(8);  bkgEst_ext30fb_mlb.CR_bins.push_back(30);  // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(9);  bkgEst_ext30fb_mlb.CR_bins.push_back(9);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(10);  bkgEst_ext30fb_mlb.CR_bins.push_back(10);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(11);  bkgEst_ext30fb_mlb.CR_bins.push_back(11);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(12);  bkgEst_ext30fb_mlb.CR_bins.push_back(31); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$550<MET<650$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(13);  bkgEst_ext30fb_mlb.CR_bins.push_back(31); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(14);  bkgEst_ext30fb_mlb.CR_bins.push_back(14);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(15);  bkgEst_ext30fb_mlb.CR_bins.push_back(15);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(16);  bkgEst_ext30fb_mlb.CR_bins.push_back(32); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(17);  bkgEst_ext30fb_mlb.CR_bins.push_back(32); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(18);  bkgEst_ext30fb_mlb.CR_bins.push_back(18);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(19);  bkgEst_ext30fb_mlb.CR_bins.push_back(33); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(20);  bkgEst_ext30fb_mlb.CR_bins.push_back(33); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>450$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(21);  bkgEst_ext30fb_mlb.CR_bins.push_back(34); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("6"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<400$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(22);  bkgEst_ext30fb_mlb.CR_bins.push_back(34); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("6"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>400$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(23);  bkgEst_ext30fb_mlb.CR_bins.push_back(23);
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(24);  bkgEst_ext30fb_mlb.CR_bins.push_back(24);
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(25);  bkgEst_ext30fb_mlb.CR_bins.push_back(35); // Extrapolate
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<600$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(26);  bkgEst_ext30fb_mlb.CR_bins.push_back(35); // Extrapolate
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>600$");
+
+  
+  bkgEst_ext30fb_mlb.SR_bins.push_back(27);  bkgEst_ext30fb_mlb.CR_bins.push_back(27);
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<400$");
+ 
+  bkgEst_ext30fb_mlb.SR_bins.push_back(28);  bkgEst_ext30fb_mlb.CR_bins.push_back(36);
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$400<MET<650$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(29);  bkgEst_ext30fb_mlb.CR_bins.push_back(36);
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
+ 
+  
+  v_bkgEst.push_back( bkgEst_ext30fb_mlb );
+
+
+
+  // Dev, ext30fb,  bJetPt
+  bkgEstUtil bkgEst_ext30fb_bJetPt;
+ 
+  bkgEst_ext30fb_bJetPt.hName_base = "h_yields_SR_dev_ext30fb_bJetPt_v1";
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(1);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(1);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(2);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(2);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(3);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(3);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(4);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(4);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
+  
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(5);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(5);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(6);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(6);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(7);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(30);  // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(8);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(30);  // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(9);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(9);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(10);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(10);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(11);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(11);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(12);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(31); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$550<MET<650$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(13);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(31); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(14);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(14);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(15);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(15);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(16);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(32); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(17);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(32); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(18);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(18);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(19);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(33); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(20);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(33); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>450$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(21);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(34); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("6"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<400$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(22);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(34); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("6"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>400$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(23);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(23);
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(24);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(24);
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(25);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(35); // Extrapolate
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<600$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(26);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(35); // Extrapolate
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>600$");
+
+  
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(27);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(27);
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<400$");
+ 
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(28);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(36);
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$400<MET<650$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(29);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(36);
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
+ 
+  
+  v_bkgEst.push_back( bkgEst_ext30fb_bJetPt );
+
+
+
+  
+  //
+  // Loop over vector of bkg estimates
+  //
+  for(int iBkgEst=0; iBkgEst<(int)v_bkgEst.size(); iBkgEst++){
+
+    // Get yield histo base name
+    TString hNameBase = v_bkgEst[iBkgEst].hName_base;
+
+    // Get number of signal regions
+    const int nSRs = (int)v_bkgEst[iBkgEst].SR_bins.size();
+    
+    // Check if there is any extrapolation, to properly formate tables
+    bool oneTF = true;
+    for(int iSR=0; iSR<nSRs; iSR++){
+      if( v_bkgEst[iBkgEst].SR_bins[iSR] != v_bkgEst[iBkgEst].CR_bins[iSR] ){
+	oneTF = false;
+	break;
+      }
+    }
+    
+    // Root Output File for Bkg Estimate
+    TString root_fileName = outDir;
+    root_fileName += hNameBase;
+    root_fileName += "__bkgEst_lostLepton__histos.root";
+    TFile  *f_out = new TFile(root_fileName.Data(), "recreate");
+
+
+    // Histograms for limit setting
+    const int nSys_histos = nSys + 4; // +2 for data stats up/down, +2 for mc status up/down
+
+    TH1D *h_SR[nSys_histos];
+    h_SR[0] = new TH1D("CR2l_yield",       "CR2l_yield",       nSRs, 0.0, nSRs); // Nominal
+    h_SR[1] = new TH1D("CR2l_dataStatsUp", "CR2l_dataStatsUp", nSRs, 0.0, nSRs); // data stats up
+    h_SR[2] = new TH1D("CR2l_dataStatsDn", "CR2l_dataStatsDn", nSRs, 0.0, nSRs); // data stats dn
+    h_SR[3] = new TH1D("CR2l_mcStatsUp",   "CR2l_mcStatsUp",   nSRs, 0.0, nSRs); // mc stats up
+    h_SR[4] = new TH1D("CR2l_mcStatsDn",   "CR2l_mcStatsDn",   nSRs, 0.0, nSRs); // mc stats dn
+    for(int iCat=0; iCat<(int)nSRs; iCat++){
+      
+      TString binName = v_bkgEst[iBkgEst].regionName[iCat];
+      binName += "__";
+      binName += v_bkgEst[iBkgEst].binName[iCat];
+
+      h_SR[0]->GetXaxis()->SetBinLabel( iCat+1, binName );
+      h_SR[1]->GetXaxis()->SetBinLabel( iCat+1, binName );
+      h_SR[2]->GetXaxis()->SetBinLabel( iCat+1, binName );
+      h_SR[3]->GetXaxis()->SetBinLabel( iCat+1, binName );
+      h_SR[4]->GetXaxis()->SetBinLabel( iCat+1, binName );
+    }
+
+    h_SR[0]->SetDirectory(f_out);
+    h_SR[1]->SetDirectory(f_out);
+    h_SR[2]->SetDirectory(f_out);
+    h_SR[3]->SetDirectory(f_out);
+    h_SR[4]->SetDirectory(f_out);
+    
+    // Systematics for limit setting
+    for(int iSys=1; iSys<nSys; iSys++){
+      h_SR[iSys+4] = new TH1D(Form("CR2l_%s", systematicList[iSys].label.c_str()), Form("CR2l_%s",systematicList[iSys].label.c_str()), nSRs, 0.0, nSRs);   
+      for(int iCat=0; iCat<(int)nSRs; iCat++){
+
+	TString binName = v_bkgEst[iBkgEst].regionName[iCat];
+	binName += "__";
+	binName += v_bkgEst[iBkgEst].binName[iCat];
+	
+	h_SR[iSys+4]->GetXaxis()->SetBinLabel( iCat+1, binName );
+      }
+      h_SR[iSys+4]->SetDirectory(f_out);
+    }
+    
+
+    // Results Table
+    //   ROW=Categories, COL=Lost Lepton Estimate and Components
+    FILE *yFile;
+    TString texFile = outDir;
+    texFile += hNameBase;
+    texFile += "__bkgEst_lostLepton__resultsTable.tex";
+    yFile = fopen(texFile.Data(), "w");
+    
+    cout << "Writing Table of Lost Lepton Estimates to file; " << endl;
+    cout << "    " << texFile << endl;
+
+    printLatexHeader(yFile);
+    fprintf(yFile, "\\tiny \n");  
+    fprintf(yFile, "\\begin{table} \n");
+    fprintf(yFile, "\\caption{ Lost Lepton Background Estimate and Components, for each Signal Region } \n");
+    fprintf(yFile, "\\scalebox{1.0}{ \n");
+    if(oneTF){
+      fprintf(yFile, "\\begin{tabular}{|l|c|c|c|c|} \\hline \n");
+      fprintf(yFile, "Region & MET bin & $N_{Incl}^{CR}$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR}$ & $N_{2\\ell,estimate}^{SR}$");
+    }
+    else{
+      fprintf(yFile, "\\begin{tabular}{|l|c|c|c|c|c|} \\hline \n");
+      fprintf(yFile, "Region & MET bin & $N_{Incl}^{CR}$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR}$ & $M_{MET,~bin}^{SR}/M_{2\\ell}^{SR}$ & $N_{2\\ell,estimate}^{SR}$");
+    }
+    fprintf(yFile, "\\"); fprintf(yFile, "\\ \\hline \\hline \n");
+    
+
+
+    // Uncertainty table for each category
+    //   ROW=Uncertainties, COL=DiLepton Estimate and Components
+    FILE *uncFile = NULL;
+    TString uncFileName = outDir;
+    uncFileName += hNameBase;
+    uncFileName += "__bkgEst_lostLepton__uncertaintyTable__byCategory.tex";
+    uncFile = fopen(uncFileName.Data(), "w");
+    
+    cout << "Writing table of diLepton uncertainties to: " << endl;
+    cout << "    " << uncFileName << endl;
+
+    printLatexHeader(uncFile);
+    
+
+    
+    // Uncertainty Table, Summary of components over all Categories
+    //   ROW=Uncertainty ranges by %, over all cateogries, COL=DiLepton Estimate and Components
+    FILE *uncFileSummary;
+    TString uncFileSummaryName = outDir;
+    uncFileSummaryName += hNameBase;
+    uncFileSummaryName += "__bkgEst_lostLepton__uncertaintyTable__summary.tex";
+    uncFileSummary = fopen(uncFileSummaryName.Data(), "w");
+    
+    cout << "Writing Table of Lost Lepton Uncertainties to: " << endl;
+    cout << "    " << uncFileSummaryName << endl;
+    
+    printLatexHeader(uncFileSummary);
+    fprintf(uncFileSummary, "\\begin{table} \n");
+    fprintf(uncFileSummary, "\\caption{ Summary of Lost Lepton Background Estimate Uncertainties } \n");
+    fprintf(uncFileSummary, "\\scalebox{0.7}{ \n");
+    if(oneTF){
+      fprintf(uncFileSummary, "\\begin{tabular}{|l|c|c|c|} \\hline \n");
+      fprintf(uncFileSummary, "Systematic & $N_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR},~(\\%%)$ & $N_{2\\ell,estimate}^{SR},~(\\%%)$ ");
+    }
+    else{
+      fprintf(uncFileSummary, "\\begin{tabular}{|l|c|c|c|c|} \\hline \n");
+      fprintf(uncFileSummary, "Systematic & $N_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR},~(\\%%)$ & $M_{MET,nJet~bin}^{SR}/M_{2\\ell}^{SR},~(\\%%)$ & $N_{2\\ell,estimate}^{SR},~(\\%%)$ ");
+    }
+    fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \\hline \n");
+    
+
+    // Need an arry of min/max, element for each systematic
+    const int nSys_unique = ((nSys-1)/2) + 3; // -1 for nominal, +1 for data stats, +1 for mc stats, +1 for total uncertainty
+    double uncMax_cr_data_cr2sr[nSys_unique]; 
+    double uncMin_cr_data_cr2sr[nSys_unique];
+    double uncMax_tf_cr2sr[nSys_unique]; 
+    double uncMin_tf_cr2sr[nSys_unique];
+    double uncMax_tf_srBin[nSys_unique]; 
+    double uncMin_tf_srBin[nSys_unique];
+    double uncMax_sr_estimate[nSys_unique]; 
+    double uncMin_sr_estimate[nSys_unique];
+    for(int iSys=0; iSys<nSys_unique; iSys++){
+      uncMax_cr_data_cr2sr[iSys] = 0.0;
+      uncMin_cr_data_cr2sr[iSys] = 999.9;
+      uncMax_tf_cr2sr[iSys] = 0.0;
+      uncMin_tf_cr2sr[iSys] = 999.9;
+      uncMax_tf_srBin[iSys] = 0.0;
+      uncMin_tf_srBin[iSys] = 999.9;
+      uncMax_sr_estimate[iSys] = 0.0;
+      uncMin_sr_estimate[iSys] = 999.9;
+    }
+    
+      
+    // Uncertainty summary table 
+    //   ROWS=% Uncertainties on final estimate, COLS=Categories
+    double cats_vs_sys[nSRs][nSys_unique];
+    for(int iCat=0; iCat<nSRs; iCat++){
+      for(int iSys=0; iSys<nSys_unique; iSys++){
+	cats_vs_sys[iCat][iSys] = 0.0;
+      }
+    }
+    
+    FILE *uncFileSummaryV2 = NULL;
+    TString uncFileSummaryV2Name = outDir;
+    uncFileSummaryV2Name += hNameBase;
+    uncFileSummaryV2Name += "__bkgEstimate_lostLepton__uncertaintyTable__summary__byCategory.tex";
+    uncFileSummaryV2 = fopen(uncFileSummaryV2Name.Data(), "w");
+    
+    cout << "Writing table of diLepton uncertainties summary by cats to: " << endl;
+    cout << "    " << uncFileSummaryV2Name << endl;
+    
+    printLatexHeader(uncFileSummaryV2);
+    fprintf(uncFileSummaryV2, "\\begin{table} \n");
+    fprintf(uncFileSummaryV2, "\\scalebox{0.3}{ \n");
+    fprintf(uncFileSummaryV2, "\\begin{tabular}{|l|");
+    for(int iCat=0; iCat<nSRs; iCat++){
+      fprintf(uncFileSummaryV2, "c|");
+    }
+    fprintf(uncFileSummaryV2, "} \\hline \n");
+    
+    fprintf(uncFileSummaryV2, "Systematic ");
+    for(int iCat=0; iCat<nSRs; iCat++){
+      fprintf(uncFileSummaryV2, " & %s ", v_bkgEst[iBkgEst].regionName_short[iCat].Data());
+    }
+    fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\  \n");
+    for(int iCat=0; iCat<nSRs; iCat++){
+      TString modified_metLabel = v_bkgEst[iBkgEst].binName[iCat];
+      modified_metLabel.ReplaceAll("<MET<","-");
+      modified_metLabel.ReplaceAll("MET>",">");
+      fprintf(uncFileSummaryV2, " & %s ", modified_metLabel.Data());
+    }
+    fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \\hline \\hline  \n");
+  
+    
+        
+    //
+    // Loop over categories to get yields
+    //
+    TH1D *h_temp = NULL;
+    TString hName = "";
+    for(int iSR=0; iSR<nSRs; iSR++){
+      
+      // Category Name for yield tables
+      TString catName = v_bkgEst[iBkgEst].regionName[iSR];
+      catName += ",~";
+      catName += v_bkgEst[iBkgEst].binName[iSR];
+
+      fprintf(yFile, " %s & ", v_bkgEst[iBkgEst].regionName[iSR].Data() );
+      fprintf(yFile, " %s & ", v_bkgEst[iBkgEst].binName[iSR].Data() );
+      
+      // Cateogry info for uncertainty table, for each category
+      fprintf(uncFile, "\\begin{table} \n");
+      fprintf(uncFile, "\\caption{ diLepton Background Estimate Uncertainties, for %s } \n", catName.Data());
+      fprintf(uncFile, "\\scalebox{0.6}{ \n");
+      if(oneTF){
+	fprintf(uncFile, "\\begin{tabular}{|l|c|c|c|c|c|} \\hline \n");
+	fprintf(uncFile, "Systematic & $N_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR},~(\\%%)$ & $M_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR},~(\\%%)$ & $N_{2\\ell,estimate}^{SR},~(\\%%)$ ");
+      }
+      else{
+	fprintf(uncFile, "\\begin{tabular}{|l|c|c|c|c|c|c|c|} \\hline \n");
+	fprintf(uncFile, "Systematic & $N_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR},~(\\%%)$ & $M_{Incl}^{CR},~(\\%%)$ & $M_{2\\ell}^{SR}/M_{Incl}^{CR},~(\\%%)$ & $M_{MET,nJet~bin}^{SR},~(\\%%)$ & $M_{MET,nJet~bin}^{SR}/M_{2\\ell}^{SR},~(\\%%)$ & $N_{2\\ell,estimate}^{SR},~(\\%%)$ ");
+      }
+      fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \\hline \n");
+
+
+      
+      //
+      // Get yields, begin calculation for this cateogry
+      //
+      int SR_bin = v_bkgEst[iBkgEst].SR_bins[iSR];
+      int CR_bin = v_bkgEst[iBkgEst].CR_bins[iSR];
+      
+      // SR, category bin 
+      hName = hNameBase;
+      hName += "__";
+      hName += regionName_SR;
+      hName += "__genClassy_";
+      hName += genClassy_SR_MC.label;
+      hName += "__systematic_";
+      hName += nominal_sys.label;
+      
+      h_temp = (TH1D*)f_SR_mc->Get(hName);
+      if(!h_temp) cout << "BAD SR CATEGORY BIN HISTO: " << hName << endl;
+
+      double SR_bin_yield = h_temp->GetBinContent( SR_bin );
+      double SR_bin_error = h_temp->GetBinError( SR_bin );
+      
       if(doRescale){
-	SR_cr2sr_error_up *= rescale;
-	SR_cr2sr_yield_up *= rescale;
+	SR_bin_error *= rescale;
+	SR_bin_yield *= rescale;
       }
       
-
-      //
-      // CR, MC, cr2sr bin, up
-      //
-      //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType_CR, systematicList[iSys] );
+      
+      // SR, mc, cr2sr bin
+      hName = hNameBase;
+      hName += "__";
+      hName += regionName_SR;
+      hName += "__genClassy_";
+      hName += genClassy_SR_MC.label;
+      hName += "__systematic_";
+      hName += nominal_sys.label;
+      
+      h_temp = (TH1D*)f_SR_mc->Get(hName);
+      if(!h_temp) cout << "BAD SR CRtoSR bin HISTO: " << hName << endl;
+      
+      double SR_cr2sr_yield = h_temp->GetBinContent( CR_bin );
+      double SR_cr2sr_error = h_temp->GetBinError( CR_bin );
+      int SR_cr2sr_nEntries = h_temp->GetEntries();
+      
+      if(doRescale){
+	SR_cr2sr_error *= rescale;
+	SR_cr2sr_yield *= rescale;
+      }
+      
+      
+      // CR, mc, cr2sr bin
       hName = hNameBase;
       hName += "__";
       hName += regionName_CR;
       hName += "__genClassy_";
-      hName += genClassy_MC_CR.label;
+      hName += genClassy_CR_MC.label;
       hName += "__systematic_";
-      hName += systematicList[iSys].label;
+      hName += nominal_sys.label;
       
-      h_temp = (TH1D*)f_CR->Get(hName);
-      if(!h_temp) cout << "BAD CR CRtoSR UP MC HISTO: " << hName << endl;
+      h_temp = (TH1D*)f_CR_mc->Get(hName);
+      if(!h_temp) cout << "BAD MC CR CRtoSR bin HISTO: " << hName << endl;
+      
+      double CR_cr2sr_yield = h_temp->GetBinContent( CR_bin);
+      double CR_cr2sr_error = h_temp->GetBinError( CR_bin );
     
-      double CR_cr2sr_yield_up = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-      double CR_cr2sr_error_up = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
+      if(doRescale){
+	CR_cr2sr_error *= rescale;
+	CR_cr2sr_yield *= rescale;
+      }
+      
+      
+      // CR, data, cr2sr bin
+      hName = hNameBase;
+      hName += "__";
+      hName += regionName_CR;
+      hName += "__genClassy_";
+      hName += genClassy_CR_data.label;
+      hName += "__systematic_";
+      hName += nominal_sys.label;
+      
+      h_temp = (TH1D*)f_CR_data->Get(hName);
+      if(!h_temp) cout << "BAD DATA CR CRtoSR bin HISTO: " << hName << endl;
+      
+      double CR_data_cr2sr_yield = h_temp->GetBinContent( CR_bin );
+      double CR_data_cr2sr_error = sqrt( CR_data_cr2sr_yield );
       
       if(doRescale){
-	CR_cr2sr_error_up *= rescale;
-	CR_cr2sr_yield_up *= rescale;
+	CR_data_cr2sr_yield *= rescale;
+	CR_data_cr2sr_error = sqrt( CR_data_cr2sr_yield );
+	
       }
-
       
       
-      // Transfer Factor SR/CR, up
-      double tf_cr2sr_up = 1.0;
-      double tf_cr2sr_up_statErr = 0.0;
-    
+      // Transfer Factor SR/CR
+      double tf_cr2sr = 1.0;
+      double tf_cr2sr_err = 0.0;
+      double tf_cr2sr_statErr = 0.0;
+      
       // Transfer Factor SR_bin/SR_cr2sr
-      double tf_srBin_up = 1.0;
-      double tf_srBin_up_statErr = 0.0;
-
+      double tf_srBin = 1.0;
+      double tf_srBin_err = 0.0;
+      double tf_srBin_statErr = 0.0;
+      
       // Signal Region Estimate
-      double sr_estimate_up = 0.0;
-      double sr_estimate_up_statErr = 0.0;
+      double sr_estimate = 0.0;
+      double sr_estimate_error = 0.0;
+      double sr_estimate_error_mc_stats = 0.0;
+      
       
       if(oneTF){
 	
-	// TF for SR/CR, up
-	if(CR_cr2sr_yield_up>0.0){
-	  tf_cr2sr_up = SR_cr2sr_yield_up/CR_cr2sr_yield_up;
-	  tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(CR_cr2sr_error_up/CR_cr2sr_yield_up, 2) + pow(SR_cr2sr_error_up/SR_cr2sr_yield_up, 2) ); // avoid double counting mc stats
+	// Transfer Factor SR/CR
+	if(CR_cr2sr_yield>0.0){
+	  tf_cr2sr = SR_cr2sr_yield/CR_cr2sr_yield;
+	  tf_cr2sr_err = tf_cr2sr*sqrt( pow(CR_cr2sr_error/CR_cr2sr_yield, 2) + pow(SR_cr2sr_error/SR_cr2sr_yield, 2) ); // avoid double counting mc stats
+	  tf_cr2sr_statErr = tf_cr2sr_err;
 	}
-
-	// SR estimate, up
-	sr_estimate_up = CR_data_cr2sr_yield*tf_cr2sr_up;
-	sr_estimate_up_statErr = sr_estimate_up*sqrt( pow( CR_data_cr2sr_error/CR_data_cr2sr_yield,2 ) + pow( tf_cr2sr_up_statErr/tf_cr2sr_up,2 ) );
-
+	
+	// Signal Region Estimate
+	sr_estimate = CR_data_cr2sr_yield*tf_cr2sr;
+	sr_estimate_error = sr_estimate*sqrt( pow(CR_data_cr2sr_error/CR_data_cr2sr_yield, 2) + pow(tf_cr2sr_err/tf_cr2sr, 2) );
+	sr_estimate_error_mc_stats = sr_estimate*sqrt( pow(tf_cr2sr_err/tf_cr2sr, 2) );
+	
+	
       }
       else{
 	
-	// TF for SR/CR, up
-	if(CR_cr2sr_yield_up>0.0){
-	  tf_cr2sr_up = SR_cr2sr_yield_up/CR_cr2sr_yield_up;
-	  tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow( CR_cr2sr_error_up/CR_cr2sr_yield_up, 2 ) ); // avoid double counting mc stats
+	// Transfer Factor SR/CR
+	if(CR_cr2sr_yield>0.0){
+	  tf_cr2sr = SR_cr2sr_yield/CR_cr2sr_yield;
+	  tf_cr2sr_err = tf_cr2sr*sqrt( pow( CR_cr2sr_error/CR_cr2sr_yield, 2 ) ); // avoid double counting mc stats
+	  tf_cr2sr_statErr = tf_cr2sr_err;
 	}
-
-	// TF for SR_bin/SR_cr2sr, up
-	if(SR_cr2sr_yield_up>0.0){
-	  tf_srBin_up = SR_bin_yield_up/SR_cr2sr_yield_up;
-	  tf_srBin_up_statErr = sqrt( tf_srBin_up*(1-tf_srBin_up)/SR_cr2sr_nEntries_up ); // binomial errors since SR_bin_yield is a subset of SR_cr2sr_yield
+	
+	// Transfer Factor SR_bin/SR_cr2sr
+	if(SR_cr2sr_yield>0.0){
+	  tf_srBin = SR_bin_yield/SR_cr2sr_yield;
+	  tf_srBin_err = sqrt( tf_srBin*(1-tf_srBin)/SR_cr2sr_nEntries ); // binomial errors since SR_bin_yield is a subset of SR_cr2sr_yield
+	  tf_srBin_statErr = tf_srBin_err;
 	}
-
-	// SR estimate, up
-	sr_estimate_up = CR_data_cr2sr_yield*tf_cr2sr_up*tf_srBin_up;
-	sr_estimate_up_statErr = sr_estimate_up*sqrt( pow( CR_data_cr2sr_error/CR_data_cr2sr_yield,2 ) + pow( tf_cr2sr_up_statErr/tf_cr2sr_up,2 ) + pow( tf_srBin_up_statErr/tf_srBin_up,2 ) );
-
+	
+	// Signal Region Estimate
+	sr_estimate = CR_data_cr2sr_yield*tf_cr2sr*tf_srBin;
+	sr_estimate_error = sr_estimate*sqrt( pow(CR_data_cr2sr_error/CR_data_cr2sr_yield, 2) + pow(tf_cr2sr_err/tf_cr2sr, 2) + pow(tf_srBin_err/tf_srBin, 2) );
+	sr_estimate_error_mc_stats = sr_estimate*sqrt( pow(tf_cr2sr_err/tf_cr2sr, 2) + pow(tf_srBin_err/tf_srBin, 2) );
+	
       }
+
+
+      // Fill histograms for limit setting, 0 is nominal element, 1 is first bin
+      h_SR[0]->SetBinContent( iSR+1, sr_estimate );
+      h_SR[0]->SetBinError( iSR+1, sr_estimate_error );
       
-      /*
+      
+      // Uncertainty File, for each category, Nominal Values
       if(oneTF){
-	fprintf(uncFile, "%s,~Up & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)  ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_up,(100*(SR_cr2sr_yield_up-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_up,(100*(CR_cr2sr_yield_up-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_up, (100*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr), sr_estimate_up, (100*(sr_estimate_up-sr_estimate)/sr_estimate) );
+	fprintf(uncFile, "Nominal & %.2f & %.2f & %.2f & %.2f & %.2f ", CR_data_cr2sr_yield, SR_cr2sr_yield, CR_cr2sr_yield, tf_cr2sr, sr_estimate );
       }
       else{
-	fprintf(uncFile, "%s,~Up & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_up,(100*(SR_cr2sr_yield_up-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_up,(100*(CR_cr2sr_yield_up-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_up, (100*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr), SR_bin_yield_up, (100*(SR_bin_yield_up-SR_bin_yield)/SR_bin_yield), tf_srBin_up, (100*(tf_srBin_up-tf_srBin)/tf_srBin), sr_estimate_up, (100*(sr_estimate_up-sr_estimate)/sr_estimate) );
+	fprintf(uncFile, "Nominal & %.2f & %.2f & %.2f & %.2f & %.2f & %.2f & %.2f ", CR_data_cr2sr_yield, SR_cr2sr_yield, CR_cr2sr_yield, tf_cr2sr, SR_bin_yield, tf_srBin, sr_estimate );
+      }
+      fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \\hline \n"); 
+      
+      
+      // Uncertainty File, for each category, Data Stats Up
+      if(oneTF){
+	fprintf(uncFile, "Data Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield+CR_data_cr2sr_error, (100*CR_data_cr2sr_error/CR_data_cr2sr_yield), SR_cr2sr_yield, 0.0, CR_cr2sr_yield, 0.0, tf_cr2sr, 0.0, (CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin, (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
+      }
+      else{
+	fprintf(uncFile, "Data Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield+CR_data_cr2sr_error, (100*CR_data_cr2sr_error/CR_data_cr2sr_yield), SR_cr2sr_yield, 0.0, CR_cr2sr_yield, 0.0, tf_cr2sr, 0.0, SR_bin_yield, 0.0, tf_srBin, 0.0, (CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin, (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
       }
       fprintf(uncFile, "\\"); fprintf(uncFile, "\\  \n"); 
-      */  
       
-      //
-      // SR, category bin, dn
-      //
-      //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, systematicList[iSys+1] );
-      hName = hNameBase;
-      hName += "__";
-      hName += regionName_SR;
-      hName += "__genClassy_";
-      hName += genClassy_MC_SR.label;
-      hName += "__systematic_";
-      hName += systematicList[iSys+1].label;
-      
-      h_temp = (TH1D*)f_SR->Get(hName);
-      if(!h_temp) cout << "BAD SR BIN DN HISTO: " << hName << endl;
-      
-      double SR_bin_error_dn = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( sr_cats[iSR].Data() ) );
-      double SR_bin_yield_dn = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( sr_cats[iSR].Data() ) );
-      
-      if(doRescale){
-	SR_bin_error_dn *= rescale;
-	SR_bin_yield_dn *= rescale;
-      }
-      
-      
-      //
-      // SR, CRtoSR bin, dn
-      //
-      //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_SR, recoClassyType_SR, systematicList[iSys+1] );
-      hName = hNameBase;
-      hName += "__";
-      hName += regionName_SR;
-      hName += "__genClassy_";
-      hName += genClassy_MC_SR.label;
-      hName += "__systematic_";
-      hName += systematicList[iSys+1].label;
-      
-      h_temp = (TH1D*)f_SR->Get(hName);
-      if(!h_temp) cout << "BAD SR INCL DN HISTO: " << hName << endl;
-    
-      double SR_cr2sr_yield_dn = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-      double SR_cr2sr_error_dn = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-      int SR_cr2sr_nEntries_dn = h_temp->GetEntries();
-      
-      if(doRescale){
-	SR_cr2sr_error_dn *= rescale;
-	SR_cr2sr_yield_dn *= rescale;
-      }
-      
-      
-      //
-      // CR, MC, CRtoSR bin, dn
-      //
-      //hName = histogramInfo::getYieldHistoLabel( "yields", genClassy_MC_CR, recoClassyType_CR, systematicList[iSys+1] );
-      hName = hNameBase;
-      hName += "__";
-      hName += regionName_CR;
-      hName += "__genClassy_";
-      hName += genClassy_MC_CR.label;
-      hName += "__systematic_";
-      hName += systematicList[iSys+1].label;
-      
-      h_temp = (TH1D*)f_CR->Get(hName);
-      if(!h_temp) cout << "BAD CR CRtoSR DN MC HISTO: " << hName << endl;
- 
-      double CR_cr2sr_yield_dn = h_temp->GetBinContent( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-      double CR_cr2sr_error_dn = h_temp->GetBinError( h_temp->GetXaxis()->FindBin( cr2sr_cats[iSR].Data() ) );
-      
-      if(doRescale){
-	CR_cr2sr_error_dn *= rescale;
-	CR_cr2sr_yield_dn *= rescale;
-      }
-
-
-
-      // Transfer Factor SR/CR, dn
-      double tf_cr2sr_dn = 1.0;
-      double tf_cr2sr_dn_statErr = 0.0;
-    
-      // Transfer Factor SR_bin/SR_cr2sr, dn
-      double tf_srBin_dn = 1.0;
-      double tf_srBin_dn_statErr = 0.0;
-
-      // Signal Region Estimate, dn
-      double sr_estimate_dn = 0.0;
-      double sr_estimate_dn_statErr = 0.0;
-      
+      // Uncertainty File, for each category, Data Stats Down
       if(oneTF){
-
-	// Tf_Cr2sr of SR/CR, dn
-	tf_cr2sr_dn = SR_cr2sr_yield_dn/CR_cr2sr_yield_dn;
-	tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(CR_cr2sr_error_dn/CR_cr2sr_yield_dn,2) + pow(SR_cr2sr_error_dn/SR_cr2sr_yield_dn,2) ); // avoid double counting MC stats
-      
-	// SR estimate, dn
-	sr_estimate_dn = CR_data_cr2sr_yield*tf_cr2sr_dn;
-	sr_estimate_dn_statErr = sr_estimate_dn*sqrt( pow( CR_data_cr2sr_error/CR_data_cr2sr_yield,2 ) + pow( tf_cr2sr_dn_statErr/tf_cr2sr_dn,2 ) );
-
+	fprintf(uncFile, "Data Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield-CR_data_cr2sr_error, (-100*CR_data_cr2sr_error/CR_data_cr2sr_yield), SR_cr2sr_yield, 0.0, CR_cr2sr_yield, 0.0, tf_cr2sr, 0.0, (CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin, (100*(((CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
       }
       else{
-
-	// Tf_Cr2sr of SR/CR, dn
-	tf_cr2sr_dn = SR_cr2sr_yield_dn/CR_cr2sr_yield_dn;
-	tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow( CR_cr2sr_error_dn/CR_cr2sr_yield_dn,2 ) ); // avoid double counting MC stats
-      
-	// Transfer Factor SR_bin/SR_cr2sr, dn
-	tf_srBin_dn = SR_bin_yield_dn/SR_cr2sr_yield_dn;
-	tf_srBin_dn_statErr = sqrt( tf_srBin_dn*(1-tf_srBin_dn)/SR_cr2sr_nEntries_dn ); // binomial errors since SR_bin_yield is a subset of SR_cr2sr_yield
-	
-	// SR estimate, dn
-	sr_estimate_dn = CR_data_cr2sr_yield*tf_cr2sr_dn*tf_srBin_dn;
-	sr_estimate_dn_statErr = sr_estimate_dn*sqrt( pow( CR_data_cr2sr_error/CR_data_cr2sr_yield,2 ) + pow( tf_cr2sr_dn_statErr/tf_cr2sr_dn,2 ) + pow( tf_srBin_dn_statErr/tf_srBin_dn,2 ) );
-
+	fprintf(uncFile, "Data Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield-CR_data_cr2sr_error, (-100*CR_data_cr2sr_error/CR_data_cr2sr_yield), SR_cr2sr_yield, 0.0, CR_cr2sr_yield, 0.0, tf_cr2sr, 0.0, SR_bin_yield, 0.0, tf_srBin, 0.0, (CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin, (100*(((CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
       }
+      fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \n");
+      
+      
+      // Calc Min/Max uncertainty for data stats across all categories
+      uncMax_cr_data_cr2sr[0] = std::max( uncMax_cr_data_cr2sr[0], (100*CR_data_cr2sr_error/CR_data_cr2sr_yield) );
+      uncMin_cr_data_cr2sr[0] = std::min( uncMin_cr_data_cr2sr[0], (100*CR_data_cr2sr_error/CR_data_cr2sr_yield) );
+      uncMax_tf_cr2sr[0] = std::max( uncMax_tf_cr2sr[0], 0.0 );
+      uncMin_tf_cr2sr[0] = std::min( uncMin_tf_cr2sr[0], 0.0 );
+      uncMax_tf_srBin[0] = std::max( uncMax_tf_srBin[0], 0.0 );
+      uncMin_tf_srBin[0] = std::min( uncMin_tf_srBin[0], 0.0 );
+      uncMax_sr_estimate[0] = std::max( uncMax_sr_estimate[0], (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
+      uncMin_sr_estimate[0] = std::min( uncMin_sr_estimate[0], (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate );
+      
+      // Calc SR estimate for dataStats up systematic for this cat
+      cats_vs_sys[iSR][0] = (100*(((CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin)-sr_estimate))/sr_estimate;
+      
+      
+      // Fill histograms for limit setting, data stats
+      h_SR[1]->SetBinContent( iSR+1, (CR_data_cr2sr_yield+CR_data_cr2sr_error)*tf_cr2sr*tf_srBin );
+      h_SR[1]->SetBinError( iSR+1, CR_data_cr2sr_error*tf_cr2sr*tf_srBin );
+      h_SR[2]->SetBinContent( iSR+1, (CR_data_cr2sr_yield-CR_data_cr2sr_error)*tf_cr2sr*tf_srBin );
+      h_SR[2]->SetBinError( iSR+1, CR_data_cr2sr_error*tf_cr2sr*tf_srBin );
+      
+      
+      // Uncertainty File, per category, MC Stats Up
+      if(oneTF){
+	fprintf(uncFile, "MC Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield, 0.0, SR_cr2sr_yield+SR_cr2sr_error, (100*SR_cr2sr_error/SR_cr2sr_yield), CR_cr2sr_yield+CR_cr2sr_error, (100*CR_cr2sr_error/CR_cr2sr_yield), tf_cr2sr+tf_cr2sr_err, (100*tf_cr2sr_err/tf_cr2sr), sr_estimate+sr_estimate_error_mc_stats, (100*sr_estimate_error_mc_stats/sr_estimate) );
+      }
+      else{
+	fprintf(uncFile, "MC Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield, 0.0, SR_cr2sr_yield+SR_cr2sr_error, (100*SR_cr2sr_error/SR_cr2sr_yield), CR_cr2sr_yield+CR_cr2sr_error, (100*CR_cr2sr_error/CR_cr2sr_yield), tf_cr2sr+tf_cr2sr_err, (100*tf_cr2sr_err/tf_cr2sr), SR_bin_yield+SR_bin_error, (100*SR_bin_error/SR_bin_yield), tf_srBin+tf_srBin_err, (100*tf_srBin_err/tf_srBin), sr_estimate+sr_estimate_error_mc_stats, (100*sr_estimate_error_mc_stats/sr_estimate) );
+      }
+      fprintf(uncFile, "\\"); fprintf(uncFile, "\\  \n"); 
+      
+      
+      // Uncertainty File, per category, MC Stats Down
+      if(oneTF){
+	fprintf(uncFile, "MC Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield, 0.0, SR_cr2sr_yield-SR_cr2sr_error, (-100*SR_cr2sr_error/SR_cr2sr_yield), CR_cr2sr_yield-CR_cr2sr_error, (-100*CR_cr2sr_error/CR_cr2sr_yield), tf_cr2sr-tf_cr2sr_err, (-100*tf_cr2sr_err/tf_cr2sr), sr_estimate-sr_estimate_error_mc_stats, (-100*sr_estimate_error_mc_stats/sr_estimate) );
+      }
+      else{
+	fprintf(uncFile, "MC Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ", CR_data_cr2sr_yield, 0.0, SR_cr2sr_yield-SR_cr2sr_error, (-100*SR_cr2sr_error/SR_cr2sr_yield), CR_cr2sr_yield-CR_cr2sr_error, (-100*CR_cr2sr_error/CR_cr2sr_yield), tf_cr2sr-tf_cr2sr_err, (-100*tf_cr2sr_err/tf_cr2sr), SR_bin_yield-SR_bin_error, (-100*SR_bin_error/SR_bin_yield), tf_srBin-tf_srBin_err, (-100*tf_srBin_err/tf_srBin), sr_estimate-sr_estimate_error_mc_stats, (-100*sr_estimate_error_mc_stats/sr_estimate) );
+      }
+      fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \n");
+      
+      fprintf(uncFile, "\\hline \n");
+    
+      
+      // Calc Min/Max for MC Stats across all categories
+      uncMax_cr_data_cr2sr[1] = std::max( uncMax_cr_data_cr2sr[1], 0.0 );
+      uncMin_cr_data_cr2sr[1] = std::min( uncMin_cr_data_cr2sr[1], 0.0 );
+      uncMax_tf_cr2sr[1] = std::max( uncMax_tf_cr2sr[1], (100*tf_cr2sr_err/tf_cr2sr) );
+      uncMin_tf_cr2sr[1] = std::min( uncMin_tf_cr2sr[1], (100*tf_cr2sr_err/tf_cr2sr) );
+      uncMax_tf_srBin[1] = std::max( uncMax_tf_srBin[1], (100*tf_srBin_err/tf_srBin) );
+      uncMin_tf_srBin[1] = std::min( uncMin_tf_srBin[1], (100*tf_srBin_err/tf_srBin) );
+      uncMax_sr_estimate[1] = std::max( uncMax_sr_estimate[1], (100*sr_estimate_error_mc_stats/sr_estimate) );
+      uncMin_sr_estimate[1] = std::min( uncMin_sr_estimate[1], (100*sr_estimate_error_mc_stats/sr_estimate) );
+      
+      
+      // Calc SR estimate for MC Stats for this cat
+      cats_vs_sys[iSR][1] = (100*sr_estimate_error_mc_stats/sr_estimate);
+      
+      
+      // Fill histograms for limit setting, MC Stats
+      h_SR[3]->SetBinContent( iSR+1, (sr_estimate+sr_estimate_error_mc_stats) );
+      h_SR[3]->SetBinError( iSR+1, sr_estimate_error_mc_stats );
+      h_SR[4]->SetBinContent( iSR+1, (sr_estimate-sr_estimate_error_mc_stats) );
+      h_SR[4]->SetBinError( iSR+1, sr_estimate_error_mc_stats );
+      
+      
+      
+      //
+      // Loop over systematics
+      //
+      int unique_sys = 2;
+      for(int iSys=1; iSys<(int)systematicList.size(); iSys+=2){
+	
+	// SR, category bin, up
+	hName = hNameBase;
+	hName += "__";
+	hName += regionName_SR;
+	hName += "__genClassy_";
+	hName += genClassy_SR_MC.label;
+	hName += "__systematic_";
+	hName += systematicList[iSys].label;
+	
+	h_temp = (TH1D*)f_SR_mc->Get(hName);
+	if(!h_temp) cout << "BAD SR CATEGORY BIN UP HISTO: " << hName << endl;
+	
+	double SR_bin_yield_up = h_temp->GetBinContent( SR_bin );
+	double SR_bin_error_up = h_temp->GetBinError( SR_bin );
+      
+	if(doRescale){
+	  SR_bin_error_up *= rescale;
+	  SR_bin_yield_up *= rescale;
+	}
+      
+      
+	// SR, cr2sr bin, up
+	hName = hNameBase;
+	hName += "__";
+	hName += regionName_SR;
+	hName += "__genClassy_";
+	hName += genClassy_SR_MC.label;
+	hName += "__systematic_";
+	hName += systematicList[iSys].label;
+      
+	h_temp = (TH1D*)f_SR_mc->Get(hName);
+	if(!h_temp) cout << "BAD SR INCL UP HISTO: " << hName << endl;
+	
+	double SR_cr2sr_yield_up = h_temp->GetBinContent( CR_bin );
+	double SR_cr2sr_error_up = h_temp->GetBinError( CR_bin );
+	int SR_cr2sr_nEntries_up = h_temp->GetEntries();
+
+	if(doRescale){
+	  SR_cr2sr_error_up *= rescale;
+	  SR_cr2sr_yield_up *= rescale;
+	}
+	
+
+	// CR, MC, cr2sr bin, up
+	hName = hNameBase;
+	hName += "__";
+	hName += regionName_CR;
+	hName += "__genClassy_";
+	hName += genClassy_CR_MC.label;
+	hName += "__systematic_";
+	hName += systematicList[iSys].label;
+	
+	h_temp = (TH1D*)f_CR_mc->Get(hName);
+	if(!h_temp) cout << "BAD CR CRtoSR UP MC HISTO: " << hName << endl;
+	
+	double CR_cr2sr_yield_up = h_temp->GetBinContent( CR_bin );
+	double CR_cr2sr_error_up = h_temp->GetBinError( CR_bin );
+      
+	if(doRescale){
+	  CR_cr2sr_error_up *= rescale;
+	  CR_cr2sr_yield_up *= rescale;
+	}
 
       
-      /*
-      // Hot rod out CR2l JESup/down for now
-      if( systematicList[iSys].id == sysInfo::k_JESUp ||
-	  systematicList[iSys].id == sysInfo::k_JESDown ){
-
-	double newNom = 0.5*fabs(CR_cr2sr_yield_up - CR_cr2sr_yield_dn);
-	//double percentDiffFromNewNom = (CR_cr2sr_yield_up-newNom)/newNom;
+	// Transfer Factor SR/CR, up
+	double tf_cr2sr_up = 1.0;
+	double tf_cr2sr_up_statErr = 0.0;
 	
-	//CR_cr2sr_yield_up = CR_cr2sr_yield*(1.00+percentDiffFromNewNom);
-	//CR_cr2sr_yield_dn = CR_cr2sr_yield*(1.00-percentDiffFromNewNom);
+	// Transfer Factor SR_bin/SR_cr2sr
+	double tf_srBin_up = 1.0;
+	double tf_srBin_up_statErr = 0.0;
 	
-	CR_cr2sr_yield_up = CR_cr2sr_yield+newNom;
-	CR_cr2sr_yield_dn = CR_cr2sr_yield-newNom;
-
+	// Signal Region Estimate
+	double sr_estimate_up = 0.0;
+	double sr_estimate_up_statErr = 0.0;
+	
 	if(oneTF){
+	  
+	  // TF for SR/CR, up
+	  if(CR_cr2sr_yield_up>0.0){
+	    tf_cr2sr_up = SR_cr2sr_yield_up/CR_cr2sr_yield_up;
+	    tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(CR_cr2sr_error_up/CR_cr2sr_yield_up, 2) + pow(SR_cr2sr_error_up/SR_cr2sr_yield_up, 2) ); // avoid double counting mc stats
+	  }
 
-	  // Tf_Cr2sr of SR/CR, up
-	  tf_cr2sr_up = SR_cr2sr_yield_up/CR_cr2sr_yield_up;
-	  tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(CR_cr2sr_error_up/CR_cr2sr_yield_up,2) + pow(SR_cr2sr_error_up/SR_cr2sr_yield_up,2) ); // avoid double counting MC stats
-      
 	  // SR estimate, up
 	  sr_estimate_up = CR_data_cr2sr_yield*tf_cr2sr_up;
 	  sr_estimate_up_statErr = sr_estimate_up*sqrt( pow( CR_data_cr2sr_error/CR_data_cr2sr_yield,2 ) + pow( tf_cr2sr_up_statErr/tf_cr2sr_up,2 ) );
-
-	  // Tf_Cr2sr of SR/CR, dn
-	  tf_cr2sr_dn = SR_cr2sr_yield_dn/CR_cr2sr_yield_dn;
-	  tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(CR_cr2sr_error_dn/CR_cr2sr_yield_dn,2) + pow(SR_cr2sr_error_dn/SR_cr2sr_yield_dn,2) ); // avoid double counting MC stats
-      
-	  // SR estimate, dn
-	  sr_estimate_dn = CR_data_cr2sr_yield*tf_cr2sr_dn;
-	  sr_estimate_dn_statErr = sr_estimate_dn*sqrt( pow( CR_data_cr2sr_error/CR_data_cr2sr_yield,2 ) + pow( tf_cr2sr_dn_statErr/tf_cr2sr_dn,2 ) );
 	  
 	}
 	else{
-
-	  // Tf_Cr2sr of SR/CR, up
-	  tf_cr2sr_up = SR_cr2sr_yield_up/CR_cr2sr_yield_up;
-	  tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow( CR_cr2sr_error_up/CR_cr2sr_yield_up,2 ) ); // avoid double counting MC stats
+	
+	  // TF for SR/CR, up
+	  if(CR_cr2sr_yield_up>0.0){
+	    tf_cr2sr_up = SR_cr2sr_yield_up/CR_cr2sr_yield_up;
+	    tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow( CR_cr2sr_error_up/CR_cr2sr_yield_up, 2 ) ); // avoid double counting mc stats
+	  }
 	  
-	  // Transfer Factor SR_bin/SR_cr2sr, up
-	  tf_srBin_up = SR_bin_yield_up/SR_cr2sr_yield_up;
-	  tf_srBin_up_statErr = sqrt( tf_srBin_up*(1-tf_srBin_up)/SR_cr2sr_nEntries_up ); // binomial errors since SR_bin_yield is a subset of SR_cr2sr_yield
+	  // TF for SR_bin/SR_cr2sr, up
+	  if(SR_cr2sr_yield_up>0.0){
+	    tf_srBin_up = SR_bin_yield_up/SR_cr2sr_yield_up;
+	    tf_srBin_up_statErr = sqrt( tf_srBin_up*(1-tf_srBin_up)/SR_cr2sr_nEntries_up ); // binomial errors since SR_bin_yield is a subset of SR_cr2sr_yield
+	  }
 	  
 	  // SR estimate, up
 	  sr_estimate_up = CR_data_cr2sr_yield*tf_cr2sr_up*tf_srBin_up;
 	  sr_estimate_up_statErr = sr_estimate_up*sqrt( pow( CR_data_cr2sr_error/CR_data_cr2sr_yield,2 ) + pow( tf_cr2sr_up_statErr/tf_cr2sr_up,2 ) + pow( tf_srBin_up_statErr/tf_srBin_up,2 ) );
 	  
+	}
+      
+      
+	// SR, category bin, dn
+	hName = hNameBase;
+	hName += "__";
+	hName += regionName_SR;
+	hName += "__genClassy_";
+	hName += genClassy_SR_MC.label;
+	hName += "__systematic_";
+	hName += systematicList[iSys+1].label;
+      
+	h_temp = (TH1D*)f_SR_mc->Get(hName);
+	if(!h_temp) cout << "BAD SR BIN DN HISTO: " << hName << endl;
+	
+	double SR_bin_error_dn = h_temp->GetBinError( SR_bin );
+	double SR_bin_yield_dn = h_temp->GetBinContent( SR_bin );
+	
+	if(doRescale){
+	  SR_bin_error_dn *= rescale;
+	  SR_bin_yield_dn *= rescale;
+	}
+      
+      
+	// SR, CRtoSR bin, dn
+	hName = hNameBase;
+	hName += "__";
+	hName += regionName_SR;
+	hName += "__genClassy_";
+	hName += genClassy_SR_MC.label;
+	hName += "__systematic_";
+	hName += systematicList[iSys+1].label;
+	
+	h_temp = (TH1D*)f_SR_mc->Get(hName);
+	if(!h_temp) cout << "BAD SR INCL DN HISTO: " << hName << endl;
+    
+	double SR_cr2sr_yield_dn = h_temp->GetBinContent( CR_bin );
+	double SR_cr2sr_error_dn = h_temp->GetBinError( CR_bin );
+	int SR_cr2sr_nEntries_dn = h_temp->GetEntries();
+	
+	if(doRescale){
+	  SR_cr2sr_error_dn *= rescale;
+	  SR_cr2sr_yield_dn *= rescale;
+	}
+	
+      
+	// CR, MC, CRtoSR bin, dn
+	hName = hNameBase;
+	hName += "__";
+	hName += regionName_CR;
+	hName += "__genClassy_";
+	hName += genClassy_CR_MC.label;
+	hName += "__systematic_";
+	hName += systematicList[iSys+1].label;
+      
+	h_temp = (TH1D*)f_CR_mc->Get(hName);
+	if(!h_temp) cout << "BAD CR CRtoSR DN MC HISTO: " << hName << endl;
+	
+	double CR_cr2sr_yield_dn = h_temp->GetBinContent( CR_bin );
+	double CR_cr2sr_error_dn = h_temp->GetBinError( CR_bin );
+	
+	if(doRescale){
+	  CR_cr2sr_error_dn *= rescale;
+	  CR_cr2sr_yield_dn *= rescale;
+	}
+
+
+	// Transfer Factor SR/CR, dn
+	double tf_cr2sr_dn = 1.0;
+	double tf_cr2sr_dn_statErr = 0.0;
+	
+	// Transfer Factor SR_bin/SR_cr2sr, dn
+	double tf_srBin_dn = 1.0;
+	double tf_srBin_dn_statErr = 0.0;
+	
+	// Signal Region Estimate, dn
+	double sr_estimate_dn = 0.0;
+	double sr_estimate_dn_statErr = 0.0;
+      
+	if(oneTF){
 	  
+	  // Tf_Cr2sr of SR/CR, dn
+	  tf_cr2sr_dn = SR_cr2sr_yield_dn/CR_cr2sr_yield_dn;
+	  tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(CR_cr2sr_error_dn/CR_cr2sr_yield_dn,2) + pow(SR_cr2sr_error_dn/SR_cr2sr_yield_dn,2) ); // avoid double counting MC stats
+	  
+	  // SR estimate, dn
+	  sr_estimate_dn = CR_data_cr2sr_yield*tf_cr2sr_dn;
+	  sr_estimate_dn_statErr = sr_estimate_dn*sqrt( pow( CR_data_cr2sr_error/CR_data_cr2sr_yield,2 ) + pow( tf_cr2sr_dn_statErr/tf_cr2sr_dn,2 ) );
+
+	}
+	else{
+	
 	  // Tf_Cr2sr of SR/CR, dn
 	  tf_cr2sr_dn = SR_cr2sr_yield_dn/CR_cr2sr_yield_dn;
 	  tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow( CR_cr2sr_error_dn/CR_cr2sr_yield_dn,2 ) ); // avoid double counting MC stats
@@ -1058,294 +1362,260 @@ int bkgEstimate_diLepton_newBinning(){
 	  
 	}
 
-      } // end if systematic is JES
-      */
-
-      //
-      // Diff in TF Cr2sr
-      //
-      double tf_cr2sr_max_diff = std::max( fabs(tf_cr2sr_up-tf_cr2sr), fabs(tf_cr2sr_dn-tf_cr2sr) );
-      double tf_cr2sr_max_diff_sq = pow( tf_cr2sr_max_diff, 2 );
-      tf_cr2sr_err = pow( tf_cr2sr_err, 2 );
-      tf_cr2sr_err += tf_cr2sr_max_diff_sq;
-      tf_cr2sr_err = sqrt(tf_cr2sr_err);
-
-
-      //
-      // Diff in TF SR bin
-      //
-      double tf_srBin_max_diff = std::max( fabs(tf_srBin_up-tf_srBin), fabs(tf_srBin_dn-tf_srBin) );
-      double tf_srBin_max_diff_sq = pow( tf_srBin_max_diff, 2 );
-      tf_srBin_err = pow( tf_srBin_err, 2 );
-      tf_srBin_err += tf_srBin_max_diff_sq;
-      tf_srBin_err = sqrt(tf_srBin_err);
-
-
-      //
-      // Diff in SR estimate
-      //
-      double est_max_diff = std::max( fabs(sr_estimate_up-sr_estimate), fabs(sr_estimate_dn-sr_estimate) );
-      double est_max_diff_sq = pow( est_max_diff, 2 );
-      sr_estimate_error = pow( sr_estimate_error, 2 );
-      sr_estimate_error += est_max_diff_sq;
-      sr_estimate_error = sqrt(sr_estimate_error);
-
-
       
-      
-      //
-      // Fill histograms for limit setting
-      //
-      h_SR[iSys+4]->SetBinContent( iSR+1, sr_estimate_up );
-      h_SR[iSys+4]->SetBinError( iSR+1, sr_estimate_up_statErr );
-      h_SR[iSys+5]->SetBinContent( iSR+1, sr_estimate_dn );
-      h_SR[iSys+5]->SetBinError( iSR+1, sr_estimate_dn_statErr );
-    
-      
-      //
-      // Tables
-      //
+	// Diff in TF Cr2sr
+	double tf_cr2sr_max_diff = std::max( fabs(tf_cr2sr_up-tf_cr2sr), fabs(tf_cr2sr_dn-tf_cr2sr) );
+	double tf_cr2sr_max_diff_sq = pow( tf_cr2sr_max_diff, 2 );
+	tf_cr2sr_err = pow( tf_cr2sr_err, 2 );
+	tf_cr2sr_err += tf_cr2sr_max_diff_sq;
+	tf_cr2sr_err = sqrt(tf_cr2sr_err);
+	
+	
+	// Diff in TF SR bin
+	double tf_srBin_max_diff = std::max( fabs(tf_srBin_up-tf_srBin), fabs(tf_srBin_dn-tf_srBin) );
+	double tf_srBin_max_diff_sq = pow( tf_srBin_max_diff, 2 );
+	tf_srBin_err = pow( tf_srBin_err, 2 );
+	tf_srBin_err += tf_srBin_max_diff_sq;
+	tf_srBin_err = sqrt(tf_srBin_err);
+	
 
-      // Up variations
-      if(oneTF){
-	fprintf(uncFile, "%s,~Up & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)  ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_up,(100*(SR_cr2sr_yield_up-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_up,(100*(CR_cr2sr_yield_up-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_up, (100*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr), sr_estimate_up, (100*(sr_estimate_up-sr_estimate)/sr_estimate) );
-      }
-      else{
-	fprintf(uncFile, "%s,~Up & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_up,(100*(SR_cr2sr_yield_up-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_up,(100*(CR_cr2sr_yield_up-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_up, (100*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr), SR_bin_yield_up, (100*(SR_bin_yield_up-SR_bin_yield)/SR_bin_yield), tf_srBin_up, (100*(tf_srBin_up-tf_srBin)/tf_srBin), sr_estimate_up, (100*(sr_estimate_up-sr_estimate)/sr_estimate) );
-      }
-      fprintf(uncFile, "\\"); fprintf(uncFile, "\\  \n"); 
-
-      // Down variations
-      if(oneTF){
-	fprintf(uncFile, "%s,~Down & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)  ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_dn,(100*(SR_cr2sr_yield_dn-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_dn,(100*(CR_cr2sr_yield_dn-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_dn, (100*(tf_cr2sr_dn-tf_cr2sr)/tf_cr2sr), sr_estimate_dn, (100*(sr_estimate_dn-sr_estimate)/sr_estimate) );
-      }
+	// Diff in SR estimate
+	double est_max_diff = std::max( fabs(sr_estimate_up-sr_estimate), fabs(sr_estimate_dn-sr_estimate) );
+	double est_max_diff_sq = pow( est_max_diff, 2 );
+	sr_estimate_error = pow( sr_estimate_error, 2 );
+	sr_estimate_error += est_max_diff_sq;
+	sr_estimate_error = sqrt(sr_estimate_error);
+	
+     
+	// Fill histograms for limit setting
+	h_SR[iSys+4]->SetBinContent( iSR+1, sr_estimate_up );
+	h_SR[iSys+4]->SetBinError( iSR+1, sr_estimate_up_statErr );
+	h_SR[iSys+5]->SetBinContent( iSR+1, sr_estimate_dn );
+	h_SR[iSys+5]->SetBinError( iSR+1, sr_estimate_dn_statErr );
+	
+      
+	//
+	// Tables
+	//
+	
+	// Up variations
+	if(oneTF){
+	  fprintf(uncFile, "%s,~Up & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)  ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_up,(100*(SR_cr2sr_yield_up-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_up,(100*(CR_cr2sr_yield_up-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_up, (100*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr), sr_estimate_up, (100*(sr_estimate_up-sr_estimate)/sr_estimate) );
+	}
+	else{
+	  fprintf(uncFile, "%s,~Up & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_up,(100*(SR_cr2sr_yield_up-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_up,(100*(CR_cr2sr_yield_up-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_up, (100*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr), SR_bin_yield_up, (100*(SR_bin_yield_up-SR_bin_yield)/SR_bin_yield), tf_srBin_up, (100*(tf_srBin_up-tf_srBin)/tf_srBin), sr_estimate_up, (100*(sr_estimate_up-sr_estimate)/sr_estimate) );
+	}
+	fprintf(uncFile, "\\"); fprintf(uncFile, "\\  \n"); 
+	
+	// Down variations
+	if(oneTF){
+	  fprintf(uncFile, "%s,~Down & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)  ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_dn,(100*(SR_cr2sr_yield_dn-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_dn,(100*(CR_cr2sr_yield_dn-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_dn, (100*(tf_cr2sr_dn-tf_cr2sr)/tf_cr2sr), sr_estimate_dn, (100*(sr_estimate_dn-sr_estimate)/sr_estimate) );
+	}
       else{
 	fprintf(uncFile, "%s,~Down & %.2f,~(%.2f\\%%) & %.2f,~(%.2f\\%%) & %.2f~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) ",systematicList[iSys].tex.c_str(),CR_data_cr2sr_yield,0.0,SR_cr2sr_yield_dn,(100*(SR_cr2sr_yield_dn-SR_cr2sr_yield)/SR_cr2sr_yield),CR_cr2sr_yield_dn,(100*(CR_cr2sr_yield_dn-CR_cr2sr_yield)/CR_cr2sr_yield), tf_cr2sr_dn, (100*(tf_cr2sr_dn-tf_cr2sr)/tf_cr2sr), SR_bin_yield_dn, (100*(SR_bin_yield_dn-SR_bin_yield)/SR_bin_yield), tf_srBin_dn, (100*(tf_srBin_dn-tf_srBin)/tf_srBin), sr_estimate_dn, (100*(sr_estimate_dn-sr_estimate)/sr_estimate) );
       }
+	fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \n");
+	
+	
+	// Fill Min/Max Uncertainty
+	uncMax_cr_data_cr2sr[unique_sys] = std::max( uncMax_cr_data_cr2sr[unique_sys], 0.0 );
+	uncMin_cr_data_cr2sr[unique_sys] = std::min( uncMin_cr_data_cr2sr[unique_sys], 0.0 );
+	uncMax_tf_cr2sr[unique_sys] = std::max( uncMax_tf_cr2sr[unique_sys], (100*tf_cr2sr_max_diff/tf_cr2sr) );
+	uncMin_tf_cr2sr[unique_sys] = std::min( uncMin_tf_cr2sr[unique_sys], (100*tf_cr2sr_max_diff/tf_cr2sr) );
+	uncMax_tf_srBin[unique_sys] = std::max( uncMax_tf_srBin[unique_sys], (100*tf_srBin_max_diff/tf_srBin) );
+	uncMin_tf_srBin[unique_sys] = std::min( uncMin_tf_srBin[unique_sys], (100*tf_srBin_max_diff/tf_srBin) );
+	uncMax_sr_estimate[unique_sys] = std::max( uncMax_sr_estimate[unique_sys], (100*est_max_diff/sr_estimate) );
+	uncMin_sr_estimate[unique_sys] = std::min( uncMin_sr_estimate[unique_sys], (100*est_max_diff/sr_estimate) );
+
+      
+	// Calc SR estimate for this sys for this cat
+	cats_vs_sys[iSR][unique_sys] = (100*est_max_diff/sr_estimate);
+      
+
+	// Increment unique sys counter
+	unique_sys++;
+
+      
+      } // end loop over systematics
+
+
+      // Total Uncertainty, for tabales
+      if(oneTF){
+	fprintf(uncFile, "\\hline \n");
+	fprintf(uncFile, "Total Uncertainties & %.2f\\%% & & & %.2f\\%% & %.2f\\%% ",(100*CR_data_cr2sr_error/CR_data_cr2sr_yield), (100*tf_cr2sr_err/tf_cr2sr), (100*sr_estimate_error/sr_estimate) );
+      }
+      else{
+	fprintf(uncFile, "\\hline \n");
+	fprintf(uncFile, "Total Uncertainties & %.2f\\%% & & & %.2f\\%% & & & %.2f\\%% ",(100*CR_data_cr2sr_error/CR_data_cr2sr_yield), (100*tf_cr2sr_err/tf_cr2sr), (100*sr_estimate_error/sr_estimate) );
+      }
       fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \n");
-  
       
-      //
+      h_SR[0]->SetBinError( iSR+1, sr_estimate_error );
+      
+      
+      // Formatting for uncertainty tex file for each category
+      fprintf(uncFile, "\\end{tabular} \n");
+      fprintf(uncFile, "} \n");
+      fprintf(uncFile, "\\end{table} \n");
+      fprintf(uncFile, "\n \n");
+      fprintf(uncFile, "\\clearpage");
+      fprintf(uncFile, "\n \n");
+    
+    
       // Fill Min/Max Uncertainty
-      //
-      uncMax_cr_data_cr2sr[unique_sys] = std::max( uncMax_cr_data_cr2sr[unique_sys], 0.0 );
-      uncMin_cr_data_cr2sr[unique_sys] = std::min( uncMin_cr_data_cr2sr[unique_sys], 0.0 );
-      uncMax_tf_cr2sr[unique_sys] = std::max( uncMax_tf_cr2sr[unique_sys], (100*tf_cr2sr_max_diff/tf_cr2sr) );
-      uncMin_tf_cr2sr[unique_sys] = std::min( uncMin_tf_cr2sr[unique_sys], (100*tf_cr2sr_max_diff/tf_cr2sr) );
-      uncMax_tf_srBin[unique_sys] = std::max( uncMax_tf_srBin[unique_sys], (100*tf_srBin_max_diff/tf_srBin) );
-      uncMin_tf_srBin[unique_sys] = std::min( uncMin_tf_srBin[unique_sys], (100*tf_srBin_max_diff/tf_srBin) );
-      uncMax_sr_estimate[unique_sys] = std::max( uncMax_sr_estimate[unique_sys], (100*est_max_diff/sr_estimate) );
-      uncMin_sr_estimate[unique_sys] = std::min( uncMin_sr_estimate[unique_sys], (100*est_max_diff/sr_estimate) );
-
+      uncMax_cr_data_cr2sr[nSys_unique-1] = std::max( uncMax_cr_data_cr2sr[nSys_unique-1], (100*CR_data_cr2sr_error/CR_data_cr2sr_yield) );
+      uncMin_cr_data_cr2sr[nSys_unique-1] = std::min( uncMin_cr_data_cr2sr[nSys_unique-1], (100*CR_data_cr2sr_error/CR_data_cr2sr_yield) );
+      uncMax_tf_cr2sr[nSys_unique-1] = std::max( uncMax_tf_cr2sr[nSys_unique-1], (100*tf_cr2sr_err/tf_cr2sr) );
+      uncMin_tf_cr2sr[nSys_unique-1] = std::min( uncMin_tf_cr2sr[nSys_unique-1], (100*tf_cr2sr_err/tf_cr2sr) );
+      uncMax_tf_srBin[nSys_unique-1] = std::max( uncMax_tf_srBin[nSys_unique-1], (100*tf_srBin_err/tf_srBin) );
+      uncMin_tf_srBin[nSys_unique-1] = std::min( uncMin_tf_srBin[nSys_unique-1], (100*tf_srBin_err/tf_srBin) );
+      uncMax_sr_estimate[nSys_unique-1] = std::max( uncMax_sr_estimate[nSys_unique-1], (100*sr_estimate_error/sr_estimate) );
+      uncMin_sr_estimate[nSys_unique-1] = std::min( uncMin_sr_estimate[nSys_unique-1], (100*sr_estimate_error/sr_estimate) );
       
-      //
-      // Calc SR estimate for this sys for this cat
-      //
       
-      cats_vs_sys[iSR][unique_sys] = (100*est_max_diff/sr_estimate);
+      // Calc SR estimate for total error for this cat
+      cats_vs_sys[iSR][nSys_unique-1] = (100*sr_estimate_error/sr_estimate);
+    
+    
+      // Final Results Table
+      if(oneTF){
+	fprintf(yFile, "%.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f " , CR_data_cr2sr_yield, CR_data_cr2sr_error, tf_cr2sr, tf_cr2sr_err, sr_estimate, sr_estimate_error);
+      }
+      else{
+	fprintf(yFile, "%.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f " , CR_data_cr2sr_yield, CR_data_cr2sr_error, tf_cr2sr, tf_cr2sr_err, tf_srBin, tf_srBin_err, sr_estimate, sr_estimate_error);
+      }
+      fprintf(yFile, "\\"); fprintf(yFile, "\\ \\hline \n");
+      
       
 
-      //
-      // Increment unique sys counter
-      //
-      unique_sys++;
-
-
-    } // end loop over systematics
-
-
-    //
-    // Total Uncertainty
-    //
-    if(oneTF){
-      fprintf(uncFile, "\\hline \n");
-      fprintf(uncFile, "Total Uncertainties & %.2f\\%% & & & %.2f\\%% & %.2f\\%% ",(100*CR_data_cr2sr_error/CR_data_cr2sr_yield), (100*tf_cr2sr_err/tf_cr2sr), (100*sr_estimate_error/sr_estimate) );
-    }
-    else{
-      fprintf(uncFile, "\\hline \n");
-      fprintf(uncFile, "Total Uncertainties & %.2f\\%% & & & %.2f\\%% & & & %.2f\\%% ",(100*CR_data_cr2sr_error/CR_data_cr2sr_yield), (100*tf_cr2sr_err/tf_cr2sr), (100*sr_estimate_error/sr_estimate) );
-    }
-    fprintf(uncFile, "\\"); fprintf(uncFile, "\\ \\hline \n");
-
-    h_SR[0]->SetBinError( iSR+1, sr_estimate_error );
-    
-
-    //
-    // Formatting for uncertainty tex file
-    //
-    fprintf(uncFile, "\\end{tabular} \n");
-    fprintf(uncFile, "} \n");
-    fprintf(uncFile, "\\end{table} \n");
-    fprintf(uncFile, "\n \n");
-    fprintf(uncFile, "\\clearpage");
-    fprintf(uncFile, "\n \n");
-    
-    
-    //
-    // Fill Min/Max Uncertainty
-    //
-    uncMax_cr_data_cr2sr[nSys_unique-1] = std::max( uncMax_cr_data_cr2sr[nSys_unique-1], (100*CR_data_cr2sr_error/CR_data_cr2sr_yield) );
-    uncMin_cr_data_cr2sr[nSys_unique-1] = std::min( uncMin_cr_data_cr2sr[nSys_unique-1], (100*CR_data_cr2sr_error/CR_data_cr2sr_yield) );
-    uncMax_tf_cr2sr[nSys_unique-1] = std::max( uncMax_tf_cr2sr[nSys_unique-1], (100*tf_cr2sr_err/tf_cr2sr) );
-    uncMin_tf_cr2sr[nSys_unique-1] = std::min( uncMin_tf_cr2sr[nSys_unique-1], (100*tf_cr2sr_err/tf_cr2sr) );
-    uncMax_tf_srBin[nSys_unique-1] = std::max( uncMax_tf_srBin[nSys_unique-1], (100*tf_srBin_err/tf_srBin) );
-    uncMin_tf_srBin[nSys_unique-1] = std::min( uncMin_tf_srBin[nSys_unique-1], (100*tf_srBin_err/tf_srBin) );
-    uncMax_sr_estimate[nSys_unique-1] = std::max( uncMax_sr_estimate[nSys_unique-1], (100*sr_estimate_error/sr_estimate) );
-    uncMin_sr_estimate[nSys_unique-1] = std::min( uncMin_sr_estimate[nSys_unique-1], (100*sr_estimate_error/sr_estimate) );
-    
-
-    //
-    // Calc SR estimate for this sys for this cat
-    //
-    cats_vs_sys[iSR][nSys_unique-1] = (100*sr_estimate_error/sr_estimate);
-    
-    
-    if(oneTF){
-      fprintf(yFile, "%.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f " , CR_data_cr2sr_yield, CR_data_cr2sr_error, tf_cr2sr, tf_cr2sr_err, sr_estimate, sr_estimate_error);
-    }
-    else{
-      fprintf(yFile, "%.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f " , CR_data_cr2sr_yield, CR_data_cr2sr_error, tf_cr2sr, tf_cr2sr_err, tf_srBin, tf_srBin_err, sr_estimate, sr_estimate_error);
-    }
-    fprintf(yFile, "\\"); fprintf(yFile, "\\ \\hline \n");
-
-    
-
-  } // end loop over signal regions
+    } // end loop over signal regions
 
   
 
-  //
-  // Summary table of uncertainties
-  //
-  if(oneTF){
+    //
+    // Summary table of uncertainties
+    //
+    if(oneTF){
     
-    fprintf(uncFileSummary, "Data Stats & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[0], uncMax_cr_data_cr2sr[0], uncMin_tf_cr2sr[0], uncMax_tf_cr2sr[0], uncMin_sr_estimate[0], uncMax_sr_estimate[0]);
-    fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
-    
-    fprintf(uncFileSummary, "MC Stats & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[1], uncMax_cr_data_cr2sr[1], uncMin_tf_cr2sr[1], uncMax_tf_cr2sr[1], uncMin_sr_estimate[1], uncMax_sr_estimate[1]);
-    fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
-    
-    int unique_sys = 2;
-    for(int iSys=1; iSys<(int)systematicList.size(); iSys+=2){
-      TString sys_name = systematicList[iSys].tex.c_str();
-      sys_name.ReplaceAll(",~Up","");  sys_name.ReplaceAll("~Up","");
-      sys_name.ReplaceAll(",~Down","");  sys_name.ReplaceAll("~Down","");
-      fprintf(uncFileSummary, "%s & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", sys_name.Data(), uncMin_cr_data_cr2sr[unique_sys], uncMax_cr_data_cr2sr[unique_sys], uncMin_tf_cr2sr[unique_sys], uncMax_tf_cr2sr[unique_sys], uncMin_sr_estimate[unique_sys], uncMax_sr_estimate[unique_sys]);
+      fprintf(uncFileSummary, "Data Stats & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[0], uncMax_cr_data_cr2sr[0], uncMin_tf_cr2sr[0], uncMax_tf_cr2sr[0], uncMin_sr_estimate[0], uncMax_sr_estimate[0]);
       fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
-      unique_sys++;
+      
+      fprintf(uncFileSummary, "MC Stats & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[1], uncMax_cr_data_cr2sr[1], uncMin_tf_cr2sr[1], uncMax_tf_cr2sr[1], uncMin_sr_estimate[1], uncMax_sr_estimate[1]);
+      fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
+      
+      int unique_sys = 2;
+      for(int iSys=1; iSys<(int)systematicList.size(); iSys+=2){
+	TString sys_name = systematicList[iSys].tex.c_str();
+	sys_name.ReplaceAll(",~Up","");  sys_name.ReplaceAll("~Up","");
+	sys_name.ReplaceAll(",~Down","");  sys_name.ReplaceAll("~Down","");
+	fprintf(uncFileSummary, "%s & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", sys_name.Data(), uncMin_cr_data_cr2sr[unique_sys], uncMax_cr_data_cr2sr[unique_sys], uncMin_tf_cr2sr[unique_sys], uncMax_tf_cr2sr[unique_sys], uncMin_sr_estimate[unique_sys], uncMax_sr_estimate[unique_sys]);
+	fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
+	unique_sys++;
+      }
+      
+      fprintf(uncFileSummary, "Total & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[nSys_unique-1], uncMax_cr_data_cr2sr[nSys_unique-1], uncMin_tf_cr2sr[nSys_unique-1], uncMax_tf_cr2sr[nSys_unique-1], uncMin_sr_estimate[nSys_unique-1], uncMax_sr_estimate[nSys_unique-1]);
+      fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
+      
     }
-    
-    fprintf(uncFileSummary, "Total & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[nSys_unique-1], uncMax_cr_data_cr2sr[nSys_unique-1], uncMin_tf_cr2sr[nSys_unique-1], uncMax_tf_cr2sr[nSys_unique-1], uncMin_sr_estimate[nSys_unique-1], uncMax_sr_estimate[nSys_unique-1]);
-    fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
-
-  }
-  else{
-
-    fprintf(uncFileSummary, "Data Stats & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[0], uncMax_cr_data_cr2sr[0], uncMin_tf_cr2sr[0], uncMax_tf_cr2sr[0], uncMin_tf_srBin[0], uncMax_tf_srBin[0], uncMin_sr_estimate[0], uncMax_sr_estimate[0]);
-    fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \n");
-    
-    fprintf(uncFileSummary, "MC Stats & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[1], uncMax_cr_data_cr2sr[1], uncMin_tf_cr2sr[1], uncMax_tf_cr2sr[1], uncMin_tf_srBin[1], uncMax_tf_srBin[1], uncMin_sr_estimate[1], uncMax_sr_estimate[1]);
-    fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
-    
-    int unique_sys = 2;
-    for(int iSys=1; iSys<(int)systematicList.size(); iSys+=2){
-      TString sys_name = systematicList[iSys].tex.c_str();
-      sys_name.ReplaceAll(",~Up","");  sys_name.ReplaceAll("~Up","");
-      sys_name.ReplaceAll(",~Down","");  sys_name.ReplaceAll("~Down","");
-      fprintf(uncFileSummary, "%s & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", sys_name.Data(), uncMin_cr_data_cr2sr[unique_sys], uncMax_cr_data_cr2sr[unique_sys], uncMin_tf_cr2sr[unique_sys], uncMax_tf_cr2sr[unique_sys], uncMin_tf_srBin[unique_sys], uncMax_tf_srBin[unique_sys], uncMin_sr_estimate[unique_sys], uncMax_sr_estimate[unique_sys]);
+    else{
+      
+      fprintf(uncFileSummary, "Data Stats & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[0], uncMax_cr_data_cr2sr[0], uncMin_tf_cr2sr[0], uncMax_tf_cr2sr[0], uncMin_tf_srBin[0], uncMax_tf_srBin[0], uncMin_sr_estimate[0], uncMax_sr_estimate[0]);
       fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \n");
-      unique_sys++;
+      
+      fprintf(uncFileSummary, "MC Stats & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[1], uncMax_cr_data_cr2sr[1], uncMin_tf_cr2sr[1], uncMax_tf_cr2sr[1], uncMin_tf_srBin[1], uncMax_tf_srBin[1], uncMin_sr_estimate[1], uncMax_sr_estimate[1]);
+      fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
+      
+      int unique_sys = 2;
+      for(int iSys=1; iSys<(int)systematicList.size(); iSys+=2){
+	TString sys_name = systematicList[iSys].tex.c_str();
+	sys_name.ReplaceAll(",~Up","");  sys_name.ReplaceAll("~Up","");
+	sys_name.ReplaceAll(",~Down","");  sys_name.ReplaceAll("~Down","");
+	fprintf(uncFileSummary, "%s & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", sys_name.Data(), uncMin_cr_data_cr2sr[unique_sys], uncMax_cr_data_cr2sr[unique_sys], uncMin_tf_cr2sr[unique_sys], uncMax_tf_cr2sr[unique_sys], uncMin_tf_srBin[unique_sys], uncMax_tf_srBin[unique_sys], uncMin_sr_estimate[unique_sys], uncMax_sr_estimate[unique_sys]);
+	fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \n");
+	unique_sys++;
+      }
+      
+      fprintf(uncFileSummary, "\\hline \n");
+      fprintf(uncFileSummary, "Total & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[nSys_unique-1], uncMax_cr_data_cr2sr[nSys_unique-1], uncMin_tf_cr2sr[nSys_unique-1], uncMax_tf_cr2sr[nSys_unique-1], uncMin_tf_srBin[nSys_unique-1], uncMax_tf_srBin[nSys_unique-1], uncMin_sr_estimate[nSys_unique-1], uncMax_sr_estimate[nSys_unique-1]);
+      fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
+      
     }
+
+
+    // Uncertainty Summary File
+    fprintf(uncFileSummary, "\\end{tabular} \n");
+    fprintf(uncFileSummary, "} \n");
+    fprintf(uncFileSummary, "\\end{table} \n");
+    fprintf(uncFileSummary, "\\end{document} \n");
+    fclose(uncFileSummary);
     
-    fprintf(uncFileSummary, "\\hline \n");
-    fprintf(uncFileSummary, "Total & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ & $%.1f~-~%.1f~\\%%$ ", uncMin_cr_data_cr2sr[nSys_unique-1], uncMax_cr_data_cr2sr[nSys_unique-1], uncMin_tf_cr2sr[nSys_unique-1], uncMax_tf_cr2sr[nSys_unique-1], uncMin_tf_srBin[nSys_unique-1], uncMax_tf_srBin[nSys_unique-1], uncMin_sr_estimate[nSys_unique-1], uncMax_sr_estimate[nSys_unique-1]);
-    fprintf(uncFileSummary, "\\"); fprintf(uncFileSummary, "\\ \\hline \n");
-    
-
-  }
-
-  //
-  // Uncertainty Summary File
-  //
-  fprintf(uncFileSummary, "\\end{tabular} \n");
-  fprintf(uncFileSummary, "} \n");
-  fprintf(uncFileSummary, "\\end{table} \n");
-  fprintf(uncFileSummary, "\\end{document} \n");
-  fclose(uncFileSummary);
-
-
   
-  //
-  // Uncertainty Summary File
-  //
-  
-  fprintf(uncFileSummaryV2, "Data Stats");
-  for(int iSR=0; iSR<nSRs; iSR++){
-    fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][0]);
-  }
-  fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \n");
-  
-  fprintf(uncFileSummaryV2, "MC Stats");
-  for(int iSR=0; iSR<nSRs; iSR++){
-    fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][1]);
-  }
-  fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \\hline \n");
-  
-  int iSys_temp = 2;
-  for(int iSys=1; iSys<(int)systematicList.size(); iSys+=2){
-    TString sys_name = systematicList[iSys].tex.c_str();
-    sys_name.ReplaceAll(",~Up","");  sys_name.ReplaceAll("~Up","");
-    sys_name.ReplaceAll(",~Down","");  sys_name.ReplaceAll("~Down","");
-    fprintf(uncFileSummaryV2, "%s ", sys_name.Data() );
+    // Uncertainty Summary File
+    fprintf(uncFileSummaryV2, "Data Stats");
     for(int iSR=0; iSR<nSRs; iSR++){
-      fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][iSys_temp]);
+      fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][0]);
     }
     fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \n");
-    iSys_temp++;
-  }
-  fprintf(uncFileSummaryV2, "\\hline \n");
+    
+    fprintf(uncFileSummaryV2, "MC Stats");
+    for(int iSR=0; iSR<nSRs; iSR++){
+      fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][1]);
+    }
+    fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \\hline \n");
+    
+    int iSys_temp = 2;
+    for(int iSys=1; iSys<(int)systematicList.size(); iSys+=2){
+      TString sys_name = systematicList[iSys].tex.c_str();
+      sys_name.ReplaceAll(",~Up","");  sys_name.ReplaceAll("~Up","");
+      sys_name.ReplaceAll(",~Down","");  sys_name.ReplaceAll("~Down","");
+      fprintf(uncFileSummaryV2, "%s ", sys_name.Data() );
+      for(int iSR=0; iSR<nSRs; iSR++){
+	fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][iSys_temp]);
+      }
+      fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \n");
+      iSys_temp++;
+    }
+    fprintf(uncFileSummaryV2, "\\hline \n");
+    
+    fprintf(uncFileSummaryV2, "Total ");
+    for(int iSR=0; iSR<nSRs; iSR++){
+      fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][nSys_unique-1]);
+    }
   
-  fprintf(uncFileSummaryV2, "Total ");
-  for(int iSR=0; iSR<nSRs; iSR++){
-    fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][nSys_unique-1]);
-  }
+    fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \\hline \n");
+    fprintf(uncFileSummaryV2, "\\end{tabular} \n");
+    fprintf(uncFileSummaryV2, "} \n");
+    fprintf(uncFileSummaryV2, "\\end{table} \n");
+    fprintf(uncFileSummaryV2, "\\end{document} \n");
+    fclose(uncFileSummaryV2);
   
-  fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \\hline \n");
-  fprintf(uncFileSummaryV2, "\\end{tabular} \n");
-  fprintf(uncFileSummaryV2, "} \n");
-  fprintf(uncFileSummaryV2, "\\end{table} \n");
-  fprintf(uncFileSummaryV2, "\\end{document} \n");
-  fclose(uncFileSummaryV2);
-  
-  
+      
+    // Table of background estimate
+    fprintf(yFile, "\\end{tabular} \n");
+    fprintf(yFile, "} \n");
+    fprintf(yFile, "\\end{table} \n");
+    fprintf(yFile, "\\end{document} \n");
+    fclose(yFile);
+    
 
+    // Uncertainty file for each category
+    fprintf(uncFile, "\\end{document} \n");
+    fclose(uncFile);
   
-  //
-  // Table of background estimate
-  //
-  fprintf(yFile, "\\end{tabular} \n");
-  fprintf(yFile, "} \n");
-  fprintf(yFile, "\\end{table} \n");
-  fprintf(yFile, "\\end{document} \n");
-  fclose(yFile);
-
-
-  //
-  // Uncertainty file for each category
-  //
-  fprintf(uncFile, "\\end{document} \n");
-  fclose(uncFile);
+    // Write and Close Root File for Limit Setting
+    f_out->Write();
+    f_out->Close();
   
+  
+  } // end loop over bkgEstimate yields
   
   
   //
   // Clean up
   //
-  f_out->Write();
-  f_out->Close();
-  f_SR->Close();
-  f_CR->Close();
-  f_data_CR->Close();
+  f_SR_mc->Close();
+  f_CR_mc->Close();
+  f_CR_data->Close();
 
   return 0;
 }
