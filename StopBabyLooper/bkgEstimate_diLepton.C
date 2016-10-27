@@ -263,12 +263,12 @@ int bkgEstimate_diLepton(){
   bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
   bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
   
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(9);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(23); // Extrapolate
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(9);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(9); // No Extrapolation, but if so bin=23
   bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
   bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
   bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
     
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(10);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(23); // Extrapolate
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(10);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(10); // No Extrapolation, but if so bin=23
   bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
   bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
   bkgEst_ICHEP_ext30fb.binName.push_back("$MET>650$");
@@ -315,7 +315,7 @@ int bkgEstimate_diLepton(){
   bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
   bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
   
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(19);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(25);  // Extrapolate
+  bkgEst_ICHEP_ext30fb.SR_bins.push_back(19);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(19);  
   bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");
   bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
   bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
@@ -343,154 +343,154 @@ int bkgEstimate_diLepton(){
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(1);  bkgEst_ext30fb_mlb.CR_bins.push_back(1);  
   bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(2);  bkgEst_ext30fb_mlb.CR_bins.push_back(2);  
   bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
   bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(3);  bkgEst_ext30fb_mlb.CR_bins.push_back(3);  
   bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
   bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(4);  bkgEst_ext30fb_mlb.CR_bins.push_back(4);  
   bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
   
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(5);  bkgEst_ext30fb_mlb.CR_bins.push_back(5);  
   bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(6);  bkgEst_ext30fb_mlb.CR_bins.push_back(6);  
   bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
 
-  bkgEst_ext30fb_mlb.SR_bins.push_back(7);  bkgEst_ext30fb_mlb.CR_bins.push_back(30);  // Extrapolate  
+  bkgEst_ext30fb_mlb.SR_bins.push_back(7);  bkgEst_ext30fb_mlb.CR_bins.push_back(7);  // No Extrapolation, if so bin=30
   bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
 
-  bkgEst_ext30fb_mlb.SR_bins.push_back(8);  bkgEst_ext30fb_mlb.CR_bins.push_back(30);  // Extrapolate  
+  bkgEst_ext30fb_mlb.SR_bins.push_back(8);  bkgEst_ext30fb_mlb.CR_bins.push_back(8);  // No Extrapolation, if so bin=30
   bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
 
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(9);  bkgEst_ext30fb_mlb.CR_bins.push_back(9);  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(10);  bkgEst_ext30fb_mlb.CR_bins.push_back(10);  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(11);  bkgEst_ext30fb_mlb.CR_bins.push_back(11);  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(12);  bkgEst_ext30fb_mlb.CR_bins.push_back(31); // Extrapolate  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb.binName.push_back("$550<MET<650$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(13);  bkgEst_ext30fb_mlb.CR_bins.push_back(31); // Extrapolate  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
 
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(14);  bkgEst_ext30fb_mlb.CR_bins.push_back(14);  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(15);  bkgEst_ext30fb_mlb.CR_bins.push_back(15);  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
   bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
 
-  bkgEst_ext30fb_mlb.SR_bins.push_back(16);  bkgEst_ext30fb_mlb.CR_bins.push_back(32); // Extrapolate  
+  bkgEst_ext30fb_mlb.SR_bins.push_back(16);  bkgEst_ext30fb_mlb.CR_bins.push_back(16); // No Extrapolation, if so bin=32
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
   bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
 
-  bkgEst_ext30fb_mlb.SR_bins.push_back(17);  bkgEst_ext30fb_mlb.CR_bins.push_back(32); // Extrapolate  
+  bkgEst_ext30fb_mlb.SR_bins.push_back(17);  bkgEst_ext30fb_mlb.CR_bins.push_back(17); // No Extrapolation, if so bin=32
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
 
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(18);  bkgEst_ext30fb_mlb.CR_bins.push_back(18);  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(19);  bkgEst_ext30fb_mlb.CR_bins.push_back(33); // Extrapolate  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(20);  bkgEst_ext30fb_mlb.CR_bins.push_back(33); // Extrapolate  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>450$");
 
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(21);  bkgEst_ext30fb_mlb.CR_bins.push_back(34); // Extrapolate  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("6"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("F"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<400$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(22);  bkgEst_ext30fb_mlb.CR_bins.push_back(34); // Extrapolate  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("6"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("F"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>400$");
 
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(23);  bkgEst_ext30fb_mlb.CR_bins.push_back(23);
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(24);  bkgEst_ext30fb_mlb.CR_bins.push_back(24);
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
   bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(25);  bkgEst_ext30fb_mlb.CR_bins.push_back(35); // Extrapolate
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
   bkgEst_ext30fb_mlb.binName.push_back("$450<MET<600$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(26);  bkgEst_ext30fb_mlb.CR_bins.push_back(35); // Extrapolate
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>600$");
 
   
   bkgEst_ext30fb_mlb.SR_bins.push_back(27);  bkgEst_ext30fb_mlb.CR_bins.push_back(27);
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<400$");
  
   bkgEst_ext30fb_mlb.SR_bins.push_back(28);  bkgEst_ext30fb_mlb.CR_bins.push_back(36);
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb.binName.push_back("$400<MET<650$");
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(29);  bkgEst_ext30fb_mlb.CR_bins.push_back(36);
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
  
   
@@ -505,154 +505,154 @@ int bkgEstimate_diLepton(){
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(1);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(1);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(2);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(2);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(3);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(3);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(4);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(4);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("1"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
   
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(5);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(5);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(6);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(6);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(7);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(30);  // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(8);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(30);  // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("2"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
 
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(9);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(9);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(10);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(10);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(11);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(11);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(12);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(31); // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$550<MET<650$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(13);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(31); // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("3"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
 
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(14);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(14);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(15);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(15);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(16);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(32); // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(17);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(32); // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("4"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
 
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(18);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(18);  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(19);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(33); // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(20);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(33); // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("5"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>450$");
 
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(21);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(34); // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("6"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("F"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<400$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(22);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(34); // Extrapolate  
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("6"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("F"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>400$");
 
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(23);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(23);
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(24);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(24);
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(25);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(35); // Extrapolate
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<600$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(26);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(35); // Extrapolate
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("7"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>600$");
 
   
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(27);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(27);
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<400$");
  
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(28);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(36);
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$400<MET<650$");
 
   bkgEst_ext30fb_bJetPt.SR_bins.push_back(29);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(36);
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge7.5$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("8"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
  
   

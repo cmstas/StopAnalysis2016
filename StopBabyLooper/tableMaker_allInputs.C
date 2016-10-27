@@ -54,28 +54,31 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   sampleList.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8 );
   sampleList.push_back( sampleInfo::k_singleT_non_tW );
   sampleList.push_back( sampleInfo::k_t_sch_4f_amcnlo_pythia8 );
-  //sampleList.push_back( sampleInfo::k_t_tch_4f_powheg_pythia8 );
-  //sampleList.push_back( sampleInfo::k_tbar_tch_4f_powheg_pythia8 );
+  sampleList.push_back( sampleInfo::k_t_tch_4f_powheg_pythia8 );
+  sampleList.push_back( sampleInfo::k_tbar_tch_4f_powheg_pythia8 );
   sampleList.push_back( sampleInfo::k_VJets );
   sampleList.push_back( sampleInfo::k_DYJetsToLL );
   sampleList.push_back( sampleInfo::k_DYJetsToLL_m10To50_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_DYJetsToLL_m50_amcnlo_pythia8 );
+  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 );
   sampleList.push_back( sampleInfo::k_WJetsToLNu );
-  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8 );
-  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8 );
-  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8 );
-  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT600ToInf_madgraph_pythia8 );
-  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8 );
-  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8 );
-  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 );
-  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_WNJetsToLNu_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_W1JetsToLNu_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_W2JetsToLNu_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_W3JetsToLNu_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_W4JetsToLNu_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8 );  
   sampleList.push_back( sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1 );
   sampleList.push_back( sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1 );
+  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1 );
   sampleList.push_back( sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 );
+  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1 );
+  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1 );
+  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1 );
   sampleList.push_back( sampleInfo::k_rare );
   sampleList.push_back( sampleInfo::k_diBoson );
   sampleList.push_back( sampleInfo::k_WW );
@@ -87,7 +90,7 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   sampleList.push_back( sampleInfo::k_WZTo1LNu2Q_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_WZTo1L3Nu_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_ZZ );
-  //sampleList.push_back( sampleInfo::k_ZZTo4L_powheg_pythia8 );
+  sampleList.push_back( sampleInfo::k_ZZTo4L_powheg_pythia8 );
   sampleList.push_back( sampleInfo::k_ZZTo2L2Q_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_ZZTo2L2Nu_powheg_pythia8 );
   sampleList.push_back( sampleInfo::k_ZZTo2Q2Nu_amcnlo_pythia8 );
@@ -182,7 +185,9 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 29; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$MET>650$";
   catList.push_back( cat );
   tableList.push_back( catList );
-   
+
+
+  
 
   //
   // Gen Classy List

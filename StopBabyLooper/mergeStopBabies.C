@@ -54,7 +54,7 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   // ttbar
   addSet.first = sampleInfo::k_ttbar;
   //addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_powheg_pythia8_ext3) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1) );
   //addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1) );
@@ -82,8 +82,8 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   // single t, non tW
   addSet.first = sampleInfo::k_singleT_non_tW;
   addSet.second.push_back( mergeUtil(sampleInfo::k_t_sch_4f_amcnlo_pythia8,use_zeroed_samp,false) );
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_t_tch_4f_powheg_pythia8) );
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_tbar_tch_4f_powheg_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tch_4f_powheg_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_tbar_tch_4f_powheg_pythia8) );
   addList.push_back(addSet);
   addSet.second.clear();
  
@@ -98,13 +98,13 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
 
   // WJets, Madgraph Ht Summed Samples
   addSet.first = sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8;
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1,false,use_rescaled_samp) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1,false,use_rescaled_samp) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8,false,use_rescaled_samp) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1) );
   addList.push_back(addSet);
   addSet.second.clear();
 
@@ -185,7 +185,7 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
 
   // ZZ
   addSet.first = sampleInfo::k_ZZ;
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_ZZTo4L_powheg_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_ZZTo4L_powheg_pythia8) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ZZTo2L2Q_amcnlo_pythia8,use_zeroed_samp,false) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ZZTo2L2Nu_powheg_pythia8) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ZZTo2Q2Nu_amcnlo_pythia8,use_zeroed_samp,false) );

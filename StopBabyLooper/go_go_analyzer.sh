@@ -52,7 +52,7 @@ root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/y
 # Print yields of summed inputs
 echo "Printing yields of summmed inputs..."
 echo ""
-root -l -b -q head.C tableMaker_summedInputs.C++'("Output/Histos/","Output/Tables/yields_summedInputs.tex")' >& Output/Log/tableMaker_summedInputs.log 
+root -l -b -q head.C tableMaker_summedInputs.C++'("Output/Histos/","Output/Tables/yields_summedInputs")' >& Output/Log/tableMaker_summedInputs.log 
 
 # Calculate Uncertainties - CURRENTLY NEEDS VALIDATION FOR NEW STOPCORE
 #echo "Calculating Uncertainties..."
