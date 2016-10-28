@@ -15,10 +15,9 @@ namespace sampleInfo{
   //
   // NAMESPACE VARS
   //
-  const std::string baby_inputDir = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v8.0x_v10/skim/"; 
-  //const std::string baby_inputDir = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v8.0x_v10/output/"; 
+  const std::string baby_inputDir = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v11/skim/";
   
-  //const std::string baby_inputDir = "/nfs-7/userdata/stopRun2/stop_babies__CMS3_V080005__BabyMaker_V0800X_v8__20160729/"; // 12.9/fb with btag, ICHEP lep sfs
+  //const std::string baby_inputDir = "/nfs-7/userdata/stopRun2/analysis2016__SUS-16-028__12p9fb/stopBabies__v8.0.x_v8__20160729/Nominal/"; // 12.9/fb ICHEP results
   
   const std::string baby_outputDir = "Output/Histos/";
   
@@ -70,14 +69,15 @@ namespace sampleInfo{
 	   k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1,
 	   k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1,
 	   k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1,
-	   k_W1JetsToLNu,
-	   k_W2JetsToLNu,
-	   k_W3JetsToLNu,
-	   k_W4JetsToLNu,
-	   k_W1JetsToLNu_NuPt200,
-	   k_W2JetsToLNu_NuPt200,
-	   k_W3JetsToLNu_NuPt200,
-	   k_W4JetsToLNu_NuPt200,
+	   k_WNJetsToLNu_madgraph_pythia8,
+	   k_W1JetsToLNu_madgraph_pythia8,
+	   k_W2JetsToLNu_madgraph_pythia8,
+	   k_W3JetsToLNu_madgraph_pythia8,
+	   k_W4JetsToLNu_madgraph_pythia8,
+	   k_W1JetsToLNu_NuPt200_madgraph_pythia8,
+	   k_W2JetsToLNu_NuPt200_madgraph_pythia8,
+	   k_W3JetsToLNu_NuPt200_madgraph_pythia8,
+	   k_W4JetsToLNu_NuPt200_madgraph_pythia8,
 	   k_singleT,
 	   k_t_sch_4f_amcnlo_pythia8,
 	   k_t_tch_4f_powheg_pythia8,

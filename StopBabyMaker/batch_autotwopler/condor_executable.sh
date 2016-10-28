@@ -28,7 +28,7 @@ echo "EXE_ARGS=${EXE_ARGS[*]}"
 cd forCondor_stopBabyMaker_80x/StopBabyMaker/
 
 SAMPLE_NAME=${EXE_ARGS[0]}
-ISFASTSIM=false
+ISFASTSIM=0
 if [ ! -z ${EXE_ARGS[1]} ]; then
   ISFASTSIM=${EXE_ARGS[1]}
 fi

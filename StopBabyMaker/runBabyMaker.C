@@ -73,8 +73,7 @@ int main(int argc, char **argv){
   if(argc>5) input = argv[5];
 
   bool isFastsim = false;
-  if(argc>6) isFastsim = argv[6];
-
+  if(argc>6) isFastsim = atoi(argv[6]);
 
   //
   // Initialize looper
