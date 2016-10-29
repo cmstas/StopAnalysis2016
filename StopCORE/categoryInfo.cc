@@ -7,40 +7,41 @@ TH1D* categoryInfo::getYieldHistoTemplate_SR_ICHEP(){
   int nBins_ICHEP_ = 29;
   TH1D *result = new TH1D("h_yields_SR_ICHEP", "Yields, ICHEP Signal Regions", nBins_ICHEP_, 1.0, (double)nBins_ICHEP_+1.0);
 
-  result->GetXaxis()->SetBinLabel(1, "incl");
+  result->GetXaxis()->SetBinLabel(1, "ee2jets_ge6p4modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(2, "ee2jets_ge6p4modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(3, "ee2jets_ge6p4modTop_450toInfmet");
   
-  result->GetXaxis()->SetBinLabel(2, "ee2jets");
-  result->GetXaxis()->SetBinLabel(3, "ee2jets_ge6p4modTop");
-  result->GetXaxis()->SetBinLabel(4, "ee2jets_ge6p4modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(5, "ee2jets_ge6p4modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(6, "ee2jets_ge6p4modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(7, "ee2jets_ge6p4modTop_450toInfmet");
+  result->GetXaxis()->SetBinLabel(4, "ee3jets_ge200mt2w_250to350met");
+  result->GetXaxis()->SetBinLabel(5, "ee3jets_ge200mt2w_350to450met");
+  result->GetXaxis()->SetBinLabel(6, "ee3jets_ge200mt2w_450to550met");
+  result->GetXaxis()->SetBinLabel(7, "ee3jets_ge200mt2w_550toInfmet");
   
-  result->GetXaxis()->SetBinLabel(8, "ee3jets");
-  result->GetXaxis()->SetBinLabel(9, "ee3jets_ge200mt2w");
-  result->GetXaxis()->SetBinLabel(10, "ee3jets_ge200mt2w_150to250met");
-  result->GetXaxis()->SetBinLabel(11, "ee3jets_ge200mt2w_250to350met");
-  result->GetXaxis()->SetBinLabel(12, "ee3jets_ge200mt2w_350to450met");
-  result->GetXaxis()->SetBinLabel(13, "ee3jets_ge200mt2w_450toInfmet");
-  result->GetXaxis()->SetBinLabel(14, "ee3jets_ge200mt2w_450to550met");
-  result->GetXaxis()->SetBinLabel(15, "ee3jets_ge200mt2w_550toInfmet");
+  result->GetXaxis()->SetBinLabel(8, "ge4jets_lt200mt2w_250to350met");
+  result->GetXaxis()->SetBinLabel(9, "ge4jets_lt200mt2w_350to450met");
+  result->GetXaxis()->SetBinLabel(10, "ge4jets_lt200mt2w_450toInfmet");
+  
+  result->GetXaxis()->SetBinLabel(11, "ge4jets_ge200mt2w_250to350met");
+  result->GetXaxis()->SetBinLabel(12, "ge4jets_ge200mt2w_350to450met");
+  result->GetXaxis()->SetBinLabel(13, "ge4jets_ge200mt2w_450to550met");
+  result->GetXaxis()->SetBinLabel(14, "ge4jets_ge200mt2w_550to650met");
+  result->GetXaxis()->SetBinLabel(15, "ge4jets_ge200mt2w_650toInfmet");
 
-  result->GetXaxis()->SetBinLabel(16, "ge4jets");
-  result->GetXaxis()->SetBinLabel(17, "ge4jets_lt200mt2w");
-  result->GetXaxis()->SetBinLabel(18, "ge4jets_lt200mt2w_150to250met");
-  result->GetXaxis()->SetBinLabel(19, "ge4jets_lt200mt2w_250to350met");
-  result->GetXaxis()->SetBinLabel(20, "ge4jets_lt200mt2w_350to450met");
-  result->GetXaxis()->SetBinLabel(21, "ge4jets_lt200mt2w_450toInfmet");
+  // Inclusive Bins
+  result->GetXaxis()->SetBinLabel(16, "incl");
+  result->GetXaxis()->SetBinLabel(17, "ee2jets");
+  result->GetXaxis()->SetBinLabel(18, "ee2jets_ge6p4modTop");
+  result->GetXaxis()->SetBinLabel(19, "ee2jets_ge6p4modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(20, "ee3jets");
+  result->GetXaxis()->SetBinLabel(21, "ee3jets_ge200mt2w");
+  result->GetXaxis()->SetBinLabel(22, "ee3jets_ge200mt2w_150to250met");
+  result->GetXaxis()->SetBinLabel(23, "ee3jets_ge200mt2w_450toInfmet");
+  result->GetXaxis()->SetBinLabel(24, "ge4jets");
+  result->GetXaxis()->SetBinLabel(25, "ge4jets_lt200mt2w");
+  result->GetXaxis()->SetBinLabel(26, "ge4jets_lt200mt2w_150to250met");
+  result->GetXaxis()->SetBinLabel(27, "ge4jets_ge200mt2w");
+  result->GetXaxis()->SetBinLabel(28, "ge4jets_ge200mt2w_150to250met");
+  result->GetXaxis()->SetBinLabel(29, "ge4jets_ge200mt2w_550toInfmet");
   
-  result->GetXaxis()->SetBinLabel(22, "ge4jets_ge200mt2w");
-  result->GetXaxis()->SetBinLabel(23, "ge4jets_ge200mt2w_150to250met");
-  result->GetXaxis()->SetBinLabel(24, "ge4jets_ge200mt2w_250to350met");
-  result->GetXaxis()->SetBinLabel(25, "ge4jets_ge200mt2w_350to450met");
-  result->GetXaxis()->SetBinLabel(26, "ge4jets_ge200mt2w_450to550met");
-  result->GetXaxis()->SetBinLabel(27, "ge4jets_ge200mt2w_550toInfmet");
-  result->GetXaxis()->SetBinLabel(28, "ge4jets_ge200mt2w_550to650met");
-  result->GetXaxis()->SetBinLabel(29, "ge4jets_ge200mt2w_650toInfmet");
-
   return result;
 }
 
@@ -89,29 +90,29 @@ vector<int> categoryInfo::passCategory_SR_ICHEP( int jesType, bool add2ndLepToMe
   
 
   // Incl
-  result.push_back(1);
+  result.push_back(16);
 
   if( nGoodJets==2 ){
     
     // ==2 jets
-    result.push_back(2);
+    result.push_back(17);
 
     if( modTopness>=6.4){
 
       // ==2 jets, modTopness>=6.4, met>=250
-      if( met>=250 ) result.push_back(3);
+      if( met>=250 ) result.push_back(18);
 
       // ==2 jets, modTopness>=6.4, 150<=met<250
-      if( met>=150.0 && met<250 ) result.push_back(4);
+      if( met>=150.0 && met<250 ) result.push_back(19);
 
       // ==2 jets, modTopness>=6.4, 250<=met<350
-      if( met>=250.0 && met<350 ) result.push_back(5);
+      if( met>=250.0 && met<350 ) result.push_back(1);
        
       // ==2 jets, modTopness>=6.4, 350<=met<450
-      if( met>=350.0 && met<450 ) result.push_back(6);
+      if( met>=350.0 && met<450 ) result.push_back(2);
 
       // ==2 jets, modTopness>=6.4, met>=450
-      if( met>=450.0 ) result.push_back(7);
+      if( met>=450.0 ) result.push_back(3);
 
     } // end if modTopness>=6.4
   } // end if nGoodJets==2
@@ -119,30 +120,30 @@ vector<int> categoryInfo::passCategory_SR_ICHEP( int jesType, bool add2ndLepToMe
   if( nGoodJets==3 ){
 
     // ==3 jets
-    result.push_back(8);
+    result.push_back(20);
 
     if( mt2w>=200.0){
 
       // ==3 jets, mt2w>=200.0, met>=250
-      if( met>=250 ) result.push_back(9);
+      if( met>=250 ) result.push_back(21);
 
       // ==3 jets, mt2w>=200.0, 150<=met<250
-      if( met>=150.0 && met<250 ) result.push_back(10);
+      if( met>=150.0 && met<250 ) result.push_back(22);
 
       // ==3 jets, mt2w>=200.0, 250<=met<350
-      if( met>=250.0 && met<350 ) result.push_back(11);
+      if( met>=250.0 && met<350 ) result.push_back(4);
        
       // ==3 jets, mt2w>=200.0, 350<=met<450
-      if( met>=350.0 && met<450 ) result.push_back(12);
+      if( met>=350.0 && met<450 ) result.push_back(5);
 
       // ==3 jets, mt2w>=200.0, met>=450
-      if( met>=450.0 ) result.push_back(13);
+      if( met>=450.0 ) result.push_back(23);
 
       // ==3 jets, mt2w>=200.0, 450<=met<550
-      if( met>=450.0 && met<550 ) result.push_back(14);
+      if( met>=450.0 && met<550 ) result.push_back(6);
 
       // ==3 jets, mt2w>=200.0, met>=550
-      if( met>=550.0 ) result.push_back(15);
+      if( met>=550.0 ) result.push_back(7);
 
     } // end if mt2w>=200
   } // end if nGoodJets>=3
@@ -150,52 +151,52 @@ vector<int> categoryInfo::passCategory_SR_ICHEP( int jesType, bool add2ndLepToMe
   if( nGoodJets>=4 ){
 
     // >=4 jets
-    result.push_back(16);
+    result.push_back(24);
 
     if( mt2w<200.0){
 
       // >=4 jets, mt2w<200.0, met>=250
-      if( met>=250 ) result.push_back(17);
+      if( met>=250 ) result.push_back(25);
 
       // >=4 jets, mt2w<200.0, 150<=met<250
-      if( met>=150.0 && met<250 ) result.push_back(18);
+      if( met>=150.0 && met<250 ) result.push_back(26);
 
       // >=4 jets, mt2w<200.0, 250<=met<350
-      if( met>=250.0 && met<350 ) result.push_back(19);
+      if( met>=250.0 && met<350 ) result.push_back(8);
        
       // >=4 jets, mt2w<200.0, 350<=met<450
-      if( met>=350.0 && met<450 ) result.push_back(20);
+      if( met>=350.0 && met<450 ) result.push_back(9);
 
       // >=4 jets, mt2w<200.0, met>=450
-      if( met>=450.0 ) result.push_back(21);
+      if( met>=450.0 ) result.push_back(10);
 
     } // end if mt2w<200.0
 
     if( mt2w>=200.0){
 
       // >=4 jets, mt2w>=200.0, met>=250
-      if( met>=250 ) result.push_back(22);
+      if( met>=250 ) result.push_back(27);
 
       // >=4 jets, mt2w>=200.0, 150<=met<250
-      if( met>=150.0 && met<250 ) result.push_back(23);
+      if( met>=150.0 && met<250 ) result.push_back(28);
 
       // >=4 jets, mt2w>=200.0, 250<=met<350
-      if( met>=250.0 && met<350 ) result.push_back(24);
+      if( met>=250.0 && met<350 ) result.push_back(11);
        
       // >=4 jets, mt2w>=200.0, 350<=met<450
-      if( met>=350.0 && met<450 ) result.push_back(25);
+      if( met>=350.0 && met<450 ) result.push_back(12);
 
       // >=4 jets, mt2w>=200.0, 450<=met<550
-      if( met>=450.0 && met<550 ) result.push_back(26);
+      if( met>=450.0 && met<550 ) result.push_back(13);
 
       // >=4 jets, mt2w>=200.0, met>=550
-      if( met>=550.0 ) result.push_back(27);
+      if( met>=550.0 ) result.push_back(29);
 
       // >=4 jets, mt2w>=200.0, 550<=met<650
-      if( met>=550.0 && met<650 ) result.push_back(28);
+      if( met>=550.0 && met<650 ) result.push_back(14);
 
       // >=4 jets, mt2w>=200.0, met>=650
-      if( met>=650.0 ) result.push_back(29);
+      if( met>=650.0 ) result.push_back(15);
 
     } // end if mt2w>=200
 

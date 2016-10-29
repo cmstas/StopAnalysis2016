@@ -912,9 +912,7 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
   // MC, ttbar
   //result.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext4 );
   result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
-  //result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
   result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
-  //result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 );
   result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1);
   
   // MC, DYJets
@@ -1006,7 +1004,15 @@ sampleInfo::vect_id sampleInfo::getSampleList_CR2l_bulkTTbar(){
   result.push_back( sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1 );
   result.push_back( sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1 );
   result.push_back( sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1 );
-  
+  result.push_back( sampleInfo::k_W1JetsToLNu_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W2JetsToLNu_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W3JetsToLNu_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W4JetsToLNu_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8 );
+
   // MC, single t
   result.push_back( sampleInfo::k_t_sch_4f_amcnlo_pythia8 );
   result.push_back( sampleInfo::k_t_tch_4f_powheg_pythia8 );

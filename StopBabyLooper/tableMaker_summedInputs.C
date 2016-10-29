@@ -14,7 +14,7 @@
 #include "../StopCORE/sysInfo.h"
 
 
-struct plotHelper{
+struct yieldHelper{
   std::string histName;
   std::string tex;
   int binNumber;
@@ -157,54 +157,54 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
   //
   // Category List
   //
-  std::vector< std::vector< std::vector<plotHelper> > > fileList;
-  std::vector< std::vector<plotHelper> > tableList;
-  std::vector<plotHelper> catList;
-  plotHelper cat;
+  std::vector< std::vector< std::vector<yieldHelper> > > fileList;
+  std::vector< std::vector<yieldHelper> > tableList;
+  std::vector<yieldHelper> catList;
+  yieldHelper cat;
   
 
   //
   // Yields, 2016 ICHEP, 12.9fb
   //
 
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 5; cat.tex = "2jets,~modTopness$\\ge6.4$,~$250<MET<350$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 1; cat.tex = "2jets,~modTopness$\\ge6.4$,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 6; cat.tex = "2jets,~modTopness$\\ge6.4$,~$350<MET<450$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 2; cat.tex = "2jets,~modTopness$\\ge6.4$,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 7; cat.tex = "2jets,~modTopness$\\ge6.4$,~$MET>450$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  catList.clear();
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 11; cat.tex = "3jets,~MT2W$\\ge$200,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 12; cat.tex = "3jets,~MT2W$\\ge$200,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 14; cat.tex = "3jets,~MT2W$\\ge$200,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 15; cat.tex = "3jets,~MT2W$\\ge$200,~$MET>550$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 3; cat.tex = "2jets,~modTopness$\\ge6.4$,~$MET>450$";
   catList.push_back( cat );
   tableList.push_back( catList );
 
   catList.clear();
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 19; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$250<MET<350$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 4; cat.tex = "3jets,~MT2W$\\ge$200,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 20; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$350<MET<450$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 5; cat.tex = "3jets,~MT2W$\\ge$200,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 21; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$MET>450$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 6; cat.tex = "3jets,~MT2W$\\ge$200,~$450<MET<550$";
+  catList.push_back( cat );
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 7; cat.tex = "3jets,~MT2W$\\ge$200,~$MET>550$";
+  catList.push_back( cat );
+  tableList.push_back( catList );
+
+  catList.clear();
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 8; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$250<MET<350$";
+  catList.push_back( cat );
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 9; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$350<MET<450$";
+  catList.push_back( cat );
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 10; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$MET>450$";
   catList.push_back( cat );
   tableList.push_back( catList );
   
   catList.clear();
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 24; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$250<MET<350$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 11; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 25; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$350<MET<450$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 12; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 26; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$450<MET<550$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 13; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$450<MET<550$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 28; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$550<MET<650$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 14; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$550<MET<650$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 29; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$MET>650$";
+  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 15; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$MET>650$";
   catList.push_back( cat );
   tableList.push_back( catList );
 
@@ -478,7 +478,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
       
       for(int iFile=0; iFile<(int)fileList.size(); iFile++ ){
 	
-	std::vector< std::vector<plotHelper> > iTableList = fileList[iFile];
+	std::vector< std::vector<yieldHelper> > iTableList = fileList[iFile];
 
 	// Open output file
 	std::string f_out_name = f_out_name_base;
@@ -508,7 +508,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 	
 	for(int iTable=0; iTable<(int)iTableList.size(); iTable++){
 
-	  std::vector<plotHelper> iCatList = iTableList[iTable];
+	  std::vector<yieldHelper> iCatList = iTableList[iTable];
       	  
 	  // Get number of collumns for table - ie categories
 	  int nCol = 1 + (int)iCatList.size();
@@ -709,7 +709,6 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 
 		int binX = h_yield_sig->GetXaxis()->FindBin(mStop);
 		int binY = h_yield_sig->GetYaxis()->FindBin(mLSP);
-		//int binZ = h_yield_sig->GetZaxis()->FindBin(category.label.c_str());
 		int binZ = iCatList[iCat].binNumber;
 
 		yield = h_yield_sig->GetBinContent( binX,binY,binZ );
@@ -780,8 +779,6 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 	      double error = 0.0;
 	    
 	      TH1D *h_yield_bkg = (TH1D*)f_input->Get(h_name.c_str());
-	      //yield = h_yield_bkg->GetBinContent( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
-	      //error = h_yield_bkg->GetBinError( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	      yield = h_yield_bkg->GetBinContent( iCatList[iCat].binNumber );
 	      error = h_yield_bkg->GetBinError( iCatList[iCat].binNumber );
 	   
@@ -841,8 +838,6 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 	    double error = 0.0;
 	    
 	    TH1D *h_yield_bkg = (TH1D*)f_input->Get(h_name.c_str());
-	    //yield = h_yield_bkg->GetBinContent( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
-	    //error = h_yield_bkg->GetBinError( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	    yield = h_yield_bkg->GetBinContent( iCatList[iCat].binNumber );
 	    error = h_yield_bkg->GetBinError( iCatList[iCat].binNumber );
 	  
@@ -870,7 +865,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 	  fprintf(f_out, "\\"); 
 	  fprintf(f_out, "\\* \n");
 	  //fprintf(f_out, "\\hline \\hline \n");
-
+	  
 	  f_input->Close();
 	  f_input->~TFile();
 
@@ -904,7 +899,6 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 	    double error = 0.0;
 	    
 	    TH1D *h_yield_data = (TH1D*)f_input->Get(h_name.c_str());
-	    //yield = h_yield_data->GetBinContent( h_yield_data->GetXaxis()->FindBin(category.label.c_str()) );
 	    yield = h_yield_data->GetBinContent( iCatList[iCat].binNumber );
 	    error = sqrt(yield);
 	  
@@ -1000,8 +994,6 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 	      double error = 0.0;
 	    
 	      TH1D *h_yield_bkg = (TH1D*)f_input->Get(h_name.c_str());
-	      //yield = h_yield_bkg->GetBinContent( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
-	      //error = h_yield_bkg->GetBinError( h_yield_bkg->GetXaxis()->FindBin(category.label.c_str()) );
 	      yield = h_yield_bkg->GetBinContent( iCatList[iCat].binNumber );
 	      error = h_yield_bkg->GetBinError( iCatList[iCat].binNumber );
 	   

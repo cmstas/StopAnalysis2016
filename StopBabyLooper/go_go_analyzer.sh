@@ -32,7 +32,7 @@ root -l -b -q head.C mergeStopBabies.C++'("Output/Histos/", "Output/Histos/",fal
 # Print yields of all inputs
 echo "Printing yields of all inputs before zeroing amcnlo samples..."
 echo ""
-root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/yields_allInputs_beforeZeroing.tex",false)' >& Output/Log/tableMaker_allInputs_beforeZeroingAMCNLO.log 
+root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/yields_allInputs_beforeZeroing",false)' >& Output/Log/tableMaker_allInputs_beforeZeroingAMCNLO.log 
 
 # For aMC@NLO samples, zero yields if final weight is negative
 echo "Zeroing negative Yields..."
@@ -47,17 +47,17 @@ root -l -b -q head.C mergeStopBabies.C++'("Output/Histos/", "Output/Histos/",tru
 # Print yields of all inputs
 echo "Printing yields of all inputs..."
 echo ""
-root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/yields_allInputs.tex")' >& Output/Log/tableMaker_allInputs.log 
+root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/yields_allInputs")' >& Output/Log/tableMaker_allInputs.log 
 
 # Print yields of summed inputs
 echo "Printing yields of summmed inputs..."
 echo ""
 root -l -b -q head.C tableMaker_summedInputs.C++'("Output/Histos/","Output/Tables/yields_summedInputs")' >& Output/Log/tableMaker_summedInputs.log 
 
-# Calculate Uncertainties - CURRENTLY NEEDS VALIDATION FOR NEW STOPCORE
-#echo "Calculating Uncertainties..."
-#echo ""
-#root -l -b -q head.C calcErrors.C++ >& Output/Log/calcErrors.log
+# Calculate Uncertainties 
+echo "Calculating Uncertainties..."
+echo ""
+root -l -b -q head.C calcErrors.C++ >& Output/Log/calcErrors.log
 
 # Make plots 
 echo "Making Plots..."
@@ -71,13 +71,18 @@ echo ""
 root -l -b -q head.C bkgEstimate_diLepton.C++ >& Output/Log/bkgEstimate_diLepton.log
 
 # Create pdfs of latex files
-echo "Converting Tex to PDF"
+echo "Converting Tex to PDF..."
 echo ""
 cd Output/Tables/
-for x in `/bin/ls *.tex`; do pdflatex $x; pdflatex $x; done
+for x in `/bin/ls *.tex`; do pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
 cd ../BkgEstimate/
-for x in `/bin/ls *.tex`; do pdflatex $x; pdflatex $x; done
+for x in `/bin/ls *.tex`; do pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
 cd ../../
+
+# Clean up 
+echo "Cleaning Up..."
+echo ""
+. clean.sh
 
 # Done!
 echo ""
