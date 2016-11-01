@@ -690,6 +690,52 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
 
 //////////////////////////////////////////////////////////////////////
 
+TH1D* selectionInfo::get_cutflowHistoTemplate_CR2l_bulkTTbar(){
+
+  TH1D *result = new TH1D("h_cutflow_CR2l_bulkTTbar", "Cutflow, Control Region, 2l bulk ttbar", 10, 0.0, 10.0); 
+  result->GetXaxis()->SetBinLabel(1, "data_filter" );
+  result->GetXaxis()->SetBinLabel(2, "trigger_singleLep_OR_MET" );
+  result->GetXaxis()->SetBinLabel(3, "good_vertex" );
+  result->GetXaxis()->SetBinLabel(4, "ge2_leptons" );
+  result->GetXaxis()->SetBinLabel(5, "oppSign_leptons" );
+  result->GetXaxis()->SetBinLabel(6, "leptonFlavour" );
+  result->GetXaxis()->SetBinLabel(7, "zMassWindow" );
+  result->GetXaxis()->SetBinLabel(8, "diLeptonMass" );
+  result->GetXaxis()->SetBinLabel(9, "ge2_jets" );
+  result->GetXaxis()->SetBinLabel(10, "ge50_met" );
+  
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l_bulkTTbar(){
+
+  vector<TH1D*> result;
+  
+  TH1D *h_temp = get_cutflowHistoTemplate_CR2l_bulkTTbar();
+  
+  for(int i=1; i<=(int)h_temp->GetNbinsX(); i++){
+    std::string name = h_temp->GetName();
+    name += "_";
+    name += h_temp->GetXaxis()->GetBinLabel(i);
+    
+    std::string title = h_temp->GetTitle();
+    title += ", nMinus1, ";
+    title += h_temp->GetXaxis()->GetBinLabel(i);
+    
+    int nBins  = h_temp->GetNbinsX(); 
+    double min = h_temp->GetXaxis()->GetBinLowEdge(1);
+    double max = h_temp->GetXaxis()->GetBinUpEdge(h_temp->GetNbinsX());
+    TH1D *h_nMinus1 = new TH1D(name.c_str(), title.c_str(), nBins, min, max);
+    result.push_back(h_nMinus1);
+  }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 bool selectionInfo::pass_CR2l_bulkTTbar(int jesType, int lepFlavour, bool add2ndLepToMet){
 
   bool result = false;
@@ -716,7 +762,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
 
   bool temp_result=false;
 
-  // Data Filter
+  // 1) Data Filter
   temp_result=false;
   if( !babyAnalyzer.is_data() ) temp_result=true;
   else{
@@ -727,24 +773,27 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
   result.push_back(temp_result);
 
 
-  // Trigger
+  // 2) Trigger
   temp_result=false;
   if( !babyAnalyzer.is_data() ) temp_result = true;
   else{
-    if( babyAnalyzer.HLT_SingleEl() ||
-	babyAnalyzer.HLT_SingleMu() ||
-	babyAnalyzer.HLT_MET()        ) temp_result = true;
+    if( (babyAnalyzer.HLT_DiEl() &&
+	 abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==22) ||
+	(babyAnalyzer.HLT_DiMu() &&
+	 abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==26) ||
+	(babyAnalyzer.HLT_MuE()  &&
+	 abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==24)    ) temp_result = true;
   }
   result.push_back(temp_result);
 
 
-  // Good Vertex
+  // 3) Good Vertex
   temp_result=false;
   if( babyAnalyzer.nvtxs()>=1 ) temp_result = true;
   result.push_back(temp_result);
 
 
-  // diLepton
+  // 4) diLepton
   temp_result=false;
   if( babyAnalyzer.lep1_p4().Pt()>30.0 && 
       babyAnalyzer.lep2_p4().Pt()>15.0 &&
@@ -763,19 +812,20 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
   result.push_back(temp_result);
 
 
-  // Opposite sign charge leptons
+  // 5) Opposite sign charge leptons
   temp_result=false;
   if( babyAnalyzer.lep1_pdgid()*babyAnalyzer.lep2_pdgid()<0.0 ) temp_result = true;
   result.push_back(temp_result);
 
 
-  // Lepton Flavour
+  // 6) Lepton Flavour
   temp_result=false;
-  if( (abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid()))==lepFlavour ) temp_result = true;
+  if( lepFlavour==-1 ) temp_result = true;
+  else if( (abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid()))==lepFlavour ) temp_result = true;
   result.push_back(temp_result);
 
 
-  // zMass Window
+  // 7) zMass Window
   temp_result=false;
   if( (abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid()))==24 ) temp_result = true;
   else if( (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()>(91.1876+15.0) || 
@@ -783,12 +833,12 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
   result.push_back(temp_result);
 
   
-  // DiLepton Mass>20.0
+  // 8) DiLepton Mass>20.0
   temp_result=false;
   if( (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()>=20.0 ) temp_result = true;
-  
+  result.push_back(temp_result);
 
-  // nGoodJets>=2
+  // 9) nGoodJets>=2
   temp_result=false;
   if( jesType==1){
     if( babyAnalyzer.jup_ngoodjets()>=2 ) temp_result = true;
@@ -802,7 +852,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
   result.push_back(temp_result);
 
   
-  // met>50.0
+  // 10) met>50.0
   temp_result=false;
   if( add2ndLepToMet ){
     if( jesType==1){

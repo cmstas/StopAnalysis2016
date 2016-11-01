@@ -656,3 +656,94 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1( int jesType, bo
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TH1D* categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar(){
+  
+  int nBins_CR2l_bulkTTbar_ = 15;
+  TH1D *result = new TH1D("h_yields_CR2l_bulkTTbar", "Yields, CR2l bulk TTbar", nBins_CR2l_bulkTTbar_, 1.0, (double)nBins_CR2l_bulkTTbar_+1.0);
+  
+  result->GetXaxis()->SetBinLabel(1, "ge0tags_ge50met");
+  result->GetXaxis()->SetBinLabel(2, "ge0tags_ge100met");
+  result->GetXaxis()->SetBinLabel(3, "ge0tags_ge150met");
+  result->GetXaxis()->SetBinLabel(4, "ge0tags_ge200met");
+  result->GetXaxis()->SetBinLabel(5, "ge0tags_ge250met");
+ 
+  result->GetXaxis()->SetBinLabel(6, "ge1tags_ge50met");
+  result->GetXaxis()->SetBinLabel(7, "ge1tags_ge100met");
+  result->GetXaxis()->SetBinLabel(8, "ge1tags_ge150met");
+  result->GetXaxis()->SetBinLabel(9, "ge1tags_ge200met");
+  result->GetXaxis()->SetBinLabel(10, "ge1tags_ge250met");
+ 
+  result->GetXaxis()->SetBinLabel(11, "ge2tags_ge50met");
+  result->GetXaxis()->SetBinLabel(12, "ge2tags_ge100met");
+  result->GetXaxis()->SetBinLabel(13, "ge2tags_ge150met");
+  result->GetXaxis()->SetBinLabel(14, "ge2tags_ge200met");
+  result->GetXaxis()->SetBinLabel(15, "ge2tags_ge250met");
+ 
+    
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+vector<int> categoryInfo::passCategory_CR2l_bulkTTbar( int jesType, bool add2ndLepToMet ){
+
+  vector<int> result;
+
+  int nGoodBTags = babyAnalyzer.ngoodbtags(); 
+  if( jesType==1)  nGoodBTags = babyAnalyzer.jup_ngoodbtags();
+  if( jesType==-1) nGoodBTags = babyAnalyzer.jdown_ngoodbtags();
+
+  
+  double met = babyAnalyzer.pfmet();
+  if( add2ndLepToMet){
+    if(jesType==0)  met = babyAnalyzer.pfmet_rl();
+    if(jesType==1)  met = babyAnalyzer.pfmet_rl_jup();
+    if(jesType==-1) met = babyAnalyzer.pfmet_rl_jdown();
+  }
+  else{
+    if(jesType==1)  met = babyAnalyzer.pfmet_jup();
+    if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
+  }
+  
+
+  if( nGoodBTags>=0 ){
+    
+    // >=0 bTags
+    if( met>50  ) result.push_back(1);
+    if( met>100 ) result.push_back(2);
+    if( met>150 ) result.push_back(3);
+    if( met>200 ) result.push_back(4);
+    if( met>250 ) result.push_back(5);
+
+  } // >=0 nGoodBTags
+
+
+  if( nGoodBTags>=1 ){
+    
+    // >=1 bTags
+    if( met>50  ) result.push_back(6);
+    if( met>100 ) result.push_back(7);
+    if( met>150 ) result.push_back(8);
+    if( met>200 ) result.push_back(9);
+    if( met>250 ) result.push_back(10);
+  
+  } // >=1 nGoodBTags
+
+  if( nGoodBTags>=2 ){
+    
+    // >=2 bTags
+    if( met>50  ) result.push_back(11);
+    if( met>100 ) result.push_back(12);
+    if( met>150 ) result.push_back(13);
+    if( met>200 ) result.push_back(14);
+    if( met>250 ) result.push_back(15);
+
+  } // >=0 nGoodBTags
+
+
+  return result;
+
+}
+
+//////////////////////////////////////////////////////////////////////

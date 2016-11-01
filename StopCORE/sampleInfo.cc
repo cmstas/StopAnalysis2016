@@ -115,6 +115,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title  = "Data, ee/emu/mumu";
     tex    = "Data,$~ee/e\\mu/\\mu\\mu$";
     isData = true;
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
     inputBabies.push_back("data_muon_eg*.root");
     inputBabies.push_back("data_double_eg*.root");
     inputBabies.push_back("data_double_mu*.root");
