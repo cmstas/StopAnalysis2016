@@ -119,7 +119,6 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     inputBabies.push_back("data_muon_eg*.root");
     inputBabies.push_back("data_double_eg*.root");
     inputBabies.push_back("data_double_mu*.root");
-    //baby_i_o.first  = "";
     break;
     
   case( k_muon_eg ):

@@ -111,12 +111,12 @@ int bkgEstimate_diLepton(){
   systematicList.push_back( sysInfo::Util(sysInfo::k_metResDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtDown) );
-  //systematicList.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
-  //systematicList.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
-  //systematicList.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
-  //systematicList.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
-  //systematicList.push_back( sysInfo::Util(sysInfo::k_q2Up) );
-  //systematicList.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_q2Down) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerDown) );
   

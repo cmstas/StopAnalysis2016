@@ -694,7 +694,7 @@ TH1D* selectionInfo::get_cutflowHistoTemplate_CR2l_bulkTTbar(){
 
   TH1D *result = new TH1D("h_cutflow_CR2l_bulkTTbar", "Cutflow, Control Region, 2l bulk ttbar", 10, 0.0, 10.0); 
   result->GetXaxis()->SetBinLabel(1, "data_filter" );
-  result->GetXaxis()->SetBinLabel(2, "trigger_singleLep_OR_MET" );
+  result->GetXaxis()->SetBinLabel(2, "trigger_diLepton" );
   result->GetXaxis()->SetBinLabel(3, "good_vertex" );
   result->GetXaxis()->SetBinLabel(4, "ge2_leptons" );
   result->GetXaxis()->SetBinLabel(5, "oppSign_leptons" );

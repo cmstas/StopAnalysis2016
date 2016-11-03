@@ -1,5 +1,5 @@
 // Usage:
-// > root -l -b -q head.C stopBabyLooper.C++
+// > root -l -b -q head.C stopBabyLooper__CR2l_bulkTTbar.C++
 
 // C++
 #include <iostream>
@@ -42,7 +42,7 @@ using namespace stop_1l;
 //                          //
 //////////////////////////////
 
-bool analyzeFast_           = true; // skips systematics
+bool analyzeFast_           = true;  // skips systematics
 
 bool applyjson              = true;
 
@@ -51,13 +51,14 @@ bool add2ndLepToMet_        = false;
 bool useBTagSFs_fromUtils_  = false;
 bool useLepSFs_fromUtils_   = false;
         
-bool apply_diLepTrigger_sf_ = true; // for ee/emu/mumu triggers only
-bool apply_bTag_sf_         = true; // event weight, product of all jet wgts
-bool apply_lep_sf_          = true; // both lep1 and lep2 (if available) are multiplied together
+bool apply_diLepTrigger_sf_ = true;  // for ee/emu/mumu triggers only
+bool apply_bTag_sf_         = true;  // event weight, product of all jet wgts
+bool apply_lep_sf_          = true;  // both lep1 and lep2 (if available) are multiplied together
+bool apply_vetoLep_sf_      = true;  // this is actually the lost lepton sf, only !=1 if there is >=2 genLeptons and ==1 recoLeptons in the event
 bool apply_lepFS_sf_        = false;
 bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = false;
-bool apply_ttbarSysPt_sf_   = false;  // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
+bool apply_ttbarSysPt_sf_   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
 bool apply_ISR_sf_          = false; // only !=1.0 for signal
 bool apply_sample_sf_       = false; // only !=1.0 for some WJetsHT samps
   
@@ -223,9 +224,10 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   cout << "    Loading eventWeight Utilities..." << endl << endl;
   sysInfo::evtWgtInfo *wgtInfo = new sysInfo::evtWgtInfo( sample.id, useBTagSFs_fromUtils_, useLepSFs_fromUtils_, add2ndLepToMet_ );  
-  wgtInfo->apply_diLepTrigger_sf = false;
+  wgtInfo->apply_diLepTrigger_sf = apply_diLepTrigger_sf_;
   wgtInfo->apply_bTag_sf         = apply_bTag_sf_;
   wgtInfo->apply_lep_sf          = apply_lep_sf_;
+  wgtInfo->apply_vetoLep_sf      = apply_vetoLep_sf_;
   wgtInfo->apply_lepFS_sf        = apply_lepFS_sf_;
   wgtInfo->apply_topPt_sf        = apply_topPt_sf_;
   wgtInfo->apply_metRes_sf       = apply_metRes_sf_;
@@ -416,6 +418,26 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_lep1lep2bbMetPt_ge1bTags[nLepFlav][nGenClassy];
   TH1D *h_lep1lep2bbMetPt_ge2bTags[nLepFlav][nGenClassy];
  
+  // mt
+  TH1D *h_mt_ge0bTags[nLepFlav][nGenClassy];
+  TH1D *h_mt_ge1bTags[nLepFlav][nGenClassy];
+  TH1D *h_mt_ge2bTags[nLepFlav][nGenClassy];
+
+  // modifiedTopness
+  TH1D *h_modTopness_ge0bTags[nLepFlav][nGenClassy];
+  TH1D *h_modTopness_ge1bTags[nLepFlav][nGenClassy];
+  TH1D *h_modTopness_ge2bTags[nLepFlav][nGenClassy];
+
+  // mt2w
+  TH1D *h_mt2w_ge0bTags[nLepFlav][nGenClassy];
+  TH1D *h_mt2w_ge1bTags[nLepFlav][nGenClassy];
+  TH1D *h_mt2w_ge2bTags[nLepFlav][nGenClassy];
+
+  // Mlb
+  TH1D *h_mlb_ge0bTags[nLepFlav][nGenClassy];
+  TH1D *h_mlb_ge1bTags[nLepFlav][nGenClassy];
+  TH1D *h_mlb_ge2bTags[nLepFlav][nGenClassy];
+
   for(int iFlav=0; iFlav<nLepFlav; iFlav++){
     for(int iGen=0; iGen<nGenClassy; iGen++){
       
@@ -664,126 +686,179 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       h_lep1lep2bbMetPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
+      // MT, ge0bTags
+      hName = "h_mt__ge0bTags";
+      hName += flav_gen_sys_name;
+      h_mt_ge0bTags[iFlav][iGen] = new TH1D( hName, "MT, >=0 bTags;M_{T} [GeV]", 40, 0.0, 400.0);
+      h_mt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // MT, ge1bTags
+      hName = "h_mt__ge1bTags";
+      hName += flav_gen_sys_name;
+      h_mt_ge1bTags[iFlav][iGen] = new TH1D( hName, "MT, >=1 bTags;M_{T} [GeV]", 40, 0.0, 400.0);
+      h_mt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // MT, ge2bTags
+      hName = "h_mt__ge2bTags";
+      hName += flav_gen_sys_name;
+      h_mt_ge2bTags[iFlav][iGen] = new TH1D( hName, "MT, >=2 bTags;M_{T} [GeV]", 40, 0.0, 400.0);
+      h_mt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+
+
+      // modified topness, ge0bTags
+      hName = "h_modTopness__ge0bTags";
+      hName += flav_gen_sys_name;
+      h_modTopness_ge0bTags[iFlav][iGen] = new TH1D( hName, "modified topness, >=0 bTags;pT [GeV]", 20, -20.0, 20.0);
+      h_modTopness_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // modified topness, ge1bTags
+      hName = "h_modTopness__ge1bTags";
+      hName += flav_gen_sys_name;
+      h_modTopness_ge1bTags[iFlav][iGen] = new TH1D( hName, "modified topness, >=1 bTags;pT [GeV]", 20, -20.0, 20.0);
+      h_modTopness_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // modified topness, ge2bTags
+      hName = "h_modTopness__ge2bTags";
+      hName += flav_gen_sys_name;
+      h_modTopness_ge2bTags[iFlav][iGen] = new TH1D( hName, "modified topness, >=2 bTags;pT [GeV]", 20, -20.0, 20.0);
+      h_modTopness_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+
+
+      // MT2W, ge0bTags
+      hName = "h_mt2w__ge0bTags";
+      hName += flav_gen_sys_name;
+      h_mt2w_ge0bTags[iFlav][iGen] = new TH1D( hName, "MT2W, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
+      h_mt2w_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // MT2W, ge1bTags
+      hName = "h_mt2w__ge1bTags";
+      hName += flav_gen_sys_name;
+      h_mt2w_ge1bTags[iFlav][iGen] = new TH1D( hName, "MT2W, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
+      h_mt2w_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // MT2W, ge2bTags
+      hName = "h_mt2w__ge2bTags";
+      hName += flav_gen_sys_name;
+      h_mt2w_ge2bTags[iFlav][iGen] = new TH1D( hName, "MT2W, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
+      h_mt2w_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+
+
+      // Mlb, ge0bTags
+      hName = "h_mlb__ge0bTags";
+      hName += flav_gen_sys_name;
+      h_mlb_ge0bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_mlb_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // Mlb, ge1bTags
+      hName = "h_mlb__ge1bTags";
+      hName += flav_gen_sys_name;
+      h_mlb_ge1bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_mlb_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // Mlb, ge2bTags
+      hName = "h_mlb__ge2bTags";
+      hName += flav_gen_sys_name;
+      h_mlb_ge2bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_mlb_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+
 
     } // end loop over genClassifications for histogram arrays
   } // end loop over leptonFlavs for histogram arrays
 
+        
 
-  /*
-      
-  
-  //
-  // modified Topness
-  //
-  cat_temp.clear(); sys_temp.clear();
+  ////////////////////////////////
+  //                            //
+  // Trigger Efficiency Studies //
+  //                            //
+  ////////////////////////////////
 
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
+  // OR of all diLepton triggers
+  int nEvents_pass_diLepSel_and_metTrig = 0;
+  int nEvents_pass_diLepSel_and_metTrig_and_diLepTrig = 0;
   
-  sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
-  
-  
-  //
-  // MT2W
-  //
-  cat_temp.clear(); sys_temp.clear();
-  
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
-  
-  sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
-  
-  
-  //
-  // MET
-  //
-  cat_temp.clear(); sys_temp.clear();
-  
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
-  
-  sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
-  
-  
-  //
-  // pfMET
-  //
-  cat_temp.clear(); sys_temp.clear();
-  
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee2jets_ge6p4modTop) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets_ge200mt2w) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_lt200mt2w) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_ge200mt2w) );
-  
-  sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
-  
-  
+  TH1D *h1_diLep_trigger_eff_vs_lep1Pt_num = NULL;
+  TH1D *h1_diLep_trigger_eff_vs_lep1Pt_den = NULL;
+  TH1D *h1_diLep_trigger_eff_vs_lep2Pt_num = NULL;
+  TH1D *h1_diLep_trigger_eff_vs_lep2Pt_den = NULL;
+  TH2D *h2_diLep_trigger_eff_num = NULL;
+  TH2D *h2_diLep_trigger_eff_den = NULL;
 
-  //
-  // MT
-  //
-  cat_temp.clear(); sys_temp.clear();
+  // MuE Triggers
+  int nEvents_pass_diLepSel_and_singleElTrig = 0;
+  int nEvents_pass_diLepSel_and_singleElTrig_and_emuTrig = 0;
+  int nEvents_pass_diLepSel_and_singleMuTrig = 0;
+  int nEvents_pass_diLepSel_and_singleMuTrig_and_emuTrig = 0;
+  int nEvents_pass_diLepSel_and_metTrig_emuEvents = 0;
+  int nEvents_pass_diLepSel_and_metTrig_and_emuTrig = 0;
+  
+  TH1D *h1_emu_trigger_eff_vs_lep1Pt_num = NULL;
+  TH1D *h1_emu_trigger_eff_vs_lep1Pt_den = NULL;
+  TH1D *h1_emu_trigger_eff_vs_lep2Pt_num = NULL;
+  TH1D *h1_emu_trigger_eff_vs_lep2Pt_den = NULL;
+  TH2D *h2_emu_trigger_eff_num = NULL;
+  TH2D *h2_emu_trigger_eff_den = NULL;
 
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
-  
-  sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
-  
-  
-  //
-  // jet pT
-  //
-  cat_temp.clear(); sys_temp.clear();
-  
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
-  
-  sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
+  // DiEl Trigger
+  int nEvents_pass_diLepSel_and_metTrig_diElEvents = 0;
+  int nEvents_pass_diLepSel_and_metTrig_and_diElTrig = 0;
 
-   
+  TH1D *h1_diEl_trigger_eff_vs_lep1Pt_num = NULL;
+  TH1D *h1_diEl_trigger_eff_vs_lep1Pt_den = NULL;
+  TH1D *h1_diEl_trigger_eff_vs_lep2Pt_num = NULL;
+  TH1D *h1_diEl_trigger_eff_vs_lep2Pt_den = NULL;
+  TH2D *h2_diEl_trigger_eff_num = NULL;
+  TH2D *h2_diEl_trigger_eff_den = NULL;
 
+  // DiMu Triggers
+  int nEvents_pass_diLepSel_and_metTrig_diMuEvents = 0;
+  int nEvents_pass_diLepSel_and_metTrig_and_diMuTrig = 0;
+  
+  TH1D *h1_diMu_trigger_eff_vs_lep1Pt_num = NULL;
+  TH1D *h1_diMu_trigger_eff_vs_lep1Pt_den = NULL;
+  TH1D *h1_diMu_trigger_eff_vs_lep2Pt_num = NULL;
+  TH1D *h1_diMu_trigger_eff_vs_lep2Pt_den = NULL;
+  TH2D *h2_diMu_trigger_eff_num = NULL;
+  TH2D *h2_diMu_trigger_eff_den = NULL;
 
-  //
-  // lep1,lep2,b,bbar pT
-  //
-  cat_temp.clear(); sys_temp.clear();
-  
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
-  
-  sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
-  
-  
-  //
-  // lep1,lep2,b,bbar,MET pT
-  //
-  cat_temp.clear(); sys_temp.clear();
-  
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_incl) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ee3jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets) );
-  cat_temp.push_back( categoryInfo::categoryUtil(categoryInfo::k_ge4jets_250toInfmet) );
-  
-  sys_temp.push_back( systematicInfo::systematicUtil(systematicInfo::k_nominal) );
-  */
-      
+  if( sample.isData ){
 
+    h1_diLep_trigger_eff_vs_lep1Pt_num = new TH1D( "h_diLep_trigger_eff_vs_lep1Pt_num", "ee/emu/mumu trigger efficiency vs leading lepton pT, numerator;diLep trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
+    h1_diLep_trigger_eff_vs_lep1Pt_den = new TH1D( "h_diLep_trigger_eff_vs_lep1Pt_den", "ee/emu/mumu trigger efficiency vs leading lepton pT, denominator;diLep trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
+    
+    h1_diLep_trigger_eff_vs_lep2Pt_num = new TH1D( "h_diLep_trigger_eff_vs_lep2Pt_num", "ee/emu/mumu trigger efficiency vs trailing lepton pT, numerator;diLep trigger efficiency;lep2 pT", 20, 0.0, 200.0 );
+    h1_diLep_trigger_eff_vs_lep2Pt_den = new TH1D( "h_diLep_trigger_eff_vs_lep2Pt_den", "ee/emu/mumu trigger efficiency vs trailing lepton pT, denominator;diLep trigger efficiency;lep2 pT", 20, 0.0, 200.0 );    
+    
+    h2_diLep_trigger_eff_num = new TH2D( "h_diLep_trigger_eff_num", "ee/emu/mumu trigger efficiency, numerator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
+    h2_diLep_trigger_eff_den = new TH2D( "h_diLep_trigger_eff_den", "ee/emu/mumu trigger efficiency, denominator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
+
+    
+    h1_emu_trigger_eff_vs_lep1Pt_num = new TH1D( "h_emu_trigger_eff_vs_lep1Pt_num", "emu trigger efficiency vs leading lepton pT, numerator;emu trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
+    h1_emu_trigger_eff_vs_lep1Pt_den = new TH1D( "h_emu_trigger_eff_vs_lep1Pt_den", "emu trigger efficiency vs leading lepton pT, denominator;emu trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
+    h1_emu_trigger_eff_vs_lep2Pt_num = new TH1D( "h_emu_trigger_eff_vs_lep2Pt_num", "emu trigger efficiency vs trailing lepton pT, numerator;emu trigger efficiency;lep2 pT", 20, 0.0, 200.0 );
+    h1_emu_trigger_eff_vs_lep2Pt_den = new TH1D( "h_emu_trigger_eff_vs_lep2Pt_den", "emu trigger efficiency vs trailing lepton pT, denominator;emu trigger efficiency;lep2 pT", 20, 0.0, 200.0 );    
+    h2_emu_trigger_eff_num = new TH2D( "h_emu_trigger_eff_num", "e/mu trigger efficiency, numerator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
+    h2_emu_trigger_eff_den = new TH2D( "h_emu_trigger_eff_den", "e/mu trigger efficiency, denominator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
+  
+        
+    h1_diEl_trigger_eff_vs_lep1Pt_num = new TH1D( "h_diEl_trigger_eff_vs_lep1Pt_num", "ee trigger efficiency vs leading lepton pT, numerator;diEl trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
+    h1_diEl_trigger_eff_vs_lep1Pt_den = new TH1D( "h_diEl_trigger_eff_vs_lep1Pt_den", "ee trigger efficiency vs leading lepton pT, denominator;diEl trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
+  
+    h1_diEl_trigger_eff_vs_lep2Pt_num = new TH1D( "h_diEl_trigger_eff_vs_lep2Pt_num", "ee trigger efficiency vs trailing lepton pT, numerator;diEl trigger efficiency;lep2 pT", 20, 0.0, 200.0 );
+    h1_diEl_trigger_eff_vs_lep2Pt_den = new TH1D( "h_diEl_trigger_eff_vs_lep2Pt_den", "ee trigger efficiency vs trailing lepton pT, denominator;diEl trigger efficiency;lep2 pT", 20, 0.0, 200.0 );    
+    h2_diEl_trigger_eff_num = new TH2D( "h_diEl_trigger_eff_num", "ee trigger efficiency, numerator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
+    h2_diEl_trigger_eff_den = new TH2D( "h_diEl_trigger_eff_den", "ee trigger efficiency, denominator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
+  
+    
+    h1_diMu_trigger_eff_vs_lep1Pt_num = new TH1D( "h_diMu_trigger_eff_vs_lep1Pt_num", "mumu trigger efficiency vs leading lepton pT, numerator;diMu trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
+    h1_diMu_trigger_eff_vs_lep1Pt_den = new TH1D( "h_diMu_trigger_eff_vs_lep1Pt_den", "mumu trigger efficiency vs leading lepton pT, denominator;diMu trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
+    h1_diMu_trigger_eff_vs_lep2Pt_num = new TH1D( "h_diMu_trigger_eff_vs_lep2Pt_num", "mumu trigger efficiency vs trailing lepton pT, numerator;diMu trigger efficiency;lep2 pT", 20, 0.0, 200.0 );
+    h1_diMu_trigger_eff_vs_lep2Pt_den = new TH1D( "h_diMu_trigger_eff_vs_lep2Pt_den", "mumu trigger efficiency vs trailing lepton pT, denominator;diMu trigger efficiency;lep2 pT", 20, 0.0, 200.0 );    
+    h2_diMu_trigger_eff_num = new TH2D( "h_diMu_trigger_eff_num", "mumu trigger efficiency, numerator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
+    h2_diMu_trigger_eff_den = new TH2D( "h_diMu_trigger_eff_den", "mumu trigger efficiency, denominator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
+
+  } // end if data for trigger efficiency histogram declarations
+  
   
 
 
@@ -844,12 +919,24 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       stop_1l_babyAnalyzer::progress( nEventsTotal, nEventsChain );
 
       
+
+      /////////////////////////////
+      //                         //
+      // Calculate Event Weights //
+      //                         //
+      /////////////////////////////
+   
+      wgtInfo->getEventWeights( analyzeFast_ );
+
+      double wgt_nominal = wgtInfo->sys_wgts[sysInfo::k_nominal];
+
+      
+      
       /////////////////////
       //                 //
       // Check Selection //
       //                 //
       /////////////////////
-
 
       // Check JSON
       if( sample.isData && applyjson ){
@@ -870,18 +957,17 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	if( genmet()>200.0 ) continue;
       }
 
-      bool passAnyRegion = false;
-
       // Evt Selection
       pass_evtSel = selectionInfo::pass_CR2l_bulkTTbar(0, -1, add2ndLepToMet_);
 
       if( !sample.isData && !analyzeFast_ ) pass_evtSel_jup   = selectionInfo::pass_CR2l_bulkTTbar(1,  -1, add2ndLepToMet_);
       if( !sample.isData && !analyzeFast_ ) pass_evtSel_jdown = selectionInfo::pass_CR2l_bulkTTbar(-1, -1, add2ndLepToMet_);
 
+      bool passAnyRegion = false;
       if( pass_evtSel || pass_evtSel_jup || pass_evtSel_jdown ) passAnyRegion=true;
 
       // Cutflow
-      vector<bool> cutflow = selectionInfo::get_selectionResults_CR2l_bulkTTbar(0);
+      vector<bool> cutflow = selectionInfo::get_selectionResults_CR2l_bulkTTbar(0, -1);
       for(int i=0; i<(int)cutflow.size(); i++){
 	if(!cutflow[i]) break;
 	h_cutflow_evtSel->Fill( i, cutflow[i] );
@@ -889,11 +975,126 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
 
       //
+      // If Data, before selection continue, look at trigger efficiency
+      //
+      if( sample.isData ){
+
+	// Check if event passes cutlist for "diLepton selection"
+	bool pass_selection_noTrigger = true;
+	for(int iCut=0; iCut<(int)cutflow.size(); iCut++){
+	  if( iCut==1 ) continue; // ignore diLepton trigger cut
+	  if( !cutflow[iCut] ){
+	    pass_selection_noTrigger = false;
+	    break;
+	  }
+	}
+	
+	// Check if event passes triggers
+	bool pass_trigger_singleEl = HLT_SingleEl();
+	bool pass_trigger_singleMu = HLT_SingleMu(); 
+	bool pass_trigger_met      = HLT_MET();
+	bool pass_trigger_emu      = HLT_MuE();
+	bool pass_trigger_diEl     = HLT_DiEl();
+	bool pass_trigger_diMu     = HLT_DiMu();
+	bool pass_trigger_diLep    = HLT_DiEl() || HLT_MuE() || HLT_DiMu();
+	
+	// DiLep Triggers (OR'd of all 3), MET trigger method
+	if( pass_selection_noTrigger && pass_trigger_met ){
+	  h1_diLep_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
+	  h1_diLep_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
+	  h2_diLep_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+	  nEvents_pass_diLepSel_and_metTrig++;
+	  if( pass_trigger_diLep ){
+	    nEvents_pass_diLepSel_and_metTrig_and_diLepTrig++;
+	    h1_diLep_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
+	    h1_diLep_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
+	    h2_diLep_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+	    
+	  }
+	}
+
+	// E/Mu Triggers
+	if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==24 ){
+
+	  // E/mu Trigger, SingleLep factorized method, Test trailing electron leg
+	  if( pass_selection_noTrigger && pass_trigger_singleEl && abs(lep1_pdgid())==11 ){
+	    nEvents_pass_diLepSel_and_singleElTrig++;
+	    if( pass_trigger_emu ){
+	      nEvents_pass_diLepSel_and_singleElTrig_and_emuTrig++;
+	    }
+	  }
+
+	  // E/mu Trigger, SingleLep factorized method, Test trailing muon leg
+	  if( pass_selection_noTrigger && pass_trigger_singleMu && abs(lep1_pdgid())==13 ){
+	    nEvents_pass_diLepSel_and_singleMuTrig++;
+	    if( pass_trigger_diLep ){
+	      nEvents_pass_diLepSel_and_singleMuTrig_and_emuTrig++;
+	    }
+	  }
+
+	  // E/mu Trigger, MET Trigger method
+	  if( pass_selection_noTrigger && pass_trigger_met ){
+	    nEvents_pass_diLepSel_and_metTrig_emuEvents++;
+	    h1_emu_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
+	    h1_emu_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
+	    h2_emu_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+	    if( pass_trigger_emu ){
+	      nEvents_pass_diLepSel_and_metTrig_and_emuTrig++;
+	      h1_emu_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
+	      h1_emu_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
+	      h2_emu_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+	    }
+	  }
+
+	} // end if e/mu
+
+	
+	// DiEl Triggers, MET Trigger method
+	if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==22 ){
+	  if( pass_selection_noTrigger && pass_trigger_met ){
+	    nEvents_pass_diLepSel_and_metTrig_diElEvents++;
+	    h1_diEl_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
+	    h1_diEl_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
+	    h2_diEl_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+	    if( pass_trigger_diEl ){
+	      nEvents_pass_diLepSel_and_metTrig_and_diElTrig++;
+	      h1_diEl_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
+	      h1_diEl_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
+	      h2_diEl_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+	    }
+	  }
+	} // end if elel
+
+
+	// DiMu Triggers, MET Trigger method
+	if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==26 ){
+	  if( pass_selection_noTrigger && pass_trigger_met ){
+	    nEvents_pass_diLepSel_and_metTrig_diMuEvents++;
+	    h1_diMu_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
+	    h1_diMu_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
+	    h2_diMu_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+	    if( pass_trigger_diMu ){
+	      nEvents_pass_diLepSel_and_metTrig_and_diMuTrig++;
+	      h1_diMu_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
+	      h1_diMu_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
+	      h2_diMu_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+	    }
+	  }
+	} // end if mumu
+
+
+      } // end if sample is data
+
+
+      
+      //
       // Continue if Event Passes No Region of Interest
       //
       if( !passAnyRegion ) continue;
 
 
+      // Intialize lepFlav vector
+      for(int iFlav=0; iFlav<nLepFlav; iFlav++){ v_lepFlav[iFlav].second=false; }
 
       // Check Lepton Flavs
       for(int iFlav=0; iFlav<nLepFlav; iFlav++){
@@ -911,19 +1112,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	
       
       
-
-      /////////////////////////////
-      //                         //
-      // Calculate Event Weights //
-      //                         //
-      /////////////////////////////
-   
-      wgtInfo->getEventWeights( analyzeFast_ );
-
-      double wgt_nominal = wgtInfo->sys_wgts[sysInfo::k_nominal];
-
-
-
+      
       ///////////////////////////////
       //                           //
       // Check Gen Classifications //
@@ -1195,6 +1384,51 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    if( ngoodbtags()>=1 ) h_lep1lep2bbMetPt_ge1bTags[iFlav][iGen]->Fill( lep1lep2bbMet_pt, wgt_nominal );
 	    if( ngoodbtags()>=2 ) h_lep1lep2bbMetPt_ge2bTags[iFlav][iGen]->Fill( lep1lep2bbMet_pt, wgt_nominal );
 
+	    
+	    // mt
+	    if( add2ndLepToMet_ ){
+	      if( ngoodbtags()>=0 ) h_mt_ge0bTags[iFlav][iGen]->Fill( mt_met_lep_rl(), wgt_nominal );
+	      if( ngoodbtags()>=1 ) h_mt_ge1bTags[iFlav][iGen]->Fill( mt_met_lep_rl(), wgt_nominal );
+	      if( ngoodbtags()>=2 ) h_mt_ge2bTags[iFlav][iGen]->Fill( mt_met_lep_rl(), wgt_nominal );
+	    }
+	    else{
+	      if( ngoodbtags()>=0 ) h_mt_ge0bTags[iFlav][iGen]->Fill( mt_met_lep(), wgt_nominal );
+	      if( ngoodbtags()>=1 ) h_mt_ge1bTags[iFlav][iGen]->Fill( mt_met_lep(), wgt_nominal );
+	      if( ngoodbtags()>=2 ) h_mt_ge2bTags[iFlav][iGen]->Fill( mt_met_lep(), wgt_nominal );
+	    }
+	    
+
+	    // modified topness
+	    if( add2ndLepToMet_ ){
+	      if( ngoodbtags()>=0 ) h_modTopness_ge0bTags[iFlav][iGen]->Fill( topnessMod_rl(), wgt_nominal );
+	      if( ngoodbtags()>=1 ) h_modTopness_ge1bTags[iFlav][iGen]->Fill( topnessMod_rl(), wgt_nominal );
+	      if( ngoodbtags()>=2 ) h_modTopness_ge2bTags[iFlav][iGen]->Fill( topnessMod_rl(), wgt_nominal );
+	    }
+	    else{
+	      if( ngoodbtags()>=0 ) h_modTopness_ge0bTags[iFlav][iGen]->Fill( topnessMod(), wgt_nominal );
+	      if( ngoodbtags()>=1 ) h_modTopness_ge1bTags[iFlav][iGen]->Fill( topnessMod(), wgt_nominal );
+	      if( ngoodbtags()>=2 ) h_modTopness_ge2bTags[iFlav][iGen]->Fill( topnessMod(), wgt_nominal );
+	    }
+	    
+
+	    // mt2w
+	    if( add2ndLepToMet_ ){
+	      if( ngoodbtags()>=0 ) h_mt2w_ge0bTags[iFlav][iGen]->Fill( MT2W_rl(), wgt_nominal );
+	      if( ngoodbtags()>=1 ) h_mt2w_ge1bTags[iFlav][iGen]->Fill( MT2W_rl(), wgt_nominal );
+	      if( ngoodbtags()>=2 ) h_mt2w_ge2bTags[iFlav][iGen]->Fill( MT2W_rl(), wgt_nominal );
+	    }
+	    else{
+	      if( ngoodbtags()>=0 ) h_mt2w_ge0bTags[iFlav][iGen]->Fill( MT2W(), wgt_nominal );
+	      if( ngoodbtags()>=1 ) h_mt2w_ge1bTags[iFlav][iGen]->Fill( MT2W(), wgt_nominal );
+	      if( ngoodbtags()>=2 ) h_mt2w_ge2bTags[iFlav][iGen]->Fill( MT2W(), wgt_nominal );
+	    }
+	    
+
+	    // mlb
+	    if( ngoodbtags()>=0 ) h_mlb_ge0bTags[iFlav][iGen]->Fill( Mlb_closestb(), wgt_nominal );
+	    if( ngoodbtags()>=1 ) h_mlb_ge1bTags[iFlav][iGen]->Fill( Mlb_closestb(), wgt_nominal );
+	    if( ngoodbtags()>=2 ) h_mlb_ge2bTags[iFlav][iGen]->Fill( Mlb_closestb(), wgt_nominal );
+	    
 
 	  } // end loop over genClassifications
 	} // end loop over lepton flavours
@@ -1240,6 +1474,55 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   cout << "====================================================" << endl;
 
   
+  //
+  // Trigger Efficiency Printouts
+  //
+  if( sample.isData ){
+    
+    cout << "  Trigger Efficiency Results: " << endl;
+
+    double trigger_eff_diLep = (double)nEvents_pass_diLepSel_and_metTrig_and_diLepTrig/(double)nEvents_pass_diLepSel_and_metTrig;
+    double trigger_eff_diLep_err = sqrt( (trigger_eff_diLep*(1-trigger_eff_diLep))/(double)nEvents_pass_diLepSel_and_metTrig );
+    cout << "    OR of all diLep Triggers, using MET monitoring trigger " << endl;
+    cout << "        Efficiency = (" << nEvents_pass_diLepSel_and_metTrig_and_diLepTrig << " / " << nEvents_pass_diLepSel_and_metTrig << " ) = " << trigger_eff_diLep << " +/- " << trigger_eff_diLep_err << endl;
+    
+
+    double trigger_eff_diEl = (double)nEvents_pass_diLepSel_and_metTrig_and_diElTrig/(double)nEvents_pass_diLepSel_and_metTrig_diElEvents;
+    double trigger_eff_diEl_err = sqrt( (trigger_eff_diEl*(1-trigger_eff_diEl))/(double)nEvents_pass_diLepSel_and_metTrig_diElEvents );
+    cout << "    diEl Trigger, using MET monitoring trigger " << endl;
+    cout << "        Efficiency = (" << nEvents_pass_diLepSel_and_metTrig_and_diElTrig << " / " << nEvents_pass_diLepSel_and_metTrig_diElEvents << " ) = " << trigger_eff_diEl << " +/- " << trigger_eff_diEl_err << endl;
+    
+
+    double trigger_eff_diMu = (double)nEvents_pass_diLepSel_and_metTrig_and_diMuTrig/(double)nEvents_pass_diLepSel_and_metTrig_diMuEvents;
+    double trigger_eff_diMu_err = sqrt( (trigger_eff_diMu*(1-trigger_eff_diMu))/(double)nEvents_pass_diLepSel_and_metTrig_diMuEvents );
+    cout << "    diMu Trigger, using MET monitoring trigger " << endl;
+    cout << "        Efficiency = (" << nEvents_pass_diLepSel_and_metTrig_and_diMuTrig << " / " << nEvents_pass_diLepSel_and_metTrig_diMuEvents << " ) = " << trigger_eff_diMu << " +/- " << trigger_eff_diMu_err << endl;
+  
+
+    double trigger_eff_emu = (double)nEvents_pass_diLepSel_and_metTrig_and_emuTrig/(double)nEvents_pass_diLepSel_and_metTrig_emuEvents;
+    double trigger_eff_emu_err = sqrt( (trigger_eff_emu*(1-trigger_eff_emu))/(double)nEvents_pass_diLepSel_and_metTrig_emuEvents );
+    cout << "    e/mu Trigger, using MET monitoring trigger " << endl;
+    cout << "        Efficiency = (" << nEvents_pass_diLepSel_and_metTrig_and_emuTrig << " / " << nEvents_pass_diLepSel_and_metTrig_emuEvents << " ) = " << trigger_eff_emu << " +/- " << trigger_eff_emu_err << endl;
+  
+
+    double trigger_eff_emu_trailingLep_el = (double)nEvents_pass_diLepSel_and_singleElTrig_and_emuTrig/(double)nEvents_pass_diLepSel_and_singleElTrig;
+    double trigger_eff_emu_trailingLep_el_err = sqrt( (trigger_eff_emu_trailingLep_el*(1-trigger_eff_emu_trailingLep_el))/(double)nEvents_pass_diLepSel_and_singleElTrig );
+    cout << "    e/mu Trigger, using SingleLep monitoring triggers " << endl;
+    cout << "        Trailing Mu Leg Efficiency, using singleEl triggers = " << "( " << (double)nEvents_pass_diLepSel_and_singleElTrig_and_emuTrig << " / " << (double)nEvents_pass_diLepSel_and_singleElTrig << " ) = " << trigger_eff_emu_trailingLep_el << " +/- " << trigger_eff_emu_trailingLep_el_err << endl;
+
+    
+    double trigger_eff_emu_trailingLep_mu = (double)nEvents_pass_diLepSel_and_singleMuTrig_and_emuTrig/(double)nEvents_pass_diLepSel_and_singleMuTrig;
+    double trigger_eff_emu_trailingLep_mu_err = sqrt( (trigger_eff_emu_trailingLep_mu*(1-trigger_eff_emu_trailingLep_mu))/(double)nEvents_pass_diLepSel_and_singleMuTrig );
+    cout << "        Trailing El Leg Efficiency, using singleMu triggers = " << "( " << (double)nEvents_pass_diLepSel_and_singleMuTrig_and_emuTrig << " / " << (double)nEvents_pass_diLepSel_and_singleMuTrig << " ) = " << trigger_eff_emu_trailingLep_mu << " +/- " << trigger_eff_emu_trailingLep_mu_err << endl;
+
+    double trigger_eff_emu_singleLepMethod = trigger_eff_emu_trailingLep_mu*trigger_eff_emu_trailingLep_el;
+    double trigger_eff_emu_singleLepMethod_err = trigger_eff_emu_singleLepMethod*sqrt( pow(trigger_eff_emu_trailingLep_mu_err/trigger_eff_emu_trailingLep_mu,2) + pow(trigger_eff_emu_trailingLep_el_err/trigger_eff_emu_trailingLep_el,2) );
+    cout << "        Factorized Trigger Efficiency = (" << trigger_eff_emu_trailingLep_mu << " * " << trigger_eff_emu_trailingLep_el << " ) = " << trigger_eff_emu_singleLepMethod << " +/- " << trigger_eff_emu_singleLepMethod_err << endl;
+ 
+    cout << "====================================================" << endl;
+  }
+
+
   //
   // Clean stopCORE objects
   //

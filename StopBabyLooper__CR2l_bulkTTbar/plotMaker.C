@@ -1426,6 +1426,397 @@ void plotMaker( bool plotByGenDecay=true ){
 
   
 
+  // Plot mt
+  
+  // ge0bTags
+  var_list_label.push_back( "h_mt__ge0bTags" );
+  var_list_title.push_back( "mt, >=0 bTags" );
+  var_list_xaxis.push_back( "mt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge0bTags, Rebinned
+  var_list_label.push_back( "h_mt__ge0bTags" );
+  var_list_title.push_back( "mt, >=0 bTags" );
+  var_list_xaxis.push_back( "mt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mt_ge0bTags = 8;
+  double xRebins_mt_ge0bTags[nRebins_mt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
+  double xRebinsSF_mt_ge0bTags[nRebins_mt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mt_ge0bTags);
+  var_rebin_xBins.push_back(xRebins_mt_ge0bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mt_ge0bTags);
+
+
+  // ge1bTags
+  var_list_label.push_back( "h_mt__ge1bTags" );
+  var_list_title.push_back( "mt, >=1 bTags" );
+  var_list_xaxis.push_back( "mt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_mt__ge1bTags" );
+  var_list_title.push_back( "mt, >=1 bTags" );
+  var_list_xaxis.push_back( "mt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mt_ge1bTags = 8;
+  double xRebins_mt_ge1bTags[nRebins_mt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
+  double xRebinsSF_mt_ge1bTags[nRebins_mt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mt_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_mt_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mt_ge1bTags);
+
+
+  // ge2bTags
+  var_list_label.push_back( "h_mt__ge2bTags" );
+  var_list_title.push_back( "mt, >=2 bTags" );
+  var_list_xaxis.push_back( "mt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge2bTags, Rebinned
+  var_list_label.push_back( "h_mt__ge2bTags" );
+  var_list_title.push_back( "mt, >=2 bTags" );
+  var_list_xaxis.push_back( "mt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mt_ge2bTags = 8;
+  double xRebins_mt_ge2bTags[nRebins_mt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
+  double xRebinsSF_mt_ge2bTags[nRebins_mt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mt_ge2bTags);
+  var_rebin_xBins.push_back(xRebins_mt_ge2bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mt_ge2bTags);
+
+
+  // Plot modTopness
+  
+  // ge0bTags
+  var_list_label.push_back( "h_modTopness__ge0bTags" );
+  var_list_title.push_back( "modTopness, >=0 bTags" );
+  var_list_xaxis.push_back( "modTopness" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge0bTags, Rebinned
+  var_list_label.push_back( "h_modTopness__ge0bTags" );
+  var_list_title.push_back( "modTopness, >=0 bTags" );
+  var_list_xaxis.push_back( "modTopness" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_modTopness_ge0bTags = 4;
+  double xRebins_modTopness_ge0bTags[nRebins_modTopness_ge0bTags+1]{ -20, -10, 0.0, 10.0, 20.0 };
+  double xRebinsSF_modTopness_ge0bTags[nRebins_modTopness_ge0bTags]{   0.2,  0.2,  0.2, 0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_modTopness_ge0bTags);
+  var_rebin_xBins.push_back(xRebins_modTopness_ge0bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_modTopness_ge0bTags);
+
+
+  // ge1bTags
+  var_list_label.push_back( "h_modTopness__ge1bTags" );
+  var_list_title.push_back( "modTopness, >=1 bTags" );
+  var_list_xaxis.push_back( "modTopness" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_modTopness__ge1bTags" );
+  var_list_title.push_back( "modTopness, >=1 bTags" );
+  var_list_xaxis.push_back( "modTopness" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_modTopness_ge1bTags = 4;
+  double xRebins_modTopness_ge1bTags[nRebins_modTopness_ge1bTags+1]{ -20, -10, 0.0, 10.0, 20.0 };
+  double xRebinsSF_modTopness_ge1bTags[nRebins_modTopness_ge1bTags]{   0.2,  0.2,  0.2,  0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_modTopness_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_modTopness_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_modTopness_ge1bTags);
+
+
+  // ge2bTags
+  var_list_label.push_back( "h_modTopness__ge2bTags" );
+  var_list_title.push_back( "modTopness, >=2 bTags" );
+  var_list_xaxis.push_back( "modTopness" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge2bTags, Rebinned
+  var_list_label.push_back( "h_modTopness__ge2bTags" );
+  var_list_title.push_back( "modTopness, >=2 bTags" );
+  var_list_xaxis.push_back( "modTopness" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_modTopness_ge2bTags = 4;
+  double xRebins_modTopness_ge2bTags[nRebins_modTopness_ge2bTags+1]{ -20, -10, 0.0, 10.0, 20.0 };
+  double xRebinsSF_modTopness_ge2bTags[nRebins_modTopness_ge2bTags]{   0.2,  0.2,  0.2,  0.2  };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_modTopness_ge2bTags);
+  var_rebin_xBins.push_back(xRebins_modTopness_ge2bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_modTopness_ge2bTags);
+
+
+  // Plot mt2w
+  
+  // ge0bTags
+  var_list_label.push_back( "h_mt2w__ge0bTags" );
+  var_list_title.push_back( "mt2w, >=0 bTags" );
+  var_list_xaxis.push_back( "mt2w" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge0bTags, Rebinned
+  var_list_label.push_back( "h_mt2w__ge0bTags" );
+  var_list_title.push_back( "mt2w, >=0 bTags" );
+  var_list_xaxis.push_back( "mt2w" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mt2w_ge0bTags = 12;
+  double xRebins_mt2w_ge0bTags[nRebins_mt2w_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0 };
+  double xRebinsSF_mt2w_ge0bTags[nRebins_mt2w_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,    0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mt2w_ge0bTags);
+  var_rebin_xBins.push_back(xRebins_mt2w_ge0bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mt2w_ge0bTags);
+
+
+  // ge1bTags
+  var_list_label.push_back( "h_mt2w__ge1bTags" );
+  var_list_title.push_back( "mt2w, >=1 bTags" );
+  var_list_xaxis.push_back( "mt2w" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_mt2w__ge1bTags" );
+  var_list_title.push_back( "mt2w, >=1 bTags" );
+  var_list_xaxis.push_back( "mt2w" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mt2w_ge1bTags = 12;
+  double xRebins_mt2w_ge1bTags[nRebins_mt2w_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0 };
+  double xRebinsSF_mt2w_ge1bTags[nRebins_mt2w_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,    0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mt2w_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_mt2w_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mt2w_ge1bTags);
+
+
+  // ge2bTags
+  var_list_label.push_back( "h_mt2w__ge2bTags" );
+  var_list_title.push_back( "mt2w, >=2 bTags" );
+  var_list_xaxis.push_back( "mt2w" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge2bTags, Rebinned
+  var_list_label.push_back( "h_mt2w__ge2bTags" );
+  var_list_title.push_back( "mt2w, >=2 bTags" );
+  var_list_xaxis.push_back( "mt2w" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mt2w_ge2bTags = 12;
+  double xRebins_mt2w_ge2bTags[nRebins_mt2w_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0 };
+  double xRebinsSF_mt2w_ge2bTags[nRebins_mt2w_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,    0.2,   0.2,  0.2,   0.2  };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mt2w_ge2bTags);
+  var_rebin_xBins.push_back(xRebins_mt2w_ge2bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mt2w_ge2bTags);
+
+
+  // Plot mlb
+  
+  // ge0bTags
+  var_list_label.push_back( "h_mlb__ge0bTags" );
+  var_list_title.push_back( "mlb, >=0 bTags" );
+  var_list_xaxis.push_back( "mlb" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge0bTags, Rebinned
+  var_list_label.push_back( "h_mlb__ge0bTags" );
+  var_list_title.push_back( "mlb, >=0 bTags" );
+  var_list_xaxis.push_back( "mlb" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mlb_ge0bTags = 8;
+  double xRebins_mlb_ge0bTags[nRebins_mlb_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
+  double xRebinsSF_mlb_ge0bTags[nRebins_mlb_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mlb_ge0bTags);
+  var_rebin_xBins.push_back(xRebins_mlb_ge0bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mlb_ge0bTags);
+
+
+  // ge1bTags
+  var_list_label.push_back( "h_mlb__ge1bTags" );
+  var_list_title.push_back( "mlb, >=1 bTags" );
+  var_list_xaxis.push_back( "mlb" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_mlb__ge1bTags" );
+  var_list_title.push_back( "mlb, >=1 bTags" );
+  var_list_xaxis.push_back( "mlb" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mlb_ge1bTags = 8;
+  double xRebins_mlb_ge1bTags[nRebins_mlb_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
+  double xRebinsSF_mlb_ge1bTags[nRebins_mlb_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mlb_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_mlb_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mlb_ge1bTags);
+
+
+  // ge2bTags
+  var_list_label.push_back( "h_mlb__ge2bTags" );
+  var_list_title.push_back( "mlb, >=2 bTags" );
+  var_list_xaxis.push_back( "mlb" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge2bTags, Rebinned
+  var_list_label.push_back( "h_mlb__ge2bTags" );
+  var_list_title.push_back( "mlb, >=2 bTags" );
+  var_list_xaxis.push_back( "mlb" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_mlb_ge2bTags = 8;
+  double xRebins_mlb_ge2bTags[nRebins_mlb_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
+  double xRebinsSF_mlb_ge2bTags[nRebins_mlb_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_mlb_ge2bTags);
+  var_rebin_xBins.push_back(xRebins_mlb_ge2bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_mlb_ge2bTags);
+
 
 
   

@@ -227,9 +227,12 @@ namespace sysInfo{
     double sf_hfXsec_up;
     double sf_hfXsec_dn;
   
+    double sf_pdf_up;
+    double sf_pdf_dn;
+  
     double sf_alphas_up;
     double sf_alphas_dn;
-  
+    
     double sf_q2_up;
     double sf_q2_dn;
   
@@ -283,6 +286,8 @@ namespace sysInfo{
     void getWwidthSF( double &weight_Wwidth_up, double &weight_Wwidth_dn );
 
     void getWJetsHFXSecSF( double &weight_hfXsec_up, double &weight_hfXsec_dn );
+
+    void getPDFWeight( double &weight_pdf_up, double &weight_pdf_dn );
 
     void getAlphasWeight( double &weight_alphas_up, double &weight_alphas_dn );
 

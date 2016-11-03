@@ -508,6 +508,9 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_hfXsec_up = 1.0;
   sf_hfXsec_dn = 1.0;
   
+  sf_pdf_up = 1.0;
+  sf_pdf_dn = 1.0;
+
   sf_alphas_up = 1.0;
   sf_alphas_dn = 1.0;
   
@@ -592,6 +595,9 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     // W+HF xsec uncertainty
     getWJetsHFXSecSF( sf_hfXsec_up, sf_hfXsec_dn );
     
+    // PDF Uncertainty
+    getPDFWeight( sf_pdf_up, sf_pdf_dn );
+
     // Alpha Strong, QCD variation
     getAlphasWeight( sf_alphas_up, sf_alphas_dn );
     
@@ -790,30 +796,12 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 
     // PDF Up
     else if( iSys==k_pdfUp ){
-      if(sample_info->isSignal){
-	if( babyAnalyzer.genweights().size()>=110 && h_sig_counter->GetBinContent(mStop,mLSP,10)>0 ){
-	  sys_wgt *= (babyAnalyzer.pdf_up_weight())/(h_sig_counter->GetBinContent(mStop,mLSP,10)/nEvents);
-	}
-      }
-      else{
-	if( babyAnalyzer.genweights().size()>=110 && h_bkg_counter->GetBinContent(10)>0 ){
-	  sys_wgt *= (babyAnalyzer.pdf_up_weight())/(h_bkg_counter->GetBinContent(10)/nEvents);
-	}
-      }
+      sys_wgt *= sf_pdf_up;
     }
-
+     
     // PDF Dn
     else if( iSys==k_pdfDown ){
-      if(sample_info->isSignal){
-	if( babyAnalyzer.genweights().size()>=110 && h_sig_counter->GetBinContent(mStop,mLSP,11)>0 ){
-	  sys_wgt *= (babyAnalyzer.pdf_down_weight())/(h_sig_counter->GetBinContent(mStop,mLSP,11)/nEvents);
-	}
-      }
-      else{
-	if( babyAnalyzer.genweights().size()>=110 && h_bkg_counter->GetBinContent(11)>0 ){
-	  sys_wgt *= (babyAnalyzer.pdf_down_weight())/(h_bkg_counter->GetBinContent(11)/nEvents);
-	}
-      }
+      sys_wgt *= sf_pdf_dn;
     }
       
     // Alpha Strong Up
@@ -956,20 +944,26 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // DiElectron Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==22 ){
-    sf_val = 0.883481;
-    sf_err = 0.012322;
+    sf_val = 0.884591; // 29.53fb
+    sf_err = 0.00811308;
+    //sf_val = 0.883481; // 12.9fb ICHEP
+    //sf_err = 0.012322;
   }
 
   // MuE Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==24 ){
-    sf_val = 0.893801;
-    sf_err = 0.00657751;
+    sf_val = 0.908511; // 29.53fb
+    sf_err = 0.00420534;
+    //sf_val = 0.893801; // 12.9fb ICHEP
+    //sf_err = 0.00657751;
   }
 
   // DiMuon Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==26 ){
-    sf_val = 0.841817;
-    sf_err = 0.0102116;
+    sf_val = 0.858291; // 29.53fb
+    sf_err = 0.00666499;
+    //sf_val = 0.841817; // 12.9fb ICHEP
+    //sf_err = 0.0102116;
   }
 
   // Calculate Scale Factor
@@ -1595,6 +1589,7 @@ void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &we
   // Get ttbar/tW system pT
   LorentzVector system_LV(0.0,0.0,0.0,0.0);
 
+  /*
   // Grab top quarks
   for(int iGen=0; iGen<(int)babyAnalyzer.genqs_p4().size(); iGen++){
     if( abs(babyAnalyzer.genqs_id().at(iGen))==6 &&
@@ -1614,39 +1609,99 @@ void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &we
       }
     }
   }
-   
+
+  // Get system Pt
   double system_pt = system_LV.Pt();
+  */
 
+  // Lep1 LV
+  system_LV += babyAnalyzer.lep1_p4();
 
+  // Lep2 LV, if available
+  if( babyAnalyzer.nvetoleps()>1 ) system_LV += babyAnalyzer.lep2_p4();
+
+  // Highest CSV Jet
+  int jet1_idx = -1;
+  double max_csv = -99.9;
+  for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
+    if( babyAnalyzer.ak4pfjets_CSV().at(iJet) > max_csv ){
+      jet1_idx = iJet;
+      max_csv  = babyAnalyzer.ak4pfjets_CSV().at(iJet);
+    }
+  }
+  if(jet1_idx>=0) system_LV += babyAnalyzer.ak4pfjets_p4().at(jet1_idx);
+    
+  // 2nd Highest CSV Jets
+  int jet2_idx = -1;
+  max_csv = -99.9;
+  for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
+    if( iJet==jet1_idx ) continue;
+    if( babyAnalyzer.ak4pfjets_CSV().at(iJet) > max_csv ){
+      jet2_idx = iJet;
+      max_csv = babyAnalyzer.ak4pfjets_CSV().at(iJet);
+    }
+  }
+  if(jet2_idx>=0) system_LV += babyAnalyzer.ak4pfjets_p4().at(jet2_idx);
+
+  // Met
+  LorentzVector met_TLV( babyAnalyzer.pfmet()*cos(babyAnalyzer.pfmet_phi()), babyAnalyzer.pfmet()*sin(babyAnalyzer.pfmet_phi()), 0.0, babyAnalyzer.pfmet() );
+  system_LV += met_TLV;
+
+  // Get system Pt
+  double system_pt = system_LV.Pt();
+  
   // Get Scale Factor
+  if( system_pt>=0.0 && system_pt<50.0 ){
+    sf_val = 1.10;
+    sf_err = 0.01;
+  }
+
+  if( system_pt>=50.0 && system_pt<100.0 ){
+    sf_val = 0.98;
+    sf_err = 0.01;
+  }
+
+  // Used these from now on with gen ttbar for ICHEP synch
   if( system_pt>=100.0 && system_pt<150.0 ){
-    sf_val = 1.02;
-    sf_err = 0.02;
+    sf_val = 1.03; // 29.53fb
+    sf_err = 0.01;
+    //sf_val = 1.02; // 12.9fb ICHEP
+    //sf_err = 0.02;
   }
 
   if( system_pt>=150.0 && system_pt<200.0 ){
-    sf_val = 0.98;
+    sf_val = 0.96; // 29.53fb
     sf_err = 0.02;
+    //sf_val = 0.98; // 12.9fb ICHEP
+    //sf_err = 0.02;
   }
 
   if( system_pt>=200.0 && system_pt<250.0 ){
-    sf_val = 0.99;
-    sf_err = 0.03;
+    sf_val = 0.96; // 29.53fb
+    sf_err = 0.02;
+    //sf_val = 0.99; // 12.9fb ICHEP
+    //sf_err = 0.03;
   }
 
   if( system_pt>=250.0 && system_pt<350.0 ){
-    sf_val = 0.97;
+    sf_val = 0.98; // 29.53fb
     sf_err = 0.03;
+    //sf_val = 0.97; // 12.9fb ICHEP
+    //sf_err = 0.03;
   }
 
   if( system_pt>=350.0 && system_pt<450.0 ){
-    sf_val = 0.98;
-    sf_err = 0.05;
+    sf_val = 1.06; // 29.53fb
+    sf_err = 0.04;
+    //sf_val = 0.98; // 12.9fb ICHEP
+    //sf_err = 0.05;
   }
 
   if( system_pt>=450.0 ){
-    sf_val = 1.08;
-    sf_err = 0.07;
+    sf_val = 1.01; // 29.53fb
+    sf_err = 0.05;
+    //sf_val = 1.08; // 12.9fb ICHEP
+    //sf_err = 0.07;
   }
 
 
@@ -1822,6 +1877,47 @@ void sysInfo::evtWgtInfo::getWJetsHFXSecSF( double &weight_hfXsec_up, double &we
 
   return;
 
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void sysInfo::evtWgtInfo::getPDFWeight( double &weight_pdf_up, double &weight_pdf_dn ){
+
+  weight_pdf_up = 1.0;
+  weight_pdf_dn = 1.0;
+
+  if( sample_info->isData ) return;
+
+  if( babyAnalyzer.genweights().size() < 110 ) return;
+
+  if( sample_info->isSignal ){
+    if( h_sig_counter->GetBinContent(mStop,mLSP,10)<=0 ||
+	h_sig_counter->GetBinContent(mStop,mLSP,11)<=0   ) return;
+  }
+  else{
+    if( h_bkg_counter->GetBinContent(10)<=0 ||
+	h_bkg_counter->GetBinContent(11)<=0   ) return;
+  }
+
+  weight_pdf_up = babyAnalyzer.pdf_up_weight();
+  weight_pdf_dn = babyAnalyzer.pdf_down_weight();
+
+  // Normalization
+  if( sample_info->isSignal ){
+    weight_pdf_up *= (nEvents/h_sig_counter->GetBinContent(mStop,mLSP,10));
+    weight_pdf_dn *= (nEvents/h_sig_counter->GetBinContent(mStop,mLSP,11));
+  }
+  else{
+    weight_pdf_up *= (nEvents/h_bkg_counter->GetBinContent(10));
+    weight_pdf_dn *= (nEvents/h_bkg_counter->GetBinContent(11));
+  }
+
+  if( weight_pdf_up<0.0 || weight_pdf_dn<0.0 ){
+    weight_pdf_up = 1.0;
+    weight_pdf_dn = 1.0;
+  }
+
+  return;
 }
 
 //////////////////////////////////////////////////////////////////////

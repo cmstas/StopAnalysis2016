@@ -64,6 +64,16 @@ echo ""
 root -l -b -q head.C plotMaker.C++ >& Output/Log/plotMaker_byGenDecay.log
 root -l -b -q head.C plotMaker.C++'(false)' >& Output/Log/plotMaker_byProduction.log
 
+# Making Plots for data trigger efficiency studies
+echo "Making plots for trigger efficiency studies..."
+echo ""
+root -l -b -q head.C diLepTriggerEfficiency_analyzer.C++ >& Output/Log/diLeptriggerEfficiency_analyzer.log
+
+# Making Tables for ttbarSystem pT SFs
+echo "Calculating ttbarSystemPt SF..."
+echo ""
+root -l -b -q head.C ttbarSystemPt_analyzer.C++ >& Output/Log/ttbarSystemPt_analyzer.log
+
 # Create pdfs of latex files
 echo "Converting Tex to PDF..."
 echo ""
