@@ -430,6 +430,23 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
 
   fileList.push_back( tableList );
   tableList.clear();
+
+  
+  //
+  // Yields, Top Corridor
+  //
+  catList.clear();
+  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 1; cat.tex = "top~corridor,~$250<MET<350$";
+  catList.push_back( cat );
+  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 2; cat.tex = "top~corridor,~$350<MET<450$";
+  catList.push_back( cat );
+  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 3; cat.tex = "top~corridor,~$MET>450$";
+  catList.push_back( cat );
+  tableList.push_back( catList );
+
+  fileList.push_back( tableList );
+  tableList.clear();
+
   
 
   //

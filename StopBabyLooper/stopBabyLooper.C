@@ -306,6 +306,9 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   vector<int> passCats_SR_dev_ext30fb_bJetPt_v1_jup;
   vector<int> passCats_SR_dev_ext30fb_bJetPt_v1_jdown;
 
+  vector<int> passCats_SR_corridor; 
+  vector<int> passCats_SR_corridor_jup;
+  vector<int> passCats_SR_corridor_jdown;
 
   ////////////////////////
   //                    //
@@ -362,7 +365,13 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_yields_dev_ext30fb_bJetPt_v1_SR[nHistos];
   TH1D *h_yields_dev_ext30fb_bJetPt_v1_CR0b[nHistos];
   TH1D *h_yields_dev_ext30fb_bJetPt_v1_CR2l[nHistos];
-  
+
+  // Top Corridor SR bins, Dan
+  TH1D *h_yields_corridor_template = categoryInfo::getYieldHistoTemplate_SR_corridor();
+  TH1D *h_yields_corridor_SR[nHistos];
+  TH1D *h_yields_corridor_CR0b[nHistos];
+  TH1D *h_yields_corridor_CR2l[nHistos];
+
 
   // Loop over genClassifications and systematics
   for(int iGen=0; iGen<nGenClassy; iGen++){
@@ -487,6 +496,32 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       h_yields_dev_ext30fb_bJetPt_v1_CR2l[iHisto]->SetDirectory(f_output);
 
 
+      // Top Corridor Region
+
+      // Baseline Name
+      TString h_name_corridor_base = h_yields_corridor_template->GetName();
+      
+      // SR yields
+      TString h_name_corridor_SR = h_name_corridor_base;
+      h_name_corridor_SR += "__SR";
+      h_name_corridor_SR += gen_sys_name;
+      h_yields_corridor_SR[iHisto] = (TH1D*)h_yields_corridor_template->Clone(h_name_corridor_SR);
+      h_yields_corridor_SR[iHisto]->SetDirectory(f_output);
+
+      // CR0b yields
+      TString h_name_corridor_CR0b = h_name_corridor_base;
+      h_name_corridor_CR0b += "__CR0b";
+      h_name_corridor_CR0b += gen_sys_name;
+      h_yields_corridor_CR0b[iHisto] = (TH1D*)h_yields_corridor_template->Clone(h_name_corridor_CR0b);
+      h_yields_corridor_CR0b[iHisto]->SetDirectory(f_output);
+
+      // CR2l yields
+      TString h_name_corridor_CR2l = h_name_corridor_base;
+      h_name_corridor_CR2l += "__CR2l";
+      h_name_corridor_CR2l += gen_sys_name;
+      h_yields_corridor_CR2l[iHisto] = (TH1D*)h_yields_corridor_template->Clone(h_name_corridor_CR2l);
+      h_yields_corridor_CR2l[iHisto]->SetDirectory(f_output);
+      
 
     } // end loop over systematics
   } // end loop over gen classifications
@@ -942,11 +977,17 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       passCats_SR_dev_ext30fb_bJetPt_v1_jup.clear();
       passCats_SR_dev_ext30fb_bJetPt_v1_jdown.clear();
     
+      // Top Corridor Singal Regions
+      passCats_SR_corridor.clear(); 
+      passCats_SR_corridor_jup.clear();
+      passCats_SR_corridor_jdown.clear();
+
       if( pass_SR || pass_CR0b || pass_CR2l ){
 	passCats_SR_ICHEP = categoryInfo::passCategory_SR_ICHEP(0, add2ndLepToMet_);
 	passCats_SR_ICHEP_ext30fb = categoryInfo::passCategory_SR_ICHEP_ext30fb(0, add2ndLepToMet_);
 	passCats_SR_dev_ext30fb_mlb_v1 = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(0, add2ndLepToMet_);
 	passCats_SR_dev_ext30fb_bJetPt_v1 = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(0, add2ndLepToMet_);
+	passCats_SR_corridor = categoryInfo::passCategory_SR_corridor(0, add2ndLepToMet_);
       }
       // No JES for data
       if( !sample.isData ){
@@ -955,12 +996,14 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	  passCats_SR_ICHEP_ext30fb_jup = categoryInfo::passCategory_SR_ICHEP_ext30fb(1, add2ndLepToMet_);
 	  passCats_SR_dev_ext30fb_mlb_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(1, add2ndLepToMet_);
 	  passCats_SR_dev_ext30fb_bJetPt_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(1, add2ndLepToMet_);
+	  passCats_SR_corridor_jup = categoryInfo::passCategory_SR_corridor(1, add2ndLepToMet_);
 	}
 	if( pass_SR_jdown || pass_CR0b_jdown || pass_CR2l_jdown ){
 	  passCats_SR_ICHEP_jdown = categoryInfo::passCategory_SR_ICHEP(-1, add2ndLepToMet_);
 	  passCats_SR_ICHEP_ext30fb_jdown = categoryInfo::passCategory_SR_ICHEP_ext30fb(-1, add2ndLepToMet_);
 	  passCats_SR_dev_ext30fb_mlb_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(-1, add2ndLepToMet_);
 	  passCats_SR_dev_ext30fb_bJetPt_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(-1, add2ndLepToMet_);
+	  passCats_SR_corridor_jdown = categoryInfo::passCategory_SR_corridor(-1, add2ndLepToMet_);
 	}
       }
   
@@ -1168,6 +1211,28 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    }
 
 
+	    // Corridor Signal Regions
+	    
+	    // JES Up
+	    if( iSys==sysInfo::k_JESUp ){
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor_jup.size(); iCat++){
+		h_yields_corridor_SR[iHisto]->Fill( passCats_SR_corridor_jup[iCat], wgt );
+	      }
+	    }
+	    // JES Dn
+	    else if( iSys==sysInfo::k_JESDown ){
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor_jdown.size(); iCat++){
+		h_yields_corridor_SR[iHisto]->Fill( passCats_SR_corridor_jdown[iCat], wgt );
+	      }
+	    }
+	    // All Others
+	    else{
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor.size(); iCat++){
+		h_yields_corridor_SR[iHisto]->Fill( passCats_SR_corridor[iCat], wgt );
+	      }
+	    }
+
+
 
 	  } // end loop over systematics
 
@@ -1302,6 +1367,28 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    }
 
 
+	    // corridor Signal Regions
+	    
+	    // JES Up
+	    if( iSys==sysInfo::k_JESUp ){
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor_jup.size(); iCat++){
+		h_yields_corridor_CR0b[iHisto]->Fill( passCats_SR_corridor_jup[iCat], wgt );
+	      }
+	    }
+	    // JES Dn
+	    else if( iSys==sysInfo::k_JESDown ){
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor_jdown.size(); iCat++){
+		h_yields_corridor_CR0b[iHisto]->Fill( passCats_SR_corridor_jdown[iCat], wgt );
+	      }
+	    }
+	    // All Others
+	    else{
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor.size(); iCat++){
+		h_yields_corridor_CR0b[iHisto]->Fill( passCats_SR_corridor[iCat], wgt );
+	      }
+	    }
+
+
 	  
 	  } // end loop over systematics
 
@@ -1369,7 +1456,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    // All Others
 	    else{
 	      for(int iCat=0; iCat<(int)passCats_SR_ICHEP.size(); iCat++){
-		//if( sample.isData && passCats_SR_ICHEP[iCat]==7 ) cout << "run=" << run() << ", ls=" << ls() << ", evt=" << evt() << ", ngoodleps=" << ngoodleps() << ", nvetoleps=" << nvetoleps() << ", lep1_pt=" << lep1_p4().Pt() << ", lep1_eta=" << lep1_p4().Eta() << ", lep1_phi=" << lep1_p4().Phi() << ", lep2_pt=" << lep2_p4().Pt() << ", lep2_eta=" << lep2_p4().Eta() << ", lep2_phi=" << lep2_p4().Phi() << endl;
 		h_yields_ICHEP_CR2l[iHisto]->Fill( passCats_SR_ICHEP[iCat], wgt );
 	      }
 	    }
@@ -1438,6 +1524,28 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    else{
 	      for(int iCat=0; iCat<(int)passCats_SR_dev_ext30fb_bJetPt_v1.size(); iCat++){
 		h_yields_dev_ext30fb_bJetPt_v1_CR2l[iHisto]->Fill( passCats_SR_dev_ext30fb_bJetPt_v1[iCat], wgt );
+	      }
+	    }
+
+
+	    // corridor Signal Regions
+	    
+	    // JES Up
+	    if( iSys==sysInfo::k_JESUp ){
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor_jup.size(); iCat++){
+		h_yields_corridor_CR2l[iHisto]->Fill( passCats_SR_corridor_jup[iCat], wgt );
+	      }
+	    }
+	    // JES Dn
+	    else if( iSys==sysInfo::k_JESDown ){
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor_jdown.size(); iCat++){
+		h_yields_corridor_CR2l[iHisto]->Fill( passCats_SR_corridor_jdown[iCat], wgt );
+	      }
+	    }
+	    // All Others
+	    else{
+	      for(int iCat=0; iCat<(int)passCats_SR_corridor.size(); iCat++){
+		h_yields_corridor_CR2l[iHisto]->Fill( passCats_SR_corridor[iCat], wgt );
 	      }
 	    }
 

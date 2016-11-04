@@ -166,7 +166,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
   //
   // Yields, 2016 ICHEP, 12.9fb
   //
-
+  catList.clear();
   cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 1; cat.tex = "2jets,~modTopness$\\ge6.4$,~$250<MET<350$";
   catList.push_back( cat );
   cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 2; cat.tex = "2jets,~modTopness$\\ge6.4$,~$350<MET<450$";
@@ -448,6 +448,23 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 
   fileList.push_back( tableList );
   tableList.clear();
+
+
+  //
+  // Yields, Top Corridor
+  //
+  catList.clear();
+  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 1; cat.tex = "top~corridor,~$250<MET<350$";
+  catList.push_back( cat );
+  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 2; cat.tex = "top~corridor,~$350<MET<450$";
+  catList.push_back( cat );
+  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 3; cat.tex = "top~corridor,~$MET>450$";
+  catList.push_back( cat );
+  tableList.push_back( catList );
+
+  fileList.push_back( tableList );
+  tableList.clear();
+
 
 
   //

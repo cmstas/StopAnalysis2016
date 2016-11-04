@@ -657,6 +657,83 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1( int jesType, bo
 
 //////////////////////////////////////////////////////////////////////
 
+TH1D* categoryInfo::getYieldHistoTemplate_SR_corridor(){
+  
+  int nBins_SR_corridor_ = 5;
+  TH1D *result = new TH1D("h_yields_SR_corridor", "Yields, SR Top Corridor", nBins_SR_corridor_, 1.0, (double)nBins_SR_corridor_+1.0);
+  
+  result->GetXaxis()->SetBinLabel(1, "top_corridor_250to350met");
+  result->GetXaxis()->SetBinLabel(2, "top_corridor_350to450met");
+  result->GetXaxis()->SetBinLabel(3, "top_corridor_450toInfmet");
+  
+  // Inclusive
+  result->GetXaxis()->SetBinLabel(4, "top_corridor");
+  result->GetXaxis()->SetBinLabel(5, "top_corridor_150to250met");
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepToMet ){
+
+  vector<int> result;
+  result.clear();
+
+  int nGoodJets = babyAnalyzer.ngoodjets();
+  if( jesType==1 )  nGoodJets = babyAnalyzer.jup_ngoodjets();
+  if( jesType==-1 ) nGoodJets = babyAnalyzer.jdown_ngoodjets();
+  
+  // Require at least 5 jets
+  if( nGoodJets < 5 ) return result;
+
+
+  double leadJetPt = babyAnalyzer.ak4pfjets_p4().at(0).Pt();
+  if( jesType==1 )  leadJetPt = babyAnalyzer.jup_ak4pfjets_p4().at(0).Pt();
+  if( jesType==-1 ) leadJetPt = babyAnalyzer.jdown_ak4pfjets_p4().at(0).Pt();
+  
+  // Require leading jet to have pT > 200
+  if( leadJetPt <= 200.0 ) return result;  
+
+  
+  bool leadJet_isBTag = babyAnalyzer.ak4pfjets_passMEDbtag().at(0);
+  if( jesType==1 )  leadJet_isBTag = babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
+  if( jesType==-1 ) leadJet_isBTag = babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
+
+  // Require leading jet to NOT be b-tagged
+  if( leadJet_isBTag ) return result;      
+
+
+  // Met Bins
+  double met = babyAnalyzer.pfmet();
+  if( add2ndLepToMet){
+    if(jesType==0)  met = babyAnalyzer.pfmet_rl();
+    if(jesType==1)  met = babyAnalyzer.pfmet_rl_jup();
+    if(jesType==-1) met = babyAnalyzer.pfmet_rl_jdown();
+  }
+  else{
+    if(jesType==1)  met = babyAnalyzer.pfmet_jup();
+    if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
+  }
+  
+   
+
+  //  Inclusive Bin
+  result.push_back(4);
+
+  if( met>=150.0 && met<250.0 ) result.push_back(5); // CR bin
+  
+  if( met>=250.0 && met<350.0 ) result.push_back(1); // SR bin 1
+  if( met>=350.0 && met<450.0 ) result.push_back(2); // SR bin 2
+  if( met>=450.0 )              result.push_back(3); // SR bin 3
+
+
+  return result;
+
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TH1D* categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar(){
   
   int nBins_CR2l_bulkTTbar_ = 15;
