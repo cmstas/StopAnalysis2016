@@ -22,8 +22,9 @@ class bkgEstUtil{
 public:
   TString hName_base;
 
-  vector<int> SR_bins;
-  vector<int> CR_bins;
+  vector<bool> SR_mcOnly;
+  vector<int>  SR_bins;
+  vector<int>  CR_bins;
   
   vector<TString> regionName;
   vector<TString> regionName_short;
@@ -50,7 +51,7 @@ void printLatexHeader( FILE *file ){
 //
 // Main
 //
-int bkgEstimate_diLepton(){
+int bkgEstimate_1lepFromW(){
 
 
   TH1::SetDefaultSumw2();
@@ -66,7 +67,7 @@ int bkgEstimate_diLepton(){
   //double rescale     = 40.0/29.53; // rescale to new lumi
 
   TString regionName_SR = "SR";
-  TString regionName_CR = "CR2l";
+  TString regionName_CR = "CR0b";
   
    
   //
@@ -76,10 +77,11 @@ int bkgEstimate_diLepton(){
   TString outDir = "Output/BkgEstimate/";
 
   TFile *f_SR_mc = new TFile(inDir+"allBkg_25ns.root", "read");
-  genClassyInfo::Util genClassy_SR_MC( genClassyInfo::k_ge2lep );
+  genClassyInfo::Util genClassy_SR_MC( genClassyInfo::k_ee1lep_fromW );
 
   TFile *f_CR_mc = new TFile(inDir+"allBkg_25ns.root", "read");
-  genClassyInfo::Util genClassy_CR_MC( genClassyInfo::k_incl );
+  genClassyInfo::Util genClassy_CR_MC( genClassyInfo::k_ee1lep_fromW );
+  genClassyInfo::Util genClassy_CR_MC_incl( genClassyInfo::k_incl );
   
   TFile *f_CR_data = NULL;
   genClassyInfo::Util genClassy_CR_data( genClassyInfo::k_incl );
@@ -111,14 +113,18 @@ int bkgEstimate_diLepton(){
   systematicList.push_back( sysInfo::Util(sysInfo::k_metResDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_nuPtSF_Up) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_nuPtSF_Down) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_WwidthSF_Up) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_WwidthSF_Down) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_hfXsec_Up) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_hfXsec_Down) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_q2Up) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_q2Down) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerUp) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerDown) );
   
   const int nSys = (int)systematicList.size();
  
@@ -339,7 +345,6 @@ int bkgEstimate_diLepton(){
   // Dev, ext30fb,  mlb
   bkgEstUtil bkgEst_ext30fb_mlb;
  
-  // met extrapolation
   bkgEst_ext30fb_mlb.hName_base = "h_yields_SR_dev_ext30fb_mlb_v1";
 
   bkgEst_ext30fb_mlb.SR_bins.push_back(1);  bkgEst_ext30fb_mlb.CR_bins.push_back(1);  
@@ -436,12 +441,12 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
 
-  bkgEst_ext30fb_mlb.SR_bins.push_back(19);  bkgEst_ext30fb_mlb.CR_bins.push_back(19); // No Extrapolation, if so, bin=33
+  bkgEst_ext30fb_mlb.SR_bins.push_back(19);  bkgEst_ext30fb_mlb.CR_bins.push_back(33); // Extrapolate  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
 
-  bkgEst_ext30fb_mlb.SR_bins.push_back(20);  bkgEst_ext30fb_mlb.CR_bins.push_back(20); // No Extrapolattion, if so, bin=33
+  bkgEst_ext30fb_mlb.SR_bins.push_back(20);  bkgEst_ext30fb_mlb.CR_bins.push_back(33); // Extrapolate  
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>450$");
@@ -484,12 +489,12 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb.binName.push_back("$250<MET<400$");
  
-  bkgEst_ext30fb_mlb.SR_bins.push_back(28);  bkgEst_ext30fb_mlb.CR_bins.push_back(36); // Extrapolate
+  bkgEst_ext30fb_mlb.SR_bins.push_back(28);  bkgEst_ext30fb_mlb.CR_bins.push_back(36);
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb.binName.push_back("$400<MET<650$");
 
-  bkgEst_ext30fb_mlb.SR_bins.push_back(29);  bkgEst_ext30fb_mlb.CR_bins.push_back(36); // Extrpolate
+  bkgEst_ext30fb_mlb.SR_bins.push_back(29);  bkgEst_ext30fb_mlb.CR_bins.push_back(36);
   bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
@@ -961,11 +966,7 @@ int bkgEstimate_diLepton(){
       
       double SR_cr2sr_yield = h_temp->GetBinContent( CR_bin );
       double SR_cr2sr_error = h_temp->GetBinError( CR_bin );
-      
-      hName += "__nEntries";
-      h_temp = (TH1D*)f_SR_mc->Get(hName);
-      if(!h_temp) cout << "BAD SR CRtoSR bin HISTO: " << hName << endl;
-      int SR_cr2sr_nEntries = h_temp->GetBinContent( CR_bin );
+      int SR_cr2sr_nEntries = h_temp->GetEntries();
       
       if(doRescale){
 	SR_cr2sr_error *= rescale;
@@ -1213,11 +1214,7 @@ int bkgEstimate_diLepton(){
 	
 	double SR_cr2sr_yield_up = h_temp->GetBinContent( CR_bin );
 	double SR_cr2sr_error_up = h_temp->GetBinError( CR_bin );
-
-	hName += "__nEntries";
-	h_temp = (TH1D*)f_SR_mc->Get(hName);
-	if(!h_temp) cout << "BAD SR INCL UP HISTO: " << hName << endl;
-	int SR_cr2sr_nEntries_up = h_temp->GetBinContent( CR_bin );
+	int SR_cr2sr_nEntries_up = h_temp->GetEntries();
 
 	if(doRescale){
 	  SR_cr2sr_error_up *= rescale;
@@ -1327,11 +1324,7 @@ int bkgEstimate_diLepton(){
     
 	double SR_cr2sr_yield_dn = h_temp->GetBinContent( CR_bin );
 	double SR_cr2sr_error_dn = h_temp->GetBinError( CR_bin );
-
-	hName += "__nEntries";
-	h_temp = (TH1D*)f_SR_mc->Get(hName);
-	if(!h_temp) cout << "BAD SR INCL DN HISTO: " << hName << endl;
-	int SR_cr2sr_nEntries_dn = h_temp->GetBinContent( CR_bin );
+	int SR_cr2sr_nEntries_dn = h_temp->GetEntries();
 	
 	if(doRescale){
 	  SR_cr2sr_error_dn *= rescale;

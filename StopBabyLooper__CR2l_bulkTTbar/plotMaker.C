@@ -565,8 +565,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_diLepPt_ge0bTags = 8;
-  double xRebins_diLepPt_ge0bTags[nRebins_diLepPt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_diLepPt_ge0bTags[nRebins_diLepPt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_diLepPt_ge0bTags[nRebins_diLepPt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 550.0, 600.0 };
+  double xRebinsSF_diLepPt_ge0bTags[nRebins_diLepPt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_diLepPt_ge0bTags);
   var_rebin_xBins.push_back(xRebins_diLepPt_ge0bTags);
@@ -597,8 +597,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_diLepPt_ge1bTags = 8;
-  double xRebins_diLepPt_ge1bTags[nRebins_diLepPt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_diLepPt_ge1bTags[nRebins_diLepPt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_diLepPt_ge1bTags[nRebins_diLepPt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_diLepPt_ge1bTags[nRebins_diLepPt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_diLepPt_ge1bTags);
   var_rebin_xBins.push_back(xRebins_diLepPt_ge1bTags);
@@ -629,8 +629,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_diLepPt_ge2bTags = 8;
-  double xRebins_diLepPt_ge2bTags[nRebins_diLepPt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_diLepPt_ge2bTags[nRebins_diLepPt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_diLepPt_ge2bTags[nRebins_diLepPt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_diLepPt_ge2bTags[nRebins_diLepPt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_diLepPt_ge2bTags);
   var_rebin_xBins.push_back(xRebins_diLepPt_ge2bTags);
@@ -663,8 +663,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jetPt_ge0bTags = 8;
-  double xRebins_jetPt_ge0bTags[nRebins_jetPt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jetPt_ge0bTags[nRebins_jetPt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jetPt_ge0bTags[nRebins_jetPt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jetPt_ge0bTags[nRebins_jetPt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jetPt_ge0bTags);
   var_rebin_xBins.push_back(xRebins_jetPt_ge0bTags);
@@ -695,8 +695,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jetPt_ge1bTags = 8;
-  double xRebins_jetPt_ge1bTags[nRebins_jetPt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jetPt_ge1bTags[nRebins_jetPt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jetPt_ge1bTags[nRebins_jetPt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jetPt_ge1bTags[nRebins_jetPt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jetPt_ge1bTags);
   var_rebin_xBins.push_back(xRebins_jetPt_ge1bTags);
@@ -727,8 +727,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jetPt_ge2bTags = 8;
-  double xRebins_jetPt_ge2bTags[nRebins_jetPt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jetPt_ge2bTags[nRebins_jetPt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jetPt_ge2bTags[nRebins_jetPt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jetPt_ge2bTags[nRebins_jetPt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jetPt_ge2bTags);
   var_rebin_xBins.push_back(xRebins_jetPt_ge2bTags);
@@ -761,8 +761,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jet1Pt_ge0bTags = 8;
-  double xRebins_jet1Pt_ge0bTags[nRebins_jet1Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jet1Pt_ge0bTags[nRebins_jet1Pt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jet1Pt_ge0bTags[nRebins_jet1Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jet1Pt_ge0bTags[nRebins_jet1Pt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jet1Pt_ge0bTags);
   var_rebin_xBins.push_back(xRebins_jet1Pt_ge0bTags);
@@ -793,8 +793,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jet1Pt_ge1bTags = 8;
-  double xRebins_jet1Pt_ge1bTags[nRebins_jet1Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jet1Pt_ge1bTags[nRebins_jet1Pt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jet1Pt_ge1bTags[nRebins_jet1Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jet1Pt_ge1bTags[nRebins_jet1Pt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jet1Pt_ge1bTags);
   var_rebin_xBins.push_back(xRebins_jet1Pt_ge1bTags);
@@ -825,8 +825,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jet1Pt_ge2bTags = 8;
-  double xRebins_jet1Pt_ge2bTags[nRebins_jet1Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jet1Pt_ge2bTags[nRebins_jet1Pt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jet1Pt_ge2bTags[nRebins_jet1Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jet1Pt_ge2bTags[nRebins_jet1Pt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jet1Pt_ge2bTags);
   var_rebin_xBins.push_back(xRebins_jet1Pt_ge2bTags);
@@ -859,8 +859,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jet2Pt_ge0bTags = 8;
-  double xRebins_jet2Pt_ge0bTags[nRebins_jet2Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jet2Pt_ge0bTags[nRebins_jet2Pt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jet2Pt_ge0bTags[nRebins_jet2Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jet2Pt_ge0bTags[nRebins_jet2Pt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jet2Pt_ge0bTags);
   var_rebin_xBins.push_back(xRebins_jet2Pt_ge0bTags);
@@ -891,8 +891,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jet2Pt_ge1bTags = 8;
-  double xRebins_jet2Pt_ge1bTags[nRebins_jet2Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jet2Pt_ge1bTags[nRebins_jet2Pt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jet2Pt_ge1bTags[nRebins_jet2Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jet2Pt_ge1bTags[nRebins_jet2Pt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jet2Pt_ge1bTags);
   var_rebin_xBins.push_back(xRebins_jet2Pt_ge1bTags);
@@ -923,8 +923,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_jet2Pt_ge2bTags = 8;
-  double xRebins_jet2Pt_ge2bTags[nRebins_jet2Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_jet2Pt_ge2bTags[nRebins_jet2Pt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_jet2Pt_ge2bTags[nRebins_jet2Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_jet2Pt_ge2bTags[nRebins_jet2Pt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_jet2Pt_ge2bTags);
   var_rebin_xBins.push_back(xRebins_jet2Pt_ge2bTags);
@@ -957,8 +957,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_csvJet1Pt_ge0bTags = 8;
-  double xRebins_csvJet1Pt_ge0bTags[nRebins_csvJet1Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_csvJet1Pt_ge0bTags[nRebins_csvJet1Pt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_csvJet1Pt_ge0bTags[nRebins_csvJet1Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_csvJet1Pt_ge0bTags[nRebins_csvJet1Pt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_csvJet1Pt_ge0bTags);
   var_rebin_xBins.push_back(xRebins_csvJet1Pt_ge0bTags);
@@ -989,8 +989,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_csvJet1Pt_ge1bTags = 8;
-  double xRebins_csvJet1Pt_ge1bTags[nRebins_csvJet1Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_csvJet1Pt_ge1bTags[nRebins_csvJet1Pt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_csvJet1Pt_ge1bTags[nRebins_csvJet1Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_csvJet1Pt_ge1bTags[nRebins_csvJet1Pt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_csvJet1Pt_ge1bTags);
   var_rebin_xBins.push_back(xRebins_csvJet1Pt_ge1bTags);
@@ -1021,8 +1021,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_csvJet1Pt_ge2bTags = 8;
-  double xRebins_csvJet1Pt_ge2bTags[nRebins_csvJet1Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_csvJet1Pt_ge2bTags[nRebins_csvJet1Pt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_csvJet1Pt_ge2bTags[nRebins_csvJet1Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_csvJet1Pt_ge2bTags[nRebins_csvJet1Pt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_csvJet1Pt_ge2bTags);
   var_rebin_xBins.push_back(xRebins_csvJet1Pt_ge2bTags);
@@ -1055,8 +1055,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_csvJet2Pt_ge0bTags = 8;
-  double xRebins_csvJet2Pt_ge0bTags[nRebins_csvJet2Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_csvJet2Pt_ge0bTags[nRebins_csvJet2Pt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_csvJet2Pt_ge0bTags[nRebins_csvJet2Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_csvJet2Pt_ge0bTags[nRebins_csvJet2Pt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_csvJet2Pt_ge0bTags);
   var_rebin_xBins.push_back(xRebins_csvJet2Pt_ge0bTags);
@@ -1087,8 +1087,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_csvJet2Pt_ge1bTags = 8;
-  double xRebins_csvJet2Pt_ge1bTags[nRebins_csvJet2Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_csvJet2Pt_ge1bTags[nRebins_csvJet2Pt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_csvJet2Pt_ge1bTags[nRebins_csvJet2Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_csvJet2Pt_ge1bTags[nRebins_csvJet2Pt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_csvJet2Pt_ge1bTags);
   var_rebin_xBins.push_back(xRebins_csvJet2Pt_ge1bTags);
@@ -1119,8 +1119,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_csvJet2Pt_ge2bTags = 8;
-  double xRebins_csvJet2Pt_ge2bTags[nRebins_csvJet2Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_csvJet2Pt_ge2bTags[nRebins_csvJet2Pt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_csvJet2Pt_ge2bTags[nRebins_csvJet2Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_csvJet2Pt_ge2bTags[nRebins_csvJet2Pt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_csvJet2Pt_ge2bTags);
   var_rebin_xBins.push_back(xRebins_csvJet2Pt_ge2bTags);
@@ -1154,8 +1154,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_met_ge0bTags = 8;
-  double xRebins_met_ge0bTags[nRebins_met_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_met_ge0bTags[nRebins_met_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_met_ge0bTags[nRebins_met_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_met_ge0bTags[nRebins_met_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_met_ge0bTags);
   var_rebin_xBins.push_back(xRebins_met_ge0bTags);
@@ -1186,8 +1186,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_met_ge1bTags = 8;
-  double xRebins_met_ge1bTags[nRebins_met_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_met_ge1bTags[nRebins_met_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_met_ge1bTags[nRebins_met_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_met_ge1bTags[nRebins_met_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_met_ge1bTags);
   var_rebin_xBins.push_back(xRebins_met_ge1bTags);
@@ -1218,8 +1218,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_met_ge2bTags = 8;
-  double xRebins_met_ge2bTags[nRebins_met_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_met_ge2bTags[nRebins_met_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_met_ge2bTags[nRebins_met_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_met_ge2bTags[nRebins_met_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_met_ge2bTags);
   var_rebin_xBins.push_back(xRebins_met_ge2bTags);
@@ -1452,8 +1452,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_mt_ge0bTags = 8;
-  double xRebins_mt_ge0bTags[nRebins_mt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_mt_ge0bTags[nRebins_mt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_mt_ge0bTags[nRebins_mt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_mt_ge0bTags[nRebins_mt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_mt_ge0bTags);
   var_rebin_xBins.push_back(xRebins_mt_ge0bTags);
@@ -1484,8 +1484,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_mt_ge1bTags = 8;
-  double xRebins_mt_ge1bTags[nRebins_mt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_mt_ge1bTags[nRebins_mt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_mt_ge1bTags[nRebins_mt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_mt_ge1bTags[nRebins_mt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_mt_ge1bTags);
   var_rebin_xBins.push_back(xRebins_mt_ge1bTags);
@@ -1516,8 +1516,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_mt_ge2bTags = 8;
-  double xRebins_mt_ge2bTags[nRebins_mt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_mt_ge2bTags[nRebins_mt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_mt_ge2bTags[nRebins_mt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_mt_ge2bTags[nRebins_mt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_mt_ge2bTags);
   var_rebin_xBins.push_back(xRebins_mt_ge2bTags);
@@ -1746,8 +1746,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_mlb_ge0bTags = 8;
-  double xRebins_mlb_ge0bTags[nRebins_mlb_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_mlb_ge0bTags[nRebins_mlb_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_mlb_ge0bTags[nRebins_mlb_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_mlb_ge0bTags[nRebins_mlb_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_mlb_ge0bTags);
   var_rebin_xBins.push_back(xRebins_mlb_ge0bTags);
@@ -1778,8 +1778,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_mlb_ge1bTags = 8;
-  double xRebins_mlb_ge1bTags[nRebins_mlb_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_mlb_ge1bTags[nRebins_mlb_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_mlb_ge1bTags[nRebins_mlb_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_mlb_ge1bTags[nRebins_mlb_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_mlb_ge1bTags);
   var_rebin_xBins.push_back(xRebins_mlb_ge1bTags);
@@ -1810,8 +1810,8 @@ void plotMaker( bool plotByGenDecay=true ){
   sysListPerPlot.clear();
   
   const int nRebins_mlb_ge2bTags = 8;
-  double xRebins_mlb_ge2bTags[nRebins_mlb_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0 };
-  double xRebinsSF_mlb_ge2bTags[nRebins_mlb_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  double xRebins_mlb_ge2bTags[nRebins_mlb_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_mlb_ge2bTags[nRebins_mlb_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,   0.5, (1.0/6.0) };
   var_doRebin.push_back(true);
   var_rebin_nBins.push_back(nRebins_mlb_ge2bTags);
   var_rebin_xBins.push_back(xRebins_mlb_ge2bTags);

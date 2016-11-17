@@ -96,16 +96,16 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
  
 
   // WJets, Madgraph Ht Summed Samples
-  addSet.first = sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8;
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1) );
-  addList.push_back(addSet);
-  addSet.second.clear();
+  //addSet.first = sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8;
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1) );
+  //addList.push_back(addSet);
+  //addSet.second.clear();
 
   // WJets, Madgraph NParton Summed Samples
   addSet.first = sampleInfo::k_WNJetsToLNu_madgraph_pythia8;
@@ -137,6 +137,7 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
 
   // TTW
   addSet.first = sampleInfo::k_TTW;
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_ttWJets_13TeV_madgraphMLM) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8,use_zeroed_samp,false) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8,use_zeroed_samp,false) );
   addList.push_back(addSet);
@@ -144,9 +145,9 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
 
   // TTZ
   addSet.first = sampleInfo::k_TTZ;
-  addSet.second.push_back( mergeUtil(sampleInfo::k_ttZJets_13TeV_madgraphMLM) );
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_TTZToQQ_amcnlo_pythia8,use_zeroed_samp,false) );
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8,use_zeroed_samp,false) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_ttZJets_13TeV_madgraphMLM) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_TTZToQQ_amcnlo_pythia8,use_zeroed_samp,false) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8,use_zeroed_samp,false) );
   addList.push_back(addSet);
   addSet.second.clear();
 

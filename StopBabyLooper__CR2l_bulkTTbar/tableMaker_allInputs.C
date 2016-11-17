@@ -22,7 +22,7 @@ struct yieldHelper{
 };
 
 
-int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string f_out_name_base="Output/Tables/yields_allInputs", bool useZeroedAMCNLO=true ){
+int tableMaker_allInputs( std::string f_input_dir="Output/Histos/", std::string f_out_name_base="Output/Tables/yields_allInputs", bool useZeroedAMCNLO=true ){
 
   // Make a tex document where each page will have a table
   //   This table will be for a given systematic. 
@@ -68,14 +68,14 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   sampleList.push_back( sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 );
   sampleList.push_back( sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 );
   sampleList.push_back( sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8 );  
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 );
+  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1 );
+  //sampleList.push_back( sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1 );
   sampleList.push_back( sampleInfo::k_rare );
   sampleList.push_back( sampleInfo::k_diBoson );
   sampleList.push_back( sampleInfo::k_WW );
@@ -95,9 +95,9 @@ int tableMaker_allInputs( std::string f_input_dir="Histos/Nominal/", std::string
   sampleList.push_back( sampleInfo::k_TTW );
   sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
-  sampleList.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM );
+  //sampleList.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM );
   sampleList.push_back( sampleInfo::k_TTZ );
-  sampleList.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
+  //sampleList.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
   sampleList.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
   //sampleList.push_back( sampleInfo::k_tZq );

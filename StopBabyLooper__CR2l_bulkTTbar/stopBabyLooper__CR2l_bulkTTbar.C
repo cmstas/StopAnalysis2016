@@ -518,133 +518,133 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       // diLep pT, ge0bTags
       hName = "h_diLepPt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_diLepPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_diLepPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_diLepPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // diLep pT, ge1bTags
       hName = "h_diLepPt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_diLepPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_diLepPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_diLepPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // diLep pT, ge2bTags
       hName = "h_diLepPt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_diLepPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_diLepPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_diLepPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
       // jet pT, ge0bTags
       hName = "h_jetPt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_jetPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jetPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jetPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // jet pT, ge1bTags
       hName = "h_jetPt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_jetPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jetPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jetPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // jet pT, ge2bTags
       hName = "h_jetPt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_jetPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jetPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jetPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
       // jet1 pT, ge0bTags
       hName = "h_jet1Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_jet1Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jet1Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jet1Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // jet1 pT, ge1bTags
       hName = "h_jet1Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_jet1Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jet1Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jet1Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // jet1 pT, ge2bTags
       hName = "h_jet1Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_jet1Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jet1Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jet1Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
       // jet2 pT, ge0bTags
       hName = "h_jet2Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_jet2Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jet2Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jet2Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // jet2 pT, ge1bTags
       hName = "h_jet2Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_jet2Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jet2Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jet2Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // jet2 pT, ge2bTags
       hName = "h_jet2Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_jet2Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_jet2Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_jet2Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
       // csvJet1 pT, ge0bTags
       hName = "h_csvJet1Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_csvJet1Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_csvJet1Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_csvJet1Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // csvJet1 pT, ge1bTags
       hName = "h_csvJet1Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_csvJet1Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_csvJet1Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_csvJet1Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // csvJet1 pT, ge2bTags
       hName = "h_csvJet1Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_csvJet1Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_csvJet1Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_csvJet1Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
       // csvJet2 pT, ge0bTags
       hName = "h_csvJet2Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_csvJet2Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_csvJet2Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_csvJet2Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // csvJet2 pT, ge1bTags
       hName = "h_csvJet2Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_csvJet2Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_csvJet2Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_csvJet2Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // csvJet2 pT, ge2bTags
       hName = "h_csvJet2Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_csvJet2Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_csvJet2Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_csvJet2Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
       // MET, ge0bTags
       hName = "h_met__ge0bTags";
       hName += flav_gen_sys_name;
-      h_met_ge0bTags[iFlav][iGen] = new TH1D( hName, "MET, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_met_ge0bTags[iFlav][iGen] = new TH1D( hName, "MET, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_met_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // MET, ge1bTags
       hName = "h_met__ge1bTags";
       hName += flav_gen_sys_name;
-      h_met_ge1bTags[iFlav][iGen] = new TH1D( hName, "MET, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_met_ge1bTags[iFlav][iGen] = new TH1D( hName, "MET, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_met_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // MET, ge2bTags
       hName = "h_met__ge2bTags";
       hName += flav_gen_sys_name;
-      h_met_ge2bTags[iFlav][iGen] = new TH1D( hName, "MET, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_met_ge2bTags[iFlav][iGen] = new TH1D( hName, "MET, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_met_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
@@ -689,19 +689,19 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       // MT, ge0bTags
       hName = "h_mt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_mt_ge0bTags[iFlav][iGen] = new TH1D( hName, "MT, >=0 bTags;M_{T} [GeV]", 40, 0.0, 400.0);
+      h_mt_ge0bTags[iFlav][iGen] = new TH1D( hName, "MT, >=0 bTags;M_{T} [GeV]", 24, 0.0, 600.0);
       h_mt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // MT, ge1bTags
       hName = "h_mt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_mt_ge1bTags[iFlav][iGen] = new TH1D( hName, "MT, >=1 bTags;M_{T} [GeV]", 40, 0.0, 400.0);
+      h_mt_ge1bTags[iFlav][iGen] = new TH1D( hName, "MT, >=1 bTags;M_{T} [GeV]", 24, 0.0, 600.0);
       h_mt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // MT, ge2bTags
       hName = "h_mt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_mt_ge2bTags[iFlav][iGen] = new TH1D( hName, "MT, >=2 bTags;M_{T} [GeV]", 40, 0.0, 400.0);
+      h_mt_ge2bTags[iFlav][iGen] = new TH1D( hName, "MT, >=2 bTags;M_{T} [GeV]", 24, 0.0, 600.0);
       h_mt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 
@@ -746,19 +746,19 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       // Mlb, ge0bTags
       hName = "h_mlb__ge0bTags";
       hName += flav_gen_sys_name;
-      h_mlb_ge0bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=0 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_mlb_ge0bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=0 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_mlb_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // Mlb, ge1bTags
       hName = "h_mlb__ge1bTags";
       hName += flav_gen_sys_name;
-      h_mlb_ge1bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=1 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_mlb_ge1bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=1 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_mlb_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
 
       // Mlb, ge2bTags
       hName = "h_mlb__ge2bTags";
       hName += flav_gen_sys_name;
-      h_mlb_ge2bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=2 bTags;pT [GeV]", 40, 0.0, 400.0);
+      h_mlb_ge2bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=2 bTags;pT [GeV]", 24, 0.0, 600.0);
       h_mlb_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
 

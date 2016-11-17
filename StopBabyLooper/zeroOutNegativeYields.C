@@ -130,6 +130,7 @@ int zeroOutNegativeYields(std::string f_input_dir){
 	  for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
 	    if( h_clone->GetBinContent(iBin)<0.0 ){
 	      h_clone->SetBinContent(iBin,0.0);
+	      h_clone->SetBinError(iBin,0.0);
 	      foundNegCategory=true;
 	    }
 	  }
