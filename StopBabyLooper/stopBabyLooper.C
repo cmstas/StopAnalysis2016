@@ -554,7 +554,26 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_mlb_lep2_150to250met_ee3j[nRegions][nGenClassy];
   TH1D *h_mlb_lep2_150to250met_lt4j[nRegions][nGenClassy];
   TH1D *h_mlb_lep2_150to250met_ge4j[nRegions][nGenClassy];
+
+  // bJetPt
+  TH1D *h_bJetPt_incl[nRegions][nGenClassy];
+  TH1D *h_bJetPt_ee2j[nRegions][nGenClassy];
+  TH1D *h_bJetPt_ee3j[nRegions][nGenClassy];
+  TH1D *h_bJetPt_lt4j[nRegions][nGenClassy];
+  TH1D *h_bJetPt_ge4j[nRegions][nGenClassy];
+
+  // bJetPt
+  TH1D *h_bJetPt_lt0modTopness[nRegions][nGenClassy];
+  TH1D *h_bJetPt_ge0modTopness[nRegions][nGenClassy];
+  TH1D *h_bJetPt_ge10modTopness[nRegions][nGenClassy];
   
+  // bJetPt, met sideband CR
+  TH1D *h_bJetPt_150to250met_incl[nRegions][nGenClassy];
+  TH1D *h_bJetPt_150to250met_ee2j[nRegions][nGenClassy];
+  TH1D *h_bJetPt_150to250met_ee3j[nRegions][nGenClassy];
+  TH1D *h_bJetPt_150to250met_lt4j[nRegions][nGenClassy];
+  TH1D *h_bJetPt_150to250met_ge4j[nRegions][nGenClassy];
+
   // Gen ttbar system pT
   TH1D *h_gen_ttbarPt_incl[nRegions][nGenClassy];
   TH1D *h_gen_ttbarPt_ee2j[nRegions][nGenClassy];
@@ -1140,7 +1159,102 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       h_mlb_lep2_150to250met_ge4j[iReg][iGen] = new TH1D( hName, "M_{l2b};M_{l2b} [GeV]", 24, 0.0, 600.0 );
       h_mlb_lep2_150to250met_ge4j[iReg][iGen]->SetDirectory(f_output);
 
+
+
+      //
+      // bJetPt
+      //
+
+      // Incl Selection
+      hName = "h_bJetPt__inclSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_incl[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_incl[iReg][iGen]->SetDirectory(f_output);
       
+      // ==2j Selection
+      hName = "h_bJetPt__ee2jSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_ee2j[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_ee2j[iReg][iGen]->SetDirectory(f_output);
+
+      // ==3j Selection
+      hName = "h_bJetPt__ee3jSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_ee3j[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_ee3j[iReg][iGen]->SetDirectory(f_output);
+      
+      // <4j Selection
+      hName = "h_bJetPt__lt4jSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_lt4j[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_lt4j[iReg][iGen]->SetDirectory(f_output);
+
+      // >=4j Selection
+      hName = "h_bJetPt__ge4jSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_ge4j[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_ge4j[iReg][iGen]->SetDirectory(f_output);
+
+      
+
+      //
+      // bJetPt, inclusive nJets, modTopness bins
+      //
+
+      // <0 modTopness Selection
+      hName = "h_bJetPt__lt0modTopnessSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_lt0modTopness[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_lt0modTopness[iReg][iGen]->SetDirectory(f_output);
+
+      // >=0 modTopness Selection
+      hName = "h_bJetPt__ge0modTopnessSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_ge0modTopness[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_ge0modTopness[iReg][iGen]->SetDirectory(f_output);
+      
+      // >=10 modTopness Selection
+      hName = "h_bJetPt__ge10modTopnessSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_ge10modTopness[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_ge10modTopness[iReg][iGen]->SetDirectory(f_output);
+
+
+      //
+      // bJetPt, met sideband CR
+      //
+
+      // Incl Selection
+      hName = "h_bJetPt_150to250met__inclSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_150to250met_incl[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_150to250met_incl[iReg][iGen]->SetDirectory(f_output);
+      
+      // ==2j Selection
+      hName = "h_bJetPt_150to250met__ee2jSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_150to250met_ee2j[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_150to250met_ee2j[iReg][iGen]->SetDirectory(f_output);
+
+      // ==3j Selection
+      hName = "h_bJetPt_150to250met__ee3jSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_150to250met_ee3j[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_150to250met_ee3j[iReg][iGen]->SetDirectory(f_output);
+      
+      // <4j Selection
+      hName = "h_bJetPt_150to250met__lt4jSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_150to250met_lt4j[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_150to250met_lt4j[iReg][iGen]->SetDirectory(f_output);
+
+      // >=4j Selection
+      hName = "h_bJetPt_150to250met__ge4jSelection";
+      hName += reg_gen_sys_name;
+      h_bJetPt_150to250met_ge4j[iReg][iGen] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
+      h_bJetPt_150to250met_ge4j[iReg][iGen]->SetDirectory(f_output);
+
+
 
       //
       // Gen ttbar pT
@@ -1563,8 +1677,42 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      if( gen2ndLep__tauDecay==4 ) fill_bin_genLep2ID = 6;  // "had tau, 3 prong";
 	      if( gen2ndLep__tauDecay==5 ) fill_bin_genLep2ID = 7;  // "\"other\" tau";
 	    } // end if 2nd lep is tau
-	    
-	  	  	    
+
+	    /*
+	    // Try to match 2nd reco lepton if 2nd gen is hadTau
+	    if( abs(gen2ndLep__id)==15 && 
+		pass_evtSel[2] && 
+		(gen2ndLep__tauDecay==3 ||
+		 gen2ndLep__tauDecay==4   ) &&
+		pfmet_rl()>=250.0              ){
+	      
+	      cout << "Found 2lep event, with genHadTau: " << endl;
+	      cout << "  reco lep1_id=" << lep1_pdgid() << ", reco lep2_id=" << lep2_pdgid() << endl;
+	      cout << "  gen2ndLep_id=" << gen2ndLep__id << ", gen2ndLep__tauDecay=" << gen2ndLep__tauDecay << endl;
+	      for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
+		if( iGen == genLep_matchedTo_selLep__idx ) continue;
+		if( !genleps_isLastCopy().at(iGen) ) continue;
+		if( ROOT::Math::VectorUtil::DeltaR(genleps_p4().at(iGen), lep2_p4()) < 0.01 ){
+		  cout << "  lep2 matched to gen lep in event: " << endl;
+		  cout << "    genLepID=" << genleps_id().at(iGen) << ", motherID=" << genleps_motherid().at(iGen);
+		  cout << "    genLepFromHardProcessFinal=" << genleps_fromHardProcessFinalState().at(iGen);
+		  cout << "    genLepFromHardProcessDecay=" << genleps_fromHardProcessDecayed().at(iGen)<< endl;
+		}
+	      }
+
+	      for(int iGen=0; iGen<(int)genqs_p4().size(); iGen++){
+		if( !genqs_isLastCopy().at(iGen) ) continue;
+		if( ROOT::Math::VectorUtil::DeltaR(genqs_p4().at(iGen), lep2_p4()) < 0.01 ){
+		  cout << "  lep2 matched to gen q in event: " << endl;
+		  cout << "    genQID=" << genqs_id().at(iGen) << ", motherID=" << genqs_motherid().at(iGen);
+		  cout << "    genQsFromHardProcessFinal=" << genqs_fromHardProcessFinalState().at(iGen);
+		  cout << "    genQsFromHardProcessDecay=" << genqs_fromHardProcessDecayed().at(iGen)<< endl;
+		}
+	      }
+	      cout << endl << endl;
+	    }
+	    */
+
 	  } // end if found 2nd gen lep
 	} // end if found first gen lep, matched to selected lepton
       } // end if 2lep event and not data
@@ -1782,6 +1930,14 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		if( nGoodJets<4 )  h_mlb_lep2_150to250met_lt4j[iReg][iGen]->Fill( lep2b_TLV.M(), wgt_nominal );	    
 		if( nGoodJets>=4 ) h_mlb_lep2_150to250met_ge4j[iReg][iGen]->Fill( lep2b_TLV.M(), wgt_nominal );	    
 	      }
+
+	      // bJetPt, met sideband CR
+	      h_bJetPt_150to250met_incl[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	      if( nGoodJets==2 ) h_bJetPt_150to250met_ee2j[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	      if( nGoodJets==3 ) h_bJetPt_150to250met_ee3j[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	      if( nGoodJets<4 )  h_bJetPt_150to250met_lt4j[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	      if( nGoodJets>=4 ) h_bJetPt_150to250met_ge4j[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	      
 	    } // end if 150<met<250
 
 	    // Signal Region Area, met>=250
@@ -1900,6 +2056,18 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      if( nGoodJets>=4 ) h_mlb_lep2_ge4j[iReg][iGen]->Fill( lep2b_TLV.M(), wgt_nominal );	    
 	    }
 
+	    // bJetPt
+	    h_bJetPt_incl[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	    if( nGoodJets==2 ) h_bJetPt_ee2j[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	    if( nGoodJets==3 ) h_bJetPt_ee3j[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	    if( nGoodJets<4 )  h_bJetPt_lt4j[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	    if( nGoodJets>=4 ) h_bJetPt_ge4j[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+
+	    // bJetPt, modTopness bins
+	    if(modTopness<0.0)   h_bJetPt_lt0modTopness[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	    if(modTopness>=0.0)  h_bJetPt_ge0modTopness[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	    if(modTopness>=10.0) h_bJetPt_ge10modTopness[iReg][iGen]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	    	    
 	    // Gen TTBar System
 	    if( sampleIsTTbar ){
 	      h_gen_ttbarPt_incl[iReg][iGen]->Fill( ttbarPt, wgt_nominal );
@@ -1916,6 +2084,12 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      if( ngoodjets()==3 ) h_gen_lep2_id_ee3j[iReg][iGen]->Fill( fill_bin_genLep2ID, wgt_nominal );
 	      if( ngoodjets()<4 )  h_gen_lep2_id_lt4j[iReg][iGen]->Fill( fill_bin_genLep2ID, wgt_nominal );
 	      if( ngoodjets()>=4 ) h_gen_lep2_id_ge4j[iReg][iGen]->Fill( fill_bin_genLep2ID, wgt_nominal );
+
+	      //h_gen_lep2_id_incl[iReg][iGen]->Fill( fill_bin_genLep2ID, wgt_nominal );
+	      //if( ngoodjets()==2 && modTopness>6.4) h_gen_lep2_id_ee2j[iReg][iGen]->Fill( fill_bin_genLep2ID, wgt_nominal );
+	      //if( ngoodjets()==3 && mt2w>=200.0) h_gen_lep2_id_ee3j[iReg][iGen]->Fill( fill_bin_genLep2ID, wgt_nominal );
+	      //if( ngoodjets()>=4 && mt2w<200.0 )  h_gen_lep2_id_lt4j[iReg][iGen]->Fill( fill_bin_genLep2ID, wgt_nominal );
+	      //if( ngoodjets()>=4 && mt2w>=200.0) h_gen_lep2_id_ge4j[iReg][iGen]->Fill( fill_bin_genLep2ID, wgt_nominal );
 	    }
 	    
 	  } // end if pass event selection for nominal sys

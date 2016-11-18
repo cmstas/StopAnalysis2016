@@ -2360,6 +2360,690 @@ void plotMaker( bool plotByGenDecay=true ){
 
 
 
+  // bJetPt, incl selection
+  var_list_label.push_back( "h_bJetPt__inclSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt, ==2jets
+  var_list_label.push_back( "h_bJetPt__ee2jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt, ==3jets
+  var_list_label.push_back( "h_bJetPt__ee3jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt, <4jets
+  var_list_label.push_back( "h_bJetPt__lt4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt, >=4jets
+  var_list_label.push_back( "h_bJetPt__ge4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  
+  
+  // bJetPt, incl selection
+  var_list_label.push_back( "h_bJetPt__inclSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_incl = 8;
+  double xRebins_bJetPt_incl[nRebins_bJetPt_incl+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_incl[nRebins_bJetPt_incl]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_incl);
+  var_rebin_xBins.push_back(xRebins_bJetPt_incl);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_incl);
+
+  
+  // bJetPt, ==2jets
+  var_list_label.push_back( "h_bJetPt__ee2jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_ee2j = 8;
+  double xRebins_bJetPt_ee2j[nRebins_bJetPt_ee2j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_ee2j[nRebins_bJetPt_ee2j]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_ee2j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_ee2j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_ee2j);
+
+  // bJetPt, ==3jets
+  var_list_label.push_back( "h_bJetPt__ee3jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_ee3j = 8;
+  double xRebins_bJetPt_ee3j[nRebins_bJetPt_ee3j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_ee3j[nRebins_bJetPt_ee3j]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_ee3j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_ee3j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_ee3j);
+
+  // bJetPt, <4jets
+  var_list_label.push_back( "h_bJetPt__lt4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_lt4j = 8;
+  double xRebins_bJetPt_lt4j[nRebins_bJetPt_lt4j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_lt4j[nRebins_bJetPt_lt4j]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_lt4j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_lt4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_lt4j);
+
+  // bJetPt, >=4jets
+  var_list_label.push_back( "h_bJetPt__ge4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  const int nRebins_bJetPt_ge4j = 8;
+  double xRebins_bJetPt_ge4j[nRebins_bJetPt_ge4j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_ge4j[nRebins_bJetPt_ge4j]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_ge4j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_ge4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_ge4j);
+
+
+
+  // bJetPt, incl selection
+  var_list_label.push_back( "h_bJetPt__inclSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_coarseRebin_incl = 2;
+  double xRebins_bJetPt_coarseRebin_incl[nRebins_bJetPt_coarseRebin_incl+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_coarseRebin_incl[nRebins_bJetPt_coarseRebin_incl]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_coarseRebin_incl);
+  var_rebin_xBins.push_back(xRebins_bJetPt_coarseRebin_incl);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_coarseRebin_incl);
+
+  
+  // bJetPt, ==2jets
+  var_list_label.push_back( "h_bJetPt__ee2jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_coarseRebin_ee2j = 2;
+  double xRebins_bJetPt_coarseRebin_ee2j[nRebins_bJetPt_coarseRebin_ee2j+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_coarseRebin_ee2j[nRebins_bJetPt_coarseRebin_ee2j]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_coarseRebin_ee2j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_coarseRebin_ee2j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_coarseRebin_ee2j);
+
+  // bJetPt, ==3jets
+  var_list_label.push_back( "h_bJetPt__ee3jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_coarseRebin_ee3j = 2;
+  double xRebins_bJetPt_coarseRebin_ee3j[nRebins_bJetPt_coarseRebin_ee3j+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_coarseRebin_ee3j[nRebins_bJetPt_coarseRebin_ee3j]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_coarseRebin_ee3j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_coarseRebin_ee3j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_coarseRebin_ee3j);
+
+  // bJetPt, <4jets
+  var_list_label.push_back( "h_bJetPt__lt4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_coarseRebin_lt4j = 2;
+  double xRebins_bJetPt_coarseRebin_lt4j[nRebins_bJetPt_coarseRebin_lt4j+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_coarseRebin_lt4j[nRebins_bJetPt_coarseRebin_lt4j]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_coarseRebin_lt4j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_coarseRebin_lt4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_coarseRebin_lt4j);
+
+  // bJetPt, >=4jets
+  var_list_label.push_back( "h_bJetPt__ge4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  const int nRebins_bJetPt_coarseRebin_ge4j = 2;
+  double xRebins_bJetPt_coarseRebin_ge4j[nRebins_bJetPt_coarseRebin_ge4j+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_coarseRebin_ge4j[nRebins_bJetPt_coarseRebin_ge4j]{ (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_coarseRebin_ge4j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_coarseRebin_ge4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_coarseRebin_ge4j);
+
+
+
+  // bJetPt, modTopness<0.0 selection
+  var_list_label.push_back( "h_bJetPt__lt0modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt, modTopness>=0.0 selection
+  var_list_label.push_back( "h_bJetPt__ge0modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt, modTopness>=10.0 selection
+  var_list_label.push_back( "h_bJetPt__ge10modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+   
+  
+  // bJetPt, modTopness<0.0 selection, fine rebin
+  var_list_label.push_back( "h_bJetPt__lt0modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_lt0modTop = 8;
+  double xRebins_bJetPt_lt0modTop[nRebins_bJetPt_lt0modTop+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_lt0modTop[nRebins_bJetPt_lt0modTop]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_lt0modTop);
+  var_rebin_xBins.push_back(xRebins_bJetPt_lt0modTop);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_lt0modTop);
+
+  
+  // bJetPt, modTopness>=0.0 selection, fine rebin
+  var_list_label.push_back( "h_bJetPt__ge0modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_ge0modTop = 8;
+  double xRebins_bJetPt_ge0modTop[nRebins_bJetPt_ge0modTop+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_ge0modTop[nRebins_bJetPt_ge0modTop]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_ge0modTop);
+  var_rebin_xBins.push_back(xRebins_bJetPt_ge0modTop);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_ge0modTop);
+
+  // bJetPt, modTopness>=10.0 selection, fine rebin
+  var_list_label.push_back( "h_bJetPt__ge10modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_ge10modTop = 8;
+  double xRebins_bJetPt_ge10modTop[nRebins_bJetPt_ge10modTop+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_ge10modTop[nRebins_bJetPt_ge10modTop]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_ge10modTop);
+  var_rebin_xBins.push_back(xRebins_bJetPt_ge10modTop);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_ge10modTop);
+
+
+  // bJetPt, modTopness<0.0 selection, coarse rebin
+  var_list_label.push_back( "h_bJetPt__lt0modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_coarseRebin_lt0modTop = 2;
+  double xRebins_bJetPt_coarseRebin_lt0modTop[nRebins_bJetPt_coarseRebin_lt0modTop+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_coarseRebin_lt0modTop[nRebins_bJetPt_coarseRebin_lt0modTop]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_coarseRebin_lt0modTop);
+  var_rebin_xBins.push_back(xRebins_bJetPt_coarseRebin_lt0modTop);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_coarseRebin_lt0modTop);
+
+  
+  // bJetPt, modTopness>=0.0 selection, coarse rebin
+  var_list_label.push_back( "h_bJetPt__ge0modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_coarseRebin_ge0modTop = 2;
+  double xRebins_bJetPt_coarseRebin_ge0modTop[nRebins_bJetPt_coarseRebin_ge0modTop+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_coarseRebin_ge0modTop[nRebins_bJetPt_coarseRebin_ge0modTop]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_coarseRebin_ge0modTop);
+  var_rebin_xBins.push_back(xRebins_bJetPt_coarseRebin_ge0modTop);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_coarseRebin_ge0modTop);
+
+  // bJetPt, modTopness>=10.0 selection, coarse rebin
+  var_list_label.push_back( "h_bJetPt__ge10modTopnessSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0 selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_coarseRebin_ge10modTop = 2;
+  double xRebins_bJetPt_coarseRebin_ge10modTop[nRebins_bJetPt_coarseRebin_ge10modTop+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_coarseRebin_ge10modTop[nRebins_bJetPt_coarseRebin_ge10modTop]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_coarseRebin_ge10modTop);
+  var_rebin_xBins.push_back(xRebins_bJetPt_coarseRebin_ge10modTop);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_coarseRebin_ge10modTop);
+
+
+  // bJetPt_150to250met, incl selection
+  var_list_label.push_back( "h_bJetPt_150to250met__inclSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, nJet>=2, 150<met<250, selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt_150to250met, ==2jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ee2jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jet, 150<met<250, selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt_150to250met, ==3jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ee3jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jet, 150<met<250, selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt_150to250met, <4jets
+  var_list_label.push_back( "h_bJetPt_150to250met__lt4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jet, 150<met<250, selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // bJetPt_150to250met, >=4jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ge4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jet, 150<met<250, selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // bJetPt, incl selection, met sideband CR
+  var_list_label.push_back( "h_bJetPt_150to250met__inclSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_150to250met_incl = 8;
+  double xRebins_bJetPt_150to250met_incl[nRebins_bJetPt_150to250met_incl+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_incl[nRebins_bJetPt_150to250met_incl]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_incl);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_incl);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_incl);
+
+  
+  // bJetPt, ==2jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ee2jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_150to250met_ee2j = 8;
+  double xRebins_bJetPt_150to250met_ee2j[nRebins_bJetPt_150to250met_ee2j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_ee2j[nRebins_bJetPt_150to250met_ee2j]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_ee2j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_ee2j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_ee2j);
+
+  // bJetPt, ==3jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ee3jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_150to250met_ee3j = 8;
+  double xRebins_bJetPt_150to250met_ee3j[nRebins_bJetPt_150to250met_ee3j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_ee3j[nRebins_bJetPt_150to250met_ee3j]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_ee3j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_ee3j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_ee3j);
+
+  // bJetPt, <4jets
+  var_list_label.push_back( "h_bJetPt_150to250met__lt4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_150to250met_lt4j = 8;
+  double xRebins_bJetPt_150to250met_lt4j[nRebins_bJetPt_150to250met_lt4j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_lt4j[nRebins_bJetPt_150to250met_lt4j]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_lt4j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_lt4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_lt4j);
+
+  // bJetPt, >=4jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ge4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  const int nRebins_bJetPt_150to250met_ge4j = 8;
+  double xRebins_bJetPt_150to250met_ge4j[nRebins_bJetPt_150to250met_ge4j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_ge4j[nRebins_bJetPt_150to250met_ge4j]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_ge4j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_ge4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_ge4j);
+
+
+
+  // bJetPt, incl selection
+  var_list_label.push_back( "h_bJetPt_150to250met__inclSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_150to250met_coarseRebin_incl = 2;
+  double xRebins_bJetPt_150to250met_coarseRebin_incl[nRebins_bJetPt_150to250met_coarseRebin_incl+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_coarseRebin_incl[nRebins_bJetPt_150to250met_coarseRebin_incl]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_coarseRebin_incl);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_coarseRebin_incl);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_coarseRebin_incl);
+
+  
+  // bJetPt, ==2jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ee2jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_150to250met_coarseRebin_ee2j = 2;
+  double xRebins_bJetPt_150to250met_coarseRebin_ee2j[nRebins_bJetPt_150to250met_coarseRebin_ee2j+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_coarseRebin_ee2j[nRebins_bJetPt_150to250met_coarseRebin_ee2j]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_coarseRebin_ee2j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_coarseRebin_ee2j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_coarseRebin_ee2j);
+
+  // bJetPt, ==3jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ee3jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_150to250met_coarseRebin_ee3j = 2;
+  double xRebins_bJetPt_150to250met_coarseRebin_ee3j[nRebins_bJetPt_150to250met_coarseRebin_ee3j+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_coarseRebin_ee3j[nRebins_bJetPt_150to250met_coarseRebin_ee3j]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_coarseRebin_ee3j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_coarseRebin_ee3j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_coarseRebin_ee3j);
+
+  // bJetPt, <4jets
+  var_list_label.push_back( "h_bJetPt_150to250met__lt4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_bJetPt_150to250met_coarseRebin_lt4j = 2;
+  double xRebins_bJetPt_150to250met_coarseRebin_lt4j[nRebins_bJetPt_150to250met_coarseRebin_lt4j+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_coarseRebin_lt4j[nRebins_bJetPt_150to250met_coarseRebin_lt4j]{   (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_coarseRebin_lt4j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_coarseRebin_lt4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_coarseRebin_lt4j);
+
+  // bJetPt, >=4jets
+  var_list_label.push_back( "h_bJetPt_150to250met__ge4jSelection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  const int nRebins_bJetPt_150to250met_coarseRebin_ge4j = 2;
+  double xRebins_bJetPt_150to250met_coarseRebin_ge4j[nRebins_bJetPt_150to250met_coarseRebin_ge4j+1]{ 0.0, 200.0, 600.0 };
+  double xRebinsSF_bJetPt_150to250met_coarseRebin_ge4j[nRebins_bJetPt_150to250met_coarseRebin_ge4j]{ (1.0/8.0), (1.0/16.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("coarseRebin");
+  var_rebin_nBins.push_back(nRebins_bJetPt_150to250met_coarseRebin_ge4j);
+  var_rebin_xBins.push_back(xRebins_bJetPt_150to250met_coarseRebin_ge4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_bJetPt_150to250met_coarseRebin_ge4j);
+
+
+
   // gen ttbarPt, incl selection
   var_list_label.push_back( "h_gen_ttbarPt__inclSelection" );
   var_list_title.push_back( "Gen t#bar{t} system p_{T}, inclusive selection" );
@@ -2455,6 +3139,7 @@ void plotMaker( bool plotByGenDecay=true ){
   // gen lep2ID, ==2jets
   var_list_label.push_back( "h_gen_lep2_id__ee2jSelection" );
   var_list_title.push_back( "Gen 2nd Lepton pdgid, ==2 jet selection" );
+  //var_list_title.push_back( "Gen 2nd Lepton pdgid, ==2 jet, modTop>6.4" );
   var_list_xaxis.push_back( "" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2470,6 +3155,7 @@ void plotMaker( bool plotByGenDecay=true ){
   // gen lep2ID, ==3jets
   var_list_label.push_back( "h_gen_lep2_id__ee3jSelection" );
   var_list_title.push_back( "Gen 2nd Lepton pdgid, ==3 jet selection" );
+  //var_list_title.push_back( "Gen 2nd Lepton pdgid, ==3 jet, mt2w>200" );
   var_list_xaxis.push_back( "" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2485,6 +3171,7 @@ void plotMaker( bool plotByGenDecay=true ){
   // gen lep2ID, <4jets
   var_list_label.push_back( "h_gen_lep2_id__lt4jSelection" );
   var_list_title.push_back( "Gen 2nd Lepton pdgid, <4 jet selection" );
+  //var_list_title.push_back( "Gen 2nd Lepton pdgid, >=4 jet, mt2w<200" );
   var_list_xaxis.push_back( "" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2501,6 +3188,7 @@ void plotMaker( bool plotByGenDecay=true ){
   // gen lep2ID, >=4jets
   var_list_label.push_back( "h_gen_lep2_id__ge4jSelection" );
   var_list_title.push_back( "Gen 2nd Lepton pdgid, >=4 jet selection" );
+  //var_list_title.push_back( "Gen 2nd Lepton pdgid, >=4 jet, mt2w>200" );
   var_list_xaxis.push_back( "" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );

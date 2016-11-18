@@ -335,7 +335,7 @@ int bkgEstimate_diLepton(){
   
 
 
-
+  /* 
   // Dev, ext30fb,  mlb
   bkgEstUtil bkgEst_ext30fb_mlb;
  
@@ -496,9 +496,171 @@ int bkgEstimate_diLepton(){
  
   
   v_bkgEst.push_back( bkgEst_ext30fb_mlb );
+  */
+
+  // Dev, ext30fb,  mlb, using inclusive mlb bins
+  bkgEstUtil bkgEst_ext30fb_mlb;
+ 
+  // met extrapolation
+  bkgEst_ext30fb_mlb.hName_base = "h_yields_SR_dev_ext30fb_mlb_v1";
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(1);  bkgEst_ext30fb_mlb.CR_bins.push_back(39);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(2);  bkgEst_ext30fb_mlb.CR_bins.push_back(40);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(3);  bkgEst_ext30fb_mlb.CR_bins.push_back(41);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(4);  bkgEst_ext30fb_mlb.CR_bins.push_back(42);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
+  
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(5);  bkgEst_ext30fb_mlb.CR_bins.push_back(39);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(6);  bkgEst_ext30fb_mlb.CR_bins.push_back(40);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(7);  bkgEst_ext30fb_mlb.CR_bins.push_back(41);  // No Extrapolation, if so bin=30
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(8);  bkgEst_ext30fb_mlb.CR_bins.push_back(42);  // No Extrapolation, if so bin=30
+  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
 
 
+  bkgEst_ext30fb_mlb.SR_bins.push_back(9);  bkgEst_ext30fb_mlb.CR_bins.push_back(45);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
 
+  bkgEst_ext30fb_mlb.SR_bins.push_back(10);  bkgEst_ext30fb_mlb.CR_bins.push_back(46);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(11);  bkgEst_ext30fb_mlb.CR_bins.push_back(47);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(12);  bkgEst_ext30fb_mlb.CR_bins.push_back(48); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$550<MET<650$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(13);  bkgEst_ext30fb_mlb.CR_bins.push_back(50); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(14);  bkgEst_ext30fb_mlb.CR_bins.push_back(45);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(15);  bkgEst_ext30fb_mlb.CR_bins.push_back(46);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(16);  bkgEst_ext30fb_mlb.CR_bins.push_back(47); // No Extrapolation, if so bin=32
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(17);  bkgEst_ext30fb_mlb.CR_bins.push_back(49); // No Extrapolation, if so bin=32
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(18);  bkgEst_ext30fb_mlb.CR_bins.push_back(52);  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(19);  bkgEst_ext30fb_mlb.CR_bins.push_back(53); // No Extrapolation, if so, bin=33
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(20);  bkgEst_ext30fb_mlb.CR_bins.push_back(54); // No Extrapolattion, if so, bin=33
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>450$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(21);  bkgEst_ext30fb_mlb.CR_bins.push_back(55); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("F"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<400$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(22);  bkgEst_ext30fb_mlb.CR_bins.push_back(56); // Extrapolate  
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("F"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>400$");
+
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(23);  bkgEst_ext30fb_mlb.CR_bins.push_back(58);
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(24);  bkgEst_ext30fb_mlb.CR_bins.push_back(59);
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(25);  bkgEst_ext30fb_mlb.CR_bins.push_back(60); // Extrapolate
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<600$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(26);  bkgEst_ext30fb_mlb.CR_bins.push_back(61); // Extrapolate
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb<175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>600$");
+
+  
+  bkgEst_ext30fb_mlb.SR_bins.push_back(27);  bkgEst_ext30fb_mlb.CR_bins.push_back(62);
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<400$");
+ 
+  bkgEst_ext30fb_mlb.SR_bins.push_back(28);  bkgEst_ext30fb_mlb.CR_bins.push_back(63); // Extrapolate
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$400<MET<650$");
+
+  bkgEst_ext30fb_mlb.SR_bins.push_back(29);  bkgEst_ext30fb_mlb.CR_bins.push_back(64); // Extrpolate
+  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$mlb\\ge175$"); 
+  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
+  bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
+ 
+  
+  v_bkgEst.push_back( bkgEst_ext30fb_mlb );
+
+
+  /*
   // Dev, ext30fb,  bJetPt
   bkgEstUtil bkgEst_ext30fb_bJetPt;
  
@@ -535,12 +697,12 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
 
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(7);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(30);  // Extrapolate  
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(7);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(7);  // No Extrapolation, if so bin=30
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
 
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(8);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(30);  // Extrapolate  
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(8);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(8);  // No Extrapolation  , if so bin=30
   bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
@@ -561,12 +723,12 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
 
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(12);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(31); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(12);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(12); // No Extrapolation, if so bin=31
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$550<MET<650$");
 
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(13);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(31); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(13);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(13); // No Extrapolation, if so bin=31
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
@@ -598,12 +760,12 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
 
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(19);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(33); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(19);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(19); // No Extrapolation, if so bin=33
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$bJetPt<200$"); 
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
 
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(20);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(33); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(20);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(20); // No Extrapolation, if so bin=33
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$bJetPt<200$"); 
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>450$");
@@ -646,19 +808,180 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<400$");
  
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(28);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(36);
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(28);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(36);  // Extrapolate
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$400<MET<650$");
 
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(29);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(36);
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(29);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(36);  // Extrapolate
   bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
   bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
   bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
  
   
   v_bkgEst.push_back( bkgEst_ext30fb_bJetPt );
+  */
 
+  // Dev, ext30fb,  bJetPt, using inclusive bJetPt bins
+  bkgEstUtil bkgEst_ext30fb_bJetPt;
+ 
+  bkgEst_ext30fb_bJetPt.hName_base = "h_yields_SR_dev_ext30fb_bJetPt_v1";
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(1);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(39);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(2);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(40);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(3);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(41);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(4);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(42);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
+  
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(5);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(39);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(6);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(40);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(7);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(41);  // No Extrapolation, if so bin=30
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(8);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(42);  // No Extrapolation  , if so bin=30
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(9);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(45);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(10);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(46);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(11);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(47);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(12);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(48); // No Extrapolation, if so bin=31
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$550<MET<650$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(13);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(50); // No Extrapolation, if so bin=31
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(14);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(45);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(15);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(46);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(16);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(47); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(17);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(49); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$<0.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(18);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(52);  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(19);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(53); // No Extrapolation, if so bin=33
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(20);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(54); // No Extrapolation, if so bin=33
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>450$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(21);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(55); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("F"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<400$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(22);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(56); // Extrapolate  
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$modifiedTopness$<10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("F"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>400$");
+
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(23);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(58);
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(24);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(59);
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(25);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(60); // Extrapolate
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<600$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(26);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(61); // Extrapolate
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt<200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>600$");
+
+  
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(27);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(62);
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<400$");
+ 
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(28);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(63);  // Extrapolate
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$400<MET<650$");
+
+  bkgEst_ext30fb_bJetPt.SR_bins.push_back(29);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(64);  // Extrapolate
+  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~modifiedTopness$\\ge10.0$,~$bJetPt\\ge200$"); 
+  bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
+  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
+ 
+  
+  v_bkgEst.push_back( bkgEst_ext30fb_bJetPt );
+  
 
 
   // corridor results

@@ -64,6 +64,7 @@ echo "Making Plots..."
 echo ""
 root -l -b -q head.C plotMaker.C++ >& Output/Log/plotMaker_byGenDecay.log
 root -l -b -q head.C plotMaker.C++'(false)' >& Output/Log/plotMaker_byProduction.log
+root -l -b -q head.C pieCharts.C++ >& Output/Log/pieCharts.log
 
 # Background Estimates 
 echo "Calculating DiLepton Background Estimate..."
