@@ -30,6 +30,8 @@ void plotMaker( bool plotByGenDecay=true ){
   // Intialize User Inputs
   //
   bool plotData  = true;
+
+  bool rescaleBinsAfterRebin = false;
   
   TString inDir  = "Output/Histos/";
   TString outDir = "Output/Plots/";
@@ -272,6 +274,28 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_nBins.push_back(nRebins_yields_SR_dev_ext30fb_mlb_v1);
   var_rebin_xBins.push_back(xRebins_yields_SR_dev_ext30fb_mlb_v1);
   var_rebin_xBinsSF.push_back(xRebinsSF_yields_SR_dev_ext30fb_mlb_v1);
+
+
+  // Yields, dev mlb with tight bTagging
+  var_list_label.push_back( "h_yields_SR_dev_ext30fb_mlb_v2" );
+  var_list_title.push_back( "Yields" );
+  var_list_xaxis.push_back( "Yields" );
+
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  // First 29 bins are SR
+  const int nRebins_yields_SR_dev_ext30fb_mlb_v2 = 27;
+  double xRebins_yields_SR_dev_ext30fb_mlb_v2[nRebins_yields_SR_dev_ext30fb_mlb_v2+1]; 
+  for(int i=1; i<=nRebins_yields_SR_dev_ext30fb_mlb_v2+1; i++){ xRebins_yields_SR_dev_ext30fb_mlb_v2[i-1]=i;} 
+  double xRebinsSF_yields_SR_dev_ext30fb_mlb_v2[nRebins_yields_SR_dev_ext30fb_mlb_v2];
+  for(int i=1; i<=nRebins_yields_SR_dev_ext30fb_mlb_v2; i++){ xRebinsSF_yields_SR_dev_ext30fb_mlb_v2[i-1]=1;}
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("srbins");
+  var_rebin_nBins.push_back(nRebins_yields_SR_dev_ext30fb_mlb_v2);
+  var_rebin_xBins.push_back(xRebins_yields_SR_dev_ext30fb_mlb_v2);
+  var_rebin_xBinsSF.push_back(xRebinsSF_yields_SR_dev_ext30fb_mlb_v2);
 
 
   // Yields, dev bJetPt
@@ -3263,9 +3287,11 @@ void plotMaker( bool plotByGenDecay=true ){
 	// Do rebin
 	if( var_doRebin[iVar] ){
 	  h_data = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	  for(int iBin=1; iBin<=(int)h_data->GetNbinsX(); iBin++){
-	    h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-	    h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	  if(rescaleBinsAfterRebin){
+	    for(int iBin=1; iBin<=(int)h_data->GetNbinsX(); iBin++){
+	      h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	    }
 	  }
 	}
 	else{
@@ -3314,9 +3340,11 @@ void plotMaker( bool plotByGenDecay=true ){
 	// Do rebin
 	if( var_doRebin[iVar] ){
 	  h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	  for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
-	    h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-	    h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	  if(rescaleBinsAfterRebin){
+	    for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
+	      h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	    }
 	  }
 	}
 	else{
@@ -3354,9 +3382,11 @@ void plotMaker( bool plotByGenDecay=true ){
 	    // Do rebin
 	    if( var_doRebin[iVar] ){
 	      h_clone_up = (TH1F*)h_temp_up->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	      for(int iBin=1; iBin<=(int)h_clone_up->GetNbinsX(); iBin++){
-		h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-		h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      if(rescaleBinsAfterRebin){
+		for(int iBin=1; iBin<=(int)h_clone_up->GetNbinsX(); iBin++){
+		  h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		}
 	      }
 	    }
 	    else{
@@ -3384,9 +3414,11 @@ void plotMaker( bool plotByGenDecay=true ){
 	    // Do rebin
 	    if( var_doRebin[iVar] ){
 	      h_clone_dn = (TH1F*)h_temp_dn->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	      for(int iBin=1; iBin<=(int)h_clone_dn->GetNbinsX(); iBin++){
-		h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-		h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      if(rescaleBinsAfterRebin){
+		for(int iBin=1; iBin<=(int)h_clone_dn->GetNbinsX(); iBin++){
+		  h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		}
 	      }
 	    }
 	    else{
@@ -3488,9 +3520,11 @@ void plotMaker( bool plotByGenDecay=true ){
 	    // Do rebin
 	    if( var_doRebin[iVar] ){
 	      h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	      for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
-		h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-		h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      if(rescaleBinsAfterRebin){
+		for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
+		  h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		}
 	      }
 	    }
 	    else{

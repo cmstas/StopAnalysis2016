@@ -46,7 +46,7 @@ bool analyzeFast_ = false;
 
 bool applyjson = true;
 
-bool add2ndLepToMet_ = true;
+bool add2ndLepToMet_ = false;
 bool inclTaus_CR2l_  = false;
 
 bool useBTagSFs_fromUtils_ = false;
@@ -344,6 +344,14 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   vector<int> passCats_dev_ext30fb_mlb_v1_jup;
   vector<int> passCats_dev_ext30fb_mlb_v1_jdown;
 
+  // ICHEP SR bins, extended to 30fb, mlb bins with tight bTagging
+  TH1D *h_yields_dev_ext30fb_mlb_v2_template = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2();
+  TH1D *h_yields_dev_ext30fb_mlb_v2[nHistos];
+  TH1D *h_nEntries_dev_ext30fb_mlb_v2[nHistos]; // For bkg estimates
+  vector<int> passCats_dev_ext30fb_mlb_v2; 
+  vector<int> passCats_dev_ext30fb_mlb_v2_jup;
+  vector<int> passCats_dev_ext30fb_mlb_v2_jdown;
+
 
   // ICHEP SR bins, extended to 30fb, bJetPt bins
   TH1D *h_yields_dev_ext30fb_bJetPt_v1_template = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_bJetPt_v1();
@@ -405,6 +413,15 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_yields_dev_ext30fb_mlb_v1[iHisto]->SetDirectory(f_output);
 	h_nEntries_dev_ext30fb_mlb_v1[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v1_template->Clone(h_name_dev_ext30fb_mlb_v1+"__nEntries");
 	h_nEntries_dev_ext30fb_mlb_v1[iHisto]->SetDirectory(f_output);
+       	
+
+	// Dev Signal Regions, extended to 30fb, mlb bins with tight bTag
+	TString h_name_dev_ext30fb_mlb_v2 = h_yields_dev_ext30fb_mlb_v2_template->GetName();
+	h_name_dev_ext30fb_mlb_v2 += reg_gen_sys_name;
+	h_yields_dev_ext30fb_mlb_v2[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v2_template->Clone(h_name_dev_ext30fb_mlb_v2);
+	h_yields_dev_ext30fb_mlb_v2[iHisto]->SetDirectory(f_output);
+	h_nEntries_dev_ext30fb_mlb_v2[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v2_template->Clone(h_name_dev_ext30fb_mlb_v2+"__nEntries");
+	h_nEntries_dev_ext30fb_mlb_v2[iHisto]->SetDirectory(f_output);
        	
 	
 	// Dev Signal Regions, extended to 30fb, bJetPt bins
@@ -1564,6 +1581,11 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       passCats_dev_ext30fb_mlb_v1_jup.clear();
       passCats_dev_ext30fb_mlb_v1_jdown.clear();
     
+      // ICHEP extended to 30fb, with mlb with tight bTag bins Singal Regions
+      passCats_dev_ext30fb_mlb_v2.clear(); 
+      passCats_dev_ext30fb_mlb_v2_jup.clear();
+      passCats_dev_ext30fb_mlb_v2_jdown.clear();
+    
       // ICHEP extended to 30fb, with bJetPt bins Singal Regions
       passCats_dev_ext30fb_bJetPt_v1.clear(); 
       passCats_dev_ext30fb_bJetPt_v1_jup.clear();
@@ -1579,6 +1601,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	passCats_ICHEP = categoryInfo::passCategory_SR_ICHEP(0, add2ndLepToMet_);
 	passCats_ICHEP_ext30fb = categoryInfo::passCategory_SR_ICHEP_ext30fb(0, add2ndLepToMet_);
 	passCats_dev_ext30fb_mlb_v1 = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(0, add2ndLepToMet_);
+	passCats_dev_ext30fb_mlb_v2 = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(0, add2ndLepToMet_);
 	passCats_dev_ext30fb_bJetPt_v1 = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(0, add2ndLepToMet_);
 	passCats_corridor = categoryInfo::passCategory_SR_corridor(0, add2ndLepToMet_);
       }
@@ -1588,6 +1611,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	  passCats_ICHEP_jup = categoryInfo::passCategory_SR_ICHEP(1, add2ndLepToMet_);
 	  passCats_ICHEP_ext30fb_jup = categoryInfo::passCategory_SR_ICHEP_ext30fb(1, add2ndLepToMet_);
 	  passCats_dev_ext30fb_mlb_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(1, add2ndLepToMet_);
+	  passCats_dev_ext30fb_mlb_v2_jup = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(1, add2ndLepToMet_);
 	  passCats_dev_ext30fb_bJetPt_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(1, add2ndLepToMet_);
 	  passCats_corridor_jup = categoryInfo::passCategory_SR_corridor(1, add2ndLepToMet_);
 	}
@@ -1595,6 +1619,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	  passCats_ICHEP_jdown = categoryInfo::passCategory_SR_ICHEP(-1, add2ndLepToMet_);
 	  passCats_ICHEP_ext30fb_jdown = categoryInfo::passCategory_SR_ICHEP_ext30fb(-1, add2ndLepToMet_);
 	  passCats_dev_ext30fb_mlb_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(-1, add2ndLepToMet_);
+	  passCats_dev_ext30fb_mlb_v2_jdown = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(-1, add2ndLepToMet_);
 	  passCats_dev_ext30fb_bJetPt_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(-1, add2ndLepToMet_);
 	  passCats_corridor_jdown = categoryInfo::passCategory_SR_corridor(-1, add2ndLepToMet_);
 	}
@@ -1855,6 +1880,21 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    else{ 
 	      fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1, wgt );
 	      fillHistos( h_nEntries_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1, 1.0 );
+	    } 
+
+
+	    // Dev Signal Regions, extened to 30fb, with mlb bins with tight bTagging
+	    if( iSys==sysInfo::k_JESUp ){ 
+	      fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jup, wgt );
+	      fillHistos( h_nEntries_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jup, 1.0 );
+	    } 
+	    else if( iSys==sysInfo::k_JESDown ){ 
+	      fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, wgt );
+	      fillHistos( h_nEntries_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, 1.0 );
+	    } 
+	    else{ 
+	      fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2, wgt );
+	      fillHistos( h_nEntries_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2, 1.0 );
 	    } 
 
 

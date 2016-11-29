@@ -957,12 +957,12 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
   result.push_back( sampleInfo::k_ZZTo2Q2Nu_amcnlo_pythia8 );
   
   // MC, TTV
-  result.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
-  result.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
-  //result.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM );
-  result.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
-  result.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
-  //result.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
+  //result.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
+  //result.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
+  result.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM );
+  //result.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
+  //result.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
+  result.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
 
   // MC, tZq
   //result.push_back( sampleInfo::k_tZq_ll_4f_amcnlo_pythia8 );
@@ -1033,12 +1033,12 @@ sampleInfo::vect_id sampleInfo::getSampleList_CR2l_bulkTTbar(){
   result.push_back( sampleInfo::k_ZZTo2Q2Nu_amcnlo_pythia8 );
   
   // MC, TTV
-  result.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
-  result.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
-  //result.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM );
-  result.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
-  result.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
-  //result.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
+  //result.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
+  //result.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
+  result.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM );
+  //result.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
+  //result.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
+  result.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
 
   // MC, tZq
   //result.push_back( sampleInfo::k_tZq_ll_4f_amcnlo_pythia8 );

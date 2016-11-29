@@ -137,17 +137,17 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
 
   // TTW
   addSet.first = sampleInfo::k_TTW;
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_ttWJets_13TeV_madgraphMLM) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8,use_zeroed_samp,false) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8,use_zeroed_samp,false) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_ttWJets_13TeV_madgraphMLM) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8,use_zeroed_samp,false) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8,use_zeroed_samp,false) );
   addList.push_back(addSet);
   addSet.second.clear();
 
   // TTZ
   addSet.first = sampleInfo::k_TTZ;
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_ttZJets_13TeV_madgraphMLM) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_TTZToQQ_amcnlo_pythia8,use_zeroed_samp,false) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8,use_zeroed_samp,false) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_ttZJets_13TeV_madgraphMLM) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_TTZToQQ_amcnlo_pythia8,use_zeroed_samp,false) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8,use_zeroed_samp,false) );
   addList.push_back(addSet);
   addSet.second.clear();
 

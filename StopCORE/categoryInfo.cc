@@ -343,104 +343,115 @@ vector<int> categoryInfo::passCategory_SR_ICHEP_ext30fb( int jesType, bool add2n
 
 TH1D* categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v1(){
 
-  int nBins_dev_ext30fb_mlb_v1_ = 76;
+  int nBins_dev_ext30fb_mlb_v1_ = 77;
   TH1D *result = new TH1D("h_yields_SR_dev_ext30fb_mlb_v1", "Yields, Signal Regions, extnded to 30fb, binned with Mlb", nBins_dev_ext30fb_mlb_v1_, 1.0, (double)nBins_dev_ext30fb_mlb_v1_+1.0);
 
+  // Region A, nJets<4, modTop>=10, mlb<175
   result->GetXaxis()->SetBinLabel(1, "lt4jets_ge10modTop_lt175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(2, "lt4jets_ge10modTop_lt175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(3, "lt4jets_ge10modTop_lt175mlb_450to550met");
-  result->GetXaxis()->SetBinLabel(4, "lt4jets_ge10modTop_lt175mlb_550toInfmet");
-  
-  result->GetXaxis()->SetBinLabel(5, "lt4jets_ge10modTop_ge175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(6, "lt4jets_ge10modTop_ge175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(7, "lt4jets_ge10modTop_ge175mlb_450to550met");
-  result->GetXaxis()->SetBinLabel(8, "lt4jets_ge10modTop_ge175mlb_550toInfmet");
-  
-  result->GetXaxis()->SetBinLabel(9, "ge4jets_lt0modTop_lt175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(10, "ge4jets_lt0modTop_lt175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(11, "ge4jets_lt0modTop_lt175mlb_450to550met");
-  result->GetXaxis()->SetBinLabel(12, "ge4jets_lt0modTop_lt175mlb_550to650met");
-  result->GetXaxis()->SetBinLabel(13, "ge4jets_lt0modTop_lt175mlb_650toInfmet");
-  
-  result->GetXaxis()->SetBinLabel(14, "ge4jets_lt0modTop_ge175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(15, "ge4jets_lt0modTop_ge175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(16, "ge4jets_lt0modTop_ge175mlb_450to550met");
-  result->GetXaxis()->SetBinLabel(17, "ge4jets_lt0modTop_ge175mlb_550toInfmet");
+  result->GetXaxis()->SetBinLabel(2, "lt4jets_ge10modTop_lt175mlb_350to500met");
+  result->GetXaxis()->SetBinLabel(3, "lt4jets_ge10modTop_lt175mlb_500toInfmet");
 
-  result->GetXaxis()->SetBinLabel(18, "ge4jets_0to10modTop_lt175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(19, "ge4jets_0to10modTop_lt175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(20, "ge4jets_0to10modTop_lt175mlb_450toInfmet");
-  
-  result->GetXaxis()->SetBinLabel(21, "ge4jets_0to10modTop_ge175mlb_250to400met");
-  result->GetXaxis()->SetBinLabel(22, "ge4jets_0to10modTop_ge175mlb_400toInfmet");
+  // Region B, nJets<4, modTop>=10, mlb>=175
+  result->GetXaxis()->SetBinLabel(4, "lt4jets_ge10modTop_ge175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(5, "lt4jets_ge10modTop_ge175mlb_350to450met");
+  result->GetXaxis()->SetBinLabel(6, "lt4jets_ge10modTop_ge175mlb_450to650met");
+  result->GetXaxis()->SetBinLabel(7, "lt4jets_ge10modTop_ge175mlb_650toInfmet");
 
+  // Region C, nJets>=4, modTop<0, mlb<175
+  result->GetXaxis()->SetBinLabel(8, "ge4jets_lt0modTop_lt175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(9, "ge4jets_lt0modTop_lt175mlb_350to450met");
+  result->GetXaxis()->SetBinLabel(10, "ge4jets_lt0modTop_lt175mlb_450to550met");
+  result->GetXaxis()->SetBinLabel(11, "ge4jets_lt0modTop_lt175mlb_550to650met");
+  result->GetXaxis()->SetBinLabel(12, "ge4jets_lt0modTop_lt175mlb_650toInfmet");
+
+  // Region D, nJets>=4, modTop<0, mlb>=175 
+  result->GetXaxis()->SetBinLabel(13, "ge4jets_lt0modTop_ge175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(14, "ge4jets_lt0modTop_ge175mlb_350to450met");
+  result->GetXaxis()->SetBinLabel(15, "ge4jets_lt0modTop_ge175mlb_450to550met");
+  result->GetXaxis()->SetBinLabel(16, "ge4jets_lt0modTop_ge175mlb_550toInfmet");
+
+  // Region E, nJets>=4, 0<=modTop<10, mlb<175
+  result->GetXaxis()->SetBinLabel(17, "ge4jets_0to10modTop_lt175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(18, "ge4jets_0to10modTop_lt175mlb_350to550met");
+  result->GetXaxis()->SetBinLabel(19, "ge4jets_0to10modTop_lt175mlb_550toInfmet");
+
+  // Region F, nJets>=4, 0<=modTop<10, mlb>=175
+  result->GetXaxis()->SetBinLabel(20, "ge4jets_0to10modTop_ge175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(21, "ge4jets_0to10modTop_ge175mlb_350to500met");
+  result->GetXaxis()->SetBinLabel(22, "ge4jets_0to10modTop_ge175mlb_500toInfmet");
+
+  // Region G, nJets>=4, modTop>=10, mlb<175
   result->GetXaxis()->SetBinLabel(23, "ge4jets_ge10modTop_lt175mlb_250to350met");
   result->GetXaxis()->SetBinLabel(24, "ge4jets_ge10modTop_lt175mlb_350to450met");
   result->GetXaxis()->SetBinLabel(25, "ge4jets_ge10modTop_lt175mlb_450to600met");
   result->GetXaxis()->SetBinLabel(26, "ge4jets_ge10modTop_lt175mlb_600toInfmet");
-  
-  result->GetXaxis()->SetBinLabel(27, "ge4jets_ge10modTop_ge175mlb_250to400met");
-  result->GetXaxis()->SetBinLabel(28, "ge4jets_ge10modTop_ge175mlb_400to650met");
+
+  // Region H, nJets>=4, modTop>=10, mlb>=175
+  result->GetXaxis()->SetBinLabel(27, "ge4jets_ge10modTop_ge175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(28, "ge4jets_ge10modTop_ge175mlb_350to650met");
   result->GetXaxis()->SetBinLabel(29, "ge4jets_ge10modTop_ge175mlb_650toInfmet");
 
-  // Inclusive bins for bkg estimates
+
+  // Coarser MET bins for bkg estimates
   result->GetXaxis()->SetBinLabel(30, "lt4jets_ge10modTop_ge175mlb_450toInfmet");
   result->GetXaxis()->SetBinLabel(31, "ge4jets_lt0modTop_lt175mlb_550toInfmet");
   result->GetXaxis()->SetBinLabel(32, "ge4jets_lt0modTop_ge175mlb_450toInfmet");
   result->GetXaxis()->SetBinLabel(33, "ge4jets_0to10modTop_lt175mlb_350toInfmet");
-  result->GetXaxis()->SetBinLabel(34, "ge4jets_0to10modTop_ge175mlb_250toInfmet");
+  result->GetXaxis()->SetBinLabel(34, "ge4jets_0to10modTop_ge175mlb_350toInfmet");
   result->GetXaxis()->SetBinLabel(35, "ge4jets_ge10modTop_lt175mlb_450toInfmet");
-  result->GetXaxis()->SetBinLabel(36, "ge4jets_ge10modTop_ge175mlb_400toInfmet");
+  result->GetXaxis()->SetBinLabel(36, "ge4jets_ge10modTop_ge175mlb_350toInfmet");
   
+  // nJet Bins 
   result->GetXaxis()->SetBinLabel(37, "lt4jets");
-  result->GetXaxis()->SetBinLabel(38, "lt4jets_ge10modTop");
-  result->GetXaxis()->SetBinLabel(39, "lt4jets_ge10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(40, "lt4jets_ge10modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(41, "lt4jets_ge10modTop_450to550met");
-  result->GetXaxis()->SetBinLabel(42, "lt4jets_ge10modTop_550toInfmet");
-
-  result->GetXaxis()->SetBinLabel(43, "ge4jets");
-  result->GetXaxis()->SetBinLabel(44, "ge4jets_lt0modTop");
-  result->GetXaxis()->SetBinLabel(45, "ge4jets_lt0modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(46, "ge4jets_lt0modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(47, "ge4jets_lt0modTop_450to550met");
-  result->GetXaxis()->SetBinLabel(48, "ge4jets_lt0modTop_550to650met");
-  result->GetXaxis()->SetBinLabel(49, "ge4jets_lt0modTop_550toInfmet");
-  result->GetXaxis()->SetBinLabel(50, "ge4jets_lt0modTop_650toInfmet");
-
-  result->GetXaxis()->SetBinLabel(51, "ge4jets_0to10modTop");
-  result->GetXaxis()->SetBinLabel(52, "ge4jets_0to10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(53, "ge4jets_0to10modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(54, "ge4jets_0to10modTop_450toInfmet");
-  result->GetXaxis()->SetBinLabel(55, "ge4jets_0to10modTop_250to400met");
-  result->GetXaxis()->SetBinLabel(56, "ge4jets_0to10modTop_400toInfmet");
-
-  result->GetXaxis()->SetBinLabel(57, "ge4jets_ge10modTop");
-  result->GetXaxis()->SetBinLabel(58, "ge4jets_ge10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(59, "ge4jets_ge10modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(60, "ge4jets_ge10modTop_450to600met");
-  result->GetXaxis()->SetBinLabel(61, "ge4jets_ge10modTop_600toInfmet");
+  result->GetXaxis()->SetBinLabel(38, "ge4jets");
   
-  result->GetXaxis()->SetBinLabel(62, "ge4jets_ge10modTop_250to400met");
-  result->GetXaxis()->SetBinLabel(63, "ge4jets_ge10modTop_400to650met");
-  result->GetXaxis()->SetBinLabel(64, "ge4jets_ge10modTop_650toInfmet");
+  // nJet, modTopness Bins
+  result->GetXaxis()->SetBinLabel(39, "lt4jets_ge10modTop");
+  result->GetXaxis()->SetBinLabel(40, "ge4jets_lt0modTop");
+  result->GetXaxis()->SetBinLabel(41, "ge4jets_0to10modTop");
+  result->GetXaxis()->SetBinLabel(42, "ge4jets_ge10modTop");
+  
+  // nJet, modTopness, met Bins, Inclusive in Mlb
+  result->GetXaxis()->SetBinLabel(43, "lt4jets_ge10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(44, "lt4jets_ge10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(45, "lt4jets_ge10modTop_350to500met");
+  result->GetXaxis()->SetBinLabel(46, "lt4jets_ge10modTop_500toInfmet");
+  result->GetXaxis()->SetBinLabel(47, "lt4jets_ge10modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(48, "lt4jets_ge10modTop_450to650met");
+  result->GetXaxis()->SetBinLabel(49, "lt4jets_ge10modTop_650toInfmet");
 
+  result->GetXaxis()->SetBinLabel(50, "ge4jets_lt0modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(51, "ge4jets_lt0modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(52, "ge4jets_lt0modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(53, "ge4jets_lt0modTop_450to550met");
+  result->GetXaxis()->SetBinLabel(54, "ge4jets_lt0modTop_550to650met");
+  result->GetXaxis()->SetBinLabel(55, "ge4jets_lt0modTop_650toInfmet");
+  result->GetXaxis()->SetBinLabel(56, "ge4jets_lt0modTop_550toInfmet");
+  
+  result->GetXaxis()->SetBinLabel(57, "ge4jets_0to10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(58, "ge4jets_0to10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(59, "ge4jets_0to10modTop_350to550met");
+  result->GetXaxis()->SetBinLabel(60, "ge4jets_0to10modTop_550toInfmet");
+  result->GetXaxis()->SetBinLabel(61, "ge4jets_0to10modTop_350to500met");
+  result->GetXaxis()->SetBinLabel(62, "ge4jets_0to10modTop_500toInfmet");
+  
+  result->GetXaxis()->SetBinLabel(63, "ge4jets_ge10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(64, "ge4jets_ge10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(65, "ge4jets_ge10modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(66, "ge4jets_ge10modTop_450to600met");
+  result->GetXaxis()->SetBinLabel(67, "ge4jets_ge10modTop_600toInfmet");
+  result->GetXaxis()->SetBinLabel(68, "ge4jets_ge10modTop_350to650met");
+  result->GetXaxis()->SetBinLabel(69, "ge4jets_ge10modTop_650toInfmet");
+  
   // 150<met<250 CR bins
-  result->GetXaxis()->SetBinLabel(65, "lt4jets_ge10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(66, "lt4jets_ge10modTop_lt175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(67, "lt4jets_ge10modTop_ge175mlb_150to250met");
-
-  result->GetXaxis()->SetBinLabel(68, "ge4jets_lt0modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(69, "ge4jets_lt0modTop_lt175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(70, "ge4jets_lt0modTop_ge175mlb_150to250met");
-
-  result->GetXaxis()->SetBinLabel(71, "ge4jets_0to10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(72, "ge4jets_0to10modTop_lt175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(73, "ge4jets_0to10modTop_ge175mlb_150to250met");
-  
-  result->GetXaxis()->SetBinLabel(74, "ge4jets_ge10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(75, "ge4jets_ge10modTop_lt175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(76, "ge4jets_ge10modTop_ge175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(70, "lt4jets_ge10modTop_lt175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(71, "lt4jets_ge10modTop_ge175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(72, "ge4jets_lt0modTop_lt175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(73, "ge4jets_lt0modTop_ge175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(74, "ge4jets_0to10modTop_lt175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(75, "ge4jets_0to10modTop_ge175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(76, "ge4jets_ge10modTop_lt175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(77, "ge4jets_ge10modTop_ge175mlb_150to250met");
   
 
   return result;
@@ -468,8 +479,27 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1( int jesType, bool 
     if(jesType==-1) modTopness = babyAnalyzer.topnessMod_jdown();
   }
 
-
   double mlb = babyAnalyzer.Mlb_closestb();
+
+  int nGoodBTags = babyAnalyzer.ngoodbtags(); 
+  if( jesType==1)  nGoodBTags = babyAnalyzer.jup_ngoodbtags();
+  if( jesType==-1) nGoodBTags = babyAnalyzer.jdown_ngoodbtags();
+  if(nGoodBTags==0){
+    vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
+    if( jesType==1 )  jet_csvv2 = babyAnalyzer.jup_ak4pfjets_CSV();
+    if( jesType==-1 ) jet_csvv2 = babyAnalyzer.jdown_ak4pfjets_CSV();
+    double max_csvv2 = -99.9;
+    int max_csvv2_idx = -1;
+    for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+      if( jet_csvv2[iJet] >= max_csvv2 ){
+	max_csvv2 = jet_csvv2[iJet];
+	max_csvv2_idx = iJet;
+      }
+    }
+    if( jesType==0  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_p4().at(max_csvv2_idx) ).M();
+    if( jesType==1  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jup_ak4pfjets_p4().at(max_csvv2_idx) ).M();
+    if( jesType==-1 ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jdown_ak4pfjets_p4().at(max_csvv2_idx) ).M();
+  } // end if 0 bTags
 
   double met = babyAnalyzer.pfmet();
   if( add2ndLepToMet){
@@ -481,236 +511,656 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1( int jesType, bool 
     if(jesType==1)  met = babyAnalyzer.pfmet_jup();
     if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
   }
-  
 
-  // lt4jets
-  if( nGoodJets<=3 ){
-    result.push_back(37); // "lt4jets"
-    if(modTopness>=10.0){
-      result.push_back(38); // "lt4jets_ge10modTop"
-      if(met>=150.0 && met<250.0) result.push_back(65); // "lt4jets_ge10modTop_150to250met"
-      if(met>=250.0 && met<350.0) result.push_back(39); // "lt4jets_ge10modTop_250to350met"
-      if(met>=350.0 && met<450.0) result.push_back(40); // "lt4jets_ge10modTop_350to450met"
-      if(met>=450.0 && met<550.0) result.push_back(41); // "lt4jets_ge10modTop_450to550met"
-      if(met>=550.0)              result.push_back(42); // "lt4jets_ge10modTop_550toInfmet"
-    }
-  }
 
-  
-  //v11 - tmod10/Mlb - 29 bins
-  if( nGoodJets<=3&&modTopness>=10.0&& mlb<175) {
-    if(     met>550) result.push_back(4);
-    else if(met>450) result.push_back(3);
+  //
+  // 29 Signal Region Bins
+  //
+
+  // Region A
+  if( nGoodJets<4 && modTopness>=10.0 && mlb<175 ){
+    if(     met>500) result.push_back(3);
     else if(met>350) result.push_back(2);
     else if(met>250) result.push_back(1);
-    else if(met>150) result.push_back(66); // "lt4jets_ge10modTop_lt175mlb_150to250met"
-  }
-  if( nGoodJets<=3&&modTopness>=10.0&&mlb>=175) {
-    if(     met>550) result.push_back(8);
-    else if(met>450) result.push_back(7);
-    else if(met>350) result.push_back(6);
-    else if(met>250) result.push_back(5);
-    else if(met>150) result.push_back(67); // "lt4jets_ge10modTop_ge175mlb_150to250met"
-
-    if(met>450) result.push_back(30);
   }
 
+  // Region B
+  if( nGoodJets<4 && modTopness>=10.0 && mlb>=175 ){
+    if(     met>650) result.push_back(7);
+    else if(met>450) result.push_back(6);
+    else if(met>350) result.push_back(5);
+    else if(met>250) result.push_back(4);
+  }
 
-  // ge4jet inclusive mlb bins
-  if( nGoodJets>=4 ){
-    result.push_back(43);  // "ge4jets"
-    if(modTopness<0.0){
-      result.push_back(44);  // "ge4jets_lt0modTop"
-      if(met>=150.0 && met<250.0) result.push_back(68);  // "ge4jets_lt0modTop_150to250met"
-      if(met>=250.0 && met<350.0) result.push_back(45);  // "ge4jets_lt0modTop_250to350met"
-      if(met>=350.0 && met<450.0) result.push_back(46);  // "ge4jets_lt0modTop_350to450met"
-      if(met>=450.0 && met<550.0) result.push_back(47);  // "ge4jets_lt0modTop_450to550met"
-      if(met>=550.0 && met<650.0) result.push_back(48);  // "ge4jets_lt0modTop_550to650met"
-      if(met>=550.0)              result.push_back(49);  // "ge4jets_lt0modTop_550toInfmet"
-      if(met>=650.0)              result.push_back(50);  // "ge4jets_lt0modTop_650toInfmet"
-    }
-    if(modTopness>=0.0 && modTopness<10.0){
-      result.push_back(51);  // "ge4jets_0to10modTop"
-      if(met>=150.0 && met<250.0) result.push_back(71);  // "ge4jets_0to10modTop_150to250met"
-      if(met>=250.0 && met<350.0) result.push_back(52);  // "ge4jets_0to10modTop_250to350met"
-      if(met>=350.0 && met<450.0) result.push_back(53);  // "ge4jets_0to10modTop_350to450met"
-      if(met>=450.0)              result.push_back(54);  // "ge4jets_0to10modTop_450toInfmet"
-      if(met>=250.0 && met<400.0) result.push_back(55);  // "ge4jets_0to10modTop_250to400met"
-      if(met>=400.0)              result.push_back(56);  // "ge4jets_0to10modTop_400toInfmet"
-    }
-    if(modTopness>=10.0){
-      result.push_back(57);  // "ge4jets_ge10modTop"
-      if(met>=150.0 && met<250.0) result.push_back(74);  // "ge4jets_ge10modTop_150to250met"
-      if(met>=250.0 && met<350.0) result.push_back(58);  // "ge4jets_ge10modTop_250to350met"
-      if(met>=350.0 && met<450.0) result.push_back(59);  // "ge4jets_ge10modTop_350to450met"
-      if(met>=450.0 && met<600.0) result.push_back(60);  // "ge4jets_ge10modTop_450to600met"
-      if(met>=600.0)              result.push_back(61);  // "ge4jets_ge10modTop_600toInfmet"
-    
-      if(met>=250.0 && met<400.0) result.push_back(62);  // "ge4jets_ge10modTop_250to400met"
-      if(met>=400.0 && met<650.0) result.push_back(63);  // "ge4jets_ge10modTop_400to650met"
-      if(met>=650.0)              result.push_back(64);  // "ge4jets_ge10modTop_650toInfmet"
-    }
-  } // inclusive nJets>=4 bins
+  // Region C
+  if( nGoodJets>=4 && modTopness<0 && mlb<175 ){
+    if(     met>650) result.push_back(12);
+    else if(met>550) result.push_back(11);
+    else if(met>450) result.push_back(10);
+    else if(met>350) result.push_back(9);
+    else if(met>250) result.push_back(8);
+  }
+
+  // Region D
+  if( nGoodJets>=4 && modTopness<0 && mlb>=175 ){
+    if(     met>550) result.push_back(16);
+    else if(met>450) result.push_back(15);
+    else if(met>350) result.push_back(14);
+    else if(met>250) result.push_back(13);
+  }
+
+  // Region E
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && mlb<175 ){
+    if(     met>550) result.push_back(19);
+    else if(met>350) result.push_back(18);
+    else if(met>250) result.push_back(17);
+  }
   
-  
-  if(nGoodJets>=4&&modTopness<0&& mlb<175) {
-    if(     met>650) result.push_back(13);
-    else if(met>550) result.push_back(12);
-    else if(met>450) result.push_back(11);
-    else if(met>350) result.push_back(10);
-    else if(met>250) result.push_back(9);
-    else if(met>150) result.push_back(69); // "ge4jets_lt0modTop_lt175mlb_150to250met"
-
-    if(met>550) result.push_back(31);
+  // Region F
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && mlb>=175 ){
+    if(     met>500) result.push_back(22);
+    else if(met>350) result.push_back(21);
+    else if(met>250) result.push_back(20);
   }
-  if(nGoodJets>=4&&modTopness<0&&mlb>=175) {
-    if(     met>550) result.push_back(17);
-    else if(met>450) result.push_back(16);
-    else if(met>350) result.push_back(15);
-    else if(met>250) result.push_back(14);
-    else if(met>150) result.push_back(70); // "ge4jets_lt0modTop_ge175mlb_150to250met"
 
-    if(met>450) result.push_back(32);
-  }
-  if(nGoodJets>=4&&modTopness>=0&&modTopness<10.0&& mlb<175) {
-    if(     met>450) result.push_back(20);
-    else if(met>350) result.push_back(19);
-    else if(met>250) result.push_back(18);
-    else if(met>150) result.push_back(72); // "ge4jets_0to10modTop_lt175mlb_150to250met"
-
-    if(met>350) result.push_back(33);
-  }
-  if(nGoodJets>=4&&modTopness>=0&&modTopness<10.0&&mlb>=175) {
-    if(     met>400) result.push_back(22);
-    else if(met>250) result.push_back(21);
-    else if(met>150) result.push_back(73); // "ge4jets_0to10modTop_ge175mlb_150to250met"
-
-    if(met>250) result.push_back(34);
-  }
-  if(nGoodJets>=4&&modTopness>=10.0&& mlb<175) {
+  // Region G
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb<175 ){
     if(     met>600) result.push_back(26);
     else if(met>450) result.push_back(25);
     else if(met>350) result.push_back(24);
     else if(met>250) result.push_back(23);
-    else if(met>150) result.push_back(75); // "ge4jets_ge10modTop_lt175mlb_150to250met"
-
-    if(met>450) result.push_back(35);
   }
-  if(nGoodJets>=4&&modTopness>=10.0&&mlb>=175) {
+
+  // Region H
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb>=175 ){
     if(     met>650) result.push_back(29);
-    else if(met>400) result.push_back(28);
+    else if(met>350) result.push_back(28);
     else if(met>250) result.push_back(27);
-    else if(met>150) result.push_back(76); // "ge4jets_ge10modTop_ge175mlb_150to250met"
-
-    if(met>400) result.push_back(36);
   }
 
+
+
+  // Coarser MET bins for bkg estimates
+  if( nGoodJets<4 ){
+    if(modTopness>=10.0){
+      if(mlb>=175 && met>450) result.push_back(30); // "lt4jets_ge10modTop_ge175mlb_450toInfmet" 
+    }
+  }
+  if( nGoodJets>=4 ){
+    if( modTopness<0.0 ){
+      if( mlb<175  && met>550 ) result.push_back(31); // "ge4jets_lt0modTop_lt175mlb_550toInfmet"
+      if( mlb>=175 && met>450 ) result.push_back(32); // "ge4jets_lt0modTop_ge175mlb_450toInfmet"
+    }
+    if( modTopness>=0.0 && modTopness<10.0 ){
+      if( mlb<175  && met>350 ) result.push_back(33); // "ge4jets_0to10modTop_lt175mlb_350toInfmet"
+      if( mlb>=175 && met>350 ) result.push_back(34); // "ge4jets_0to10modTop_ge175mlb_350toInfmet"
+    }
+    if( modTopness>=10.0 ){
+      if( mlb<175  && met>450 ) result.push_back(35); // "ge4jets_ge10modTop_lt175mlb_450toInfmet"
+      if( mlb>=175 && met>350 ) result.push_back(36); // "ge4jets_ge10modTop_ge175mlb_350toInfmet"
+    }
+  }
+      
   
+  // nJets Bins
+  if( nGoodJets<4  ) result.push_back(37);  // "lt4jets"
+  if( nGoodJets>=4 ) result.push_back(38);  // "ge4jets"
+  
+
+  // nJets and modTopness Bins
+  if( nGoodJets<4  && modTopness>=10.0 ) result.push_back(39); // "lt4jets_ge10modTop"
+  if( nGoodJets>=4 ){
+    if(      modTopness>=10.0 ) result.push_back(42);  // "ge4jets_ge10modTop"
+    else if( modTopness<10.0  ) result.push_back(41);  // "ge4jets_0to10modTop"
+    else if( modTopness<0.0   ) result.push_back(40);  // "ge4jets_lt0modTop"
+  }
+    
+  
+  // nJet, modTopness, met bins, inclusive in Mlb
+  if( nGoodJets<4 ){
+    if(modTopness>=10.0){
+      if(met>=150.0 && met<250.0) result.push_back(43); // "lt4jets_ge10modTop_150to250met"
+      if(met>=250.0 && met<350.0) result.push_back(44); // "lt4jets_ge10modTop_250to350met"
+
+      if(met>=350.0 && met<500.0) result.push_back(45); // "lt4jets_ge10modTop_350to450met"
+      if(met>=500.0)              result.push_back(46); // "lt4jets_ge10modTop_550toInfmet"
+
+      if(met>=350.0 && met<450.0) result.push_back(47); // "lt4jets_ge10modTop_350to450met"
+      if(met>=450.0 && met<650.0) result.push_back(48); // "lt4jets_ge10modTop_450to650met"
+      if(met>=650.0)              result.push_back(49); // "lt4jets_ge10modTop_650toInfmet"
+    }
+  }
+ 
+  if( nGoodJets>=4 ){
+    if(modTopness<0.0){
+      if(met>=150.0 && met<250.0) result.push_back(50);  // "ge4jets_lt0modTop_150to250met"
+      if(met>=250.0 && met<350.0) result.push_back(51);  // "ge4jets_lt0modTop_250to350met"
+      if(met>=350.0 && met<450.0) result.push_back(52);  // "ge4jets_lt0modTop_350to450met"
+      if(met>=450.0 && met<550.0) result.push_back(53);  // "ge4jets_lt0modTop_450to550met"
+      if(met>=550.0 && met<650.0) result.push_back(54);  // "ge4jets_lt0modTop_550to650met"
+
+      if(met>=650.0)              result.push_back(55);  // "ge4jets_lt0modTop_650toInfmet"
+      
+      if(met>=550.0)              result.push_back(56);  // "ge4jets_lt0modTop_550toInfmet"
+    }
+    if(modTopness>=0.0 && modTopness<10.0){
+      if(met>=150.0 && met<250.0) result.push_back(57);  // "ge4jets_0to10modTop_150to250met"
+      if(met>=250.0 && met<350.0) result.push_back(58);  // "ge4jets_0to10modTop_250to350met"
+
+      if(met>=350.0 && met<550.0) result.push_back(59);  // "ge4jets_0to10modTop_350to550met"
+      if(met>=550.0)              result.push_back(60);  // "ge4jets_0to10modTop_550toInfmet"
+      
+      if(met>=350.0 && met<500.0) result.push_back(61);  // "ge4jets_0to10modTop_350to500met"
+      if(met>=500.0)              result.push_back(62);  // "ge4jets_0to10modTop_500toInfmet"
+    }
+    if(modTopness>=10.0){
+      if(met>=150.0 && met<250.0) result.push_back(63);  // "ge4jets_ge10modTop_150to250met"
+      if(met>=250.0 && met<350.0) result.push_back(64);  // "ge4jets_ge10modTop_250to350met"
+
+      if(met>=350.0 && met<450.0) result.push_back(65);  // "ge4jets_ge10modTop_350to450met"
+      if(met>=450.0 && met<600.0) result.push_back(66);  // "ge4jets_ge10modTop_450to600met"
+      if(met>=600.0)              result.push_back(67);  // "ge4jets_ge10modTop_600toInfmet"
+    
+      if(met>=350.0 && met<650.0) result.push_back(68);  // "ge4jets_ge10modTop_400to650met"
+      if(met>=650.0)              result.push_back(69);  // "ge4jets_ge10modTop_650toInfmet"
+    }
+  } // inclusive nJets>=4 bins
+  
+
+  // 150<met<250 CR bins
+  if( nGoodJets<4 && modTopness>=10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(70); // "lt4jets_ge10modTop_lt175mlb_150to250met"
+    if(mlb>=175 && met>150 && met<=250) result.push_back(71); // "lt4jets_ge10modTop_ge175mlb_150to250met"
+  }
+  if( nGoodJets>=4 && modTopness<0.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(72); // "ge4jets_lt0modTop_lt175mlb_150to250met"
+    if(mlb>=175 && met>150 && met<=250) result.push_back(73); // "ge4jets_lt0modTop_ge175mlb_150to250met"
+  }
+  if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(74); // "ge4jets_0to10modTop_lt175mlb_150to250met"
+    if(mlb>=175 && met>150 && met<=250) result.push_back(75); // "ge4jets_0to10modTop_ge175mlb_150to250met"
+  }
+  if( nGoodJets>=4 && modTopness>=10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(76); // "ge4jets_ge10modTop_lt175mlb_150to250met"
+    if(mlb>=175 && met>150 && met<=250) result.push_back(77); // "ge4jets_ge10modTop_ge175mlb_150to250met"
+  }
+  
+     
   return result;
 }
+
+
+//////////////////////////////////////////////////////////////////////
+
+TH1D* categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2(){
+
+  int nBins_dev_ext30fb_mlb_v2_ = 77;
+  TH1D *result = new TH1D("h_yields_SR_dev_ext30fb_mlb_v2", "Yields, Signal Regions, extnded to 30fb, binned with Mlb, and using tight bTagging", nBins_dev_ext30fb_mlb_v2_, 1.0, (double)nBins_dev_ext30fb_mlb_v2_+1.0);
+
+  // Region A, nJets<4, modTop>=10, mlb<175
+  result->GetXaxis()->SetBinLabel(1, "lt4jets_ge10modTop_lt175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(2, "lt4jets_ge10modTop_lt175mlb_350to450met");
+  result->GetXaxis()->SetBinLabel(3, "lt4jets_ge10modTop_lt175mlb_450to600met");
+  result->GetXaxis()->SetBinLabel(4, "lt4jets_ge10modTop_lt175mlb_600toInfmet");
+
+  // Region B, nJets<4, modTop>=10, mlb>=175, nTightTags>=1
+  result->GetXaxis()->SetBinLabel(5, "lt4jets_ge10modTop_ge175mlb_250to450met");
+  result->GetXaxis()->SetBinLabel(6, "lt4jets_ge10modTop_ge175mlb_450to600met");
+  result->GetXaxis()->SetBinLabel(7, "lt4jets_ge10modTop_ge175mlb_600toInfmet");
+
+  // Region C, nJets>=4, modTop<0, mlb<175
+  result->GetXaxis()->SetBinLabel(8, "ge4jets_lt0modTop_lt175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(9, "ge4jets_lt0modTop_lt175mlb_350to450met");
+  result->GetXaxis()->SetBinLabel(10, "ge4jets_lt0modTop_lt175mlb_450to550met");
+  result->GetXaxis()->SetBinLabel(11, "ge4jets_lt0modTop_lt175mlb_550to650met");
+  result->GetXaxis()->SetBinLabel(12, "ge4jets_lt0modTop_lt175mlb_650toInfmet");
+
+  // Region D, nJets>=4, modTop<0, mlb>=175, nTightTags>=1 
+  result->GetXaxis()->SetBinLabel(13, "ge4jets_lt0modTop_ge175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(14, "ge4jets_lt0modTop_ge175mlb_350to450met");
+  result->GetXaxis()->SetBinLabel(15, "ge4jets_lt0modTop_ge175mlb_450to550met");
+  result->GetXaxis()->SetBinLabel(16, "ge4jets_lt0modTop_ge175mlb_550toInfmet");
+
+  // Region E, nJets>=4, 0<=modTop<10, mlb<175
+  result->GetXaxis()->SetBinLabel(17, "ge4jets_0to10modTop_lt175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(18, "ge4jets_0to10modTop_lt175mlb_350to550met");
+  result->GetXaxis()->SetBinLabel(19, "ge4jets_0to10modTop_lt175mlb_550toInfmet");
+
+  // Region F, nJets>=4, 0<=modTop<10, mlb>=175, nTightTags>=1
+  result->GetXaxis()->SetBinLabel(20, "ge4jets_0to10modTop_ge175mlb_250to450met");
+  result->GetXaxis()->SetBinLabel(21, "ge4jets_0to10modTop_ge175mlb_450toInfmet");
+
+  // Region G, nJets>=4, modTop>=10, mlb<175
+  result->GetXaxis()->SetBinLabel(22, "ge4jets_ge10modTop_lt175mlb_250to350met");
+  result->GetXaxis()->SetBinLabel(23, "ge4jets_ge10modTop_lt175mlb_350to450met");
+  result->GetXaxis()->SetBinLabel(24, "ge4jets_ge10modTop_lt175mlb_450to600met");
+  result->GetXaxis()->SetBinLabel(25, "ge4jets_ge10modTop_lt175mlb_600toInfmet");
+
+  // Region H, nJets>=4, modTop>=10, mlb>=175, nTightTags>=1
+  result->GetXaxis()->SetBinLabel(26, "ge4jets_ge10modTop_ge175mlb_250to450met");
+  result->GetXaxis()->SetBinLabel(27, "ge4jets_ge10modTop_ge175mlb_450toInfmet");
+
+
+  // Coarser MET bins for bkg estimates
+  result->GetXaxis()->SetBinLabel(28, "lt4jets_ge10modTop_lt175mlb_450toInfmet");
+  result->GetXaxis()->SetBinLabel(29, "lt4jets_ge10modTop_ge175mlb_250toInfmet");
+  result->GetXaxis()->SetBinLabel(30, "ge4jets_lt0modTop_lt175mlb_550toInfmet");
+  result->GetXaxis()->SetBinLabel(31, "ge4jets_lt0modTop_ge175mlb_450toInfmet");
+  result->GetXaxis()->SetBinLabel(32, "ge4jets_0to10modTop_lt175mlb_350toInfmet");
+  result->GetXaxis()->SetBinLabel(33, "ge4jets_0to10modTop_ge175mlb_250toInfmet");
+  result->GetXaxis()->SetBinLabel(34, "ge4jets_ge10modTop_lt175mlb_450toInfmet");
+  result->GetXaxis()->SetBinLabel(35, "ge4jets_ge10modTop_ge175mlb_250toInfmet");
+  
+  // nJet Bins 
+  result->GetXaxis()->SetBinLabel(36, "lt4jets");
+  result->GetXaxis()->SetBinLabel(37, "ge4jets");
+  
+  // nJet, modTopness Bins
+  result->GetXaxis()->SetBinLabel(38, "lt4jets_ge10modTop");
+  result->GetXaxis()->SetBinLabel(39, "ge4jets_lt0modTop");
+  result->GetXaxis()->SetBinLabel(40, "ge4jets_0to10modTop");
+  result->GetXaxis()->SetBinLabel(41, "ge4jets_ge10modTop");
+  
+  // nJet, modTopness, met Bins, Inclusive in Mlb
+  result->GetXaxis()->SetBinLabel(42, "lt4jets_ge10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(43, "lt4jets_ge10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(44, "lt4jets_ge10modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(45, "lt4jets_ge10modTop_450to600met");
+  result->GetXaxis()->SetBinLabel(46, "lt4jets_ge10modTop_600toInfmet");
+  result->GetXaxis()->SetBinLabel(47, "lt4jets_ge10modTop_250to450met");
+  result->GetXaxis()->SetBinLabel(48, "lt4jets_ge10modTop_450to600met_");
+  result->GetXaxis()->SetBinLabel(49, "lt4jets_ge10modTop_600toInfmet_");
+
+  result->GetXaxis()->SetBinLabel(50, "ge4jets_lt0modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(51, "ge4jets_lt0modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(52, "ge4jets_lt0modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(53, "ge4jets_lt0modTop_450to550met");
+  result->GetXaxis()->SetBinLabel(54, "ge4jets_lt0modTop_550to650met");
+  result->GetXaxis()->SetBinLabel(55, "ge4jets_lt0modTop_650toInfmet");
+  result->GetXaxis()->SetBinLabel(56, "ge4jets_lt0modTop_550toInfmet");
+  
+  result->GetXaxis()->SetBinLabel(57, "ge4jets_0to10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(58, "ge4jets_0to10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(59, "ge4jets_0to10modTop_350to550met");
+  result->GetXaxis()->SetBinLabel(60, "ge4jets_0to10modTop_550toInfmet");
+  result->GetXaxis()->SetBinLabel(61, "ge4jets_0to10modTop_250to450met");
+  result->GetXaxis()->SetBinLabel(62, "ge4jets_0to10modTop_450toInfmet");
+  
+  result->GetXaxis()->SetBinLabel(63, "ge4jets_ge10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(64, "ge4jets_ge10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(65, "ge4jets_ge10modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(66, "ge4jets_ge10modTop_450to600met");
+  result->GetXaxis()->SetBinLabel(67, "ge4jets_ge10modTop_600toInfmet");
+  result->GetXaxis()->SetBinLabel(68, "ge4jets_ge10modTop_250to450met");
+  result->GetXaxis()->SetBinLabel(69, "ge4jets_ge10modTop_450toInfmet");
+  
+  // 150<met<250 CR bins
+  result->GetXaxis()->SetBinLabel(70, "lt4jets_ge10modTop_lt175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(71, "lt4jets_ge10modTop_ge175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(72, "ge4jets_lt0modTop_lt175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(73, "ge4jets_lt0modTop_ge175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(74, "ge4jets_0to10modTop_lt175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(75, "ge4jets_0to10modTop_ge175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(76, "ge4jets_ge10modTop_lt175mlb_150to250met");
+  result->GetXaxis()->SetBinLabel(77, "ge4jets_ge10modTop_ge175mlb_150to250met");
+  
+
+  return result;
+  
+}
+
+//////////////////////////////////////////////////////////////////////
+
+vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool add2ndLepToMet ){
+
+  vector<int> result;
+
+  int nGoodJets = babyAnalyzer.ngoodjets();
+  if( jesType==1 )  nGoodJets = babyAnalyzer.jup_ngoodjets();
+  if( jesType==-1 ) nGoodJets = babyAnalyzer.jdown_ngoodjets();
+
+  int nTightTags = 0;
+  double tight_wp = 0.935;
+  vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
+  if( jesType==1 )  jet_csvv2 = babyAnalyzer.jup_ak4pfjets_CSV();
+  if( jesType==-1 ) jet_csvv2 = babyAnalyzer.jdown_ak4pfjets_CSV();
+  for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+    if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
+  }
+
+  double modTopness = babyAnalyzer.topnessMod();
+  if( add2ndLepToMet){
+    if(jesType==0)  modTopness = babyAnalyzer.topnessMod_rl();
+    if(jesType==1)  modTopness = babyAnalyzer.topnessMod_rl_jup();
+    if(jesType==-1) modTopness = babyAnalyzer.topnessMod_rl_jdown();
+  }
+  else{
+    if(jesType==1)  modTopness = babyAnalyzer.topnessMod_jup();
+    if(jesType==-1) modTopness = babyAnalyzer.topnessMod_jdown();
+  }
+
+  double mlb = babyAnalyzer.Mlb_closestb();
+  
+  int nGoodBTags = babyAnalyzer.ngoodbtags(); 
+  if( jesType==1)  nGoodBTags = babyAnalyzer.jup_ngoodbtags();
+  if( jesType==-1) nGoodBTags = babyAnalyzer.jdown_ngoodbtags();
+  if(nGoodBTags==0){
+    double max_csvv2 = -99.9;
+    int max_csvv2_idx = -1;
+    for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+      if( jet_csvv2[iJet] >= max_csvv2 ){
+	max_csvv2 = jet_csvv2[iJet];
+	max_csvv2_idx = iJet;
+      }
+    }
+    if( jesType==0  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_p4().at(max_csvv2_idx) ).M();
+    if( jesType==1  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jup_ak4pfjets_p4().at(max_csvv2_idx) ).M();
+    if( jesType==-1 ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jdown_ak4pfjets_p4().at(max_csvv2_idx) ).M();
+  } // end if 0 bTags
+
+  double met = babyAnalyzer.pfmet();
+  if( add2ndLepToMet){
+    if(jesType==0)  met = babyAnalyzer.pfmet_rl();
+    if(jesType==1)  met = babyAnalyzer.pfmet_rl_jup();
+    if(jesType==-1) met = babyAnalyzer.pfmet_rl_jdown();
+  }
+  else{
+    if(jesType==1)  met = babyAnalyzer.pfmet_jup();
+    if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
+  }
+
+
+  //
+  // 27 Signal Region Bins
+  //
+
+  // Region A
+  if( nGoodJets<4 && modTopness>=10.0 && mlb<175 ){
+    if(     met>600) result.push_back(4);
+    else if(met>450) result.push_back(3);
+    else if(met>350) result.push_back(2);
+    else if(met>250) result.push_back(1);
+  }
+
+  // Region B
+  if( nGoodJets<4 && modTopness>=10.0 && mlb>=175 && (nTightTags>=1 || nGoodBTags==0) ){
+    if(     met>600) result.push_back(7);
+    else if(met>450) result.push_back(6);
+    else if(met>250) result.push_back(5);
+  }
+
+  // Region C
+  if( nGoodJets>=4 && modTopness<0 && mlb<175 ){
+    if(     met>650) result.push_back(12);
+    else if(met>550) result.push_back(11);
+    else if(met>450) result.push_back(10);
+    else if(met>350) result.push_back(9);
+    else if(met>250) result.push_back(8);
+  }
+
+  // Region D
+  if( nGoodJets>=4 && modTopness<0 && mlb>=175 && (nTightTags>=1 || nGoodBTags==0) ){
+    if(     met>550) result.push_back(16);
+    else if(met>450) result.push_back(15);
+    else if(met>350) result.push_back(14);
+    else if(met>250) result.push_back(13);
+  }
+
+  // Region E
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && mlb<175 ){
+    if(     met>550) result.push_back(19);
+    else if(met>350) result.push_back(18);
+    else if(met>250) result.push_back(17);
+  }
+  
+  // Region F
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && mlb>=175 && (nTightTags>=1 || nGoodBTags==0) ){
+    if(     met>450) result.push_back(21);
+    else if(met>250) result.push_back(20);
+  }
+
+  // Region G
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb<175 ){
+    if(     met>600) result.push_back(25);
+    else if(met>450) result.push_back(24);
+    else if(met>350) result.push_back(23);
+    else if(met>250) result.push_back(22);
+  }
+
+  // Region H
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb>=175 && (nTightTags>=1 || nGoodBTags==0) ){
+    if(     met>450) result.push_back(27);
+    else if(met>250) result.push_back(26);
+  }
+
+
+
+  // Coarser MET bins for bkg estimates
+  if( nGoodJets<4 ){
+    if(modTopness>=10.0){
+      if(mlb<175 && met>450) result.push_back(28); 
+      if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>250) result.push_back(29); 
+    }
+  }
+  if( nGoodJets>=4 ){
+    if( modTopness<0.0 ){
+      if( mlb<175  && met>550 ) result.push_back(30); 
+      if( mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>450 ) result.push_back(31); 
+    }
+    if( modTopness>=0.0 && modTopness<10.0 ){
+      if( mlb<175  && met>350 ) result.push_back(32); 
+      if( mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>250 ) result.push_back(33); 
+    }
+    if( modTopness>=10.0 ){
+      if( mlb<175  && met>450 ) result.push_back(34); 
+      if( mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>250 ) result.push_back(35); 
+    }
+  }
+      
+  
+  // nJets Bins
+  if( nGoodJets<4  ) result.push_back(36); 
+  if( nGoodJets>=4 ) result.push_back(37); 
+  
+
+  // nJets and modTopness Bins
+  if( nGoodJets<4  && modTopness>=10.0 ) result.push_back(38); 
+  if( nGoodJets>=4 ){
+    if(      modTopness>=10.0 ) result.push_back(39); 
+    else if( modTopness<10.0  ) result.push_back(40); 
+    else if( modTopness<0.0   ) result.push_back(41); 
+  }
+    
+  
+  // nJet, modTopness, met bins, inclusive in Mlb
+  if( nGoodJets<4 ){
+    if(modTopness>=10.0){
+      if(met>=150.0 && met<250.0) result.push_back(42); 
+      if(met>=250.0 && met<350.0) result.push_back(43);
+      if(met>=350.0 && met<450.0) result.push_back(44); 
+      if(met>=450.0 && met<600.0) result.push_back(45); 
+      if(met>=600.0)              result.push_back(46); 
+
+      if(met>=250.0 && met<450.0) result.push_back(47); 
+      if(met>=450.0 && met<600.0) result.push_back(48); 
+      if(met>=600.0)              result.push_back(49); 
+    }
+  }
+ 
+  if( nGoodJets>=4 ){
+    if(modTopness<0.0){
+      if(met>=150.0 && met<250.0) result.push_back(50);  
+      if(met>=250.0 && met<350.0) result.push_back(51);  
+      if(met>=350.0 && met<450.0) result.push_back(52);  
+      if(met>=450.0 && met<550.0) result.push_back(53);  
+      if(met>=550.0 && met<650.0) result.push_back(54);  
+      if(met>=650.0)              result.push_back(55);  
+      if(met>=550.0)              result.push_back(56);  
+    }
+    if(modTopness>=0.0 && modTopness<10.0){
+      if(met>=150.0 && met<250.0) result.push_back(57);  
+      if(met>=250.0 && met<350.0) result.push_back(58);  
+      if(met>=350.0 && met<550.0) result.push_back(59);  
+      if(met>=550.0)              result.push_back(60);  
+      
+      if(met>=250.0 && met<450.0) result.push_back(61);  
+      if(met>=450.0)              result.push_back(62); 
+    }
+    if(modTopness>=10.0){
+      if(met>=150.0 && met<250.0) result.push_back(63);  
+      if(met>=250.0 && met<350.0) result.push_back(64);  
+      if(met>=350.0 && met<450.0) result.push_back(65);  
+      if(met>=450.0 && met<600.0) result.push_back(66);  
+      if(met>=600.0)              result.push_back(67);  
+    
+      if(met>=250.0 && met<450.0) result.push_back(68);  
+      if(met>=450.0)              result.push_back(69);  
+    }
+  } // inclusive nJets>=4 bins
+  
+
+  // 150<met<250 CR bins
+  if( nGoodJets<4 && modTopness>=10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(70); 
+    if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>150 && met<=250) result.push_back(71); 
+  }
+  if( nGoodJets>=4 && modTopness<0.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(72); 
+    if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>150 && met<=250) result.push_back(73); 
+  }
+  if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(74); 
+    if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>150 && met<=250) result.push_back(75); 
+  }
+  if( nGoodJets>=4 && modTopness>=10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(76); 
+    if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>150 && met<=250) result.push_back(77); 
+  }
+  
+     
+  return result;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 
 TH1D* categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_bJetPt_v1(){
 
-  int nBins_dev_ext30fb_bJetPt_v1_ = 76;
+  int nBins_dev_ext30fb_bJetPt_v1_ = 78;
   TH1D *result = new TH1D("h_yields_SR_dev_ext30fb_bJetPt_v1", "Yields, Signal Regions, extnded to 30fb, binned with BJetPt", nBins_dev_ext30fb_bJetPt_v1_, 1.0, (double)nBins_dev_ext30fb_bJetPt_v1_+1.0);
 
+  // Region A, nJet<4, modTop>=10, bJetPt<200
   result->GetXaxis()->SetBinLabel(1, "lt4jets_ge10modTop_lt200bJetPt_250to350met");
   result->GetXaxis()->SetBinLabel(2, "lt4jets_ge10modTop_lt200bJetPt_350to450met");
-  result->GetXaxis()->SetBinLabel(3, "lt4jets_ge10modTop_lt200bJetPt_450to550met");
-  result->GetXaxis()->SetBinLabel(4, "lt4jets_ge10modTop_lt200bJetPt_550toInfmet");
+  result->GetXaxis()->SetBinLabel(3, "lt4jets_ge10modTop_lt200bJetPt_450to600met");
+  result->GetXaxis()->SetBinLabel(4, "lt4jets_ge10modTop_lt200bJetPt_600toInfmet");
   
+  // Region B, nJet<4, modTop>=10, bJetPt>=200
   result->GetXaxis()->SetBinLabel(5, "lt4jets_ge10modTop_ge200bJetPt_250to350met");
-  result->GetXaxis()->SetBinLabel(6, "lt4jets_ge10modTop_ge200bJetPt_350to450met");
-  result->GetXaxis()->SetBinLabel(7, "lt4jets_ge10modTop_ge200bJetPt_450to550met");
-  result->GetXaxis()->SetBinLabel(8, "lt4jets_ge10modTop_ge200bJetPt_550toInfmet");
+  result->GetXaxis()->SetBinLabel(6, "lt4jets_ge10modTop_ge200bJetPt_350to500met");
+  result->GetXaxis()->SetBinLabel(7, "lt4jets_ge10modTop_ge200bJetPt_500to650met");
+  result->GetXaxis()->SetBinLabel(8, "lt4jets_ge10modTop_ge200bJetPt_650toInfmet");
   
+  // Region C, nJet>=4, modTop<0, bJetPt<200
   result->GetXaxis()->SetBinLabel(9, "ge4jets_lt0modTop_lt200bJetPt_250to350met");
   result->GetXaxis()->SetBinLabel(10, "ge4jets_lt0modTop_lt200bJetPt_350to450met");
   result->GetXaxis()->SetBinLabel(11, "ge4jets_lt0modTop_lt200bJetPt_450to550met");
   result->GetXaxis()->SetBinLabel(12, "ge4jets_lt0modTop_lt200bJetPt_550to650met");
   result->GetXaxis()->SetBinLabel(13, "ge4jets_lt0modTop_lt200bJetPt_650toInfmet");
-  
+
+  // Region D, nJet>=4, modTop<0, bJetPt>=200
   result->GetXaxis()->SetBinLabel(14, "ge4jets_lt0modTop_ge200bJetPt_250to350met");
   result->GetXaxis()->SetBinLabel(15, "ge4jets_lt0modTop_ge200bJetPt_350to450met");
   result->GetXaxis()->SetBinLabel(16, "ge4jets_lt0modTop_ge200bJetPt_450to550met");
   result->GetXaxis()->SetBinLabel(17, "ge4jets_lt0modTop_ge200bJetPt_550toInfmet");
 
+  // Region E, nJet>=4, 0<=modTop<10, bJetPt<200
   result->GetXaxis()->SetBinLabel(18, "ge4jets_0to10modTop_lt200bJetPt_250to350met");
   result->GetXaxis()->SetBinLabel(19, "ge4jets_0to10modTop_lt200bJetPt_350to450met");
   result->GetXaxis()->SetBinLabel(20, "ge4jets_0to10modTop_lt200bJetPt_450toInfmet");
   
-  result->GetXaxis()->SetBinLabel(21, "ge4jets_0to10modTop_ge200bJetPt_250to400met");
-  result->GetXaxis()->SetBinLabel(22, "ge4jets_0to10modTop_ge200bJetPt_400toInfmet");
+  // Region F, nJet>=4, 0<=modTop<10, bJetPt>=200
+  result->GetXaxis()->SetBinLabel(21, "ge4jets_0to10modTop_ge200bJetPt_250to350met");
+  result->GetXaxis()->SetBinLabel(22, "ge4jets_0to10modTop_ge200bJetPt_350to500met");
+  result->GetXaxis()->SetBinLabel(23, "ge4jets_0to10modTop_ge200bJetPt_500toInfmet");
 
-  result->GetXaxis()->SetBinLabel(23, "ge4jets_ge10modTop_lt200bJetPt_250to350met");
-  result->GetXaxis()->SetBinLabel(24, "ge4jets_ge10modTop_lt200bJetPt_350to450met");
-  result->GetXaxis()->SetBinLabel(25, "ge4jets_ge10modTop_lt200bJetPt_450to600met");
-  result->GetXaxis()->SetBinLabel(26, "ge4jets_ge10modTop_lt200bJetPt_600toInfmet");
+  // Region G, nJet>=4, modTop>=10, bJetPt<200
+  result->GetXaxis()->SetBinLabel(24, "ge4jets_ge10modTop_lt200bJetPt_250to350met");
+  result->GetXaxis()->SetBinLabel(25, "ge4jets_ge10modTop_lt200bJetPt_350to450met");
+  result->GetXaxis()->SetBinLabel(26, "ge4jets_ge10modTop_lt200bJetPt_450to650met");
+  result->GetXaxis()->SetBinLabel(27, "ge4jets_ge10modTop_lt200bJetPt_650toInfmet");
   
-  result->GetXaxis()->SetBinLabel(27, "ge4jets_ge10modTop_ge200bJetPt_250to400met");
-  result->GetXaxis()->SetBinLabel(28, "ge4jets_ge10modTop_ge200bJetPt_400to650met");
-  result->GetXaxis()->SetBinLabel(29, "ge4jets_ge10modTop_ge200bJetPt_650toInfmet");
+  // Region H, nJet>=4, modTop>=10, bJetPt>=200
+  result->GetXaxis()->SetBinLabel(28, "ge4jets_ge10modTop_ge200bJetPt_250to450met");
+  result->GetXaxis()->SetBinLabel(29, "ge4jets_ge10modTop_ge200bJetPt_450toInfmet");
 
-  // Inclusive bins for bkg estimates
-  result->GetXaxis()->SetBinLabel(30, "lt4jets_ge10modTop_ge200bJetPt_450toInfmet");
+
+  // Coarser MET bins for bkg estimates
+  result->GetXaxis()->SetBinLabel(30, "lt4jets_ge10modTop_ge200bJetPt_500toInfmet");
   result->GetXaxis()->SetBinLabel(31, "ge4jets_lt0modTop_lt200bJetPt_550toInfmet");
   result->GetXaxis()->SetBinLabel(32, "ge4jets_lt0modTop_ge200bJetPt_450toInfmet");
   result->GetXaxis()->SetBinLabel(33, "ge4jets_0to10modTop_lt200bJetPt_350toInfmet");
-  result->GetXaxis()->SetBinLabel(34, "ge4jets_0to10modTop_ge200bJetPt_250toInfmet");
+  result->GetXaxis()->SetBinLabel(34, "ge4jets_0to10modTop_ge200bJetPt_350toInfmet");
   result->GetXaxis()->SetBinLabel(35, "ge4jets_ge10modTop_lt200bJetPt_450toInfmet");
-  result->GetXaxis()->SetBinLabel(36, "ge4jets_ge10modTop_ge200bJetPt_400toInfmet");
+  result->GetXaxis()->SetBinLabel(36, "ge4jets_ge10modTop_ge200bJetPt_250toInfmet");
 
+  // nJet Bins 
   result->GetXaxis()->SetBinLabel(37, "lt4jets");
-  result->GetXaxis()->SetBinLabel(38, "lt4jets_ge10modTop");
-  result->GetXaxis()->SetBinLabel(39, "lt4jets_ge10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(40, "lt4jets_ge10modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(41, "lt4jets_ge10modTop_450to550met");
-  result->GetXaxis()->SetBinLabel(42, "lt4jets_ge10modTop_550toInfmet");
-
-  result->GetXaxis()->SetBinLabel(43, "ge4jets");
-  result->GetXaxis()->SetBinLabel(44, "ge4jets_lt0modTop");
-  result->GetXaxis()->SetBinLabel(45, "ge4jets_lt0modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(46, "ge4jets_lt0modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(47, "ge4jets_lt0modTop_450to550met");
-  result->GetXaxis()->SetBinLabel(48, "ge4jets_lt0modTop_550to650met");
-  result->GetXaxis()->SetBinLabel(49, "ge4jets_lt0modTop_550toInfmet");
-  result->GetXaxis()->SetBinLabel(50, "ge4jets_lt0modTop_650toInfmet");
-
-  result->GetXaxis()->SetBinLabel(51, "ge4jets_0to10modTop");
-  result->GetXaxis()->SetBinLabel(52, "ge4jets_0to10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(53, "ge4jets_0to10modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(54, "ge4jets_0to10modTop_450toInfmet");
-  result->GetXaxis()->SetBinLabel(55, "ge4jets_0to10modTop_250to400met");
-  result->GetXaxis()->SetBinLabel(56, "ge4jets_0to10modTop_400toInfmet");
-
-  result->GetXaxis()->SetBinLabel(57, "ge4jets_ge10modTop");
-  result->GetXaxis()->SetBinLabel(58, "ge4jets_ge10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(59, "ge4jets_ge10modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(60, "ge4jets_ge10modTop_450to600met");
-  result->GetXaxis()->SetBinLabel(61, "ge4jets_ge10modTop_600toInfmet");
+  result->GetXaxis()->SetBinLabel(38, "ge4jets");
   
-  result->GetXaxis()->SetBinLabel(62, "ge4jets_ge10modTop_250to400met");
-  result->GetXaxis()->SetBinLabel(63, "ge4jets_ge10modTop_400to650met");
-  result->GetXaxis()->SetBinLabel(64, "ge4jets_ge10modTop_650toInfmet");
+  // nJet, modTopness Bins
+  result->GetXaxis()->SetBinLabel(39, "lt4jets_ge10modTop");
+  result->GetXaxis()->SetBinLabel(40, "ge4jets_lt0modTop");
+  result->GetXaxis()->SetBinLabel(41, "ge4jets_0to10modTop");
+  result->GetXaxis()->SetBinLabel(42, "ge4jets_ge10modTop");
+  
+  // nJet, modTopness, met Bins, inclusive in bJetPt
+  result->GetXaxis()->SetBinLabel(43, "lt4jets_ge10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(44, "lt4jets_ge10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(45, "lt4jets_ge10modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(46, "lt4jets_ge10modTop_450to600met");
+  result->GetXaxis()->SetBinLabel(47, "lt4jets_ge10modTop_600toInfmet");
+
+  result->GetXaxis()->SetBinLabel(48, "lt4jets_ge10modTop_350to500met");
+  result->GetXaxis()->SetBinLabel(49, "lt4jets_ge10modTop_500to650met");
+  result->GetXaxis()->SetBinLabel(50, "lt4jets_ge10modTop_650toInfmet");
+  
+  result->GetXaxis()->SetBinLabel(51, "ge4jets_lt0modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(52, "ge4jets_lt0modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(53, "ge4jets_lt0modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(54, "ge4jets_lt0modTop_450to550met");
+  result->GetXaxis()->SetBinLabel(55, "ge4jets_lt0modTop_550to650met");
+  result->GetXaxis()->SetBinLabel(56, "ge4jets_lt0modTop_650toInfmet");
+
+  result->GetXaxis()->SetBinLabel(57, "ge4jets_lt0modTop_550toInfmet");
+  
+  result->GetXaxis()->SetBinLabel(58, "ge4jets_0to10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(59, "ge4jets_0to10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(60, "ge4jets_0to10modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(61, "ge4jets_0to10modTop_450toInfmet");
+
+  result->GetXaxis()->SetBinLabel(62, "ge4jets_0to10modTop_350to500met");
+  result->GetXaxis()->SetBinLabel(63, "ge4jets_0to10modTop_500toInfmet");
+
+  result->GetXaxis()->SetBinLabel(64, "ge4jets_ge10modTop_150to250met");
+  result->GetXaxis()->SetBinLabel(65, "ge4jets_ge10modTop_250to350met");
+  result->GetXaxis()->SetBinLabel(66, "ge4jets_ge10modTop_350to450met");
+  result->GetXaxis()->SetBinLabel(67, "ge4jets_ge10modTop_450to650met");
+  result->GetXaxis()->SetBinLabel(68, "ge4jets_ge10modTop_650toInfmet");
+
+  result->GetXaxis()->SetBinLabel(69, "ge4jets_ge10modTop_250to450met");
+  result->GetXaxis()->SetBinLabel(70, "ge4jets_ge10modTop_450toInfmet");
+
 
   // 150<met<250 CR bins
-  result->GetXaxis()->SetBinLabel(65, "lt4jets_ge10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(66, "lt4jets_ge10modTop_lt200bJetPt_150to250met");
-  result->GetXaxis()->SetBinLabel(67, "lt4jets_ge10modTop_ge200bJetPt_150to250met");
-
-  result->GetXaxis()->SetBinLabel(68, "ge4jets_lt0modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(69, "ge4jets_lt0modTop_lt200bJetPt_150to250met");
-  result->GetXaxis()->SetBinLabel(70, "ge4jets_lt0modTop_ge200bJetPt_150to250met");
-
-  result->GetXaxis()->SetBinLabel(71, "ge4jets_0to10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(72, "ge4jets_0to10modTop_lt200bJetPt_150to250met");
-  result->GetXaxis()->SetBinLabel(73, "ge4jets_0to10modTop_ge200bJetPt_150to250met");
-  
-  result->GetXaxis()->SetBinLabel(74, "ge4jets_ge10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(75, "ge4jets_ge10modTop_lt200bJetPt_150to250met");
-  result->GetXaxis()->SetBinLabel(76, "ge4jets_ge10modTop_ge200bJetPt_150to250met");
+  result->GetXaxis()->SetBinLabel(71, "lt4jets_ge10modTop_lt200bJetPt_150to250met");
+  result->GetXaxis()->SetBinLabel(72, "lt4jets_ge10modTop_ge200bJetPt_150to250met");
+  result->GetXaxis()->SetBinLabel(73, "ge4jets_lt0modTop_lt200bJetPt_150to250met");
+  result->GetXaxis()->SetBinLabel(74, "ge4jets_lt0modTop_ge200bJetPt_150to250met");
+  result->GetXaxis()->SetBinLabel(75, "ge4jets_0to10modTop_lt200bJetPt_150to250met");
+  result->GetXaxis()->SetBinLabel(76, "ge4jets_0to10modTop_ge200bJetPt_150to250met");
+  result->GetXaxis()->SetBinLabel(77, "ge4jets_ge10modTop_lt200bJetPt_150to250met");
+  result->GetXaxis()->SetBinLabel(78, "ge4jets_ge10modTop_ge200bJetPt_150to250met");
   
 
   return result;
@@ -738,12 +1188,32 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1( int jesType, bo
     if(jesType==-1) modTopness = babyAnalyzer.topnessMod_jdown();
   }
 
-
   double leadBJetPt = babyAnalyzer.ak4pfjets_leadbtag_p4().Pt();
   if(jesType==1) leadBJetPt = babyAnalyzer.jup_ak4pfjets_leadbtag_p4().Pt();
   if(jesType==-1) leadBJetPt = babyAnalyzer.jdown_ak4pfjets_leadbtag_p4().Pt();
-    
 
+  int nGoodBTags = babyAnalyzer.ngoodbtags(); 
+  if( jesType==1)  nGoodBTags = babyAnalyzer.jup_ngoodbtags();
+  if( jesType==-1) nGoodBTags = babyAnalyzer.jdown_ngoodbtags();
+  if(nGoodBTags==0){
+    vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
+    if( jesType==1 )  jet_csvv2 = babyAnalyzer.jup_ak4pfjets_CSV();
+    if( jesType==-1 ) jet_csvv2 = babyAnalyzer.jdown_ak4pfjets_CSV();
+    double max_csvv2 = -99.9;
+    int max_csvv2_idx = -1;
+    for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+      if( jet_csvv2[iJet] >= max_csvv2 ){
+	max_csvv2 = jet_csvv2[iJet];
+	max_csvv2_idx = iJet;
+      }
+    }
+    if( jesType==0  ) leadBJetPt = babyAnalyzer.ak4pfjets_p4().at(max_csvv2_idx).Pt();
+    if( jesType==1  ) leadBJetPt = babyAnalyzer.jup_ak4pfjets_p4().at(max_csvv2_idx).Pt();
+    if( jesType==-1 ) leadBJetPt = babyAnalyzer.jdown_ak4pfjets_p4().at(max_csvv2_idx).Pt();
+  } // end if 0 bTags
+
+  
+    
   double met = babyAnalyzer.pfmet();
   if( add2ndLepToMet){
     if(jesType==0)  met = babyAnalyzer.pfmet_rl();
@@ -756,128 +1226,177 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1( int jesType, bo
   }
 
 
-  // lt4jets
-  if( nGoodJets<=3 ){
-    result.push_back(37); // "lt4jets"
-    if(modTopness>=10.0){
-      result.push_back(38); // "lt4jets_ge10modTop"
-      if(met>=150.0 && met<250.0) result.push_back(65); // "lt4jets_ge10modTop_150to250met"
-      if(met>=250.0 && met<350.0) result.push_back(39); // "lt4jets_ge10modTop_250to350met"
-      if(met>=350.0 && met<450.0) result.push_back(40); // "lt4jets_ge10modTop_350to450met"
-      if(met>=450.0 && met<550.0) result.push_back(41); // "lt4jets_ge10modTop_450to550met"
-      if(met>=550.0)              result.push_back(42); // "lt4jets_ge10modTop_550toInfmet"
-    }
-  }
+  //
+  // 29 Signal Region Bins
+  //
 
-  
-  //v12 - tmod10/bpt - 29 bins
-  if( nGoodJets<=3&&modTopness>=10.0&& leadBJetPt<200) {
-    if(     met>550) result.push_back(4);
+  // Region A
+  if( nGoodJets<4 && modTopness>=10.0 && leadBJetPt<200 ){
+    if(     met>600) result.push_back(4);
     else if(met>450) result.push_back(3);
     else if(met>350) result.push_back(2);
     else if(met>250) result.push_back(1);
-    else if(met>150) result.push_back(66); // "lt4jets_ge10modTop_lt200bJetPt_150to250met"
   }
-  if( nGoodJets<=3&&modTopness>=10.0&&leadBJetPt>=200) {
-    if(met>550)      result.push_back(8);
-    else if(met>450) result.push_back(7);
+
+  // Region B
+  if( nGoodJets<4 && modTopness>=10.0 && leadBJetPt>=200 ){
+    if(     met>650) result.push_back(8);
+    else if(met>500) result.push_back(7);
     else if(met>350) result.push_back(6);
     else if(met>250) result.push_back(5);
-    else if(met>150) result.push_back(67); // "lt4jets_ge10modTop_ge200bJetPt_150to250met"
-
-    if(met>450) result.push_back(30);
   }
 
-  
-  // ge4jet inclusive mlb bins
-  if( nGoodJets>=4 ){
-    result.push_back(43);  // "ge4jets"
-    if(modTopness<0.0){
-      result.push_back(44);  // "ge4jets_lt0modTop"
-      if(met>-150.0 && met<250.0) result.push_back(68);  // "ge4jets_lt0modTop_150to250met"
-      if(met>=250.0 && met<350.0) result.push_back(45);  // "ge4jets_lt0modTop_250to350met"
-      if(met>=350.0 && met<450.0) result.push_back(46);  // "ge4jets_lt0modTop_350to450met"
-      if(met>=450.0 && met<550.0) result.push_back(47);  // "ge4jets_lt0modTop_450to550met"
-      if(met>=550.0 && met<650.0) result.push_back(48);  // "ge4jets_lt0modTop_550to650met"
-      if(met>=550.0)              result.push_back(49);  // "ge4jets_lt0modTop_550toInfmet"
-      if(met>=650.0)              result.push_back(50);  // "ge4jets_lt0modTop_650toInfmet"
-    }
-    if(modTopness>=0.0 && modTopness<10.0){
-      result.push_back(51);  // "ge4jets_0to10modTop"
-      if(met>=150.0 && met<250.0) result.push_back(71);  // "ge4jets_0to10modTop_150to250met"
-      if(met>=250.0 && met<350.0) result.push_back(52);  // "ge4jets_0to10modTop_250to350met"
-      if(met>=350.0 && met<450.0) result.push_back(53);  // "ge4jets_0to10modTop_350to450met"
-      if(met>=450.0)              result.push_back(54);  // "ge4jets_0to10modTop_450toInfmet"
-      if(met>=250.0 && met<400.0) result.push_back(55);  // "ge4jets_0to10modTop_250to400met"
-      if(met>=400.0)              result.push_back(56);  // "ge4jets_0to10modTop_400toInfmet"
-    }
-    if(modTopness>=10.0){
-      result.push_back(57);  // "ge4jets_ge10modTop"
-      if(met>=150.0 && met<250.0) result.push_back(74);  // "ge4jets_ge10modTop_150to250met"
-      if(met>=250.0 && met<350.0) result.push_back(58);  // "ge4jets_ge10modTop_250to350met"
-      if(met>=350.0 && met<450.0) result.push_back(59);  // "ge4jets_ge10modTop_350to450met"
-      if(met>=450.0 && met<600.0) result.push_back(60);  // "ge4jets_ge10modTop_450to600met"
-      if(met>=600.0)              result.push_back(61);  // "ge4jets_ge10modTop_600toInfmet"
-    
-      if(met>=250.0 && met<400.0) result.push_back(62);  // "ge4jets_ge10modTop_250to400met"
-      if(met>=400.0 && met<650.0) result.push_back(63);  // "ge4jets_ge10modTop_400to650met"
-      if(met>=650.0)              result.push_back(64);  // "ge4jets_ge10modTop_650toInfmet"
-    }
-  } // inclusive nJets>=4 bins
-  
-
-  if(nGoodJets>=4&&modTopness<0&& leadBJetPt<200) {
+  // Region C
+  if( nGoodJets>=4 && modTopness<0 && leadBJetPt<200 ){
     if(     met>650) result.push_back(13);
     else if(met>550) result.push_back(12);
     else if(met>450) result.push_back(11);
     else if(met>350) result.push_back(10);
     else if(met>250) result.push_back(9);
-    else if(met>150) result.push_back(69);  // "ge4jets_lt0modTop_lt200bJetPt_150to250met"
-
-    if(met>550) result.push_back(31);
   }
-  if(nGoodJets>=4&&modTopness<0&&leadBJetPt>=200) {
+
+  // Region D
+  if( nGoodJets>=4 && modTopness<0 && leadBJetPt>=200 ){
     if(     met>550) result.push_back(17);
     else if(met>450) result.push_back(16);
     else if(met>350) result.push_back(15);
     else if(met>250) result.push_back(14);
-    else if(met>150) result.push_back(70);  // "ge4jets_lt0modTop_ge200bJetPt_150to250met"
-
-    if(met>450) result.push_back(32);
   }
-  if(nGoodJets>=4&&modTopness>=0&&modTopness<10.0&& leadBJetPt<200) {
+
+  // Region E
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && leadBJetPt<200 ){
     if(     met>450) result.push_back(20);
     else if(met>350) result.push_back(19);
     else if(met>250) result.push_back(18);
-    else if(met>150) result.push_back(72);  // "ge4jets_0to10modTop_lt200bJetPt_150to250met"
-    if(met>350) result.push_back(33);
   }
-  if(nGoodJets>=4&&modTopness>=0&&modTopness<10.0&&leadBJetPt>=200) {
-    if(     met>350) result.push_back(22);
+ 
+  // Region F
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && leadBJetPt>=200 ){
+    if(     met>500) result.push_back(23);
+    else if(met>350) result.push_back(22);
     else if(met>250) result.push_back(21);
-    else if(met>150) result.push_back(73);  // "ge4jets_0to10modTop_ge200bJetPt_150to250met"
-
-    if(met>250) result.push_back(34);
   }
-  if(nGoodJets>=4&&modTopness>=10.0&& leadBJetPt<200) {
-    if(     met>600) result.push_back(26);
-    else if(met>450) result.push_back(25);
-    else if(met>350) result.push_back(24);
-    else if(met>250) result.push_back(23);
-    else if(met>150) result.push_back(75);  // "ge4jets_ge10modTop_lt200bJetPt_150to250met"
-
-    if(met>450) result.push_back(35);
-  }
-  if(nGoodJets>=4&&modTopness>=10.0&&leadBJetPt>=200) {
-    if(     met>650) result.push_back(29);
-    else if(met>400) result.push_back(28);
-    else if(met>250) result.push_back(27);
-    else if(met>150) result.push_back(76);  // "ge4jets_ge10modTop_ge200bJetPt_150to250met"
-
-    if(met>400) result.push_back(36);
-  }
-
   
+  // Region G
+  if( nGoodJets>=4 && modTopness>=10.0 && leadBJetPt<200 ){
+    if(     met>650) result.push_back(27);
+    else if(met>450) result.push_back(26);
+    else if(met>350) result.push_back(25);
+    else if(met>250) result.push_back(24);
+  }
+
+  // Region H
+  if(nGoodJets>=4 && modTopness>=10.0 && leadBJetPt>=200 ){
+    if(     met>450) result.push_back(29);
+    else if(met>250) result.push_back(28);
+  }
+
+
+  // Coarser MET bins for bkg estimates
+  if( nGoodJets<4 ){
+    if( modTopness>=10.0 ){
+      if( leadBJetPt>=200 && met>500 ) result.push_back(30);
+    }
+  }
+  if( nGoodJets>=4 ){
+    if( modTopness<0 ){
+      if( leadBJetPt<200  && met>550) result.push_back(31);
+      if( leadBJetPt>=200 && met>450) result.push_back(32);
+    }
+    if( modTopness>=0 && modTopness<10.0 ){
+      if( leadBJetPt<200  && met>350) result.push_back(33);
+      if( leadBJetPt>=200 && met>350) result.push_back(34);
+    }
+    if( modTopness>=10.0 ){
+      if( leadBJetPt<200  && met>450) result.push_back(35);
+      if( leadBJetPt>=200 && met>250) result.push_back(36);
+    }
+  }
+
+
+  // nJets Bins
+  if( nGoodJets<4  ) result.push_back(37);  // "lt4jets"
+  if( nGoodJets>=4 ) result.push_back(38);  // "ge4jets"
+  
+
+  // nJets and modTopness Bins
+  if( nGoodJets<4 && modTopness>=10.0) result.push_back(39); // "lt4jets_ge10modTop"
+  if( nGoodJets>=4 ){
+    if(      modTopness>=10.0 ) result.push_back(42);  // "ge4jets_ge10modTop"
+    else if( modTopness<10.0  ) result.push_back(41);  // "ge4jets_0to10modTop"
+    else if( modTopness<0.0   ) result.push_back(40);  // "ge4jets_lt0modTop"
+  }
+    
+
+  // nJet, modTopness, met bins, inclusive in bJetPt
+  if( nGoodJets<4 ){
+    if(modTopness>=10.0){
+      if(met>=150.0 && met<250.0) result.push_back(43); // "lt4jets_ge10modTop_150to250met"
+      if(met>=250.0 && met<350.0) result.push_back(44); // "lt4jets_ge10modTop_250to350met"
+      if(met>=350.0 && met<450.0) result.push_back(45); // "lt4jets_ge10modTop_350to450met"
+      if(met>=450.0 && met<600.0) result.push_back(46); // "lt4jets_ge10modTop_450to600met"
+      if(met>=600.0)              result.push_back(47); // "lt4jets_ge10modTop_600toInfmet"
+
+      if(met>=350.0 && met<500.0) result.push_back(48); // "lt4jets_ge10modTop_350to450met"
+      if(met>=500.0 && met<650.0) result.push_back(49); // "lt4jets_ge10modTop_500to650met"
+      if(met>=650.0)              result.push_back(50); // "lt4jets_ge10modTop_650toInfmet"
+    }
+  }
+
+  if( nGoodJets>=4 ){
+    if(modTopness<0.0){
+      if(met>=150.0 && met<250.0) result.push_back(51);  // "ge4jets_lt0modTop_150to250met"
+      if(met>=250.0 && met<350.0) result.push_back(52);  // "ge4jets_lt0modTop_250to350met"
+      if(met>=350.0 && met<450.0) result.push_back(53);  // "ge4jets_lt0modTop_350to450met"
+      if(met>=450.0 && met<550.0) result.push_back(54);  // "ge4jets_lt0modTop_450to550met"
+      if(met>=550.0 && met<650.0) result.push_back(55);  // "ge4jets_lt0modTop_550to650met"
+      if(met>=650.0)              result.push_back(56);  // "ge4jets_lt0modTop_650toInfmet"
+
+      if(met>=550.0)              result.push_back(57);  // "ge4jets_lt0modTop_550toInfmet"
+    }
+    
+    if(modTopness>=0.0 && modTopness<10.0){
+      if(met>=150.0 && met<250.0) result.push_back(58);  // "ge4jets_0to10modTop_150to250met"
+      if(met>=250.0 && met<350.0) result.push_back(59);  // "ge4jets_0to10modTop_250to350met"
+      if(met>=350.0 && met<450.0) result.push_back(60);  // "ge4jets_0to10modTop_350to450met"
+      if(met>=450.0)              result.push_back(61);  // "ge4jets_0to10modTop_450toInfmet"
+
+      if(met>=350.0 && met<500.0) result.push_back(62);  // "ge4jets_0to10modTop_350to500met"
+      if(met>=500.0)              result.push_back(63);  // "ge4jets_0to10modTop_500toInfmet"
+    }
+
+    if(modTopness>=10.0){
+      if(met>=150.0 && met<250.0) result.push_back(64);  // "ge4jets_ge10modTop_150to250met"
+      if(met>=250.0 && met<350.0) result.push_back(65);  // "ge4jets_ge10modTop_250to350met"
+      if(met>=350.0 && met<450.0) result.push_back(66);  // "ge4jets_ge10modTop_350to450met"
+      if(met>=450.0 && met<650.0) result.push_back(67);  // "ge4jets_ge10modTop_450to650met"
+      if(met>=650.0)              result.push_back(68);  // "ge4jets_ge10modTop_650toInfmet"
+    
+      if(met>=250.0 && met<450.0) result.push_back(69);  // "ge4jets_ge10modTop_250to450met"
+      if(met>=450.0)              result.push_back(70);  // "ge4jets_ge10modTop_450toInfmet"
+    }
+  } // inclusive nJets>=4 bins
+  
+
+  // 150<met<250 CR bins
+  if( nGoodJets<4 && modTopness>=10.0 ){
+    if(leadBJetPt<200.0  && met>150.0 && met<=250.0) result.push_back(71); // "lt4jets_ge10modTop_lt200bJetPt_150to250met"
+    if(leadBJetPt>=200.0 && met>150.0 && met<=250.0) result.push_back(72); // "lt4jets_ge10modTop_ge200bJetPt_150to250met"
+  }
+  if( nGoodJets>=4 && modTopness<0.0 ){
+    if(leadBJetPt<200.0  && met>150.0 && met<=250.0) result.push_back(73); // "lt4jets_ge10modTop_lt200bJetPt_150to250met"
+    if(leadBJetPt>=200.0 && met>150.0 && met<=250.0) result.push_back(74); // "lt4jets_ge10modTop_ge200bJetPt_150to250met"
+  }
+  if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 ){
+    if(leadBJetPt<200.0  && met>150.0 && met<=250.0) result.push_back(75); // "lt4jets_ge10modTop_lt200bJetPt_150to250met"
+    if(leadBJetPt>=200.0 && met>150.0 && met<=250.0) result.push_back(76); // "lt4jets_ge10modTop_ge200bJetPt_150to250met"
+  }
+  if( nGoodJets>=4 && modTopness>=10.0 ){
+    if(leadBJetPt<200.0  && met>150.0 && met<=250.0) result.push_back(77); // "lt4jets_ge10modTop_lt200bJetPt_150to250met"
+    if(leadBJetPt>=200.0 && met>150.0 && met<=250.0) result.push_back(78); // "lt4jets_ge10modTop_ge200bJetPt_150to250met"
+  }
+  
+
   return result;
 }
 
