@@ -1409,10 +1409,12 @@ TH1D* categoryInfo::getYieldHistoTemplate_SR_corridor(){
   
   result->GetXaxis()->SetBinLabel(1, "top_corridor_250to350met");
   result->GetXaxis()->SetBinLabel(2, "top_corridor_350to450met");
-  result->GetXaxis()->SetBinLabel(3, "top_corridor_450toInfmet");
-  result->GetXaxis()->SetBinLabel(4, "top_corridor_450to550met");
-  result->GetXaxis()->SetBinLabel(5, "top_corridor_550toInfmet");
+  result->GetXaxis()->SetBinLabel(3, "top_corridor_450to550met");
+  result->GetXaxis()->SetBinLabel(4, "top_corridor_550toInfmet");
 
+  // Region for background estimate
+  result->GetXaxis()->SetBinLabel(5, "top_corridor_450toInfmet");
+  
   // Inclusive
   result->GetXaxis()->SetBinLabel(6, "top_corridor");
   result->GetXaxis()->SetBinLabel(7, "top_corridor_150to250met");
@@ -1427,6 +1429,36 @@ vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepT
   vector<int> result;
   result.clear();
 
+  // Met 
+  double met = babyAnalyzer.pfmet();
+  double met_phi = babyAnalyzer.pfmet_phi();
+  if( add2ndLepToMet){
+    if(jesType==0){
+      met = babyAnalyzer.pfmet_rl();
+      met_phi = babyAnalyzer.pfmet_phi_rl();
+    }
+    if(jesType==1){
+      met = babyAnalyzer.pfmet_rl_jup();
+      met_phi = babyAnalyzer.pfmet_phi_rl_jup();
+    }
+    if(jesType==-1){
+      met = babyAnalyzer.pfmet_rl_jdown();
+      met_phi = babyAnalyzer.pfmet_phi_rl_jdown();
+    }
+  }
+  else{
+    if(jesType==1){
+      met = babyAnalyzer.pfmet_jup();
+      met_phi = babyAnalyzer.pfmet_phi_jup();
+    }
+    if(jesType==-1){ 
+      met = babyAnalyzer.pfmet_jdown();
+      met_phi = babyAnalyzer.pfmet_phi_jdown();
+    }
+  }
+  
+  
+  // NJets
   int nGoodJets = babyAnalyzer.ngoodjets();
   if( jesType==1 )  nGoodJets = babyAnalyzer.jup_ngoodjets();
   if( jesType==-1 ) nGoodJets = babyAnalyzer.jdown_ngoodjets();
@@ -1435,6 +1467,7 @@ vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepT
   if( nGoodJets < 5 ) return result;
 
 
+  // Lead Jet pT
   double leadJetPt = babyAnalyzer.ak4pfjets_p4().at(0).Pt();
   if( jesType==1 )  leadJetPt = babyAnalyzer.jup_ak4pfjets_p4().at(0).Pt();
   if( jesType==-1 ) leadJetPt = babyAnalyzer.jdown_ak4pfjets_p4().at(0).Pt();
@@ -1442,7 +1475,8 @@ vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepT
   // Require leading jet to have pT > 200
   if( leadJetPt <= 200.0 ) return result;  
 
-  
+
+  // Lead Jet is bTagged
   bool leadJet_isBTag = babyAnalyzer.ak4pfjets_passMEDbtag().at(0);
   if( jesType==1 )  leadJet_isBTag = babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
   if( jesType==-1 ) leadJet_isBTag = babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
@@ -1451,19 +1485,25 @@ vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepT
   if( leadJet_isBTag ) return result;      
 
 
-  // Met Bins
-  double met = babyAnalyzer.pfmet();
-  if( add2ndLepToMet){
-    if(jesType==0)  met = babyAnalyzer.pfmet_rl();
-    if(jesType==1)  met = babyAnalyzer.pfmet_rl_jup();
-    if(jesType==-1) met = babyAnalyzer.pfmet_rl_jdown();
-  }
-  else{
-    if(jesType==1)  met = babyAnalyzer.pfmet_jup();
-    if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
-  }
+  double lepPt = babyAnalyzer.lep1_p4().Pt();
+
+
+  // Require lepton pT < 100
+  if( lepPt>=100.0 ) return result;
+
+
+  // dPhi(lep,met)
+  double dPhiLepMet = 99.9;
+  TLorentzVector lep_TLV( 0.0, 0.0, 0.0, 0.0);
+  lep_TLV.SetPxPyPzE( babyAnalyzer.lep1_p4().Px(), babyAnalyzer.lep1_p4().Py(), babyAnalyzer.lep1_p4().Pz(), babyAnalyzer.lep1_p4().E() ); 
+  TLorentzVector met_TLV( 0.0, 0.0, 0.0, 0.0 );
+  met_TLV.SetPxPyPzE( met*cos(met_phi), met*sin(met_phi), 0.0, met );
+  dPhiLepMet = lep_TLV.DeltaPhi(met_TLV);
   
-   
+  // Require dPhi(lep,met)< 1.5
+  if( fabs(dPhiLepMet) >= 1.5 ) return result;
+  
+ 
 
   //  Inclusive Bin
   result.push_back(6);
@@ -1472,10 +1512,11 @@ vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepT
   
   if( met>=250.0 && met<350.0 ) result.push_back(1); // SR bin 1
   if( met>=350.0 && met<450.0 ) result.push_back(2); // SR bin 2
-  if( met>=450.0 )              result.push_back(3); // SR bin 3
-  if( met>=450.0 && met<550.0 ) result.push_back(4); // SR bin 4
-  if( met>=550.0 )              result.push_back(5); // SR bin 5
+  if( met>=450.0 && met<550.0 ) result.push_back(3); // SR bin 3
+  if( met>=550.0 )              result.push_back(4); // SR bin 4
 
+  if( met>=450.0 )              result.push_back(5); // For CR2l bkgEstimate
+  
 
   return result;
 

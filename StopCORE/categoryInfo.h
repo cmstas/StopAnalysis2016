@@ -6,6 +6,7 @@
 
 // ROOT
 #include "TH1D.h"
+#include "TLorentzVector.h"
 
 // C
 #include <string>

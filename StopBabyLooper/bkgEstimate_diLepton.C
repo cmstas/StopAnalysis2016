@@ -1526,11 +1526,16 @@ int bkgEstimate_diLepton(){
   bkgEst_corridor.regionName.push_back("top~corridor");
   bkgEst_corridor.regionName_short.push_back("corridor"); 
   bkgEst_corridor.binName.push_back("$350<MET<450$");
-  
+
   bkgEst_corridor.SR_bins.push_back(3);  bkgEst_corridor.CR_bins.push_back(3);  
+  bkgEst_corridor.regionName.push_back("top~corridor");
+  bkgEst_corridor.regionName_short.push_back("corridor"); 
+  bkgEst_corridor.binName.push_back("$450<MET<550$");
+  
+  bkgEst_corridor.SR_bins.push_back(4);  bkgEst_corridor.CR_bins.push_back(4);  
   bkgEst_corridor.regionName.push_back("top~corridor");  
   bkgEst_corridor.regionName_short.push_back("corridor"); 
-  bkgEst_corridor.binName.push_back("$MET>450$");
+  bkgEst_corridor.binName.push_back("$MET>550$");
 
   v_bkgEst.push_back( bkgEst_corridor );
   
@@ -2027,7 +2032,8 @@ int bkgEstimate_diLepton(){
 	    
 	    // Get MC Fraction of ge2lep
 	    MC_CR_fraction             = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + MC_CR_cr2sr_non_ge2lep_yield );
-	    MC_CR_fraction_statErr     = sqrt( MC_CR_fraction*(1-MC_CR_fraction)/MC_CR_cr2sr_incl_nEntries );
+	    //MC_CR_fraction_statErr     = sqrt( MC_CR_fraction*(1-MC_CR_fraction)/MC_CR_cr2sr_incl_nEntries ); // binominal uncertainty
+	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
 	    MC_CR_fraction_err         = MC_CR_fraction_statErr;
 
 	    // Get MC Fraction, varying impurity
@@ -2036,10 +2042,8 @@ int bkgEstimate_diLepton(){
 	    
 	    // Get Transfer Factor SR/CR
 	    tf_cr2sr = MC_SR_bin_yield/MC_CR_cr2sr_ge2lep_yield;
-
-	    // Don't double count MC_CR_cr2sr_ge2lep_error if using fraction
-	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield,2) + pow(MC_SR_bin_error/MC_SR_bin_yield,2) ); 
-	    tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_SR_bin_error/MC_SR_bin_yield,2) ); 
+	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield,2) + pow(MC_SR_bin_error/MC_SR_bin_yield,2) );  // Gaussian Errors for each component
+	    tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_SR_bin_error/MC_SR_bin_yield,2) );  // Gausisan Errors for MC_SR_bin_yield only to avoid double counting , since MC_CR_cr2sr_error is included in MC fraction error 
 	    tf_cr2sr_err = tf_cr2sr_statErr;
 
 	    // In This Case tf_tot=tf_cr2sr
@@ -2072,6 +2076,7 @@ int bkgEstimate_diLepton(){
 	    tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield,2) + pow(MC_SR_bin_error/MC_SR_bin_yield,2) ); 
 	    tf_cr2sr_err = tf_cr2sr_statErr;
 	    
+	    // In This Case tf_tot=tf_cr2sr
 	    tf_tot = tf_cr2sr;
 	    tf_tot_statErr = tf_cr2sr_statErr;
 	    tf_tot_err = tf_cr2sr_err;
@@ -2107,7 +2112,8 @@ int bkgEstimate_diLepton(){
 	    
 	    // Get MC Fraction of ge2lep
 	    MC_CR_fraction             = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + MC_CR_cr2sr_non_ge2lep_yield );
-	    MC_CR_fraction_statErr     = sqrt( MC_CR_fraction*(1-MC_CR_fraction)/MC_CR_cr2sr_incl_nEntries );
+	    //MC_CR_fraction_statErr     = sqrt( MC_CR_fraction*(1-MC_CR_fraction)/MC_CR_cr2sr_incl_nEntries ); // binomial uncertainty
+	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
 	    MC_CR_fraction_err         = MC_CR_fraction_statErr;
 
 	    // Get MC Fraction, varying impurity
@@ -2116,19 +2122,18 @@ int bkgEstimate_diLepton(){
 	    
 	    // Get Transfer Factor SR/CR
 	    tf_cr2sr = MC_SR_cr2sr_yield/MC_CR_cr2sr_ge2lep_yield;
-
-	    // Don't double count MC_CR_cr2sr_ge2lep_error if using fraction, or MC_SR_cr2sr_error is using additional TF
-	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield,2) + pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) ); 
-	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) ); 
-	    tf_cr2sr_statErr = 0.0; 
+	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield,2) + pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Gaussian Errors for all components
+	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Removed MC_SR_cr2sr_error since it is included MC fraction
+	    tf_cr2sr_statErr = 0.0;  // Removed MC_SR_cr2sr_error since it is included in tf_srBin error
 	    tf_cr2sr_err = tf_cr2sr_statErr;
 
 	    // Get Transfer Factor of SR_bin/SR
 	    tf_srBin = MC_SR_bin_yield/MC_SR_cr2sr_yield;
-	    tf_srBin_statErr = sqrt( tf_srBin*(1-tf_srBin)/MC_SR_cr2sr_nEntries ); // binomial errors since MC_SR_bin_yield is a subset of MC_SR_cr2sr_yield
+	    //tf_srBin_statErr = sqrt( tf_srBin*(1-tf_srBin)/MC_SR_cr2sr_nEntries ); // binomial errors 
+	    tf_srBin_statErr = sqrt( ( ((1-2*tf_srBin)*pow(MC_SR_bin_error,2)) + (pow(tf_srBin,2)*pow(MC_SR_cr2sr_error,2)) ) / (pow(MC_SR_cr2sr_yield,2)) ); // binomial errors for multiple samples
 	    tf_srBin_err = tf_srBin_statErr;
 
-	    // In This Case tf_tot=tf_cr2sr
+	    // Get tf_total
 	    tf_tot = tf_cr2sr*tf_srBin;
 	    tf_tot_statErr = tf_tot*sqrt( pow(tf_cr2sr_statErr/tf_cr2sr,2) + pow(tf_srBin_statErr/tf_srBin,2) );
 	    tf_tot_err = tf_tot_statErr;
@@ -2154,21 +2159,20 @@ int bkgEstimate_diLepton(){
 
 	  // If using fraction, get incl CR MC yield
 	  if(MC_CR_cr2sr_incl_yield>0.0 && MC_SR_cr2sr_yield>0.0 && MC_SR_bin_yield>0.0){
-
+	    
 	    // Get Transfer Factor SR/CR
 	    tf_cr2sr = MC_SR_cr2sr_yield/MC_CR_cr2sr_incl_yield;
-	    
-	    // Don't double count MC_SR_cr2sr_incl_error if using 2 TFs
-	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield,2) + pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) ); 
-	    tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield,2) ); 
+	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield,2) + pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Gaussian errors for all components in tf_cr2sr
+	    tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield,2) ); // Avoid double counting MC_SR_cr2sr_error since it is included in tf_srBin
 	    tf_cr2sr_err = tf_cr2sr_statErr;
 
 	    // Get Transfer Factor of SR_bin/SR
 	    tf_srBin = MC_SR_bin_yield/MC_SR_cr2sr_yield;
-	    tf_srBin_statErr = sqrt( tf_srBin*(1-tf_srBin)/MC_SR_cr2sr_nEntries ); // binomial errors since MC_SR_bin_yield is a subset of MC_SR_cr2sr_yield
+	    //tf_srBin_statErr = sqrt( tf_srBin*(1-tf_srBin)/MC_SR_cr2sr_nEntries ); // binomial errors 
+	    tf_srBin_statErr = sqrt( ( ((1-2*tf_srBin)*pow(MC_SR_bin_error,2)) + (pow(tf_srBin,2)*pow(MC_SR_cr2sr_error,2)) ) / (pow(MC_SR_cr2sr_yield,2)) ); // binomial errors for multiple samples
 	    tf_srBin_err = tf_srBin_statErr;
 
-	    // In This Case tf_tot=tf_cr2sr
+	    // Get tf_total
 	    tf_tot = tf_cr2sr*tf_srBin;
 	    tf_tot_statErr = tf_tot*sqrt( pow(tf_cr2sr_statErr/tf_cr2sr,2) + pow(tf_srBin_statErr/tf_srBin,2) );
 	    tf_tot_err = tf_tot_statErr;
@@ -2537,14 +2541,13 @@ int bkgEstimate_diLepton(){
 	    
 	      // Get MC Fraction of ge2lep
 	      MC_CR_fraction_up          = ( MC_CR_cr2sr_ge2lep_yield_up ) / ( MC_CR_cr2sr_ge2lep_yield_up + MC_CR_cr2sr_non_ge2lep_yield_up );
-	      MC_CR_fraction_up_statErr  = sqrt( MC_CR_fraction_up*(1-MC_CR_fraction_up)/MC_CR_cr2sr_incl_nEntries_up );
+	      //MC_CR_fraction_up_statErr  = sqrt( MC_CR_fraction_up*(1-MC_CR_fraction_up)/MC_CR_cr2sr_incl_nEntries_up ); // binomial error
+	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
 	    
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_up = MC_SR_bin_yield_up/MC_CR_cr2sr_ge2lep_yield_up;
-
-	      // Don't double count MC_CR_cr2sr_ge2lep_error if using fraction
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_ge2lep_error_up/MC_CR_cr2sr_ge2lep_yield_up,2) + pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) ); 
-	      tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) ); 
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_ge2lep_error_up/MC_CR_cr2sr_ge2lep_yield_up,2) + pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) );  // Gaussian errors for all components
+	      tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) ); // Avoid double counting MC_CR_cr2sr_ge2lep_error, since it is included in MC_CR_fraction_up_statErr
 	    
 	      // In This Case tf_tot=tf_cr2sr
 	      tf_tot_up = tf_cr2sr_up;
@@ -2601,21 +2604,21 @@ int bkgEstimate_diLepton(){
 	    
 	      // Get MC Fraction of ge2lep
 	      MC_CR_fraction_up         = ( MC_CR_cr2sr_ge2lep_yield_up ) / ( MC_CR_cr2sr_ge2lep_yield_up + MC_CR_cr2sr_non_ge2lep_yield_up );
-	      MC_CR_fraction_up_statErr = sqrt( MC_CR_fraction_up*(1-MC_CR_fraction_up)/MC_CR_cr2sr_incl_nEntries_up );
+	      //MC_CR_fraction_up_statErr = sqrt( MC_CR_fraction_up*(1-MC_CR_fraction_up)/MC_CR_cr2sr_incl_nEntries_up ); // binomial errors
+	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
 	    
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_up = MC_SR_cr2sr_yield_up/MC_CR_cr2sr_ge2lep_yield_up;
-
-	      // Don't double count MC_CR_cr2sr_ge2lep_error if using fraction, or MC_SR_cr2sr_error is using additional TF
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_ge2lep_error_up/MC_CR_cr2sr_ge2lep_yield_up,2) + pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) ); 
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) ); 
-	      tf_cr2sr_up_statErr = 0.0; 
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_ge2lep_error_up/MC_CR_cr2sr_ge2lep_yield_up,2) + pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Gaussian errors for all components 
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Avoid touble counting MC_CR_cr2sr_ge2lep_yield_up, since its error is included in MC_CR_fraction_up
+	      tf_cr2sr_up_statErr = 0.0;  // Avoid double counting MC_SR_cr2sr_error_up since it is included in tf_srBin_err
 	    
 	      // Get Transfer Factor of SR_bin/SR
 	      tf_srBin_up = MC_SR_bin_yield_up/MC_SR_cr2sr_yield_up;
-	      tf_srBin_up_statErr = sqrt( tf_srBin_up*(1-tf_srBin_up)/MC_SR_cr2sr_nEntries_up ); // binomial errors since MC_SR_bin_yield is a subset of MC_SR_cr2sr_yield
+	      //tf_srBin_up_statErr = sqrt( tf_srBin_up*(1-tf_srBin_up)/MC_SR_cr2sr_nEntries_up ); // binomial errors 
+	      tf_srBin_up_statErr = sqrt( ( ((1-2*tf_srBin_up)*pow(MC_SR_bin_error_up,2)) + (pow(tf_srBin_up,2)*pow(MC_SR_cr2sr_error_up,2)) ) / (pow(MC_SR_cr2sr_yield_up,2)) ); // binomial errors for multiple samples
 	    
-	      // In This Case tf_tot=tf_cr2sr
+	      // Get total transfer factor
 	      tf_tot_up = tf_cr2sr_up*tf_srBin_up;
 	      tf_tot_up_statErr = tf_tot_up*sqrt( pow(tf_cr2sr_up_statErr/tf_cr2sr_up,2) + pow(tf_srBin_up_statErr/tf_srBin_up,2) );
 	    
@@ -2639,16 +2642,15 @@ int bkgEstimate_diLepton(){
 
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_up = MC_SR_cr2sr_yield_up/MC_CR_cr2sr_incl_yield_up;
-	    
-	      // Don't double count MC_SR_cr2sr_incl_error_up if using 2 TFs
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_incl_error_up/MC_CR_cr2sr_incl_yield_up,2) + pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) ); 
-	      tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_incl_error_up/MC_CR_cr2sr_incl_yield_up,2) ); 
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_incl_error_up/MC_CR_cr2sr_incl_yield_up,2) + pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Gaussian errors for all compontnetns
+	      tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_incl_error_up/MC_CR_cr2sr_incl_yield_up,2) ); // Avoid double counting MC_SR_cr2sr_error_up since it is included in tf_srBin_up
 	    
 	      // Get Transfer Factor of SR_bin/SR
 	      tf_srBin_up = MC_SR_bin_yield_up/MC_SR_cr2sr_yield_up;
-	      tf_srBin_up_statErr = sqrt( tf_srBin_up*(1-tf_srBin_up)/MC_SR_cr2sr_nEntries_up ); // binomial errors since MC_SR_bin_yield is a subset of MC_SR_cr2sr_yield
+	      //tf_srBin_up_statErr = sqrt( tf_srBin_up*(1-tf_srBin_up)/MC_SR_cr2sr_nEntries_up ); // binomial errors 
+	      tf_srBin_up_statErr = sqrt( ( ((1-2*tf_srBin_up)*pow(MC_SR_bin_error_up,2)) + (pow(tf_srBin_up,2)*pow(MC_SR_cr2sr_error_up,2)) ) / (pow(MC_SR_cr2sr_yield_up,2)) ); // binomial errors for multiple samples
 	    
-	      // In This Case tf_tot_up=tf_cr2sr_up
+	      // Get Total Transer factor
 	      tf_tot_up = tf_cr2sr_up*tf_srBin_up;
 	      tf_tot_up_statErr = tf_tot_up*sqrt( pow(tf_cr2sr_up_statErr/tf_cr2sr_up,2) + pow(tf_srBin_up_statErr/tf_srBin_up,2) );
 	    
@@ -2810,17 +2812,16 @@ int bkgEstimate_diLepton(){
 
 	      // Get MC Non-ge2lep Yield
 	      MC_CR_cr2sr_non_ge2lep_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_ge2lep_yield_dn;
-	    
+	      
 	      // Get MC Fraction of ge2lep
 	      MC_CR_fraction_dn          = ( MC_CR_cr2sr_ge2lep_yield_dn ) / ( MC_CR_cr2sr_ge2lep_yield_dn + MC_CR_cr2sr_non_ge2lep_yield_dn );
-	      MC_CR_fraction_dn_statErr  = sqrt( MC_CR_fraction_dn*(1-MC_CR_fraction_dn)/MC_CR_cr2sr_incl_nEntries_dn );
-	    
+	      //MC_CR_fraction_dn_statErr  = sqrt( MC_CR_fraction_dn*(1-MC_CR_fraction_dn)/MC_CR_cr2sr_incl_nEntries_dn ); // binomial uncertainty
+	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
+
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_dn = MC_SR_bin_yield_dn/MC_CR_cr2sr_ge2lep_yield_dn;
-
-	      // Don't double count MC_CR_cr2sr_ge2lep_error if using fraction
 	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_ge2lep_error_dn/MC_CR_cr2sr_ge2lep_yield_dn,2) + pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) ); 
-	      tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) ); 
+	      tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) );  // Avoid double counting MC_CR_bin_error sinc eit is inlcuded in MC_CR_fraction_dn
 	    
 	      // In This Case tf_tot=tf_cr2sr
 	      tf_tot_dn = tf_cr2sr_dn;
@@ -2877,21 +2878,21 @@ int bkgEstimate_diLepton(){
 	    
 	      // Get MC Fraction of ge2lep
 	      MC_CR_fraction_dn         = ( MC_CR_cr2sr_ge2lep_yield_dn ) / ( MC_CR_cr2sr_ge2lep_yield_dn + MC_CR_cr2sr_non_ge2lep_yield_dn );
-	      MC_CR_fraction_dn_statErr = sqrt( MC_CR_fraction_dn*(1-MC_CR_fraction_dn)/MC_CR_cr2sr_incl_nEntries_dn );
-	    
+	      //MC_CR_fraction_dn_statErr = sqrt( MC_CR_fraction_dn*(1-MC_CR_fraction_dn)/MC_CR_cr2sr_incl_nEntries_dn ); // binomial uncertainty
+	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
+
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_dn = MC_SR_cr2sr_yield_dn/MC_CR_cr2sr_ge2lep_yield_dn;
-
-	      // Don't double count MC_CR_cr2sr_ge2lep_error if using fraction, or MC_SR_cr2sr_error is using additional TF
-	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_ge2lep_error_dn/MC_CR_cr2sr_ge2lep_yield_dn,2) + pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) ); 
-	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) ); 
-	      tf_cr2sr_dn_statErr = 0.0; 
+	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_ge2lep_error_dn/MC_CR_cr2sr_ge2lep_yield_dn,2) + pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) );  // Gaussian errors for each component
+	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) );  // Avoid double counting MC_CR_cr2sr_error since it is included in MC_CR_fraction
+	      tf_cr2sr_dn_statErr = 0.0;  // Avoid double counting MC_SR_cr2sr_error_dn since it is included in tf_srBin_dn
 	    
 	      // Get Transfer Factor of SR_bin/SR
 	      tf_srBin_dn = MC_SR_bin_yield_dn/MC_SR_cr2sr_yield_dn;
-	      tf_srBin_dn_statErr = sqrt( tf_srBin_dn*(1-tf_srBin_dn)/MC_SR_cr2sr_nEntries_dn ); // binomial errors since MC_SR_bin_yield is a subset of MC_SR_cr2sr_yield
-	    
-	      // In This Case tf_tot=tf_cr2sr
+	      //tf_srBin_dn_statErr = sqrt( tf_srBin_dn*(1-tf_srBin_dn)/MC_SR_cr2sr_nEntries_dn ); // binomial errors 
+	      tf_srBin_dn_statErr = sqrt( ( ((1-2*tf_srBin_dn)*pow(MC_SR_bin_error_dn,2)) + (pow(tf_srBin_dn,2)*pow(MC_SR_cr2sr_error_dn,2)) ) / (pow(MC_SR_cr2sr_yield_dn,2)) ); // binomial errors for multiple samples
+
+	      // Get tf_tot
 	      tf_tot_dn = tf_cr2sr_dn*tf_srBin_dn;
 	      tf_tot_dn_statErr = tf_tot_dn*sqrt( pow(tf_cr2sr_dn_statErr/tf_cr2sr_dn,2) + pow(tf_srBin_dn_statErr/tf_srBin_dn,2) );
 	    
@@ -2915,15 +2916,15 @@ int bkgEstimate_diLepton(){
 
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_dn = MC_SR_cr2sr_yield_dn/MC_CR_cr2sr_incl_yield_dn;
-	    
-	      // Don't double count MC_SR_cr2sr_incl_error_dn if using 2 TFs
 	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_incl_error_dn/MC_CR_cr2sr_incl_yield_dn,2) + pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) ); 
-	      tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_incl_error_dn/MC_CR_cr2sr_incl_yield_dn,2) ); 
+	      tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_incl_error_dn/MC_CR_cr2sr_incl_yield_dn,2) ); // Avoid double counting MC_SR_cr2sr_incl_error_dn since it is included in tf_srBin
+	      
 	    
 	      // Get Transfer Factor of SR_bin/SR
 	      tf_srBin_dn = MC_SR_bin_yield_dn/MC_SR_cr2sr_yield_dn;
-	      tf_srBin_dn_statErr = sqrt( tf_srBin_dn*(1-tf_srBin_dn)/MC_SR_cr2sr_nEntries_dn ); // binomial errors since MC_SR_bin_yield is a subset of MC_SR_cr2sr_yield
-	    
+	      //tf_srBin_dn_statErr = sqrt( tf_srBin_dn*(1-tf_srBin_dn)/MC_SR_cr2sr_nEntries_dn ); // binomial errors 
+	      tf_srBin_dn_statErr = sqrt( ( ((1-2*tf_srBin_dn)*pow(MC_SR_bin_error_dn,2)) + (pow(tf_srBin_dn,2)*pow(MC_SR_cr2sr_error_dn,2)) ) / (pow(MC_SR_cr2sr_yield_dn,2)) ); // binomial errors for multiple samples
+
 	      // In This Case tf_tot_dn=tf_cr2sr_dn
 	      tf_tot_dn = tf_cr2sr_dn*tf_srBin_dn;
 	      tf_tot_dn_statErr = tf_tot_dn*sqrt( pow(tf_cr2sr_dn_statErr/tf_cr2sr_dn,2) + pow(tf_srBin_dn_statErr/tf_srBin_dn,2) );
@@ -3107,9 +3108,14 @@ int bkgEstimate_diLepton(){
       fprintf(f_results, " & %.2f $\\pm$ %.2f " , tf_cr2sr, tf_cr2sr_err);
       if(!oneTF) fprintf(f_results, " & %.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f " , tf_srBin, tf_srBin_err, tf_tot, tf_tot_err);
       fprintf(f_results, " & %.2f $\\pm$ %.2f " , sr_estimate, sr_estimate_err);
-      fprintf(f_results, " \\"); fprintf(f_results, "\\ \\hline \n");
-      
-      
+      fprintf(f_results, " \\"); fprintf(f_results, "\\ \n");
+      if( iSR==(nSRs-1) ) fprintf(f_results, "\\hline \n");
+      else{
+	if( v_bkgEst[iBkgEst].regionName_short[iSR] != v_bkgEst[iBkgEst].regionName_short[iSR+1] ){
+	  fprintf(f_results, "\\hline \n");
+	}
+      }
+	
 
     } // end loop over signal regions
 

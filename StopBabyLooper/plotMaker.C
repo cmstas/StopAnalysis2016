@@ -319,6 +319,28 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBins.push_back(xRebins_yields_SR_dev_ext30fb_bJetPt_v1);
   var_rebin_xBinsSF.push_back(xRebinsSF_yields_SR_dev_ext30fb_bJetPt_v1);
 
+
+  // Yields, dev top corridor
+  var_list_label.push_back( "h_yields_SR_corridor" );
+  var_list_title.push_back( "Yields" );
+  var_list_xaxis.push_back( "Yields" );
+
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  // First 4 bins are SR
+  const int nRebins_yields_SR_corridor = 4;
+  double xRebins_yields_SR_corridor[nRebins_yields_SR_corridor+1]; 
+  for(int i=1; i<=nRebins_yields_SR_corridor+1; i++){ xRebins_yields_SR_corridor[i-1]=i;} 
+  double xRebinsSF_yields_SR_corridor[nRebins_yields_SR_corridor];
+  for(int i=1; i<=nRebins_yields_SR_corridor; i++){ xRebinsSF_yields_SR_corridor[i-1]=1;}
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("srbins");
+  var_rebin_nBins.push_back(nRebins_yields_SR_corridor);
+  var_rebin_xBins.push_back(xRebins_yields_SR_corridor);
+  var_rebin_xBinsSF.push_back(xRebinsSF_yields_SR_corridor);
+
   
 
   // nJets

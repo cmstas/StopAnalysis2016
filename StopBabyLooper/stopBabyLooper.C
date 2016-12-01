@@ -46,7 +46,7 @@ bool analyzeFast_ = false;
 
 bool applyjson = true;
 
-bool add2ndLepToMet_ = false;
+bool add2ndLepToMet_ = true;
 bool inclTaus_CR2l_  = false;
 
 bool useBTagSFs_fromUtils_ = false;

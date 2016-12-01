@@ -628,7 +628,9 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
   catList.push_back( cat );
   cat.histName = "h_yields_SR_corridor"; cat.binNumber = 2; cat.tex = "top~corridor,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 3; cat.tex = "top~corridor,~$MET>450$";
+  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 3; cat.tex = "top~corridor,~$450<MET<550$";
+  catList.push_back( cat );
+  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 4; cat.tex = "top~corridor,~$MET>550$";
   catList.push_back( cat );
   
   fileList.push_back( catList );
