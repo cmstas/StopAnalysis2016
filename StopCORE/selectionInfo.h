@@ -39,7 +39,7 @@ namespace selectionInfo{
   
   bool pass_CR2l_bulkTTbar(int jesType=0, int lepFlavour=24, bool add2ndLepToMet=false );
   std::vector<bool> get_selectionResults_CR2l_bulkTTbar(int jesType=0, int lepFlavour=24, bool add2ndLepToMet=false );
-  TH1D* get_cutflowHistoTemplate_CR2l_bulkTTBar();
+  TH1D* get_cutflowHistoTemplate_CR2l_bulkTTbar();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR2l_bulkTTbar();
 
   //bool pass_CRGammaJets(int jesType=0);

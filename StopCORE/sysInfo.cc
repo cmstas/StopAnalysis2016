@@ -508,6 +508,9 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_hfXsec_up = 1.0;
   sf_hfXsec_dn = 1.0;
   
+  sf_pdf_up = 1.0;
+  sf_pdf_dn = 1.0;
+
   sf_alphas_up = 1.0;
   sf_alphas_dn = 1.0;
   
@@ -592,6 +595,9 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     // W+HF xsec uncertainty
     getWJetsHFXSecSF( sf_hfXsec_up, sf_hfXsec_dn );
     
+    // PDF Uncertainty
+    getPDFWeight( sf_pdf_up, sf_pdf_dn );
+
     // Alpha Strong, QCD variation
     getAlphasWeight( sf_alphas_up, sf_alphas_dn );
     
@@ -603,10 +609,10 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   //
   // Systematic Weights
   //
-  double result = 1.0;
+  double evt_wgt = 1.0;
   
   // This is scale1fb*lumi = lumi*1000*xsec/nEvents
-  result *= sf_nominal; 
+  evt_wgt *= sf_nominal; 
   
   //
   // Switches, set in looper determine if 
@@ -615,44 +621,46 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   
   // Apply diLepton Trigger scale factor
   double wgt_diLepTrigger = sf_diLepTrigger;
-  result *= wgt_diLepTrigger;
+  evt_wgt *= wgt_diLepTrigger;
   
   // Apply CR2l Trigger scale factor
   double wgt_cr2lTrigger = sf_cr2lTrigger;
-  result *= wgt_cr2lTrigger;
+  evt_wgt *= wgt_cr2lTrigger;
   
   // Apply bTag scale factor
   double wgt_bTag = sf_bTag;
-  result *= wgt_bTag;
+  evt_wgt *= wgt_bTag;
   
   // Apply lepton scale factor
   double wgt_lep = sf_lep*sf_vetoLep*sf_lepFS;
-  result *= wgt_lep;
+  evt_wgt *= wgt_lep;
   
   // Apply top pT sf
   double wgt_topPt = sf_topPt;
-  result *= wgt_topPt;
+  evt_wgt *= wgt_topPt;
   
   // Apply met resolution sf
   double wgt_metRes = sf_metRes;
-  result *= wgt_metRes;
+  evt_wgt *= wgt_metRes;
     
   // Apply ttbar system pT SF (will be 1 if not ttbar/tW 2l) 
   double wgt_ttbarSysPt = sf_ttbarSysPt;
-  result *= wgt_ttbarSysPt;
+  evt_wgt *= wgt_ttbarSysPt;
   
   // Apply ISR SF( will be 1 if not Signal)
   double wgt_ISR = sf_ISR;
-  result *= wgt_ISR;
+  evt_wgt *= wgt_ISR;
   
   // Apply sample weight (for WJets stitching)
   double wgt_sample = sf_sample;
-  result *= wgt_sample;
+  evt_wgt *= wgt_sample;
     
   //
   // Systematic Weights
   //
   for(int iSys=0; iSys<k_nSys; iSys++){
+
+    double sys_wgt = evt_wgt;
     
     // Nominal
     if( iSys==k_nominal ){
@@ -668,197 +676,187 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 
     // CR2l_bulkTTbar diLepton Trigger, Up
     else if( iSys==k_diLepTriggerUp ){
-      result *= (sf_diLepTrigger_up/sf_diLepTrigger);
+      sys_wgt *= (sf_diLepTrigger_up/sf_diLepTrigger);
     }
 
     // CR2l_bulkTTbar diLepton Trigger, Dn
     else if( iSys==k_diLepTriggerDown ){
-      result *= (sf_diLepTrigger_dn/sf_diLepTrigger);
+      sys_wgt *= (sf_diLepTrigger_dn/sf_diLepTrigger);
     }
       
     // CR2l diLepton Trigger, add2ndMetToLep, Up
     else if( iSys==k_cr2lTriggerUp ){
-      result *= (sf_cr2lTrigger_up/sf_cr2lTrigger);
+      sys_wgt *= (sf_cr2lTrigger_up/sf_cr2lTrigger);
     }
 
     // CR2l diLepton Trigger, add2ndMetToLep, Dn
     else if( iSys==k_cr2lTriggerDown ){
-      result *= (sf_cr2lTrigger_dn/sf_cr2lTrigger);
+      sys_wgt *= (sf_cr2lTrigger_dn/sf_cr2lTrigger);
     }
 
     // BTagEff HF Up
     else if( iSys==k_bTagEffHFUp ){
-      result *= (sf_bTagEffHF_up/wgt_bTag);
+      sys_wgt *= (sf_bTagEffHF_up/wgt_bTag);
     }
 
     // BTagEff HF Dn
     else if( iSys==k_bTagEffHFDown ){
-      result *= (sf_bTagEffHF_dn/wgt_bTag);
+      sys_wgt *= (sf_bTagEffHF_dn/wgt_bTag);
     }
 
     // BTagEff LF Up
     else if( iSys==k_bTagEffLFUp ){
-      result *= (sf_bTagEffLF_up/wgt_bTag);
+      sys_wgt *= (sf_bTagEffLF_up/wgt_bTag);
     }
 
     // BTagEff LF Dn
     else if( iSys==k_bTagEffLFDown ){
-      result *= (sf_bTagEffLF_dn/wgt_bTag);
+      sys_wgt *= (sf_bTagEffLF_dn/wgt_bTag);
     }
 
     // Lepton SF Up
     else if( iSys==k_lepSFUp ){
-      result *= (sf_lep_up*sf_vetoLep_up*sf_lepFS)/wgt_lep;
+      sys_wgt *= (sf_lep_up*sf_vetoLep_up*sf_lepFS)/wgt_lep;
     }
 
     // Lepton SF Dn
     else if( iSys==k_lepSFDown ){
-      result *= (sf_lep_dn*sf_vetoLep_dn*sf_lepFS)/wgt_lep;
+      sys_wgt *= (sf_lep_dn*sf_vetoLep_dn*sf_lepFS)/wgt_lep;
     }
 
     // Lepton SF FastSim/FullsSim Up
     else if( iSys==k_lepFSSFUp ){
-      result *= (sf_lep*sf_vetoLep*sf_lepFS_up)/wgt_lep;
+      sys_wgt *= (sf_lep*sf_vetoLep*sf_lepFS_up)/wgt_lep;
     }
 
     // Lepton SF Rastsim/FullSim Dn
     else if( iSys==k_lepFSSFDown ){
-      result *= (sf_lep*sf_vetoLep*sf_lepFS_dn)/wgt_lep;
+      sys_wgt *= (sf_lep*sf_vetoLep*sf_lepFS_dn)/wgt_lep;
     }
 
     // Top pT SF Up
     else if( iSys==k_topPtSFUp ){
-      result *= (sf_topPt_up/wgt_topPt);
+      sys_wgt *= (sf_topPt_up/wgt_topPt);
     }
 
     // Top pT SF Dn
     else if( iSys==k_topPtSFDown ){
-      result *= (sf_topPt_dn/wgt_topPt);
+      sys_wgt *= (sf_topPt_dn/wgt_topPt);
     }
 
     // MetRes SF Up
     else if( iSys==k_metResUp ){
-      result *= sf_metRes_up/wgt_metRes;
+      sys_wgt *= sf_metRes_up/wgt_metRes;
     }
 
     // MetRes SF Dn
     else if( iSys==k_metResDown ){
-      result *= sf_metRes_dn/wgt_metRes;
+      sys_wgt *= sf_metRes_dn/wgt_metRes;
     }
 
     // TTbar/tW System pT Up
     else if( iSys==k_ttbarSysPtUp ){
-      result *= (sf_ttbarSysPt_up/wgt_ttbarSysPt);
+      sys_wgt *= (sf_ttbarSysPt_up/wgt_ttbarSysPt);
     }
 
     // TTbar/tW System pT Dn 
     else if( iSys==k_ttbarSysPtDown ){
-      result *= (sf_ttbarSysPt_dn/wgt_ttbarSysPt);
+      sys_wgt *= (sf_ttbarSysPt_dn/wgt_ttbarSysPt);
     }
 
     // Nu pT SF Up
     else if( iSys==k_nuPtSF_Up ){
-      result *= sf_nuPt_up;
+      sys_wgt *= sf_nuPt_up;
     }
 
     // Nu pT SF Dn
     else if( iSys==k_nuPtSF_Down ){
-      result *= sf_nuPt_dn;
+      sys_wgt *= sf_nuPt_dn;
     }
 
     // W Width SF Up
     else if( iSys==k_WwidthSF_Up ){
-      result *= sf_Wwidth_up;
+      sys_wgt *= sf_Wwidth_up;
     }
       
     // W Width SF Dn
     else if( iSys==k_WwidthSF_Down ){
-      result *= sf_Wwidth_dn;
+      sys_wgt *= sf_Wwidth_dn;
     }
 
     // W+HF XSec Up
     else if( iSys==k_hfXsec_Up ){
-      result *= sf_hfXsec_up;
+      sys_wgt *= sf_hfXsec_up;
     }
 
     // W+HF XSec Dn
     else if( iSys==k_hfXsec_Down ){
-      result *= sf_hfXsec_dn;
+      sys_wgt *= sf_hfXsec_dn;
     }
 
     // PDF Up
     else if( iSys==k_pdfUp ){
-      if(sample_info->isSignal){
-	result *= (babyAnalyzer.pdf_up_weight())/(h_sig_counter->GetBinContent(mStop,mLSP,10)/nEvents);
-      }
-      else{
-	result *= (babyAnalyzer.pdf_up_weight())/(h_bkg_counter->GetBinContent(10)/nEvents);
-      }
+      sys_wgt *= sf_pdf_up;
     }
-
+     
     // PDF Dn
     else if( iSys==k_pdfDown ){
-      if(sample_info->isSignal){
-	result *= (babyAnalyzer.pdf_up_weight())/(h_sig_counter->GetBinContent(mStop,mLSP,11)/nEvents);
-      }
-      else{
-	result *= (babyAnalyzer.pdf_down_weight())/(h_bkg_counter->GetBinContent(11)/nEvents);
-      }
+      sys_wgt *= sf_pdf_dn;
     }
       
     // Alpha Strong Up
     else if( iSys==k_alphasUp ){
-      result *= sf_alphas_up;
+      sys_wgt *= sf_alphas_up;
     }
 
     // Alpha Strong Dn
     else if( iSys==k_alphasDown ){
-      result *= sf_alphas_dn;
+      sys_wgt *= sf_alphas_dn;
     }
 
     // Q2 Up
     else if( iSys==k_q2Up ){
-      result *= sf_q2_up;
+      sys_wgt *= sf_q2_up;
     }
 
     // Q2 Dn
     else if( iSys==k_q2Down ){
-      result *= sf_q2_dn;
+      sys_wgt *= sf_q2_dn;
     }
 
     // Lumi Up
     else if( iSys==k_lumiUp ){
-      result *= sf_lumi_up/sf_lumi;
+      sys_wgt *= sf_lumi_up/sf_lumi;
     }
 
     // Lumi Dn
     else if( iSys==k_lumiDown ){
-      result *= sf_lumi_dn/sf_lumi;
+      sys_wgt *= sf_lumi_dn/sf_lumi;
     }
 
     // ISR Up
     else if( iSys==k_ISRUp ){
-      result *= (sf_ISR_up/wgt_ISR);
+      sys_wgt *= (sf_ISR_up/wgt_ISR);
     }
       
     // ISR Dn
     else if( iSys==k_ISRDown ){
-      result *= (sf_ISR_dn/wgt_ISR);
+      sys_wgt *= (sf_ISR_dn/wgt_ISR);
     }
 
     // XSection Up
     else if( iSys==k_xsecUp ){
-      result *= (sf_xsec_up/xsec);
+      sys_wgt *= (sf_xsec_up/xsec);
     }
 
     // XSection Dn
     else if( iSys==k_xsecDown ){
-      result *= (sf_xsec_dn/xsec);
+      sys_wgt *= (sf_xsec_dn/xsec);
     }
      
 
     // Fill Array Element
-    sys_wgts[iSys] = result;
+    sys_wgts[iSys] = sys_wgt;
 
 
     // Break if only filling nominal
@@ -946,20 +944,26 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // DiElectron Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==22 ){
-    sf_val = 0.883481;
-    sf_err = 0.012322;
+    sf_val = 0.884591; // 29.53fb
+    sf_err = 0.00811308;
+    //sf_val = 0.883481; // 12.9fb ICHEP
+    //sf_err = 0.012322;
   }
 
   // MuE Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==24 ){
-    sf_val = 0.893801;
-    sf_err = 0.00657751;
+    sf_val = 0.908511; // 29.53fb
+    sf_err = 0.00420534;
+    //sf_val = 0.893801; // 12.9fb ICHEP
+    //sf_err = 0.00657751;
   }
 
   // DiMuon Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==26 ){
-    sf_val = 0.841817;
-    sf_err = 0.0102116;
+    sf_val = 0.858291; // 29.53fb
+    sf_err = 0.00666499;
+    //sf_val = 0.841817; // 12.9fb ICHEP
+    //sf_err = 0.0102116;
   }
 
   // Calculate Scale Factor
@@ -1126,10 +1130,12 @@ void sysInfo::evtWgtInfo::getLepSFWeight( double &weight_lepSF, double &weight_l
     weight_vetoLepSF_Up = babyAnalyzer.weight_vetoLepSF_up();
     weight_vetoLepSF_Dn = babyAnalyzer.weight_vetoLepSF_down();
     
-    weight_lepFSSF = babyAnalyzer.weight_lepSF_fastSim();
-    weight_lepFSSF_Up = babyAnalyzer.weight_lepSF_fastSim_up();
-    weight_lepFSSF_Dn = babyAnalyzer.weight_lepSF_fastSim_down();
-    
+    if( sample_info->isFastsim ){
+      weight_lepFSSF = babyAnalyzer.weight_lepSF_fastSim();
+      weight_lepFSSF_Up = babyAnalyzer.weight_lepSF_fastSim_up();
+      weight_lepFSSF_Dn = babyAnalyzer.weight_lepSF_fastSim_down();
+    }
+
     // Normalization
     getNEvents( nEvents );
     
@@ -1144,10 +1150,11 @@ void sysInfo::evtWgtInfo::getLepSFWeight( double &weight_lepSF, double &weight_l
       weight_vetoLepSF_Up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,31)) );
       weight_vetoLepSF_Dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,32)) );
       
-      weight_lepFSSF    *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,33)) );
-      weight_lepFSSF_Up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,34)) );
-      weight_lepFSSF_Dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,35)) );
-      
+      if( sample_info->isFastsim ){
+	weight_lepFSSF    *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,33)) );
+	weight_lepFSSF_Up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,34)) );
+	weight_lepFSSF_Dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,35)) );
+      }
     }
     else{
       weight_lepSF    *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(28)) );
@@ -1157,12 +1164,14 @@ void sysInfo::evtWgtInfo::getLepSFWeight( double &weight_lepSF, double &weight_l
       weight_vetoLepSF    *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(31)) );
       weight_vetoLepSF_Up *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(32)) );
       weight_vetoLepSF_Dn *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(33)) );
-      
-      weight_lepFSSF    *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(34)) );
-      weight_lepFSSF_Up *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(35)) );
-      weight_lepFSSF_Dn *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(36)) );
-    }
+
+      if( sample_info->isFastsim ){
+	weight_lepFSSF    *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(34)) );
+	weight_lepFSSF_Up *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(35)) );
+	weight_lepFSSF_Dn *= ( nEvents / h_bkg_counter->GetBinContent(h_bkg_counter->FindBin(36)) );
+      }
     
+    }
   }
 
   
@@ -1176,13 +1185,12 @@ void sysInfo::evtWgtInfo::getLepSFWeight( double &weight_lepSF, double &weight_l
     weight_vetoLepSF_Up = 1.0;
     weight_vetoLepSF_Dn = 1.0;
   }
-  if( !apply_lepFS_sf ){
+  if( !apply_lepFS_sf || !sample_info->isFastsim ){
     weight_lepFSSF = 1.0;
     weight_lepFSSF_Up = 1.0;
     weight_lepFSSF_Dn = 1.0;
   }
   
-
   return;
 }
 
@@ -1405,6 +1413,9 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   double met = babyAnalyzer.pfmet();
   if(add2ndLepToMet) met = babyAnalyzer.pfmet_rl();
 
+  double mt2w = babyAnalyzer.MT2W();
+  if(add2ndLepToMet) mt2w = babyAnalyzer.MT2W_rl();
+
   double sf_val = 1.0;
   double sf_err = 0.0;
 
@@ -1445,18 +1456,18 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( babyAnalyzer.ngoodjets()==2 ){
 
     if( met>=250.0 && met<350.0 ){
-      sf_val = 1.048;
-      //sf_err = 0.007;
+      sf_val = 1.080;
+      sf_err = 0.007;
     }
 
     if( met>=350.0 && met<450.0 ){
-      sf_val = 0.910;
-      //sf_err = 0.014;
+      sf_val = 0.895;
+      sf_err = 0.011;
     }
 
     if( met>=450.0 ){
-      sf_val = 0.776;
-      //sf_err = 0.020;
+      sf_val = 0.679;
+      sf_err = 0.046;
     }
 
   } // end if nJets==2
@@ -1464,73 +1475,73 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( babyAnalyzer.ngoodjets()==3 ){
 
     if( met>=250.0 && met<350.0 ){
-      sf_val = 1.076;
-      //sf_err = 0.010;
+      sf_val = 1.066;
+      sf_err = 0.024;
     }
 
     if( met>=350.0 && met<450.0 ){
-      sf_val = 0.928;
-      //sf_err = 0.020;
+      sf_val = 0.976;
+      sf_err = 0.073;
     }
 
     if( met>=450.0 && met<550.0 ){
-      sf_val = 0.808;
-      //sf_err = 0.030;
+      sf_val = 0.784;
+      sf_err = 0.022;
     }
     
     if( met>=550.0 ){
-      sf_val = 0.658;
-      //sf_err = 0.031;
+      sf_val = 0.664;
+      sf_err = 0.024;
     }
 
   } // end if nJets==3
 
   if( babyAnalyzer.ngoodjets()>=4 ){
 
-    if( babyAnalyzer.MT2W()<200.0 ){
+    if( mt2w<200.0 ){
 
       if( met>=250.0 && met<350.0 ){
-	sf_val = 1.076;
-	//sf_err = 0.020;
+	sf_val = 1.080;
+	sf_err = 0.015;
       }
 
       if( met>=350.0 && met<450.0  ){
-	sf_val = 0.939;
-	//sf_err = 0.023;
+	sf_val = 0.935;
+	sf_err = 0.018;
       }
 
       if( met>=450.0 ){
-	sf_val = 0.740;
-	//sf_err = 0.026;
+	sf_val = 0.766;
+	sf_err = 0.020;
       }
 
     } // end if MT2W<200.0
     
-    if( babyAnalyzer.MT2W()>=200.0 ){
+    if( mt2w>=200.0 ){
       
       if( met>=250.0 && met<350.0 ){
-	sf_val = 1.076;
-	//sf_err = 0.020;
+	sf_val = 1.080;
+	sf_err = 0.015;
       }
 
       if( met>=350.0 && met<450.0  ){
-	sf_val = 0.939;
-	//sf_err = 0.023;
+	sf_val = 0.935;
+	sf_err = 0.018;
       }
 
       if( met>=450.0 && met<550.0  ){
-	sf_val = 0.873;
-	//sf_err = 0.037;
+	sf_val = 0.866;
+	sf_err = 0.028;
       }
 
       if( met>=550.0 && met<650.0  ){
-	sf_val = 0.747;
-	//sf_err = 0.055;
+	sf_val = 0.766;
+	sf_err = 0.020;
       }
 
       if( met>=650.0 ){
-	sf_val = 0.564;
-	//sf_err = 0.047;
+	sf_val = 0.590;
+	sf_err = 0.047;
       }
 
     } // end if MT2W>=200.0
@@ -1578,6 +1589,7 @@ void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &we
   // Get ttbar/tW system pT
   LorentzVector system_LV(0.0,0.0,0.0,0.0);
 
+  /*
   // Grab top quarks
   for(int iGen=0; iGen<(int)babyAnalyzer.genqs_p4().size(); iGen++){
     if( abs(babyAnalyzer.genqs_id().at(iGen))==6 &&
@@ -1597,39 +1609,99 @@ void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &we
       }
     }
   }
-   
+
+  // Get system Pt
   double system_pt = system_LV.Pt();
+  */
 
+  // Lep1 LV
+  system_LV += babyAnalyzer.lep1_p4();
 
+  // Lep2 LV, if available
+  if( babyAnalyzer.nvetoleps()>1 ) system_LV += babyAnalyzer.lep2_p4();
+
+  // Highest CSV Jet
+  int jet1_idx = -1;
+  double max_csv = -99.9;
+  for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
+    if( babyAnalyzer.ak4pfjets_CSV().at(iJet) > max_csv ){
+      jet1_idx = iJet;
+      max_csv  = babyAnalyzer.ak4pfjets_CSV().at(iJet);
+    }
+  }
+  if(jet1_idx>=0) system_LV += babyAnalyzer.ak4pfjets_p4().at(jet1_idx);
+    
+  // 2nd Highest CSV Jets
+  int jet2_idx = -1;
+  max_csv = -99.9;
+  for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
+    if( iJet==jet1_idx ) continue;
+    if( babyAnalyzer.ak4pfjets_CSV().at(iJet) > max_csv ){
+      jet2_idx = iJet;
+      max_csv = babyAnalyzer.ak4pfjets_CSV().at(iJet);
+    }
+  }
+  if(jet2_idx>=0) system_LV += babyAnalyzer.ak4pfjets_p4().at(jet2_idx);
+
+  // Met
+  LorentzVector met_TLV( babyAnalyzer.pfmet()*cos(babyAnalyzer.pfmet_phi()), babyAnalyzer.pfmet()*sin(babyAnalyzer.pfmet_phi()), 0.0, babyAnalyzer.pfmet() );
+  system_LV += met_TLV;
+
+  // Get system Pt
+  double system_pt = system_LV.Pt();
+  
   // Get Scale Factor
+  if( system_pt>=0.0 && system_pt<50.0 ){
+    sf_val = 1.10;
+    sf_err = 0.01;
+  }
+
+  if( system_pt>=50.0 && system_pt<100.0 ){
+    sf_val = 0.98;
+    sf_err = 0.01;
+  }
+
+  // Used these from now on with gen ttbar for ICHEP synch
   if( system_pt>=100.0 && system_pt<150.0 ){
-    sf_val = 1.02;
-    sf_err = 0.02;
+    sf_val = 1.03; // 29.53fb
+    sf_err = 0.01;
+    //sf_val = 1.02; // 12.9fb ICHEP
+    //sf_err = 0.02;
   }
 
   if( system_pt>=150.0 && system_pt<200.0 ){
-    sf_val = 0.98;
+    sf_val = 0.96; // 29.53fb
     sf_err = 0.02;
+    //sf_val = 0.98; // 12.9fb ICHEP
+    //sf_err = 0.02;
   }
 
   if( system_pt>=200.0 && system_pt<250.0 ){
-    sf_val = 0.99;
-    sf_err = 0.03;
+    sf_val = 0.96; // 29.53fb
+    sf_err = 0.02;
+    //sf_val = 0.99; // 12.9fb ICHEP
+    //sf_err = 0.03;
   }
 
   if( system_pt>=250.0 && system_pt<350.0 ){
-    sf_val = 0.97;
+    sf_val = 0.98; // 29.53fb
     sf_err = 0.03;
+    //sf_val = 0.97; // 12.9fb ICHEP
+    //sf_err = 0.03;
   }
 
   if( system_pt>=350.0 && system_pt<450.0 ){
-    sf_val = 0.98;
-    sf_err = 0.05;
+    sf_val = 1.06; // 29.53fb
+    sf_err = 0.04;
+    //sf_val = 0.98; // 12.9fb ICHEP
+    //sf_err = 0.05;
   }
 
   if( system_pt>=450.0 ){
-    sf_val = 1.08;
-    sf_err = 0.07;
+    sf_val = 1.01; // 29.53fb
+    sf_err = 0.05;
+    //sf_val = 1.08; // 12.9fb ICHEP
+    //sf_err = 0.07;
   }
 
 
@@ -1805,6 +1877,47 @@ void sysInfo::evtWgtInfo::getWJetsHFXSecSF( double &weight_hfXsec_up, double &we
 
   return;
 
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void sysInfo::evtWgtInfo::getPDFWeight( double &weight_pdf_up, double &weight_pdf_dn ){
+
+  weight_pdf_up = 1.0;
+  weight_pdf_dn = 1.0;
+
+  if( sample_info->isData ) return;
+
+  if( babyAnalyzer.genweights().size() < 110 ) return;
+
+  if( sample_info->isSignal ){
+    if( h_sig_counter->GetBinContent(mStop,mLSP,10)<=0 ||
+	h_sig_counter->GetBinContent(mStop,mLSP,11)<=0   ) return;
+  }
+  else{
+    if( h_bkg_counter->GetBinContent(10)<=0 ||
+	h_bkg_counter->GetBinContent(11)<=0   ) return;
+  }
+
+  weight_pdf_up = babyAnalyzer.pdf_up_weight();
+  weight_pdf_dn = babyAnalyzer.pdf_down_weight();
+
+  // Normalization
+  if( sample_info->isSignal ){
+    weight_pdf_up *= (nEvents/h_sig_counter->GetBinContent(mStop,mLSP,10));
+    weight_pdf_dn *= (nEvents/h_sig_counter->GetBinContent(mStop,mLSP,11));
+  }
+  else{
+    weight_pdf_up *= (nEvents/h_bkg_counter->GetBinContent(10));
+    weight_pdf_dn *= (nEvents/h_bkg_counter->GetBinContent(11));
+  }
+
+  if( weight_pdf_up<0.0 || weight_pdf_dn<0.0 ){
+    weight_pdf_up = 1.0;
+    weight_pdf_dn = 1.0;
+  }
+
+  return;
 }
 
 //////////////////////////////////////////////////////////////////////

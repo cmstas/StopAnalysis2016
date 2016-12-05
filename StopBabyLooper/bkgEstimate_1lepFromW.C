@@ -2033,7 +2033,7 @@ int bkgEstimate_diLepton(){
 	    // Get MC Fraction of ge2lep
 	    MC_CR_fraction             = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + MC_CR_cr2sr_non_ge2lep_yield );
 	    //MC_CR_fraction_statErr     = sqrt( MC_CR_fraction*(1-MC_CR_fraction)/MC_CR_cr2sr_incl_nEntries ); // binominal uncertainty
-	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
+	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_ge2lep_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
 	    MC_CR_fraction_err         = MC_CR_fraction_statErr;
 
 	    // Get MC Fraction, varying impurity
@@ -2113,7 +2113,7 @@ int bkgEstimate_diLepton(){
 	    // Get MC Fraction of ge2lep
 	    MC_CR_fraction             = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + MC_CR_cr2sr_non_ge2lep_yield );
 	    //MC_CR_fraction_statErr     = sqrt( MC_CR_fraction*(1-MC_CR_fraction)/MC_CR_cr2sr_incl_nEntries ); // binomial uncertainty
-	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
+	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_ge2lep_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
 	    MC_CR_fraction_err         = MC_CR_fraction_statErr;
 
 	    // Get MC Fraction, varying impurity
@@ -2542,7 +2542,7 @@ int bkgEstimate_diLepton(){
 	      // Get MC Fraction of ge2lep
 	      MC_CR_fraction_up          = ( MC_CR_cr2sr_ge2lep_yield_up ) / ( MC_CR_cr2sr_ge2lep_yield_up + MC_CR_cr2sr_non_ge2lep_yield_up );
 	      //MC_CR_fraction_up_statErr  = sqrt( MC_CR_fraction_up*(1-MC_CR_fraction_up)/MC_CR_cr2sr_incl_nEntries_up ); // binomial error
-	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
+	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
 	    
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_up = MC_SR_bin_yield_up/MC_CR_cr2sr_ge2lep_yield_up;
@@ -2605,7 +2605,7 @@ int bkgEstimate_diLepton(){
 	      // Get MC Fraction of ge2lep
 	      MC_CR_fraction_up         = ( MC_CR_cr2sr_ge2lep_yield_up ) / ( MC_CR_cr2sr_ge2lep_yield_up + MC_CR_cr2sr_non_ge2lep_yield_up );
 	      //MC_CR_fraction_up_statErr = sqrt( MC_CR_fraction_up*(1-MC_CR_fraction_up)/MC_CR_cr2sr_incl_nEntries_up ); // binomial errors
-	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
+	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
 	    
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_up = MC_SR_cr2sr_yield_up/MC_CR_cr2sr_ge2lep_yield_up;
@@ -2816,7 +2816,7 @@ int bkgEstimate_diLepton(){
 	      // Get MC Fraction of ge2lep
 	      MC_CR_fraction_dn          = ( MC_CR_cr2sr_ge2lep_yield_dn ) / ( MC_CR_cr2sr_ge2lep_yield_dn + MC_CR_cr2sr_non_ge2lep_yield_dn );
 	      //MC_CR_fraction_dn_statErr  = sqrt( MC_CR_fraction_dn*(1-MC_CR_fraction_dn)/MC_CR_cr2sr_incl_nEntries_dn ); // binomial uncertainty
-	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
+	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
 
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_dn = MC_SR_bin_yield_dn/MC_CR_cr2sr_ge2lep_yield_dn;
@@ -2879,7 +2879,7 @@ int bkgEstimate_diLepton(){
 	      // Get MC Fraction of ge2lep
 	      MC_CR_fraction_dn         = ( MC_CR_cr2sr_ge2lep_yield_dn ) / ( MC_CR_cr2sr_ge2lep_yield_dn + MC_CR_cr2sr_non_ge2lep_yield_dn );
 	      //MC_CR_fraction_dn_statErr = sqrt( MC_CR_fraction_dn*(1-MC_CR_fraction_dn)/MC_CR_cr2sr_incl_nEntries_dn ); // binomial uncertainty
-	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
+	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
 
 	      // Get Transfer Factor SR/CR
 	      tf_cr2sr_dn = MC_SR_cr2sr_yield_dn/MC_CR_cr2sr_ge2lep_yield_dn;
@@ -3108,14 +3108,9 @@ int bkgEstimate_diLepton(){
       fprintf(f_results, " & %.2f $\\pm$ %.2f " , tf_cr2sr, tf_cr2sr_err);
       if(!oneTF) fprintf(f_results, " & %.2f $\\pm$ %.2f & %.2f $\\pm$ %.2f " , tf_srBin, tf_srBin_err, tf_tot, tf_tot_err);
       fprintf(f_results, " & %.2f $\\pm$ %.2f " , sr_estimate, sr_estimate_err);
-      fprintf(f_results, " \\"); fprintf(f_results, "\\ \n");
-      if( iSR==(nSRs-1) ) fprintf(f_results, "\\hline \n");
-      else{
-	if( v_bkgEst[iBkgEst].regionName_short[iSR] != v_bkgEst[iBkgEst].regionName_short[iSR+1] ){
-	  fprintf(f_results, "\\hline \n");
-	}
-      }
-	
+      fprintf(f_results, " \\"); fprintf(f_results, "\\ \\hline \n");
+      
+      
 
     } // end loop over signal regions
 

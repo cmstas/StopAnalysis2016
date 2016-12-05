@@ -11,13 +11,12 @@ echo ""
 if [ ! -d Output/Histos ]; then mkdir -p Output/Histos; fi
 if [ ! -d Output/Plots ]; then mkdir -p Output/Plots; fi
 if [ ! -d Output/Tables ]; then mkdir -p Output/Tables; fi
-if [ ! -d Output/BkgEstimate ]; then mkdir -p Output/BkgEstimate; fi
 if [ ! -d Output/Log ]; then mkdir -p Output/Log; fi
 
 # Create Histograms of all samples
 echo "Creating Histograms..."
 echo ""
-root -l -b -q head.C stopBabyLooper.C++ >& Output/Log/stopBabyLooper.log 
+root -l -b -q head.C stopBabyLooper__CR2l_bulkTTbar.C++ >& Output/Log/stopBabyLooper__CR2l_bulkTTbar.log 
 
 # If, necessary, scale samples (should be done in looper)
 #echo "Scaling Samples..."
@@ -64,19 +63,21 @@ echo "Making Plots..."
 echo ""
 root -l -b -q head.C plotMaker.C++ >& Output/Log/plotMaker_byGenDecay.log
 root -l -b -q head.C plotMaker.C++'(false)' >& Output/Log/plotMaker_byProduction.log
-root -l -b -q head.C pieCharts.C++ >& Output/Log/pieCharts.log
 
-# Background Estimates 
-echo "Calculating DiLepton Background Estimate..."
+# Making Plots for data trigger efficiency studies
+echo "Making plots for trigger efficiency studies..."
 echo ""
-root -l -b -q head.C bkgEstimate_diLepton.C++ >& Output/Log/bkgEstimate_diLepton.log
+root -l -b -q head.C diLepTriggerEfficiency_analyzer.C++ >& Output/Log/diLeptriggerEfficiency_analyzer.log
+
+# Making Tables for ttbarSystem pT SFs
+echo "Calculating ttbarSystemPt SF..."
+echo ""
+root -l -b -q head.C ttbarSystemPt_analyzer.C++ >& Output/Log/ttbarSystemPt_analyzer.log
 
 # Create pdfs of latex files
 echo "Converting Tex to PDF..."
 echo ""
 cd Output/Tables/
-for x in `/bin/ls *.tex`; do pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
-cd ../BkgEstimate/
 for x in `/bin/ls *.tex`; do pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
 cd ../../
 
