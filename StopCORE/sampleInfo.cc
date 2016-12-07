@@ -540,7 +540,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "t_tch_4f_powheg_pythia8_25ns";
     title = "single t, t-channel, powheg pythia8";
     tex   = "single $t$,~t-channel,~powheg~pythia8";
-    baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
+    //baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
     inputBabies.push_back("t_tch_4f_powheg_pythia8_25ns*.root");
     break;
 
@@ -936,7 +936,7 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
   result.push_back( sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 );
   result.push_back( sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 );
   result.push_back( sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8 );
-
+  
   // MC, single t
   result.push_back( sampleInfo::k_t_sch_4f_amcnlo_pythia8 );
   result.push_back( sampleInfo::k_t_tch_4f_powheg_pythia8 );
