@@ -204,6 +204,27 @@ public:
     float weight_ISRnjets;
     float weight_ISRnjets_UP;
     float weight_ISRnjets_DN;
+    float weight_analysisbtagsf;//medium if Mlb<175, tight if Mlb>175
+    float weight_analysisbtagsf_heavy_UP;
+    float weight_analysisbtagsf_light_UP;
+    float weight_analysisbtagsf_heavy_DN;
+    float weight_analysisbtagsf_light_DN;
+    float weight_analysisbtagsf_fastsim_UP;
+    float weight_analysisbtagsf_fastsim_DN;
+    float weight_tightbtagsf;
+    float weight_tightbtagsf_heavy_UP;
+    float weight_tightbtagsf_light_UP;
+    float weight_tightbtagsf_heavy_DN;
+    float weight_tightbtagsf_light_DN;
+    float weight_tightbtagsf_fastsim_UP;
+    float weight_tightbtagsf_fastsim_DN;
+    float weight_loosebtagsf;
+    float weight_loosebtagsf_heavy_UP;
+    float weight_loosebtagsf_light_UP;
+    float weight_loosebtagsf_heavy_DN;
+    float weight_loosebtagsf_light_DN;
+    float weight_loosebtagsf_fastsim_UP;
+    float weight_loosebtagsf_fastsim_DN;
     int   NISRjets;
     int   NnonISRjets;
     bool  filt_fastsimjets;

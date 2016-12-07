@@ -29,7 +29,7 @@ public:
  
     void Reset ();
     void deleteBtagSFTool();
-    void InitBtagSFTool( TH2D* h_btag_eff_b, TH2D* h_btag_eff_c, TH2D* h_btag_eff_udsg, bool isFastsim_);
+    void InitBtagSFTool(bool isFastsim_);
     void SetBranches (TTree* tree);
     void SetAK4Branches_Other(TTree* tree);
     void SetAK4Branches_EF(TTree* tree);
@@ -38,8 +38,8 @@ public:
     void SetAK8Branches (TTree* tree);
     void SetAK4Branches (TTree* tree);
     void SetAliases (TTree* tree);
-    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float & btagprob_heavy_DN, float & btagprob_light_UP, float & btagprob_light_DN, float & btagprob_FS_UP, float & btagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim);
-    float getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFastsim);
+    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float & btagprob_heavy_DN, float & btagprob_light_UP, float & btagprob_light_DN, float & btagprob_FS_UP, float & btagprob_FS_DN, float& loosebtagprob_data, float &loosebtagprob_mc, float &loosebtagprob_heavy_UP, float & loosebtagprob_heavy_DN, float & loosebtagprob_light_UP, float & loosebtagprob_light_DN, float & loosebtagprob_FS_UP, float & loosebtagprob_FS_DN, float& tightbtagprob_data, float &tightbtagprob_mc, float &tightbtagprob_heavy_UP, float & tightbtagprob_heavy_DN, float & tightbtagprob_light_UP, float & tightbtagprob_light_DN, float & tightbtagprob_FS_UP, float & tightbtagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim);
+    float getBtagEffFromFile(float pt, float eta, int mcFlavour, int WP, bool isFastsim);
 //FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx, unsigned int overlep2_idx);
     void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id);
     void GetJetSelections (std::string cone_size = "");
@@ -56,13 +56,22 @@ public:
     int ak8GoodPFJets;
     int nGoodGenJets;
     int ngoodbtags;
+    int nloosebtags;
+    int ntightbtags;
+    int nanalysisbtags;
     float ak4_HT;
 
     int ngoodjets_jup;
     int ngoodjets_jdown;
     int ngoodbtags_jup;
     int ngoodbtags_jdown;
-
+    int nloosebtags_jup;
+    int nloosebtags_jdown;
+    int ntightbtags_jup;
+    int ntightbtags_jdown;
+    int nanalysisbtags_jup;
+    int nanalysisbtags_jdown;
+    
     float ak4_htssm;
     float ak4_htosm;
     float ak4_htratiom;
@@ -156,13 +165,38 @@ private:
     BTagCalibrationReader* reader_light;
     BTagCalibrationReader* reader_light_UP;
     BTagCalibrationReader* reader_light_DN;
+    BTagCalibrationReader* reader_loose_heavy;
+    BTagCalibrationReader* reader_loose_heavy_UP;
+    BTagCalibrationReader* reader_loose_heavy_DN;
+    BTagCalibrationReader* reader_loose_light;
+    BTagCalibrationReader* reader_loose_light_UP;
+    BTagCalibrationReader* reader_loose_light_DN;
+    BTagCalibrationReader* reader_tight_heavy;
+    BTagCalibrationReader* reader_tight_heavy_UP;
+    BTagCalibrationReader* reader_tight_heavy_DN;
+    BTagCalibrationReader* reader_tight_light;
+    BTagCalibrationReader* reader_tight_light_UP;
+    BTagCalibrationReader* reader_tight_light_DN;
     BTagCalibration* calib_fastsim;
     BTagCalibrationReader* reader_fastsim;
     BTagCalibrationReader* reader_fastsim_UP;
     BTagCalibrationReader* reader_fastsim_DN;
+    BTagCalibrationReader* reader_tight_fastsim;
+    BTagCalibrationReader* reader_tight_fastsim_UP;
+    BTagCalibrationReader* reader_tight_fastsim_DN;
+    BTagCalibrationReader* reader_loose_fastsim;
+    BTagCalibrationReader* reader_loose_fastsim_UP;
+    BTagCalibrationReader* reader_loose_fastsim_DN;
+    TFile *feff;
     TH2D* h_btag_eff_b;
     TH2D* h_btag_eff_c;
     TH2D* h_btag_eff_udsg;
+    TH2D* h_loose_btag_eff_b;
+    TH2D* h_loose_btag_eff_c;
+    TH2D* h_loose_btag_eff_udsg;
+    TH2D* h_tight_btag_eff_b;
+    TH2D* h_tight_btag_eff_c;
+    TH2D* h_tight_btag_eff_udsg;
 };
  
 #endif
