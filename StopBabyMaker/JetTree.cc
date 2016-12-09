@@ -14,33 +14,106 @@ JetTree::JetTree (const std::string &prefix)
 {
 }
 
-void JetTree::InitBtagSFTool(TH2D* h_btag_eff_b_, TH2D* h_btag_eff_c_, TH2D* h_btag_eff_udsg_, bool isFastsim_) {
+void JetTree::InitBtagSFTool(bool isFastsim_) {
     isFastsim = isFastsim_;
     //calib = calib_;
     calib = new BTagCalibration("csvv2", "btagsf/CSVv2_ichep_slimmed.csv"); // 25s version of SFs - slimmed version removed mujets and iterativefit from original one
-    //reader_heavy = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "central"); // central
-    //reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");  // sys up
-    //reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");  // sys down
-    reader_heavy = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central"); // central
-    reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
-    reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
-    reader_light = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "central");  // central
-    reader_light_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "up");  // sys up
-    reader_light_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "down");  // sys down
     calib_fastsim = new BTagCalibration("CSV", "btagsf/CSV_13TEV_Combined_14_7_2016.csv"); // 25ns fastsim version of SFs
-    reader_fastsim = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_MEDIUM, "fastsim", "central"); // central
+    reader_heavy      = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central"); // central
+    reader_heavy_UP   = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
+    reader_heavy_DN   = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
+    reader_light      = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "central");  // central
+    reader_light_UP   = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "up");  // sys up
+    reader_light_DN   = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "down");  // sys down
+    reader_fastsim    = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_MEDIUM, "fastsim", "central"); // central
     reader_fastsim_UP = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_MEDIUM, "fastsim", "up");  // sys up
     reader_fastsim_DN = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_MEDIUM, "fastsim", "down");  // sys down
-    h_btag_eff_b = h_btag_eff_b_;
-    h_btag_eff_c = h_btag_eff_c_;
-    h_btag_eff_udsg = h_btag_eff_udsg_;
+    reader_loose_heavy      = new BTagCalibrationReader(calib, BTagEntry::OP_LOOSE, "comb", "central"); // central
+    reader_loose_heavy_UP   = new BTagCalibrationReader(calib, BTagEntry::OP_LOOSE, "comb", "up");  // sys up
+    reader_loose_heavy_DN   = new BTagCalibrationReader(calib, BTagEntry::OP_LOOSE, "comb", "down");  // sys down
+    reader_loose_light      = new BTagCalibrationReader(calib, BTagEntry::OP_LOOSE, "incl", "central");  // central
+    reader_loose_light_UP   = new BTagCalibrationReader(calib, BTagEntry::OP_LOOSE, "incl", "up");  // sys up
+    reader_loose_light_DN   = new BTagCalibrationReader(calib, BTagEntry::OP_LOOSE, "incl", "down");  // sys down
+    reader_loose_fastsim    = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_LOOSE, "fastsim", "central"); // central
+    reader_loose_fastsim_UP = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_LOOSE, "fastsim", "up");  // sys up
+    reader_loose_fastsim_DN = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_LOOSE, "fastsim", "down");  // sys down
+    reader_tight_heavy      = new BTagCalibrationReader(calib, BTagEntry::OP_TIGHT, "comb", "central"); // central
+    reader_tight_heavy_UP   = new BTagCalibrationReader(calib, BTagEntry::OP_TIGHT, "comb", "up");  // sys up
+    reader_tight_heavy_DN   = new BTagCalibrationReader(calib, BTagEntry::OP_TIGHT, "comb", "down");  // sys down
+    reader_tight_light      = new BTagCalibrationReader(calib, BTagEntry::OP_TIGHT, "incl", "central");  // central
+    reader_tight_light_UP   = new BTagCalibrationReader(calib, BTagEntry::OP_TIGHT, "incl", "up");  // sys up
+    reader_tight_light_DN   = new BTagCalibrationReader(calib, BTagEntry::OP_TIGHT, "incl", "down");  // sys down
+    reader_tight_fastsim    = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_TIGHT, "fastsim", "central"); // central
+    reader_tight_fastsim_UP = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_TIGHT, "fastsim", "up");  // sys up
+    reader_tight_fastsim_DN = new BTagCalibrationReader(calib_fastsim, BTagEntry::OP_TIGHT, "fastsim", "down");  // sys down
+    TH2D* h_btag_eff_b_temp = NULL;
+    TH2D* h_btag_eff_c_temp = NULL;
+    TH2D* h_btag_eff_udsg_temp = NULL;
+    TH2D* h_tight_btag_eff_b_temp = NULL;
+    TH2D* h_tight_btag_eff_c_temp = NULL;
+    TH2D* h_tight_btag_eff_udsg_temp = NULL;
+    TH2D* h_loose_btag_eff_b_temp = NULL;
+    TH2D* h_loose_btag_eff_c_temp = NULL;
+    TH2D* h_loose_btag_eff_udsg_temp = NULL;
+    if(isFastsim){
+      feff =  new TFile("btagsf/btageff__SMS-T1bbbb-T1qqqq_fastsim.root");
+      h_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_b");
+      h_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_c");
+      h_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
+      h_tight_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_b");
+      h_tight_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_c");
+      h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_udsg");
+      h_loose_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_b");
+      h_loose_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_c");
+      h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_udsg");
+    } else {
+      feff =  new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
+      h_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_b");
+      h_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_c");
+      h_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
+      h_tight_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_b");
+      h_tight_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_c");
+      h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_udsg");
+      h_loose_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_b");
+      h_loose_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_c");
+      h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_udsg");
+    }
+    h_btag_eff_b = (TH2D*) h_btag_eff_b_temp->Clone("h_btag_eff_b");
+    h_btag_eff_c = (TH2D*) h_btag_eff_c_temp->Clone("h_btag_eff_c");
+    h_btag_eff_udsg = (TH2D*) h_btag_eff_udsg_temp->Clone("h_btag_eff_udsg");
+    h_tight_btag_eff_b = (TH2D*) h_tight_btag_eff_b_temp->Clone("h_tight_btag_eff_b");
+    h_tight_btag_eff_c = (TH2D*) h_tight_btag_eff_c_temp->Clone("h_tight_btag_eff_c");
+    h_tight_btag_eff_udsg = (TH2D*) h_tight_btag_eff_udsg_temp->Clone("h_tight_btag_eff_udsg");
+    h_loose_btag_eff_b = (TH2D*) h_loose_btag_eff_b_temp->Clone("h_loose_btag_eff_b");
+    h_loose_btag_eff_c = (TH2D*) h_loose_btag_eff_c_temp->Clone("h_loose_btag_eff_c");
+    h_loose_btag_eff_udsg = (TH2D*) h_loose_btag_eff_udsg_temp->Clone("h_loose_btag_eff_udsg");
+
+    //cout << h_btag_eff_b->Integral() << " " << h_btag_eff_c->Integral() << " " << h_btag_eff_udsg->Integral() << " " << endl; 
+    //cout << h_tight_btag_eff_b->Integral() << " " << h_tight_btag_eff_c->Integral() << " " << h_tight_btag_eff_udsg->Integral() << " " << endl;
+    //cout << h_loose_btag_eff_b->Integral() << " " << h_loose_btag_eff_c->Integral() << " " << h_loose_btag_eff_udsg->Integral() << " " << endl;
+    //feff->Close();
+    //h_btag_eff_b = h_btag_eff_b_;
+    //h_btag_eff_c = h_btag_eff_c_;
+    //h_btag_eff_udsg = h_btag_eff_udsg_;
     std::cout << "loaded btag SFs" << std::endl;
     return;
 }
 
-float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFastsim){
-    if(!h_btag_eff_b || !h_btag_eff_c || !h_btag_eff_udsg) {
-      std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists" << std::endl;
+float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, int WP, bool isFastsim){
+    if(WP<0||WP>2){
+      std::cout << "babyMaker::getBtagEffFromFile: ERROR: wrong WP" << std::endl;
+      return 1.;
+    }
+    if(WP==1 && (!h_btag_eff_b || !h_btag_eff_c || !h_btag_eff_udsg)) {
+      std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists for medium WP" << std::endl;
+      return 1.;
+    }
+    if(WP==0 && (!h_loose_btag_eff_b || !h_loose_btag_eff_c || !h_loose_btag_eff_udsg)) {
+      std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists for loose WP" << std::endl;
+      return 1.;
+    }
+    if(WP==2 && (!h_tight_btag_eff_b || !h_tight_btag_eff_c || !h_tight_btag_eff_udsg)) {
+      std::cout << "babyMaker::getBtagEffFromFile: ERROR: missing input hists for tight WP" << std::endl;
       return 1.;
     }
     //have fastsim already done in looper
@@ -51,27 +124,48 @@ float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, bool isFas
     // only use pt bins up to 400 GeV for charm and udsg
     float pt_cutoff = std::max(20.,std::min(399.,double(pt)));
     TH2D* h(0);
-    if (abs(mcFlavour) == 5) {
-      //h = isFastsim ? h_btag_eff_b_fastsim : h_btag_eff_b;
-      h = h_btag_eff_b;
-      // use pt bins up to 600 GeV for b
-      pt_cutoff = std::max(20.,std::min(599.,double(pt)));
+    if(WP==1){
+      if (abs(mcFlavour) == 5) {
+	h = h_btag_eff_b;
+	pt_cutoff = std::max(20.,std::min(599.,double(pt)));
+      }
+      else if (abs(mcFlavour) == 4) {
+	h = h_btag_eff_c;
+      }
+      else {
+	h = h_btag_eff_udsg;
+      }
     }
-    else if (abs(mcFlavour) == 4) {
-      //h = isFastsim ? h_btag_eff_c_fastsim : h_btag_eff_c;
-      h = h_btag_eff_c;
+    if(WP==0){
+      if (abs(mcFlavour) == 5) {
+	h = h_loose_btag_eff_b;
+	pt_cutoff = std::max(20.,std::min(599.,double(pt)));
+      }
+      else if (abs(mcFlavour) == 4) {
+	h = h_loose_btag_eff_c;
+      }
+      else {
+	h = h_loose_btag_eff_udsg;
+      }
     }
-    else {
-      //h = isFastsim ? h_btag_eff_udsg_fastsim : h_btag_eff_udsg;
-      h = h_btag_eff_udsg;
+    if(WP==2){
+      if (abs(mcFlavour) == 5) {
+	h = h_tight_btag_eff_b;
+	pt_cutoff = std::max(20.,std::min(599.,double(pt)));
+      }
+      else if (abs(mcFlavour) == 4) {
+	h = h_tight_btag_eff_c;
+      }
+      else {
+	h = h_tight_btag_eff_udsg;
+      }
     }
-    
     int binx = h->GetXaxis()->FindBin(pt_cutoff);
     int biny = h->GetYaxis()->FindBin(fabs(eta));
     return h->GetBinContent(binx,biny);
 }
 
-void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float & btagprob_heavy_DN,float & btagprob_light_UP, float & btagprob_light_DN, float & btagprob_FS_UP, float & btagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim)
+void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float & btagprob_heavy_DN,float & btagprob_light_UP, float & btagprob_light_DN, float & btagprob_FS_UP, float & btagprob_FS_DN, float& loosebtagprob_data, float &loosebtagprob_mc, float &loosebtagprob_heavy_UP, float & loosebtagprob_heavy_DN, float & loosebtagprob_light_UP, float & loosebtagprob_light_DN, float & loosebtagprob_FS_UP, float & loosebtagprob_FS_DN, float& tightbtagprob_data, float &tightbtagprob_mc, float &tightbtagprob_heavy_UP, float & tightbtagprob_heavy_DN, float & tightbtagprob_light_UP, float & tightbtagprob_light_DN, float & tightbtagprob_FS_UP, float & tightbtagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim)
 {
     
     // fill info for ak4pfjets
@@ -81,7 +175,11 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
     float HT = 0.;
     float JET_PT = 0.;
     int nbtags_med = 0;
+    int nbtags_tight = 0;
+    int nbtags_loose = 0;
     static const float BTAG_MED = 0.800;
+    static const float BTAG_LSE = 0.460;
+    static const float BTAG_TGT = 0.935;
     float dPhiM = 0.;
     float btagdisc = 0.;   
     unsigned int leadbtag_idx = 0;
@@ -222,7 +320,62 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
         else htosm = htosm + p4sCorrJets.at(jindex).pt();	
 
         HT = HT + p4sCorrJets.at(jindex).pt();
-	
+
+	float eff(1.), effloose(1.), efftight(1.);
+	BTagEntry::JetFlavor flavor = BTagEntry::FLAV_UDSG;
+	if (abs(pfjets_hadronFlavour().at(jindex)) == 5) flavor = BTagEntry::FLAV_B;
+	else if (abs(pfjets_hadronFlavour().at(jindex)) == 4) flavor = BTagEntry::FLAV_C;
+	float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].pt())));
+	float eta_cutoff = std::min(2.39,fabs(double(p4sCorrJets[jindex].eta())));
+	float weight_cent(1.), weight_UP(1.), weight_DN(1.), weight_FS_UP(1.), weight_FS_DN(1.);
+	float weight_loose_cent(1.), weight_loose_UP(1.), weight_loose_DN(1.), weight_loose_FS_UP(1.), weight_loose_FS_DN(1.);
+	float weight_tight_cent(1.), weight_tight_UP(1.), weight_tight_DN(1.), weight_tight_FS_UP(1.), weight_tight_FS_DN(1.);
+	if(applyBtagSFs){
+	  //put all b-tag issues outside what is possible
+	  effloose = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), 0, isFastsim);
+	  eff      = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), 1, isFastsim);
+	  efftight = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), 2, isFastsim);
+	  //cout << eff << " " << effloose << " " << efftight << endl;
+	  // cout<<"read uncertainty from btagsf reader:"<<endl;
+	  if (flavor == BTagEntry::FLAV_UDSG) {
+	    weight_cent = reader_light   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_UP   = reader_light_UP->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_DN   = reader_light_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_loose_cent = reader_loose_light   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_loose_UP   = reader_loose_light_UP->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_loose_DN   = reader_loose_light_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_tight_cent = reader_tight_light   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_tight_UP   = reader_tight_light_UP->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_tight_DN   = reader_tight_light_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	  } else {
+	    weight_cent = reader_heavy   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_UP   = reader_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_DN   = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_loose_cent = reader_loose_heavy   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_loose_UP   = reader_loose_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_loose_DN   = reader_loose_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_tight_cent = reader_tight_heavy   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_tight_UP   = reader_tight_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_tight_DN   = reader_tight_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
+	  }
+	  if (isFastsim) {
+	    weight_FS_UP = reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff) * weight_cent;
+	    weight_FS_DN = reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff) * weight_cent;
+	    weight_cent *= reader_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_UP   *= reader_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
+	    weight_DN   *= reader_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
+	    weight_loose_FS_UP = reader_loose_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff) * weight_loose_cent;
+	    weight_loose_FS_DN = reader_loose_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff) * weight_loose_cent;
+	    weight_loose_cent *= reader_loose_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_loose_UP   *= reader_loose_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
+	    weight_loose_DN   *= reader_loose_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
+	    weight_tight_FS_UP = reader_tight_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff) * weight_tight_cent;
+	    weight_tight_FS_DN = reader_tight_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff) * weight_tight_cent;
+	    weight_tight_cent *= reader_tight_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);
+	    weight_tight_UP   *= reader_tight_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
+	    weight_tight_DN   *= reader_tight_fastsim   ->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
+	  }
+	}	
 	//medium btag
         if(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex) > BTAG_MED){
              ak4pfjets_passMEDbtag.push_back(true);
@@ -235,123 +388,138 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
                //bool isFastsim = false; 
               // btag SF - not final yet
               if (!evt_isRealData()&&applyBtagSFs) {
-                float eff = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), isFastsim);
-		BTagEntry::JetFlavor flavor = BTagEntry::FLAV_UDSG;
-
-		if (abs(pfjets_hadronFlavour().at(jindex)) == 5) flavor = BTagEntry::FLAV_B;
-		else if (abs(pfjets_hadronFlavour().at(jindex)) == 4) flavor = BTagEntry::FLAV_C;
-
-	        float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].pt())));
-	        float eta_cutoff = std::min(2.39,fabs(double(p4sCorrJets[jindex].eta())));
-		float weight_cent(1.), weight_UP(1.), weight_DN(1.), weight_FS_UP(1.), weight_FS_DN(1.);
-
-//                cout<<"read uncertainty from btagsf reader:"<<endl;
-		if (flavor == BTagEntry::FLAV_UDSG) {
-		  weight_cent = reader_light->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_UP = reader_light_UP->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_DN = reader_light_DN->eval(flavor, eta_cutoff, pt_cutoff);
-		} else {
-		  weight_cent = reader_heavy->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_UP = reader_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_DN = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
-		}
-		if (isFastsim) {
-		  weight_FS_UP = weight_cent * reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_FS_DN = weight_cent * reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_cent *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);
-		  weight_UP *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
-		  weight_DN *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
-		}
   //              cout<<"got uncertainty from btagsf reader:"<<endl;
                 btagprob_data *= weight_cent * eff;
                 btagprob_mc *= eff;
-                //float abserr_UP = weight_UP - weight_cent;
-                //float abserr_DN = weight_cent - weight_DN;
-		//float abserr_FS_UP = weight_FS_UP - weight_cent;
-                //float abserr_FS_DN = weight_cent - weight_FS_DN;
 		if (flavor == BTagEntry::FLAV_UDSG) {
-                  //btagprob_err_light_UP += abserr_UP/weight_cent;
-                  //btagprob_err_light_DN += abserr_DN/weight_cent;
 		  btagprob_light_UP *= weight_UP * eff;
 		  btagprob_light_DN *= weight_DN * eff;
 		  btagprob_heavy_UP *= weight_cent * eff;
 		  btagprob_heavy_DN *= weight_cent * eff;
 		} else {
-                  //btagprob_err_heavy_UP += abserr_UP/weight_cent;
-                  //btagprob_err_heavy_DN += abserr_DN/weight_cent;
 		  btagprob_light_UP *= weight_cent * eff;
 		  btagprob_light_DN *= weight_cent * eff;
 		  btagprob_heavy_UP *= weight_UP * eff;
 		  btagprob_heavy_DN *= weight_DN * eff;
                 }
 		if(isFastsim){
-		  //btagprob_err_FS_UP += abserr_FS_UP/weight_cent;
-		  //btagprob_err_FS_DN += abserr_FS_DN/weight_cent;
 		  btagprob_FS_UP *= weight_FS_UP * eff;
 		  btagprob_FS_DN *= weight_FS_DN * eff;
 		}
 //                cout<<"btagprob_err_heavy_UP"<<btagprob_err_heavy_UP<<endl;
                }
-             }else{ 
+            }else{ 
              ak4pfjets_passMEDbtag.push_back(false);
              if (!evt_isRealData()&&applyBtagSFs) { // fail med btag -- needed for SF event weights
-              float eff = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), isFastsim);
-	      BTagEntry::JetFlavor flavor = BTagEntry::FLAV_UDSG;
-	      if (abs(pfjets_hadronFlavour().at(jindex)) == 5) flavor = BTagEntry::FLAV_B;
-	      else if (abs(pfjets_hadronFlavour().at(jindex)) == 4) flavor = BTagEntry::FLAV_C;
-	      float pt_cutoff = std::max(30.,std::min(669.,double(p4sCorrJets[jindex].eta())));
-	      float eta_cutoff = std::min(2.39,fabs(double(p4sCorrJets[jindex].eta())));
-	      float weight_cent(1.), weight_UP(1.), weight_DN(1.), weight_FS_UP(1.), weight_FS_DN(1.);
-	      if (flavor == BTagEntry::FLAV_UDSG) {
-		weight_cent = reader_light->eval(flavor, eta_cutoff, pt_cutoff);
-		weight_UP = reader_light_UP->eval(flavor, eta_cutoff, pt_cutoff);
-		weight_DN = reader_light_DN->eval(flavor, eta_cutoff, pt_cutoff);
-	      } else {
-		weight_cent = reader_heavy->eval(flavor, eta_cutoff, pt_cutoff);
-		weight_UP = reader_heavy_UP->eval(flavor, eta_cutoff, pt_cutoff);
-		weight_DN = reader_heavy_DN->eval(flavor, eta_cutoff, pt_cutoff);
-	      }
-	      if (isFastsim) {
-		weight_FS_UP = weight_cent * reader_fastsim_UP->eval(flavor, eta_cutoff, pt_cutoff);//this is pure fastsimSF
-		weight_FS_DN = weight_cent * reader_fastsim_DN->eval(flavor, eta_cutoff, pt_cutoff);//this is pure fastsimSF
-		weight_cent *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);
-		weight_UP *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
-		weight_DN *= reader_fastsim->eval(flavor, eta_cutoff, pt_cutoff);//this is still just btagSF
-	      }
-
               btagprob_data *= (1. - weight_cent * eff);
               btagprob_mc *= (1. - eff);
-              //float abserr_UP = weight_UP - weight_cent;
-              //float abserr_DN = weight_cent - weight_DN;
-	      //float abserr_FS_UP = weight_FS_UP - weight_cent;
-	      //float abserr_FS_DN = weight_cent - weight_FS_DN;
 	      if (flavor == BTagEntry::FLAV_UDSG) {
-                //btagprob_err_light_UP += (-eff * abserr_UP)/(1 - eff * weight_cent);
-                //btagprob_err_light_DN += (-eff * abserr_DN)/(1 - eff * weight_cent);
 		btagprob_light_UP *= (1. - weight_UP * eff);
 		btagprob_light_DN *= (1. - weight_DN * eff);
 		btagprob_heavy_UP *= (1. - weight_cent * eff);
 		btagprob_heavy_DN *= (1. - weight_cent * eff);
               } else {
-                //btagprob_err_heavy_UP += (-eff * abserr_UP)/(1 - eff * weight_cent);
-                //btagprob_err_heavy_DN += (-eff * abserr_DN)/(1 - eff * weight_cent);
 		btagprob_light_UP *= (1. - weight_cent * eff);
 		btagprob_light_DN *= (1. - weight_cent * eff);
 		btagprob_heavy_UP *= (1. - weight_UP * eff);
 		btagprob_heavy_DN *= (1. - weight_DN * eff);
               }
 	      if(isFastsim){
-		//btagprob_err_FS_UP += (-eff * abserr_FS_UP)/(1 - eff * weight_cent);
-		//btagprob_err_FS_DN += (-eff * abserr_FS_DN)/(1 - eff * weight_cent);
 		btagprob_FS_UP *= (1. - weight_FS_UP * eff);
 		btagprob_FS_DN *= (1. - weight_FS_DN * eff);
 	      }
            }
-         }
+        }//finish medium
 	if(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex)> btagdisc){
 	  btagdisc = getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex);
 	  leadbtag_idx = jindex;
 	}
+	//loose btag
+	if(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex) > BTAG_LSE){
+             nbtags_loose++;
+              if (!evt_isRealData()&&applyBtagSFs) {
+                loosebtagprob_data *= weight_loose_cent * effloose;
+                loosebtagprob_mc *= effloose;
+		if (flavor == BTagEntry::FLAV_UDSG) {
+		  loosebtagprob_light_UP *= weight_loose_UP * effloose;
+		  loosebtagprob_light_DN *= weight_loose_DN * effloose;
+		  loosebtagprob_heavy_UP *= weight_loose_cent * effloose;
+		  loosebtagprob_heavy_DN *= weight_loose_cent * effloose;
+		} else {
+		  loosebtagprob_light_UP *= weight_loose_cent * effloose;
+		  loosebtagprob_light_DN *= weight_loose_cent * effloose;
+		  loosebtagprob_heavy_UP *= weight_loose_UP * effloose;
+		  loosebtagprob_heavy_DN *= weight_loose_DN * effloose;
+                }
+		if(isFastsim){
+		  loosebtagprob_FS_UP *= weight_loose_FS_UP * effloose;
+		  loosebtagprob_FS_DN *= weight_loose_FS_DN * effloose;
+		}
+               }
+            }else{ 
+             if (!evt_isRealData()&&applyBtagSFs) { // fail loose btag -- needed for SF event weights
+              loosebtagprob_data *= (1. - weight_loose_cent * effloose);
+              loosebtagprob_mc *= (1. - effloose);
+	      if (flavor == BTagEntry::FLAV_UDSG) {
+		loosebtagprob_light_UP *= (1. - weight_loose_UP * effloose);
+		loosebtagprob_light_DN *= (1. - weight_loose_DN * effloose);
+		loosebtagprob_heavy_UP *= (1. - weight_loose_cent * effloose);
+		loosebtagprob_heavy_DN *= (1. - weight_loose_cent * effloose);
+              } else {
+		loosebtagprob_light_UP *= (1. - weight_loose_cent * effloose);
+		loosebtagprob_light_DN *= (1. - weight_loose_cent * effloose);
+		loosebtagprob_heavy_UP *= (1. - weight_loose_UP * effloose);
+		loosebtagprob_heavy_DN *= (1. - weight_loose_DN * effloose);
+              }
+	      if(isFastsim){
+		loosebtagprob_FS_UP *= (1. - weight_loose_FS_UP * effloose);
+		loosebtagprob_FS_DN *= (1. - weight_loose_FS_DN * effloose);
+	      }
+           }
+        }//finish loose
+	//tight btag
+	if(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex) > BTAG_TGT){
+             nbtags_tight++;
+              if (!evt_isRealData()&&applyBtagSFs) {
+                tightbtagprob_data *= weight_tight_cent * efftight;
+                tightbtagprob_mc *= efftight;
+		if (flavor == BTagEntry::FLAV_UDSG) {
+		  tightbtagprob_light_UP *= weight_tight_UP * efftight;
+		  tightbtagprob_light_DN *= weight_tight_DN * efftight;
+		  tightbtagprob_heavy_UP *= weight_tight_cent * efftight;
+		  tightbtagprob_heavy_DN *= weight_tight_cent * efftight;
+		} else {
+		  tightbtagprob_light_UP *= weight_tight_cent * efftight;
+		  tightbtagprob_light_DN *= weight_tight_cent * efftight;
+		  tightbtagprob_heavy_UP *= weight_tight_UP * efftight;
+		  tightbtagprob_heavy_DN *= weight_tight_DN * efftight;
+                }
+		if(isFastsim){
+		  tightbtagprob_FS_UP *= weight_tight_FS_UP * efftight;
+		  tightbtagprob_FS_DN *= weight_tight_FS_DN * efftight;
+		}
+               }
+            }else{ 
+             if (!evt_isRealData()&&applyBtagSFs) { // fail tight btag -- needed for SF event weights
+              tightbtagprob_data *= (1. - weight_tight_cent * efftight);
+              tightbtagprob_mc *= (1. - efftight);
+	      if (flavor == BTagEntry::FLAV_UDSG) {
+		tightbtagprob_light_UP *= (1. - weight_tight_UP * efftight);
+		tightbtagprob_light_DN *= (1. - weight_tight_DN * efftight);
+		tightbtagprob_heavy_UP *= (1. - weight_tight_cent * efftight);
+		tightbtagprob_heavy_DN *= (1. - weight_tight_cent * efftight);
+              } else {
+		tightbtagprob_light_UP *= (1. - weight_tight_cent * efftight);
+		tightbtagprob_light_DN *= (1. - weight_tight_cent * efftight);
+		tightbtagprob_heavy_UP *= (1. - weight_tight_UP * efftight);
+		tightbtagprob_heavy_DN *= (1. - weight_tight_DN * efftight);
+              }
+	      if(isFastsim){
+		tightbtagprob_FS_UP *= (1. - weight_tight_FS_UP * efftight);
+		tightbtagprob_FS_DN *= (1. - weight_tight_FS_DN * efftight);
+	      }
+           }
+        }//finish tight
    }
 
     ak4pfjets_leadbtag_p4 = p4sCorrJets.at(leadbtag_idx);//highest CSV jet
@@ -361,6 +529,8 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
    ak4_HT = HT;
    HT=0;
    ngoodbtags = nbtags_med;
+   nloosebtags = nbtags_loose;
+   ntightbtags = nbtags_tight;
 
    ak4_htssm = htssm;
    ak4_htosm = htosm;
@@ -439,6 +609,26 @@ void JetTree::deleteBtagSFTool()
     delete reader_fastsim;
     delete reader_fastsim_UP;
     delete reader_fastsim_DN;
+    delete reader_loose_heavy;
+    delete reader_loose_heavy_UP;
+    delete reader_loose_heavy_DN;
+    delete reader_loose_light;
+    delete reader_loose_light_UP;
+    delete reader_loose_light_DN;
+    delete reader_loose_fastsim;
+    delete reader_loose_fastsim_UP;
+    delete reader_loose_fastsim_DN;
+    delete reader_tight_heavy;
+    delete reader_tight_heavy_UP;
+    delete reader_tight_heavy_DN;
+    delete reader_tight_light;
+    delete reader_tight_light_UP;
+    delete reader_tight_light_DN;
+    delete reader_tight_fastsim;
+    delete reader_tight_fastsim_UP;
+    delete reader_tight_fastsim_DN;
+    
+    delete feff;
    return;
 } 
 void JetTree::Reset ()
@@ -527,12 +717,18 @@ void JetTree::Reset ()
     ak8GoodPFJets = -9999;
     nGoodGenJets  = -9999;
     ngoodbtags    = -9999;
+    nloosebtags    = -9999;
+    ntightbtags    = -9999;
+    nanalysisbtags = -9999;
 }
  
 void JetTree::SetAK4Branches (TTree* tree)
 {
     tree->Branch(Form("%sngoodjets", prefix_.c_str()) , &ngoodjets);
     tree->Branch(Form("%sngoodbtags", prefix_.c_str()) , &ngoodbtags);
+    tree->Branch(Form("%snloosebtags", prefix_.c_str()) , &nloosebtags);
+    tree->Branch(Form("%sntightbtags", prefix_.c_str()) , &ntightbtags);
+    tree->Branch(Form("%snanalysisbtags", prefix_.c_str()) , &nanalysisbtags);
     tree->Branch(Form("%sak4_HT", prefix_.c_str()) , &ak4_HT);
     tree->Branch(Form("%sak4_htratiom", prefix_.c_str()) , &ak4_htratiom);
     tree->Branch(Form("%sdphi_ak4pfjet_met", prefix_.c_str()) , &dphi_ak4pfjet_met);

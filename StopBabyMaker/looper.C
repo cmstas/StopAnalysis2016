@@ -729,7 +729,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     hPUdown = (TH1D*)pileupfile->Get("puWeightDown");
   }
   
-  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 36, 0.5,36.5);
+  TH1D* counterhist = new TH1D( "h_counter", "h_counter", 50, 0.5,50.5);
   counterhist->Sumw2();
   counterhist->GetXaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
   counterhist->GetXaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -767,11 +767,26 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   counterhist->GetXaxis()->SetBinLabel(34,"weight_lepSF_fastSim");
   counterhist->GetXaxis()->SetBinLabel(35,"weight_lepSF_fastSim_up");
   counterhist->GetXaxis()->SetBinLabel(36,"weight_lepSF_fastSim_down");
-  
+  counterhist->GetXaxis()->SetBinLabel(37,"weight_tightbtagsf");
+  counterhist->GetXaxis()->SetBinLabel(38,"weight_tightbtagsf_heavy_UP");
+  counterhist->GetXaxis()->SetBinLabel(39,"weight_tightbtagsf_light_UP");
+  counterhist->GetXaxis()->SetBinLabel(40,"weight_tightbtagsf_heavy_DN");
+  counterhist->GetXaxis()->SetBinLabel(41,"weight_tightbtagsf_light_DN");
+  counterhist->GetXaxis()->SetBinLabel(42,"weight_tightbtagsf_fastsim_UP");
+  counterhist->GetXaxis()->SetBinLabel(43,"weight_tightbtagsf_fastsim_DN");
+  counterhist->GetXaxis()->SetBinLabel(44,"weight_loosebtagsf");
+  counterhist->GetXaxis()->SetBinLabel(45,"weight_loosebtagsf_heavy_UP");
+  counterhist->GetXaxis()->SetBinLabel(46,"weight_loosebtagsf_light_UP");
+  counterhist->GetXaxis()->SetBinLabel(47,"weight_loosebtagsf_heavy_DN");
+  counterhist->GetXaxis()->SetBinLabel(48,"weight_loosebtagsf_light_DN");
+  counterhist->GetXaxis()->SetBinLabel(49,"weight_loosebtagsf_fastsim_UP");
+  counterhist->GetXaxis()->SetBinLabel(50,"weight_loosebtagsf_fastsim_DN");
+    
   TH3D* counterhistSig;
   TH2F* histNEvts;//count #evts per signal point
   if(isSignalFromFileName){//create histos only for signals
-    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 37,99,1024, 19,-1,474, 35, 0.5,35.5);//15000 bins!
+    //counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 305,-1,1524, 205,-1,1024, 50, 0.5,50.5);//3 million bins! - too much
+    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 61,-12.5,1512.5, 41,-12.5,1012.5, 50, 0.5,50.5);//125'000 bins!
     counterhistSig->Sumw2();
     counterhistSig->GetZaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
     counterhistSig->GetZaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -808,8 +823,24 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     counterhistSig->GetZaxis()->SetBinLabel(33,"weight_lepSF_fastSim");
     counterhistSig->GetZaxis()->SetBinLabel(34,"weight_lepSF_fastSim_up");
     counterhistSig->GetZaxis()->SetBinLabel(35,"weight_lepSF_fastSim_down");
-
-    histNEvts = new TH2F( "histNEvts", "h_histNEvts", 37,99,1024, 19,-1,474);//x=mStop, y=mLSP
+    counterhistSig->GetZaxis()->SetBinLabel(36,"nevents");
+    counterhistSig->GetZaxis()->SetBinLabel(37,"weight_tightbtagsf");
+    counterhistSig->GetZaxis()->SetBinLabel(38,"weight_tightbtagsf_heavy_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(39,"weight_tightbtagsf_light_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(40,"weight_tightbtagsf_heavy_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(41,"weight_tightbtagsf_light_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(42,"weight_tightbtagsf_fastsim_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(43,"weight_tightbtagsf_fastsim_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(44,"weight_loosebtagsf");
+    counterhistSig->GetZaxis()->SetBinLabel(45,"weight_loosebtagsf_heavy_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(46,"weight_loosebtagsf_light_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(47,"weight_loosebtagsf_heavy_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(48,"weight_loosebtagsf_light_DN");
+    counterhistSig->GetZaxis()->SetBinLabel(49,"weight_loosebtagsf_fastsim_UP");
+    counterhistSig->GetZaxis()->SetBinLabel(50,"weight_loosebtagsf_fastsim_DN");
+    
+    //histNEvts = new TH2F( "histNEvts", "h_histNEvts", 305,-1,1524, 205,-1,1024);//x=mStop, y=mLSP//65000 bins
+    histNEvts = new TH2F( "histNEvts", "h_histNEvts", 61,-12.5,1512.5, 41,-12.5,1012.5);//x=mStop, y=mLSP//2500 bins
     histNEvts->Sumw2();
   }
 
@@ -880,46 +911,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   //StopEvt.SetMetFilterEvents();
   // btagging scale factor//
-  //
-  if (skim_applyBtagSFs) {
-    //reader_heavy = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "central"); // central
-    //reader_heavy_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");  // sys up
-    //reader_heavy_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");  // sys down
-    //reader_light = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central");  // central
-    //reader_light_UP = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
-    //reader_light_DN = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
-
-    // get btag efficiencies
-    TFile* f_btag_eff;
-    TH2D* h_btag_eff_b_temp = NULL;
-    TH2D* h_btag_eff_c_temp = NULL;
-    TH2D* h_btag_eff_udsg_temp = NULL;
-
-    //if(!skim_isFastsim) f_btag_eff = new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
-    //else f_btag_eff = new TFile("btagsf/btageff__SMS-T1bbbb-T1qqqq_fastsim.root");
-    if(!skim_isFastsim){
-      //f_btag_eff = new TFile("btagsf/bTagEffs_80X.root");
-      //h_btag_eff_b_temp = (TH2D*) f_btag_eff->Get("eff_total_M_b");
-      //h_btag_eff_c_temp = (TH2D*) f_btag_eff->Get("eff_total_M_c");
-      //h_btag_eff_udsg_temp = (TH2D*) f_btag_eff->Get("eff_total_M_udsg");
-      f_btag_eff = new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
-      h_btag_eff_b_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_b");
-      h_btag_eff_c_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_c");
-      h_btag_eff_udsg_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
-    }
-    else{
-      f_btag_eff = new TFile("btagsf/btageff__SMS-T1bbbb-T1qqqq_fastsim.root");
-      h_btag_eff_b_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_b");
-      h_btag_eff_c_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_c");
-      h_btag_eff_udsg_temp = (TH2D*) f_btag_eff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
-    }
-    BabyFile->cd();
-    h_btag_eff_b = (TH2D*) h_btag_eff_b_temp->Clone("h_btag_eff_b");
-    h_btag_eff_c = (TH2D*) h_btag_eff_c_temp->Clone("h_btag_eff_c");
-    h_btag_eff_udsg = (TH2D*) h_btag_eff_udsg_temp->Clone("h_btag_eff_udsg");
-    f_btag_eff->Close(); 
- }    
-   jets.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim); 
+  //    
+   jets.InitBtagSFTool(skim_isFastsim); 
    //jets_jup.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim);   
   // jets_jdown.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim);
 
@@ -1044,6 +1037,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	//std::cout << "Got signal mass point mStop " << StopEvt.mass_stop << " mLSP " << StopEvt.mass_lsp << std::endl;
 	if(genps_weight()>0) histNEvts->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1);
 	else if(genps_weight()<0) histNEvts->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,-1);
+	if(genps_weight()>0) counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,36,1);
+	else if(genps_weight()<0) counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,36,-1);
 	StopEvt.xsec = hxsec->GetBinContent(hxsec->FindBin(StopEvt.mass_stop));
 	StopEvt.xsec_uncert = hxsec->GetBinError(hxsec->FindBin(StopEvt.mass_stop));
 	//note to get correct scale1fb you need to use in your looper xsec/nevt, where nevt you get via
@@ -1652,7 +1647,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        float btagprob_light_DN_jup  = 1.;
        float btagprob_FS_UP_jup  = 1.;
        float btagprob_FS_DN_jup  = 1.;
-
        float btagprob_data_jdown = 1.;
        float btagprob_mc_jdown = 1.;
        float btagprob_heavy_UP_jdown = 1.;
@@ -1661,6 +1655,57 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        float btagprob_light_DN_jdown = 1.;
        float btagprob_FS_UP_jdown = 1.;
        float btagprob_FS_DN_jdown = 1.;
+
+       float loosebtagprob_data = 1.;
+       float loosebtagprob_mc = 1.;
+       float loosebtagprob_heavy_UP = 1.;
+       float loosebtagprob_heavy_DN = 1.;
+       float loosebtagprob_light_UP = 1.;
+       float loosebtagprob_light_DN = 1.;
+       float loosebtagprob_FS_UP = 1.;
+       float loosebtagprob_FS_DN = 1.;
+       float tightbtagprob_data = 1.;
+       float tightbtagprob_mc = 1.;
+       float tightbtagprob_heavy_UP = 1.;
+       float tightbtagprob_heavy_DN = 1.;
+       float tightbtagprob_light_UP = 1.;
+       float tightbtagprob_light_DN = 1.;
+       float tightbtagprob_FS_UP = 1.;
+       float tightbtagprob_FS_DN = 1.;
+
+       float loosebtagprob_data_jup = 1.;
+       float loosebtagprob_mc_jup = 1.;
+       float loosebtagprob_heavy_UP_jup = 1.;
+       float loosebtagprob_heavy_DN_jup = 1.;
+       float loosebtagprob_light_UP_jup = 1.;
+       float loosebtagprob_light_DN_jup = 1.;
+       float loosebtagprob_FS_UP_jup = 1.;
+       float loosebtagprob_FS_DN_jup = 1.;
+       float tightbtagprob_data_jup = 1.;
+       float tightbtagprob_mc_jup = 1.;
+       float tightbtagprob_heavy_UP_jup = 1.;
+       float tightbtagprob_heavy_DN_jup = 1.;
+       float tightbtagprob_light_UP_jup = 1.;
+       float tightbtagprob_light_DN_jup = 1.;
+       float tightbtagprob_FS_UP_jup = 1.;
+       float tightbtagprob_FS_DN_jup = 1.;
+       
+       float loosebtagprob_data_jdown = 1.;
+       float loosebtagprob_mc_jdown = 1.;
+       float loosebtagprob_heavy_UP_jdown = 1.;
+       float loosebtagprob_heavy_DN_jdown = 1.;
+       float loosebtagprob_light_UP_jdown = 1.;
+       float loosebtagprob_light_DN_jdown = 1.;
+       float loosebtagprob_FS_UP_jdown = 1.;
+       float loosebtagprob_FS_DN_jdown = 1.;
+       float tightbtagprob_data_jdown = 1.;
+       float tightbtagprob_mc_jdown = 1.;
+       float tightbtagprob_heavy_UP_jdown = 1.;
+       float tightbtagprob_heavy_DN_jdown = 1.;
+       float tightbtagprob_light_UP_jdown = 1.;
+       float tightbtagprob_light_DN_jdown = 1.;
+       float tightbtagprob_FS_UP_jdown = 1.;
+       float tightbtagprob_FS_DN_jdown = 1.;
        
       //std::cout << "[babymaker::looper]: filling jets vars" << std::endl;         
       // Get the jets overlapping with the selected leptons
@@ -1670,11 +1715,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         //applyJECfromFile=false;
 	if(nVetoLeptons>0) jet_overlep1_idx = getOverlappingJetIndex(lep1.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile,jetcorr_uncertainty,JES_type,skim_isFastsim);  //don't care about jid
 	if(nVetoLeptons>1) jet_overlep2_idx = getOverlappingJetIndex(lep2.p4, pfjets_p4(), 0.4, skim_jet_pt, skim_jet_eta, false,jet_corrector_pfL1FastJetL2L3,applyJECfromFile,jetcorr_uncertainty,JES_type,skim_isFastsim);  //don't care about jid
-	
+
 	// Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
 	jets.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
 	jets.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_heavy_UP, btagprob_heavy_DN, btagprob_light_UP,btagprob_light_DN,btagprob_FS_UP,btagprob_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
+        //jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_heavy_UP, btagprob_heavy_DN, btagprob_light_UP,btagprob_light_DN,btagprob_FS_UP,btagprob_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
+        jets.FillCommon(idx_alloverlapjets, jet_corrector_pfL1FastJetL2L3,btagprob_data,btagprob_mc,btagprob_heavy_UP, btagprob_heavy_DN, btagprob_light_UP,btagprob_light_DN,btagprob_FS_UP,btagprob_FS_DN,loosebtagprob_data,loosebtagprob_mc,loosebtagprob_heavy_UP, loosebtagprob_heavy_DN, loosebtagprob_light_UP,loosebtagprob_light_DN,loosebtagprob_FS_UP,loosebtagprob_FS_DN,tightbtagprob_data,tightbtagprob_mc,tightbtagprob_heavy_UP, tightbtagprob_heavy_DN, tightbtagprob_light_UP,tightbtagprob_light_DN,tightbtagprob_FS_UP,tightbtagprob_FS_DN,jet_overlep1_idx, jet_overlep2_idx,applyJECfromFile,jetcorr_uncertainty,JES_type, skim_applyBtagSFs, skim_isFastsim);
 	
         //JEC up
         jet_overlep1_idx = -9999;
@@ -1685,7 +1731,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         // Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
         jets_jup.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
         jets_jup.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets_jup.FillCommon(idx_alloverlapjets_jup, jet_corrector_pfL1FastJetL2L3,btagprob_data_jup,btagprob_mc_jup,btagprob_heavy_UP_jup, btagprob_heavy_DN_jup, btagprob_light_UP_jup,btagprob_light_DN_jup,btagprob_FS_UP_jup,btagprob_FS_DN_jup,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,1, false, skim_isFastsim);
+        //jets_jup.FillCommon(idx_alloverlapjets_jup, jet_corrector_pfL1FastJetL2L3,btagprob_data_jup,btagprob_mc_jup,btagprob_heavy_UP_jup, btagprob_heavy_DN_jup, btagprob_light_UP_jup,btagprob_light_DN_jup,btagprob_FS_UP_jup,btagprob_FS_DN_jup,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,1, false, skim_isFastsim);
+        jets_jup.FillCommon(idx_alloverlapjets_jup, jet_corrector_pfL1FastJetL2L3,btagprob_data_jup,btagprob_mc_jup,btagprob_heavy_UP_jup, btagprob_heavy_DN_jup, btagprob_light_UP_jup,btagprob_light_DN_jup,btagprob_FS_UP_jup,btagprob_FS_DN_jup,loosebtagprob_data_jup,loosebtagprob_mc_jup,loosebtagprob_heavy_UP_jup, loosebtagprob_heavy_DN_jup, loosebtagprob_light_UP_jup,loosebtagprob_light_DN_jup,loosebtagprob_FS_UP_jup,loosebtagprob_FS_DN_jup,tightbtagprob_data_jup,tightbtagprob_mc_jup,tightbtagprob_heavy_UP_jup, tightbtagprob_heavy_DN_jup, tightbtagprob_light_UP_jup,tightbtagprob_light_DN_jup,tightbtagprob_FS_UP_jup,tightbtagprob_FS_DN_jup,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,1, false, skim_isFastsim);
 	
         //JEC down
         jet_overlep1_idx = -9999;
@@ -1696,7 +1743,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         // Jets and b-tag variables feeding the index for the jet overlapping the selected leptons
         jets_jdown.SetJetSelection("ak4", skim_jet_pt, skim_jet_eta, true); //save only jets passing jid
         jets_jdown.SetJetSelection("ak8", skim_jet_ak8_pt, skim_jet_ak8_eta, true); //save only jets passing jid
-        jets_jdown.FillCommon(idx_alloverlapjets_jdown, jet_corrector_pfL1FastJetL2L3,btagprob_data_jdown,btagprob_mc_jdown,btagprob_heavy_UP_jdown, btagprob_heavy_DN_jdown, btagprob_light_UP_jdown,btagprob_light_DN_jdown,btagprob_FS_UP_jdown,btagprob_FS_DN_jdown,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,-1, false, skim_isFastsim);
+        //jets_jdown.FillCommon(idx_alloverlapjets_jdown, jet_corrector_pfL1FastJetL2L3,btagprob_data_jdown,btagprob_mc_jdown,btagprob_heavy_UP_jdown, btagprob_heavy_DN_jdown, btagprob_light_UP_jdown,btagprob_light_DN_jdown,btagprob_FS_UP_jdown,btagprob_FS_DN_jdown,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,-1, false, skim_isFastsim);
+	jets_jdown.FillCommon(idx_alloverlapjets_jdown, jet_corrector_pfL1FastJetL2L3,btagprob_data_jdown,btagprob_mc_jdown,btagprob_heavy_UP_jdown, btagprob_heavy_DN_jdown, btagprob_light_UP_jdown,btagprob_light_DN_jdown,btagprob_FS_UP_jdown,btagprob_FS_DN_jdown,loosebtagprob_data_jdown,loosebtagprob_mc_jdown,loosebtagprob_heavy_UP_jdown, loosebtagprob_heavy_DN_jdown, loosebtagprob_light_UP_jdown,loosebtagprob_light_DN_jdown,loosebtagprob_FS_UP_jdown,loosebtagprob_FS_DN_jdown,tightbtagprob_data_jdown,tightbtagprob_mc_jdown,tightbtagprob_heavy_UP_jdown, tightbtagprob_heavy_DN_jdown, tightbtagprob_light_UP_jdown,tightbtagprob_light_DN_jdown,tightbtagprob_FS_UP_jdown,tightbtagprob_FS_DN_jdown,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,-1, false, skim_isFastsim);
+
       }
       if (!evt_isRealData()){
 	int NISRjets = 0;
@@ -1712,13 +1761,22 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if(!ismatched) ++NISRjets;
 	  else ++nonISRjets;
 	}
-	if(NISRjets     ==0){ StopEvt.weight_ISRnjets = 1.0000; StopEvt.weight_ISRnjets_UP = 1.0000; StopEvt.weight_ISRnjets_DN = 1.0000; }
-	else if(NISRjets==1){ StopEvt.weight_ISRnjets = 0.8820; StopEvt.weight_ISRnjets_UP = 0.9410; StopEvt.weight_ISRnjets_DN = 0.8230; }
-	else if(NISRjets==2){ StopEvt.weight_ISRnjets = 0.7920; StopEvt.weight_ISRnjets_UP = 0.8960; StopEvt.weight_ISRnjets_DN = 0.6880; }
-	else if(NISRjets==3){ StopEvt.weight_ISRnjets = 0.7020; StopEvt.weight_ISRnjets_UP = 0.8510; StopEvt.weight_ISRnjets_DN = 0.5530; }
-	else if(NISRjets==4){ StopEvt.weight_ISRnjets = 0.6480; StopEvt.weight_ISRnjets_UP = 0.8240; StopEvt.weight_ISRnjets_DN = 0.4720; }
-	else if(NISRjets==5){ StopEvt.weight_ISRnjets = 0.6010; StopEvt.weight_ISRnjets_UP = 0.8005; StopEvt.weight_ISRnjets_DN = 0.4015; }
-	else {                StopEvt.weight_ISRnjets = 0.5150; StopEvt.weight_ISRnjets_UP = 0.7575; StopEvt.weight_ISRnjets_DN = 0.2725; }
+	//ICHEP 2016
+	//if(NISRjets     ==0){ StopEvt.weight_ISRnjets = 1.0000; StopEvt.weight_ISRnjets_UP = 1.0000; StopEvt.weight_ISRnjets_DN = 1.0000; }
+	//else if(NISRjets==1){ StopEvt.weight_ISRnjets = 0.8820; StopEvt.weight_ISRnjets_UP = 0.9410; StopEvt.weight_ISRnjets_DN = 0.8230; }
+	//else if(NISRjets==2){ StopEvt.weight_ISRnjets = 0.7920; StopEvt.weight_ISRnjets_UP = 0.8960; StopEvt.weight_ISRnjets_DN = 0.6880; }
+	//else if(NISRjets==3){ StopEvt.weight_ISRnjets = 0.7020; StopEvt.weight_ISRnjets_UP = 0.8510; StopEvt.weight_ISRnjets_DN = 0.5530; }
+	//else if(NISRjets==4){ StopEvt.weight_ISRnjets = 0.6480; StopEvt.weight_ISRnjets_UP = 0.8240; StopEvt.weight_ISRnjets_DN = 0.4720; }
+	//else if(NISRjets==5){ StopEvt.weight_ISRnjets = 0.6010; StopEvt.weight_ISRnjets_UP = 0.8005; StopEvt.weight_ISRnjets_DN = 0.4015; }
+	//else {                StopEvt.weight_ISRnjets = 0.5150; StopEvt.weight_ISRnjets_UP = 0.7575; StopEvt.weight_ISRnjets_DN = 0.2725; }
+	//Moriond 2017
+	if(NISRjets     ==0){ StopEvt.weight_ISRnjets = 1.000; StopEvt.weight_ISRnjets_UP = 1.0000; StopEvt.weight_ISRnjets_DN = 1.0000; }
+	else if(NISRjets==1){ StopEvt.weight_ISRnjets = 0.920; StopEvt.weight_ISRnjets_UP = 0.960; StopEvt.weight_ISRnjets_DN = 0.880; }
+	else if(NISRjets==2){ StopEvt.weight_ISRnjets = 0.821; StopEvt.weight_ISRnjets_UP = 0.911; StopEvt.weight_ISRnjets_DN = 0.731; }
+	else if(NISRjets==3){ StopEvt.weight_ISRnjets = 0.715; StopEvt.weight_ISRnjets_UP = 0.858; StopEvt.weight_ISRnjets_DN = 0.572; }
+	else if(NISRjets==4){ StopEvt.weight_ISRnjets = 0.662; StopEvt.weight_ISRnjets_UP = 0.832; StopEvt.weight_ISRnjets_DN = 0.492; }
+	else if(NISRjets==5){ StopEvt.weight_ISRnjets = 0.561; StopEvt.weight_ISRnjets_UP = 0.782; StopEvt.weight_ISRnjets_DN = 0.340; }
+	else {                StopEvt.weight_ISRnjets = 0.511; StopEvt.weight_ISRnjets_UP = 0.769; StopEvt.weight_ISRnjets_DN = 0.253; }
 	StopEvt.NISRjets = NISRjets;
 	StopEvt.NnonISRjets = nonISRjets;
 
@@ -1735,12 +1793,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // SAVE B TAGGING SF 
      if (!evt_isRealData() && skim_applyBtagSFs) {
         StopEvt.weight_btagsf = btagprob_data / btagprob_mc;
-	//StopEvt.weight_btagsf_heavy_UP = StopEvt.weight_btagsf + btagprob_err_heavy_UP*StopEvt.weight_btagsf;
-        //StopEvt.weight_btagsf_light_UP = StopEvt.weight_btagsf + btagprob_err_light_UP*StopEvt.weight_btagsf;
-        //StopEvt.weight_btagsf_heavy_DN = StopEvt.weight_btagsf - btagprob_err_heavy_DN*StopEvt.weight_btagsf;
-        //StopEvt.weight_btagsf_light_DN = StopEvt.weight_btagsf - btagprob_err_light_DN*StopEvt.weight_btagsf;
- 	//StopEvt.weight_btagsf_fastsim_UP = StopEvt.weight_btagsf + btagprob_err_FS_UP*StopEvt.weight_btagsf;
-        //StopEvt.weight_btagsf_fastsim_DN = StopEvt.weight_btagsf - btagprob_err_FS_DN*StopEvt.weight_btagsf;
         StopEvt.weight_btagsf_heavy_UP = btagprob_heavy_UP/btagprob_mc;
         StopEvt.weight_btagsf_light_UP = btagprob_light_UP/btagprob_mc;
         StopEvt.weight_btagsf_heavy_DN = btagprob_heavy_DN/btagprob_mc;
@@ -1748,6 +1800,24 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(skim_isFastsim){
 	  StopEvt.weight_btagsf_fastsim_UP = btagprob_FS_UP/btagprob_mc;
 	  StopEvt.weight_btagsf_fastsim_DN = btagprob_FS_DN/btagprob_mc;
+	}
+        StopEvt.weight_tightbtagsf = tightbtagprob_data / tightbtagprob_mc;
+        StopEvt.weight_tightbtagsf_heavy_UP = tightbtagprob_heavy_UP/tightbtagprob_mc;
+        StopEvt.weight_tightbtagsf_light_UP = tightbtagprob_light_UP/tightbtagprob_mc;
+        StopEvt.weight_tightbtagsf_heavy_DN = tightbtagprob_heavy_DN/tightbtagprob_mc;
+        StopEvt.weight_tightbtagsf_light_DN = tightbtagprob_light_DN/tightbtagprob_mc;
+	if(skim_isFastsim){
+	  StopEvt.weight_tightbtagsf_fastsim_UP = tightbtagprob_FS_UP/tightbtagprob_mc;
+	  StopEvt.weight_tightbtagsf_fastsim_DN = tightbtagprob_FS_DN/tightbtagprob_mc;
+	}
+        StopEvt.weight_loosebtagsf = loosebtagprob_data / loosebtagprob_mc;
+        StopEvt.weight_loosebtagsf_heavy_UP = loosebtagprob_heavy_UP/btagprob_mc;
+        StopEvt.weight_loosebtagsf_light_UP = loosebtagprob_light_UP/btagprob_mc;
+        StopEvt.weight_loosebtagsf_heavy_DN = loosebtagprob_heavy_DN/btagprob_mc;
+        StopEvt.weight_loosebtagsf_light_DN = loosebtagprob_light_DN/btagprob_mc;
+	if(skim_isFastsim){
+	  StopEvt.weight_loosebtagsf_fastsim_UP = loosebtagprob_FS_UP/loosebtagprob_mc;
+	  StopEvt.weight_loosebtagsf_fastsim_DN = loosebtagprob_FS_DN/loosebtagprob_mc;
 	}
 
 	
@@ -1760,9 +1830,23 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhist->Fill(16,StopEvt.weight_btagsf_light_UP);
        counterhist->Fill(17,StopEvt.weight_btagsf_heavy_DN);
        counterhist->Fill(18,StopEvt.weight_btagsf_light_DN);
+       counterhist->Fill(37,StopEvt.weight_tightbtagsf);
+       counterhist->Fill(38,StopEvt.weight_tightbtagsf_heavy_UP);
+       counterhist->Fill(39,StopEvt.weight_tightbtagsf_light_UP);
+       counterhist->Fill(40,StopEvt.weight_tightbtagsf_heavy_DN);
+       counterhist->Fill(41,StopEvt.weight_tightbtagsf_light_DN);
+       counterhist->Fill(44,StopEvt.weight_loosebtagsf);
+       counterhist->Fill(45,StopEvt.weight_loosebtagsf_heavy_UP);
+       counterhist->Fill(46,StopEvt.weight_loosebtagsf_light_UP);
+       counterhist->Fill(47,StopEvt.weight_loosebtagsf_heavy_DN);
+       counterhist->Fill(48,StopEvt.weight_loosebtagsf_light_DN);  
        if(skim_isFastsim){
 	 counterhist->Fill(23,StopEvt.weight_btagsf_fastsim_UP);
 	 counterhist->Fill(24,StopEvt.weight_btagsf_fastsim_DN);
+	 counterhist->Fill(42,StopEvt.weight_tightbtagsf_fastsim_UP);
+	 counterhist->Fill(43,StopEvt.weight_tightbtagsf_fastsim_DN);
+	 counterhist->Fill(49,StopEvt.weight_loosebtagsf_fastsim_UP);
+	 counterhist->Fill(50,StopEvt.weight_loosebtagsf_fastsim_DN);
        }
      }
      if(isSignalFromFileName && !evt_isRealData() && skim_applyBtagSFs){
@@ -1771,9 +1855,23 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,16,StopEvt.weight_btagsf_light_UP);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,17,StopEvt.weight_btagsf_heavy_DN);
        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,18,StopEvt.weight_btagsf_light_DN);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,37,StopEvt.weight_tightbtagsf);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,38,StopEvt.weight_tightbtagsf_heavy_UP);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,39,StopEvt.weight_tightbtagsf_light_UP);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,40,StopEvt.weight_tightbtagsf_heavy_DN);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,41,StopEvt.weight_tightbtagsf_light_DN);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,44,StopEvt.weight_loosebtagsf);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,45,StopEvt.weight_loosebtagsf_heavy_UP);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,46,StopEvt.weight_loosebtagsf_light_UP);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,47,StopEvt.weight_loosebtagsf_heavy_DN);
+       counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,48,StopEvt.weight_loosebtagsf_light_DN);
        if(skim_isFastsim){
 	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,22,StopEvt.weight_btagsf_fastsim_UP);
 	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,23,StopEvt.weight_btagsf_fastsim_DN);
+	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,42,StopEvt.weight_tightbtagsf_fastsim_UP);
+	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,43,StopEvt.weight_tightbtagsf_fastsim_DN);
+	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,49,StopEvt.weight_loosebtagsf_fastsim_UP);
+	 counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,50,StopEvt.weight_loosebtagsf_fastsim_DN);
        }
      }
      // 
@@ -1984,6 +2082,30 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if(nVetoLeptons==0) continue;
 	  if(!(jets.ak4pfjets_passMEDbtag.at(rankminDR[idx].second)) ) continue;
 	  StopEvt.Mlb_closestb = (jets.ak4pfjets_p4.at(rankminDR[idx].second)+lep1.p4).M();
+	  if(StopEvt.Mlb_closestb<175) {
+	    StopEvt.weight_analysisbtagsf = StopEvt.weight_btagsf;
+	    StopEvt.weight_analysisbtagsf_heavy_UP = StopEvt.weight_btagsf_heavy_UP;
+	    StopEvt.weight_analysisbtagsf_light_UP = StopEvt.weight_btagsf_light_UP;
+	    StopEvt.weight_analysisbtagsf_heavy_DN = StopEvt.weight_btagsf_heavy_DN;
+	    StopEvt.weight_analysisbtagsf_light_DN = StopEvt.weight_btagsf_light_DN;
+	    StopEvt.weight_analysisbtagsf_fastsim_UP = StopEvt.weight_btagsf_fastsim_UP;
+	    StopEvt.weight_analysisbtagsf_fastsim_DN = StopEvt.weight_btagsf_fastsim_DN;
+	    jets.nanalysisbtags = jets.ngoodbtags;
+	    jets_jup.nanalysisbtags = jets_jup.ngoodbtags;
+	    jets_jdown.nanalysisbtags = jets_jdown.ngoodbtags;
+	  }
+	  else  {
+	    StopEvt.weight_analysisbtagsf = StopEvt.weight_tightbtagsf;
+	    StopEvt.weight_analysisbtagsf_heavy_UP = StopEvt.weight_tightbtagsf_heavy_UP;
+	    StopEvt.weight_analysisbtagsf_light_UP = StopEvt.weight_tightbtagsf_light_UP;
+	    StopEvt.weight_analysisbtagsf_heavy_DN = StopEvt.weight_tightbtagsf_heavy_DN;
+	    StopEvt.weight_analysisbtagsf_light_DN = StopEvt.weight_tightbtagsf_light_DN;
+	    StopEvt.weight_analysisbtagsf_fastsim_UP = StopEvt.weight_tightbtagsf_fastsim_UP;
+	    StopEvt.weight_analysisbtagsf_fastsim_DN = StopEvt.weight_tightbtagsf_fastsim_DN;
+	    jets.nanalysisbtags = jets.ntightbtags;
+	    jets_jup.nanalysisbtags = jets_jup.ntightbtags;
+	    jets_jdown.nanalysisbtags = jets_jdown.ntightbtags;
+	  }
 	  break;
 	}
 	for (unsigned int idx = 0; idx < rankminDR_lep2.size(); ++idx){
