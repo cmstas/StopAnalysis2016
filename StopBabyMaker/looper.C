@@ -2607,6 +2607,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v") || passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
 	//photons more complicated because of prescales - follow Vince's code
 	//StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon90_CaloIdL_PFHT500 = passHLTTriggerPattern("HLT_Photon90_CaloIdL_PFHT500_v");
+	StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v" ));
+	StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"));
+	StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
+	StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v");
+	StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v");
 	StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon22_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon22_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v"));
 	StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon30_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon30_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v"));
 	StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon36_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon36_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v"));
