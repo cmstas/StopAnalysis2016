@@ -28,9 +28,10 @@
 
 
 
-#############
+##############
 ## Examples ##
-#############
+##############
+
 #BABY ANALYSIS VERSION /TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root TTWJetsToLNu_amcnlo_pythia8_25ns
 
 #BABY ANALYSIS VERSION /SMS-T2tt_mStop-150to250_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_150to250,1
@@ -47,22 +48,45 @@
 #######################
 
 ## DoubleEG - RunB PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleEG/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016B_MINIAOD_PromptReco-v2re
+#BABY ANALYSIS VERSION /DoubleEG/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016B_MINIAOD_PromptReco-v2re
 
 ## Double mu - RunB PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleMuon/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016B_MINIAOD_PromptReco-v2re
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016B_MINIAOD_PromptReco-v2re
 
 ## Muon EG - RunB PromptRecoV2 ##
-BABY ANALYSIS VERSION /MuonEG/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016B_MINIAOD_PromptReco-v2re
+#BABY ANALYSIS VERSION /MuonEG/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016B_MINIAOD_PromptReco-v2re
 
 ## Single Electron - RunB PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleElectron/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016B_MINIAOD_PromptReco-v2re
+#BABY ANALYSIS VERSION /SingleElectron/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016B_MINIAOD_PromptReco-v2re
 
 ## Single Muon - RunB PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleMuon/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016B_MINIAOD_PromptReco-v2re
+#BABY ANALYSIS VERSION /SingleMuon/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016B_MINIAOD_PromptReco-v2re
 
 ## MET - RunB PromptRecoV2 ##
-BABY ANALYSIS VERSION /MET/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016B_MINIAOD_PromptReco-v2re
+#BABY ANALYSIS VERSION /MET/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016B_MINIAOD_PromptReco-v2re
+
+
+###########################
+## RunB 23Sep2016 Rereco ##
+###########################
+
+## DoubleEG - RunB 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleEG/Run2016B-23Sep2016-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016B_MINIAOD_23Sep2016-v3
+
+## Double mu - RunB 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016B-23Sep2016-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016B_MINIAOD_23Sep2016-v3
+
+## Muon EG - RunB 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MuonEG/Run2016B-23Sep2016-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016B_MINIAOD_23Sep2016-v3
+
+## Single Electron - RunB 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleElectron/Run2016B-23Sep2016-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016B_MINIAOD_23Sep2016-v3
+
+## Single Muon - RunB 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleMuon/Run2016B-23Sep2016-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016B_MINIAOD_23Sep2016-v3
+
+## MET - RunB 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MET/Run2016B-23Sep2016-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016B_MINIAOD_23Sep2016-v3
 
 
 #######################
@@ -70,23 +94,45 @@ BABY ANALYSIS VERSION /MET/Run2016B-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTA
 #######################
 
 ## DoubleEG - RunC PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleEG/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016C_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /DoubleEG/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016C_MINIAOD_PromptReco-v2
 
 ## Double mu - RunC PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleMuon/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016C_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016C_MINIAOD_PromptReco-v2
 
 ## Muon EG - RunC PromptRecoV2 ##
-BABY ANALYSIS VERSION /MuonEG/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016C_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016C_MuonEG_MINIAOD_PromptReco-v2/merged/V08-00-07/
+#BABY ANALYSIS VERSION /MuonEG/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016C_MINIAOD_PromptReco-v2
 
 ## Single Electron - RunC PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleElectron/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016C_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /SingleElectron/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016C_MINIAOD_PromptReco-v2
 
 ## Single Muon - RunC PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleMuon/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016C_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /SingleMuon/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016C_MINIAOD_PromptReco-v2
 
 ## MET - RunC PromptRecoV2 ##
-BABY ANALYSIS VERSION /MET/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016C_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /MET/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016C_MINIAOD_PromptReco-v2
+
+
+############################
+## RunC  23Sep2016 Rereco ##
+############################
+
+## DoubleEG - RunC 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleEG/Run2016C-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016C_MINIAOD_23Sep2016-v1
+
+## Double mu - RunC 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016C-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016C_MINIAOD_23Sep2016-v1
+
+## Muon EG - RunC 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MuonEG/Run2016C-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016C_MINIAOD_23Sep2016-v1
+
+## Single Electron - RunC 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleElectron/Run2016C-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016C_MINIAOD_23Sep2016-v1
+
+## Single Muon - RunC 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleMuon/Run2016C-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016C_MINIAOD_23Sep2016-v1
+
+## MET - RunC 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MET/Run2016C-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016C_MINIAOD_23Sep2016-v1
 
 
 #######################
@@ -94,23 +140,45 @@ BABY ANALYSIS VERSION /MET/Run2016C-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTA
 #######################
 
 ## DoubleEG - RunD PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleEG/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016D_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /DoubleEG/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016D_MINIAOD_PromptReco-v2
 
 ## Double mu - RunD PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleMuon/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016D_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016D_MINIAOD_PromptReco-v2
 
 ## Muon EG - RunD PromptRecoV2 ##
-BABY ANALYSIS VERSION /MuonEG/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016D_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /MuonEG/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016D_MINIAOD_PromptReco-v2
 
 ## Single Electron - RunD PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleElectron/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016D_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /SingleElectron/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016D_MINIAOD_PromptReco-v2
 
 ## Single Muon - RunD PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleMuon/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016D_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /SingleMuon/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016D_MINIAOD_PromptReco-v2
 
 ## MET - RunD PromptRecoV2 ##
-BABY ANALYSIS VERSION /MET/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016D_MINIAOD_PromptReco-v2
-Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MET_MINIAOD_PromptReco-v2/merged/V08-00-08/
+#BABY ANALYSIS VERSION /MET/Run2016D-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016D_MINIAOD_PromptReco-v2
+
+
+###########################
+## RunD 23Sep2016 Rereco ##
+###########################
+
+## DoubleEG - RunD 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleEG/Run2016D-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016D_MINIAOD_23Sep2016-v1
+
+## Double mu - RunD 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016D-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016D_MINIAOD_23Sep2016-v1
+
+## Muon EG - RunD 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MuonEG/Run2016D-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016D_MINIAOD_23Sep2016-v1
+
+## Single Electron - RunD 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleElectron/Run2016D-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016D_MINIAOD_23Sep2016-v1
+
+## Single Muon - RunD 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleMuon/Run2016D-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016D_MINIAOD_23Sep2016-v1
+
+## MET - RunD 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MET/Run2016D-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016D_MINIAOD_23Sep2016-v1
 
 
 #######################
@@ -118,22 +186,45 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MET_MINIAOD_PromptReco-v2/me
 #######################
 
 ## Double EG - RunE PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleEG/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016E_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /DoubleEG/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016E_MINIAOD_PromptReco-v2
 
 ## Double mu - RunE PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleMuon/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016E_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016E_MINIAOD_PromptReco-v2
 
 ## Muon EG - RunE PromptRecoV2 ##
-BABY ANALYSIS VERSION /MuonEG/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016E_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /MuonEG/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016E_MINIAOD_PromptReco-v2
 
 ## Single Electron - RunE PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleElectron/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016E_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /SingleElectron/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016E_MINIAOD_PromptReco-v2
 
 ## Single Muon - RunE PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleMuon/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016E_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /SingleMuon/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016E_MINIAOD_PromptReco-v2
 
 ## MET - RunE PromptRecoV2 ##
-BABY ANALYSIS VERSION /MET/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016E_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /MET/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016E_MINIAOD_PromptReco-v2
+
+
+###########################
+## RunE 23Sep2016 Rereco ##
+###########################
+
+## Double EG - RunE 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleEG/Run2016E-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016E_MINIAOD_23Sep2016-v1
+
+## Double mu - RunE 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016E-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016E_MINIAOD_23Sep2016-v1
+
+## Muon EG - RunE 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MuonEG/Run2016E-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016E_MINIAOD_23Sep2016-v1
+
+## Single Electron - RunE 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleElectron/Run2016E-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016E_MINIAOD_23Sep2016-v1
+
+## Single Muon - RunE 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleMuon/Run2016E-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016E_MINIAOD_23Sep2016-v1
+
+## MET - RunE 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MET/Run2016E-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016E_MINIAOD_23Sep2016-v1
 
 
 #######################
@@ -141,22 +232,45 @@ BABY ANALYSIS VERSION /MET/Run2016E-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTA
 #######################
 
 ## Double EG - RunF PromptRecoV1 ##
-BABY ANALYSIS VERSION /DoubleEG/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016F_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /DoubleEG/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016F_MINIAOD_PromptReco-v1
 
 ## Double mu - RunF PromptRecoV1 ##
-BABY ANALYSIS VERSION /DoubleMuon/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016F_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016F_MINIAOD_PromptReco-v1
 
 ## Muon EG - RunF PromptRecoV1 ##
-BABY ANALYSIS VERSION /MuonEG/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016F_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /MuonEG/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016F_MINIAOD_PromptReco-v1
 
 ## Single Electron - RunF PromptRecoV1 ##
-BABY ANALYSIS VERSION /SingleElectron/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016F_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /SingleElectron/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016F_MINIAOD_PromptReco-v1
 
 ## Single Muon - RunF PromptRecoV1 ##
-BABY ANALYSIS VERSION /SingleMuon/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016F_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /SingleMuon/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016F_MINIAOD_PromptReco-v1
 
 ## MET - RunF PromptRecoV1 ##
-BABY ANALYSIS VERSION /MET/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016F_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /MET/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016F_MINIAOD_PromptReco-v1
+
+
+###########################
+## RunF 23Sep2016 Rereco ##
+###########################
+
+## Double EG - RunF 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleEG/Run2016F-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016F_MINIAOD_23Sep2016-v1
+
+## Double mu - RunF 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016F-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016F_MINIAOD_23Sep2016-v1
+
+## Muon EG - RunF 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MuonEG/Run2016F-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016F_MINIAOD_23Sep2016-v1
+
+## Single Electron - RunF 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleElectron/Run2016F-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016F_MINIAOD_23Sep2016-v1
+
+## Single Muon - RunF 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleMuon/Run2016F-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016F_MINIAOD_23Sep2016-v1
+
+## MET - RunF 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MET/Run2016F-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016F_MINIAOD_23Sep2016-v1
 
 
 #######################
@@ -164,22 +278,45 @@ BABY ANALYSIS VERSION /MET/Run2016F-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTA
 #######################
 
 ## Double EG - RunG PromptRecoV1 ##
-BABY ANALYSIS VERSION /DoubleEG/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016G_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /DoubleEG/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016G_MINIAOD_PromptReco-v1
 
 ## Double mu - RunG PromptRecoV1 ##
-BABY ANALYSIS VERSION /DoubleMuon/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016G_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016G_MINIAOD_PromptReco-v1
 
 ## Muon EG - RunG PromptRecoV1 ##
-BABY ANALYSIS VERSION /MuonEG/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016G_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /MuonEG/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016G_MINIAOD_PromptReco-v1
 
 ## Single Electron - RunG PromptRecoV1 ##
-BABY ANALYSIS VERSION /SingleElectron/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016G_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /SingleElectron/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016G_MINIAOD_PromptReco-v1
 
 ## Single Muon - RunG PromptRecoV1 ##
-BABY ANALYSIS VERSION /SingleMuon/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016G_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /SingleMuon/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016G_MINIAOD_PromptReco-v1
 
 ## MET - RunG PromptRecoV1 ##
-BABY ANALYSIS VERSION /MET/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016G_MINIAOD_PromptReco-v1
+#BABY ANALYSIS VERSION /MET/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016G_MINIAOD_PromptReco-v1
+
+
+###########################
+## RunG 23Sep2016 Rereco ##
+###########################
+
+## Double EG - RunG 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleEG/Run2016G-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016G_MINIAOD_23Sep2016-v1
+
+## Double mu - RunG 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016G-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016G_MINIAOD_23Sep2016-v1
+
+## Muon EG - RunG 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MuonEG/Run2016G-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016G_MINIAOD_23Sep2016-v1
+
+## Single Electron - RunG 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleElectron/Run2016G-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016G_MINIAOD_23Sep2016-v1
+
+## Single Muon - RunG 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /SingleMuon/Run2016G-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016G_MINIAOD_23Sep2016-v1
+
+## MET - RunG 23Sep2016 Rereco ##
+#BABY ANALYSIS VERSION /MET/Run2016G-23Sep2016-v1/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016G_MINIAOD_23Sep2016-v1
 
 
 #######################
@@ -187,22 +324,45 @@ BABY ANALYSIS VERSION /MET/Run2016G-PromptReco-v1/MINIAOD TARBALL.tar.gz EXECUTA
 #######################
 
 ## Double EG - RunH PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleEG/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016H_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /DoubleEG/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016H_MINIAOD_PromptReco-v2
 
 ## Double mu - RunH PromptRecoV2 ##
-BABY ANALYSIS VERSION /DoubleMuon/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016H_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016H_MINIAOD_PromptReco-v2
 
 ## Muon EG - RunH PromptRecoV2 ##
-BABY ANALYSIS VERSION /MuonEG/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016H_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /MuonEG/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016H_MINIAOD_PromptReco-v2
 
 ## Single Electron - RunH PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleElectron/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016H_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /SingleElectron/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016H_MINIAOD_PromptReco-v2
 
 ## Single Muon - RunH PromptRecoV2 ##
-BABY ANALYSIS VERSION /SingleMuon/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016H_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /SingleMuon/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016H_MINIAOD_PromptReco-v2
 
 ## MET - RunH PromptRecoV2 ##
-BABY ANALYSIS VERSION /MET/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016H_MINIAOD_PromptReco-v2
+#BABY ANALYSIS VERSION /MET/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016H_MINIAOD_PromptReco-v2
+
+
+#######################
+## RunH PromptRecoV3 ##
+#######################
+
+## Double EG - RunH PromptRecoV3 ##
+#BABY ANALYSIS VERSION /DoubleEG/Run2016H-PromptReco-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_eg_Run2016H_MINIAOD_PromptReco-v3
+
+## Double mu - RunH PromptRecoV3 ##
+#BABY ANALYSIS VERSION /DoubleMuon/Run2016H-PromptReco-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_double_mu_Run2016H_MINIAOD_PromptReco-v3
+
+## Muon EG - RunH PromptRecoV3 ##
+#BABY ANALYSIS VERSION /MuonEG/Run2016H-PromptReco-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_muon_eg_Run2016H_MINIAOD_PromptReco-v3
+
+## Single Electron - RunH PromptRecoV3 ##
+#BABY ANALYSIS VERSION /SingleElectron/Run2016H-PromptReco-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_electron_Run2016H_MINIAOD_PromptReco-v3
+
+## Single Muon - RunH PromptRecoV3 ##
+#BABY ANALYSIS VERSION /SingleMuon/Run2016H-PromptReco-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_single_muon_Run2016H_MINIAOD_PromptReco-v3
+
+## MET - RunH PromptRecoV3 ##
+#BABY ANALYSIS VERSION /MET/Run2016H-PromptReco-v3/MINIAOD TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root data_met_Run2016H_MINIAOD_PromptReco-v3
 
 
 
@@ -464,21 +624,21 @@ BABY ANALYSIS VERSION /MET/Run2016H-PromptReco-v2/MINIAOD TARBALL.tar.gz EXECUTA
 #BABY ANALYSIS VERSION /SMS-T2tt_mStop-850_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root T2tt_mStop_850_mLSP_100_25ns
 
 ## T2tt - Scan - mStop [150,250] - fastSim ##
-#BABY ANALYSIS VERSION /SMS-T2tt_mStop-150to250_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_150to250,1
+BABY ANALYSIS VERSION /SMS-T2tt_mStop-150to250_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_150to250,1
 
 ## T2tt - Scan - mStop [250,350] - fastSim ##
-#BABY ANALYSIS VERSION /SMS-T2tt_mStop-250to350_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_250to350,1
+BABY ANALYSIS VERSION /SMS-T2tt_mStop-250to350_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_250to350,1
 
 ## T2tt - Scan - mStop [350,400] - fastSim ##
-#BABY ANALYSIS VERSION /SMS-T2tt_mStop-350to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_350to400,1
+BABY ANALYSIS VERSION /SMS-T2tt_mStop-350to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_350to400,1
 
 ## T2tt - Scan - mStop [400,1200] - fastSim ##
-#BABY ANALYSIS VERSION /SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_400to1200,1
+BABY ANALYSIS VERSION /SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tt_mStop_400to1200,1
 
 ## T2bW - Scan - fastSim ##
-#BABY ANALYSIS VERSION /SMS-T2bW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2bW,1
+BABY ANALYSIS VERSION /SMS-T2bW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2bW,1
 
 ## T2tb - Scan - fastSim ##
-#BABY ANALYSIS VERSION /SMS-T2bt_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tb,1
+BABY ANALYSIS VERSION /SMS-T2bt_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root Signal_T2tb,1
 
 
