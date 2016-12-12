@@ -260,7 +260,6 @@ public:
     int HLT_DiMu;
     int HLT_MuE;
 
-    int HLT_Photon90_CaloIdL_PFHT500;
     int HLT_Photon22_R9Id90_HE10_IsoM;
     int HLT_Photon30_R9Id90_HE10_IsoM;
     int HLT_Photon36_R9Id90_HE10_IsoM;
@@ -271,6 +270,11 @@ public:
     int HLT_Photon165_R9Id90_HE10_IsoM;
     int HLT_Photon175;
     int HLT_Photon165_HE10;
+    int HLT_Photon120;//from MT2
+    int HLT_Photon250_NoHE;//from MT2
+    int HLT_CaloJet500_NoJetID;//from Vince's code
+
+    float EA_fixgridfastjet_all_rho;//to do photon EA on the fly
 
     //float pu_weight;
     float lep_sf;
