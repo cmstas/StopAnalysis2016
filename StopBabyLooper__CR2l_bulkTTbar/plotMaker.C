@@ -40,7 +40,8 @@ void plotMaker( bool plotByGenDecay=true ){
   TString outExt = ".pdf";
   
   //double lumi    = 12.9; // 2016 ICHEp
-  double lumi    = 29.53; // 2016 Current
+  //double lumi    = 29.53; // 2016 intermediate status update
+  double lumi    = 36.46; // 2016 final lumi
   
   double sig_SF  = 1.0;
 

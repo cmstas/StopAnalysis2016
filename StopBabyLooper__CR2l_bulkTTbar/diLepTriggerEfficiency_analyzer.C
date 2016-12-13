@@ -13,7 +13,8 @@ int diLepTriggerEfficiency_analyzer(){
   // Trigger Efficiency Plots for Data
   
   // Get Data File
-  TFile *f_in = new TFile( "Output/Histos/data_diLepton.root", "read" );
+  //TFile *f_in = new TFile( "Output/Histos/data_diLepton.root", "read" );
+  TFile *f_in = new TFile( "Output/Histos/data_met.root", "read" );
 
   // Open Output File
   TFile *f_out = new TFile( "Output/Histos/diLeptonTriggerEfficiencies.root", "update" );
@@ -46,6 +47,7 @@ int diLepTriggerEfficiency_analyzer(){
   gStyle->SetStatX(0.50);
   gStyle->SetStatY(0.45);
   gStyle->SetOptFit(0111);
+  h1_eff->SetMinimum(0.0);
   h1_eff->Draw("e1");
   can->SaveAs("Output/Plots/diEl_trigger_eff_vs_lep1Pt.pdf");
   can->~TCanvas();
@@ -65,6 +67,7 @@ int diLepTriggerEfficiency_analyzer(){
   gStyle->SetStatX(0.50);
   gStyle->SetStatY(0.45);
   gStyle->SetOptFit(0111);
+  h1_eff->SetMinimum(0.0);
   h1_eff->Draw("e1");
   can->SaveAs("Output/Plots/diEl_trigger_eff_vs_lep2Pt.pdf");
   can->~TCanvas();
@@ -101,6 +104,7 @@ int diLepTriggerEfficiency_analyzer(){
   gStyle->SetStatX(0.50);
   gStyle->SetStatY(0.45);
   gStyle->SetOptFit(0111);
+  h1_eff->SetMinimum(0.0);
   h1_eff->Draw("e1");
   can->SaveAs("Output/Plots/emu_trigger_eff_vs_lep1Pt.pdf");
   can->~TCanvas();
@@ -119,6 +123,7 @@ int diLepTriggerEfficiency_analyzer(){
   gStyle->SetStatX(0.50);
   gStyle->SetStatY(0.45);
   gStyle->SetOptFit(0111);
+  h1_eff->SetMinimum(0.0);
   h1_eff->Draw("e1");
   can->SaveAs("Output/Plots/emu_trigger_eff_vs_lep2Pt.pdf");
   can->~TCanvas();
@@ -154,6 +159,7 @@ int diLepTriggerEfficiency_analyzer(){
   gStyle->SetStatX(0.50);
   gStyle->SetStatY(0.45);
   gStyle->SetOptFit(0111);
+  h1_eff->SetMinimum(0.0);
   h1_eff->Draw("e1");
   can->SaveAs("Output/Plots/diMu_trigger_eff_vs_lep1Pt.pdf");
   can->~TCanvas();
@@ -173,6 +179,7 @@ int diLepTriggerEfficiency_analyzer(){
   gStyle->SetStatX(0.50);
   gStyle->SetStatY(0.45);
   gStyle->SetOptFit(0111);
+  h1_eff->SetMinimum(0.0);
   h1_eff->Draw("e1");
   can->SaveAs("Output/Plots/diMu_trigger_eff_vs_lep2Pt.pdf");
   can->~TCanvas();
@@ -195,13 +202,9 @@ int diLepTriggerEfficiency_analyzer(){
   can->~TCanvas();
 
 
-  // DiMu Trigger Efficiency vs lep1 pT
-
-  // DiMu Trigger Efficiency vs lep2 pT
-
-  // DiMu Trigger Efficiency, lep1 pT vs lep2 pT
-
-
+  //
+  // Clean up
+  //
   f_out->Write();
   f_out->Close();
   f_in->Close();

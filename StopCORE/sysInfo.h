@@ -150,9 +150,9 @@ namespace sysInfo{
     double sys_wgts[k_nSys];
 
     // Variables to form baseline event weight
-    double mStop;
-    double mLSP;
-    double mChargino;
+    int mStop;
+    int mLSP;
+    int mChargino;
         
     int    nEvents;
     double xsec;
@@ -253,7 +253,7 @@ namespace sysInfo{
 
     void getEventWeights(bool nominalOnly=false);
 
-    void getSusyMasses( double &mStop, double &mLSP );
+    void getSusyMasses( int &mStop, int &mLSP );
 
     void getNEvents( int &nEvts );
 
@@ -294,6 +294,8 @@ namespace sysInfo{
     void getQ2Weight( double &weight_q2_up, double &weight_q2_dn );
 
     void getISRWeight( double &weight_ISR, double &weight_ISR_up, double &weight_ISR_dn );
+
+    void getISRnJetsWeight( double &weight_ISR, double &weight_ISR_up, double &weight_ISR_dn );
 
     double getSampleWeight( sampleInfo::ID sample );
 

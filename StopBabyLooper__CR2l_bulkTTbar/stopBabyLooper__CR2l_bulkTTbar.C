@@ -52,14 +52,14 @@ bool useBTagSFs_fromUtils_  = false;
 bool useLepSFs_fromUtils_   = false;
         
 bool apply_diLepTrigger_sf_ = true;  // for ee/emu/mumu triggers only
-bool apply_bTag_sf_         = true;  // event weight, product of all jet wgts
+bool apply_bTag_sf_         = false;  // event weight, product of all jet wgts
 bool apply_lep_sf_          = true;  // both lep1 and lep2 (if available) are multiplied together
 bool apply_vetoLep_sf_      = true;  // this is actually the lost lepton sf, only !=1 if there is >=2 genLeptons and ==1 recoLeptons in the event
 bool apply_lepFS_sf_        = false;
 bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = false;
 bool apply_ttbarSysPt_sf_   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
-bool apply_ISR_sf_          = false; // only !=1.0 for signal
+bool apply_ISR_sf_          = true; // only !=1.0 for signal
 bool apply_sample_sf_       = false; // only !=1.0 for some WJetsHT samps
   
 
@@ -86,6 +86,7 @@ int stopBabyLooper__CR2l_bulkTTbar(){
   // Examples for Quick Tests
   //
   //sampleList.clear();
+  //sampleList.push_back( sampleInfo::k_met );
   //sampleList.push_back( sampleInfo::k_diLepton );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 ); 
@@ -214,7 +215,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   // JSON File Tools
   //
-  const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-282037_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"; // 29.53fb golden json
+  const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"; // 36.46fb final 2016 run 
+  //const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-282037_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"; // 29.53fb golden json, intermediate status
   //const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"; // ICHEP 12.9fb SUS-16-028
   if( sample.isData ) set_goodrun_file_json(json_file);
   
@@ -821,7 +823,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH2D *h2_diMu_trigger_eff_num = NULL;
   TH2D *h2_diMu_trigger_eff_den = NULL;
 
-  if( sample.isData ){
+  if( sample.isData && sample.id==sampleInfo::k_met ){
 
     h1_diLep_trigger_eff_vs_lep1Pt_num = new TH1D( "h_diLep_trigger_eff_vs_lep1Pt_num", "ee/emu/mumu trigger efficiency vs leading lepton pT, numerator;diLep trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
     h1_diLep_trigger_eff_vs_lep1Pt_den = new TH1D( "h_diLep_trigger_eff_vs_lep1Pt_den", "ee/emu/mumu trigger efficiency vs leading lepton pT, denominator;diLep trigger efficiency;lep1 pT", 20, 0.0, 200.0 );
@@ -977,7 +979,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       //
       // If Data, before selection continue, look at trigger efficiency
       //
-      if( sample.isData ){
+      if( sample.isData && sample.id==sampleInfo::k_met ){
 
 	// Check if event passes cutlist for "diLepton selection"
 	bool pass_selection_noTrigger = true;
@@ -992,7 +994,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	// Check if event passes triggers
 	bool pass_trigger_singleEl = HLT_SingleEl();
 	bool pass_trigger_singleMu = HLT_SingleMu(); 
-	bool pass_trigger_met      = HLT_MET();
+	bool pass_trigger_met      = HLT_MET() || HLT_MET100_MHT100();
 	bool pass_trigger_emu      = HLT_MuE();
 	bool pass_trigger_diEl     = HLT_DiEl();
 	bool pass_trigger_diMu     = HLT_DiMu();
@@ -1477,7 +1479,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   // Trigger Efficiency Printouts
   //
-  if( sample.isData ){
+  if( sample.isData && sample.id==sampleInfo::k_met ){
     
     cout << "  Trigger Efficiency Results: " << endl;
 
@@ -1540,6 +1542,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // Clean input chain
   // 
   chain->~TChain();
+  if( sample.isData ) duplicate_removal::clear_list();
+  
 
        
   //

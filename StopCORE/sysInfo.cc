@@ -340,7 +340,8 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
   // Utilty Var Constants
   dr_matched = 0.1;
-  lumi       = 29.53; // Current lumi
+  lumi       = 36.46; // Current lumi
+  //lumi       = 29.53; // lumi for intermediate status update
   //lumi       = 12.9; // ICHEP lumi
   lumi_err   = lumi*0.062; // 6.2% for ICHEP lumi uncertainty
 
@@ -446,9 +447,9 @@ void sysInfo::evtWgtInfo::getWeightHistogramFromBaby( TFile *sourceFile ){
 void sysInfo::evtWgtInfo::initializeWeights(){
 
   // Variables to form baseline event weight
-  mStop = 1.0;
-  mLSP = 1.0;
-  mChargino = 1.0;
+  mStop = 0;
+  mLSP = 0;
+  mChargino = 0;
     
   nEvents = 1.0;
   xsec = 1.0;
@@ -578,7 +579,8 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   getLumi( sf_lumi, sf_lumi_up, sf_lumi_dn );
 
   // ISR Correction
-  if( sample_info->isSignal ) getISRWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
+  //if( sample_info->isSignal ) getISRWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
+  getISRnJetsWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
   
   // Sample Scale Factor
   sf_sample = getSampleWeight( sample_info->id );
@@ -647,7 +649,7 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   double wgt_ttbarSysPt = sf_ttbarSysPt;
   evt_wgt *= wgt_ttbarSysPt;
   
-  // Apply ISR SF( will be 1 if not Signal)
+  // Apply ISR SF ( switched to ISRnjets )
   double wgt_ISR = sf_ISR;
   evt_wgt *= wgt_ISR;
   
@@ -872,11 +874,11 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 
 //////////////////////////////////////////////////////////////////////
 
-void sysInfo::evtWgtInfo::getSusyMasses( double &mStop, double &mLSP ){
+void sysInfo::evtWgtInfo::getSusyMasses( int &mStop, int &mLSP ){
 
-  mStop = 1.0;
-  mLSP  = 1.0;
-  //mChargino = 1.0;
+  mStop = 0;
+  mLSP  = 0;
+  //mChargino = 0;
 
   if( sample_info->isSignal ){
     mStop     = babyAnalyzer.mass_stop();
@@ -944,24 +946,30 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // DiElectron Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==22 ){
-    sf_val = 0.884591; // 29.53fb
-    sf_err = 0.00811308;
+    sf_val = 0.869669; // 36.46fb
+    sf_err = 0.00456458;
+    //sf_val = 0.884591; // 29.53fb
+    //sf_err = 0.00811308;
     //sf_val = 0.883481; // 12.9fb ICHEP
     //sf_err = 0.012322;
   }
 
   // MuE Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==24 ){
-    sf_val = 0.908511; // 29.53fb
-    sf_err = 0.00420534;
+    sf_val = 0.86165; // 36.46fb
+    sf_err = 0.00255978;
+    //sf_val = 0.908511; // 29.53fb
+    //sf_err = 0.00420534;
     //sf_val = 0.893801; // 12.9fb ICHEP
     //sf_err = 0.00657751;
   }
 
   // DiMuon Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==26 ){
-    sf_val = 0.858291; // 29.53fb
-    sf_err = 0.00666499;
+    sf_val = 0.819581; // 36.46fb
+    sf_err = 0.00406059;
+    //sf_val = 0.858291; // 29.53fb
+    //sf_err = 0.00666499;
     //sf_val = 0.841817; // 12.9fb ICHEP
     //sf_err = 0.0102116;
   }
@@ -1652,54 +1660,70 @@ void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &we
   
   // Get Scale Factor
   if( system_pt>=0.0 && system_pt<50.0 ){
-    sf_val = 1.10;
+    sf_val = 1.02; // 36.46fb
     sf_err = 0.01;
+    //sf_val = 1.10; // 29.53fb
+    //sf_err = 0.01;
   }
 
   if( system_pt>=50.0 && system_pt<100.0 ){
-    sf_val = 0.98;
+    sf_val = 0.99; // 36.46fb
     sf_err = 0.01;
+    //sf_val = 0.98; // 29.53fb
+    //sf_err = 0.01;
   }
 
   // Used these from now on with gen ttbar for ICHEP synch
   if( system_pt>=100.0 && system_pt<150.0 ){
-    sf_val = 1.03; // 29.53fb
+    sf_val = 0.98; // 36.46fb
     sf_err = 0.01;
+    //sf_val = 1.03; // 29.53fb
+    //sf_err = 0.01;
     //sf_val = 1.02; // 12.9fb ICHEP
     //sf_err = 0.02;
   }
 
   if( system_pt>=150.0 && system_pt<200.0 ){
-    sf_val = 0.96; // 29.53fb
-    sf_err = 0.02;
+    sf_val = 0.95; // 36.46fb
+    sf_err = 0.01;
+    //sf_val = 0.96; // 29.53fb
+    //sf_err = 0.02;
     //sf_val = 0.98; // 12.9fb ICHEP
     //sf_err = 0.02;
   }
 
   if( system_pt>=200.0 && system_pt<250.0 ){
-    sf_val = 0.96; // 29.53fb
+    sf_val = 0.99; // 36.46
     sf_err = 0.02;
+    //sf_val = 0.96; // 29.53fb
+    //sf_err = 0.02;
     //sf_val = 0.99; // 12.9fb ICHEP
     //sf_err = 0.03;
   }
 
   if( system_pt>=250.0 && system_pt<350.0 ){
-    sf_val = 0.98; // 29.53fb
-    sf_err = 0.03;
+    sf_val = 1.01; // 36.46fb
+    sf_err = 0.02;
+    //sf_val = 0.98; // 29.53fb
+    //sf_err = 0.03;
     //sf_val = 0.97; // 12.9fb ICHEP
     //sf_err = 0.03;
   }
 
   if( system_pt>=350.0 && system_pt<450.0 ){
-    sf_val = 1.06; // 29.53fb
+    sf_val = 1.07; // 36.46fb
     sf_err = 0.04;
+    //sf_val = 1.06; // 29.53fb
+    //sf_err = 0.04;
     //sf_val = 0.98; // 12.9fb ICHEP
     //sf_err = 0.05;
   }
 
   if( system_pt>=450.0 ){
-    sf_val = 1.01; // 29.53fb
+    sf_val = 1.09; // 36.46fb
     sf_err = 0.05;
+    //sf_val = 1.01; // 29.53fb
+    //sf_err = 0.05;
     //sf_val = 1.08; // 12.9fb ICHEP
     //sf_err = 0.07;
   }
@@ -2023,6 +2047,39 @@ void sysInfo::evtWgtInfo::getISRWeight( double &weight_ISR, double &weight_ISR_u
   weight_ISR_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,20)) );
   weight_ISR_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,21)) );
 
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void sysInfo::evtWgtInfo::getISRnJetsWeight( double &weight_ISR, double &weight_ISR_up, double &weight_ISR_dn ){
+
+  weight_ISR    = 1.0;
+  weight_ISR_up = 1.0;
+  weight_ISR_dn = 1.0;
+
+  if(!apply_ISR_sf) return;
+
+  if( sample_info->isData ) return;
+  
+  weight_ISR    = babyAnalyzer.weight_ISRnjets();
+  weight_ISR_up = babyAnalyzer.weight_ISRnjets_UP();
+  weight_ISR_dn = babyAnalyzer.weight_ISRnjets_DN();
+
+  // Normalization
+  getNEvents(nEvents);
+
+  if( sample_info->isSignalScan ){
+    weight_ISR    *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,24)) );
+    weight_ISR_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,25)) );
+    weight_ISR_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,26)) );
+  }
+  else{
+    weight_ISR    *= ( nEvents / h_bkg_counter->GetBinContent(25) );
+    weight_ISR_up *= ( nEvents / h_bkg_counter->GetBinContent(26) );
+    weight_ISR_dn *= ( nEvents / h_bkg_counter->GetBinContent(27) );
+  }
+  
   return;
 }
 

@@ -26,15 +26,15 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
   isAMCNLO     = false;
 
   nBins_stop = 37; 
-  min_stop   = 87.5; 
-  max_stop   = 1012.5;
+  min_stop   = 99; 
+  max_stop   = 1024;
 
   nBins_lsp  = 19; 
-  min_lsp    = -12.5; 
-  max_lsp    = 462.5;
+  min_lsp    = -1; 
+  max_lsp    = 474;
   
   massPtList.clear();
-  std::pair< double, double > massPt;
+  std::pair< int, int > massPt;
 
   std::pair< std::string, std::string > temp_i_o;
   
@@ -50,8 +50,8 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isSignal     = true;
     isSignalScan = true;
     isFastsim    = true;
-    inputBabies.push_back("Signal_T2tt.root");
-    //baby_i_o.first  = "";
+    baby_i_o.first  = "/nfs-7/userdata/stopRun2/analysis2016__SUS-16-028__12p9fb/stopBabies__v8.0.x_v8__20160729/Nominal/";
+    inputBabies.push_back("Signal_T2tt*.root");
     massPt.first = 800; massPt.second = 100;
     massPtList.push_back(massPt);
     massPt.first = 800; massPt.second = 350;
@@ -67,7 +67,8 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title  = "Data, single e/mu, MET";
     tex    = "Data,~single~$e/\\mu$,~MET";
     isData = true;
-    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
+    //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb
+    baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/";
     inputBabies.push_back("data_met*.root");
     inputBabies.push_back("data_single_electron*.root");
     inputBabies.push_back("data_single_muon*.root");
@@ -78,8 +79,10 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title  = "Data, MET";
     tex    = "Data,~MET";
     isData = true;
+    //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb
+    //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/"; // 36p46fb 
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/skim/"; // 36p46fb fixed muE trig 
     inputBabies.push_back("data_met*.root");
-    //baby_i_o.first  = "";
     break;
 
   case( k_single_lepton ):
@@ -115,7 +118,9 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     title  = "Data, ee/emu/mumu";
     tex    = "Data,$~ee/e\\mu/\\mu\\mu$";
     isData = true;
-    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
+    //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb 
+    //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/";
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/skim/"; // 36p46fb fixed muE trig 
     inputBabies.push_back("data_muon_eg*.root");
     inputBabies.push_back("data_double_eg*.root");
     inputBabies.push_back("data_double_mu*.root");
@@ -540,7 +545,6 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "t_tch_4f_powheg_pythia8_25ns";
     title = "single t, t-channel, powheg pythia8";
     tex   = "single $t$,~t-channel,~powheg~pythia8";
-    //baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
     inputBabies.push_back("t_tch_4f_powheg_pythia8_25ns*.root");
     break;
 
@@ -981,6 +985,9 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
 sampleInfo::vect_id sampleInfo::getSampleList_CR2l_bulkTTbar(){
 
   vect_id result;
+
+  // Data, met, for trigger efficiency studies
+  result.push_back( sampleInfo::k_met );
 
   // Data, ee/emu/mumu 
   result.push_back( sampleInfo::k_diLepton );
