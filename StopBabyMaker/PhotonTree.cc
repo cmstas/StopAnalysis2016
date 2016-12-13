@@ -28,7 +28,7 @@ void PhotonTree::FillCommon ()
     if (idx < 0) return;
     if(cms3.photons_p4().at(idx).pt() < m_ph_pt_cut) continue;
     if(fabs(cms3.photons_p4().at(idx).eta()) > m_ph_eta_cut) continue;
-    if ( !isLoosePhoton(idx,analysis_t::HAD,2) ) continue;
+    if ( !isLoosePhoton(idx,analysis_t::HAD,2) ) continue;//is wrong ID, but still a good preselection
     //general stuff
     p4.push_back(cms3.photons_p4().at(idx));
     pt.push_back(cms3.photons_p4().at(idx).pt());
@@ -39,7 +39,7 @@ void PhotonTree::FillCommon ()
     sigmaIEtaEta_fill5x5.push_back(photons_full5x5_sigmaIEtaIEta().at(idx));
     hOverE.push_back(photons_full5x5_hOverEtowBC().at(idx));
     r9.push_back(photons_full5x5_r9().at(idx));
-    idCutBased.push_back(isTightPhoton(idx,analysis_t::HAD,2) ? 1 : 0); 
+    //idCutBased.push_back(isTightPhoton(idx,analysis_t::HAD,2) ? 1 : 0); //thisone is useless
     //iso variables
     chiso.push_back(photons_recoChargedHadronIso().at(idx));
     nhiso.push_back(photons_recoNeutralHadronIso().at(idx));
@@ -116,7 +116,7 @@ void PhotonTree::Reset()
     sigmaIEtaEta_fill5x5.clear(); 
     hOverE.clear();
     r9.clear();
-    idCutBased.clear();
+    //idCutBased.clear();
 
     p4.clear();
     pt.clear();
@@ -145,7 +145,7 @@ void PhotonTree::SetBranches(TTree* tree)
     tree->Branch(Form("%schiso"       , prefix_.c_str()) , &chiso);
     tree->Branch(Form("%snhiso"       , prefix_.c_str()) , &nhiso);
     tree->Branch(Form("%sphiso"       , prefix_.c_str()) , &phiso);
-    tree->Branch(Form("%sidCutBased"       , prefix_.c_str()) , &idCutBased);
+    //tree->Branch(Form("%sidCutBased"       , prefix_.c_str()) , &idCutBased);
 
     tree->Branch(Form("%soverlapJetId"       , prefix_.c_str()) , &overlapJetId);
     

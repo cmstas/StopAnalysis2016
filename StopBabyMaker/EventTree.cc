@@ -182,6 +182,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
     EA_centralchargedpileup_rho = evt_fixgridfastjet_centralchargedpileup_rho();
     EA_centralneutral_rho       = evt_fixgridfastjet_centralneutral_rho(); 
 */
+    EA_fixgridfastjet_all_rho = evt_fixgridfastjet_all_rho();
 }
 
 void EventTree::Reset ()
@@ -295,6 +296,27 @@ void EventTree::Reset ()
     weight_btagsf_light_DN = -9999;
     weight_btagsf_fastsim_UP = -9999;
     weight_btagsf_fastsim_DN = -9999;
+    weight_analysisbtagsf = -9999;
+    weight_analysisbtagsf_heavy_UP = -9999;
+    weight_analysisbtagsf_light_UP = -9999;
+    weight_analysisbtagsf_heavy_DN = -9999;
+    weight_analysisbtagsf_light_DN = -9999;
+    weight_analysisbtagsf_fastsim_UP = -9999;
+    weight_analysisbtagsf_fastsim_DN = -9999;
+    weight_tightbtagsf = -9999;
+    weight_tightbtagsf_heavy_UP = -9999;
+    weight_tightbtagsf_light_UP = -9999;
+    weight_tightbtagsf_heavy_DN = -9999;
+    weight_tightbtagsf_light_DN = -9999;
+    weight_tightbtagsf_fastsim_UP = -9999;
+    weight_tightbtagsf_fastsim_DN = -9999;
+    weight_loosebtagsf = -9999;
+    weight_loosebtagsf_heavy_UP = -9999;
+    weight_loosebtagsf_light_UP = -9999;
+    weight_loosebtagsf_heavy_DN = -9999;
+    weight_loosebtagsf_light_DN = -9999;
+    weight_loosebtagsf_fastsim_UP = -9999;
+    weight_loosebtagsf_fastsim_DN = -9999;
     weight_lepSF      = -9999;
     weight_lepSF_up      = -9999;
     weight_lepSF_down      = -9999;
@@ -352,7 +374,6 @@ void EventTree::Reset ()
     HLT_MuE                = -9999.;
     HLT_DiMu               = -9999.;
 
-    HLT_Photon90_CaloIdL_PFHT500 = -9999.;
     HLT_Photon22_R9Id90_HE10_IsoM = -9999.;
     HLT_Photon30_R9Id90_HE10_IsoM = -9999.;
     HLT_Photon36_R9Id90_HE10_IsoM = -9999.;
@@ -363,6 +384,12 @@ void EventTree::Reset ()
     HLT_Photon165_R9Id90_HE10_IsoM = -9999.;
     HLT_Photon175 = -9999.;
     HLT_Photon165_HE10 = -9999.;
+
+    HLT_Photon120 = -9999.;
+    HLT_Photon250_NoHE = -9999.;
+    HLT_CaloJet500_NoJetID = -9999.;
+
+    EA_fixgridfastjet_all_rho = -9999.;
 
    /* HLT_MET170             = -9999.;
     HLT_SingleMu           = -9999.; 
@@ -580,6 +607,27 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("weight_btagsf_light_DN", &weight_btagsf_light_DN);
     tree->Branch("weight_btagsf_fastsim_UP", &weight_btagsf_fastsim_UP);
     tree->Branch("weight_btagsf_fastsim_DN", &weight_btagsf_fastsim_DN);
+    tree->Branch("weight_analysisbtagsf", &weight_analysisbtagsf);
+    tree->Branch("weight_analysisbtagsf_heavy_UP", &weight_analysisbtagsf_heavy_UP);
+    tree->Branch("weight_analysisbtagsf_light_UP", &weight_analysisbtagsf_light_UP);
+    tree->Branch("weight_analysisbtagsf_heavy_DN", &weight_analysisbtagsf_heavy_DN);
+    tree->Branch("weight_analysisbtagsf_light_DN", &weight_analysisbtagsf_light_DN);
+    tree->Branch("weight_analysisbtagsf_fastsim_UP", &weight_analysisbtagsf_fastsim_UP);
+    tree->Branch("weight_analysisbtagsf_fastsim_DN", &weight_analysisbtagsf_fastsim_DN);
+    tree->Branch("weight_tightbtagsf", &weight_tightbtagsf);
+    tree->Branch("weight_tightbtagsf_heavy_UP", &weight_tightbtagsf_heavy_UP);
+    tree->Branch("weight_tightbtagsf_light_UP", &weight_tightbtagsf_light_UP);
+    tree->Branch("weight_tightbtagsf_heavy_DN", &weight_tightbtagsf_heavy_DN);
+    tree->Branch("weight_tightbtagsf_light_DN", &weight_tightbtagsf_light_DN);
+    tree->Branch("weight_tightbtagsf_fastsim_UP", &weight_tightbtagsf_fastsim_UP);
+    tree->Branch("weight_tightbtagsf_fastsim_DN", &weight_tightbtagsf_fastsim_DN);
+    tree->Branch("weight_loosebtagsf", &weight_loosebtagsf);
+    tree->Branch("weight_loosebtagsf_heavy_UP", &weight_loosebtagsf_heavy_UP);
+    tree->Branch("weight_loosebtagsf_light_UP", &weight_loosebtagsf_light_UP);
+    tree->Branch("weight_loosebtagsf_heavy_DN", &weight_loosebtagsf_heavy_DN);
+    tree->Branch("weight_loosebtagsf_light_DN", &weight_loosebtagsf_light_DN);
+    tree->Branch("weight_loosebtagsf_fastsim_UP", &weight_loosebtagsf_fastsim_UP);
+    tree->Branch("weight_loosebtagsf_fastsim_DN", &weight_loosebtagsf_fastsim_DN);
     tree->Branch("weight_lepSF", &weight_lepSF);
     tree->Branch("weight_lepSF_up", &weight_lepSF_up);
     tree->Branch("weight_lepSF_down", &weight_lepSF_down);
@@ -631,17 +679,6 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_DiEl", &HLT_DiEl );
     tree->Branch("HLT_DiMu", &HLT_DiMu );
     tree->Branch("HLT_MuE", &HLT_MuE);
-    tree->Branch("HLT_Photon90_CaloIdL_PFHT500", &HLT_Photon90_CaloIdL_PFHT500);
-    tree->Branch("HLT_Photon22_R9Id90_HE10_IsoM", &HLT_Photon22_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon30_R9Id90_HE10_IsoM", &HLT_Photon30_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon36_R9Id90_HE10_IsoM", &HLT_Photon36_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon50_R9Id90_HE10_IsoM", &HLT_Photon50_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon75_R9Id90_HE10_IsoM", &HLT_Photon75_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon90_R9Id90_HE10_IsoM", &HLT_Photon90_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon120_R9Id90_HE10_IsoM", &HLT_Photon120_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon165_R9Id90_HE10_IsoM", &HLT_Photon165_R9Id90_HE10_IsoM);
-    tree->Branch("HLT_Photon175", &HLT_Photon175);
-    tree->Branch("HLT_Photon165_HE10", &HLT_Photon165_HE10);
     tree->Branch("nPhotons",             &nPhotons);
     tree->Branch("ph_ngoodjets",         &ph_ngoodjets);
     tree->Branch("ph_ngoodbtags",        &ph_ngoodbtags);
@@ -733,6 +770,20 @@ void EventTree::SetPhotonBranches (TTree* tree)
     tree->Branch("ph_dR_lep_leadb",      &ph_dR_lep_leadb);
     tree->Branch("ph_Mlb_closestb",      &ph_Mlb_closestb);
     tree->Branch("ph_Mjjj",              &ph_Mjjj);
+    tree->Branch("EA_fixgridfastjet_all_rho", &EA_fixgridfastjet_all_rho);//as used only for photons
+    tree->Branch("HLT_Photon22_R9Id90_HE10_IsoM", &HLT_Photon22_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon30_R9Id90_HE10_IsoM", &HLT_Photon30_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon36_R9Id90_HE10_IsoM", &HLT_Photon36_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon50_R9Id90_HE10_IsoM", &HLT_Photon50_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon75_R9Id90_HE10_IsoM", &HLT_Photon75_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon90_R9Id90_HE10_IsoM", &HLT_Photon90_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon120_R9Id90_HE10_IsoM", &HLT_Photon120_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon165_R9Id90_HE10_IsoM", &HLT_Photon165_R9Id90_HE10_IsoM);
+    tree->Branch("HLT_Photon175", &HLT_Photon175);
+    tree->Branch("HLT_Photon165_HE10", &HLT_Photon165_HE10);
+    tree->Branch("HLT_Photon120", &HLT_Photon120);
+    tree->Branch("HLT_Photon250_NoHE", &HLT_Photon250_NoHE);
+    tree->Branch("HLT_CaloJet500_NoJetID", &HLT_CaloJet500_NoJetID);
 }
 
 void EventTree::SetZllBranches (TTree* tree)

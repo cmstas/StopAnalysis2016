@@ -46,7 +46,7 @@ public:
     vecd sigmaIEtaEta_fill5x5;
     vecd hOverE;
     vecd r9;
-    vecb idCutBased;
+    //vecb idCutBased;//this one is useless
    
     vecd chiso;
     vecd nhiso;

@@ -204,6 +204,27 @@ public:
     float weight_ISRnjets;
     float weight_ISRnjets_UP;
     float weight_ISRnjets_DN;
+    float weight_analysisbtagsf;//medium if Mlb<175, tight if Mlb>175
+    float weight_analysisbtagsf_heavy_UP;
+    float weight_analysisbtagsf_light_UP;
+    float weight_analysisbtagsf_heavy_DN;
+    float weight_analysisbtagsf_light_DN;
+    float weight_analysisbtagsf_fastsim_UP;
+    float weight_analysisbtagsf_fastsim_DN;
+    float weight_tightbtagsf;
+    float weight_tightbtagsf_heavy_UP;
+    float weight_tightbtagsf_light_UP;
+    float weight_tightbtagsf_heavy_DN;
+    float weight_tightbtagsf_light_DN;
+    float weight_tightbtagsf_fastsim_UP;
+    float weight_tightbtagsf_fastsim_DN;
+    float weight_loosebtagsf;
+    float weight_loosebtagsf_heavy_UP;
+    float weight_loosebtagsf_light_UP;
+    float weight_loosebtagsf_heavy_DN;
+    float weight_loosebtagsf_light_DN;
+    float weight_loosebtagsf_fastsim_UP;
+    float weight_loosebtagsf_fastsim_DN;
     int   NISRjets;
     int   NnonISRjets;
     bool  filt_fastsimjets;
@@ -239,7 +260,6 @@ public:
     int HLT_DiMu;
     int HLT_MuE;
 
-    int HLT_Photon90_CaloIdL_PFHT500;
     int HLT_Photon22_R9Id90_HE10_IsoM;
     int HLT_Photon30_R9Id90_HE10_IsoM;
     int HLT_Photon36_R9Id90_HE10_IsoM;
@@ -250,6 +270,11 @@ public:
     int HLT_Photon165_R9Id90_HE10_IsoM;
     int HLT_Photon175;
     int HLT_Photon165_HE10;
+    int HLT_Photon120;//from MT2
+    int HLT_Photon250_NoHE;//from MT2
+    int HLT_CaloJet500_NoJetID;//from Vince's code
+
+    float EA_fixgridfastjet_all_rho;//to do photon EA on the fly
 
     //float pu_weight;
     float lep_sf;
