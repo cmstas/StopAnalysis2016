@@ -67,6 +67,15 @@ SAMPLE
 Name data_met_Run2016B_MINIAOD_23Sep2016-v3
 Path /hadoop/cms/store/group/snt/run2_data/Run2016B_MET_MINIAOD_23Sep2016-v3/merged/V08-00-14/
 
+## HTMHT ##
+SAMPLE
+Name data_htmht_Run2016B_MINIAOD_23Sep2016-v3
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_HTMHT_MINIAOD_23Sep2016-v3/merged/V08-00-14/
+
+## JetHT ##
+SAMPLE
+Name data_jetht_Run2016B_MINIAOD_23Sep2016-v3
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_JetHT_MINIAOD_23Sep2016-v3/merged/V08-00-14/
 
 ######################################################
 ## 2016C Collection of 25ns PROMPTRECO Data Samples ##
@@ -136,6 +145,16 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2016C_SingleMuon_MINIAOD_23Sep2016
 SAMPLE
 Name data_met_Run2016C_MINIAOD_23Sep2016-v1
 Path /hadoop/cms/store/group/snt/run2_data/Run2016C_MET_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
+## HTMHT ##
+SAMPLE
+Name data_htmht_Run2016C_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_HTMHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
+## JetHT ##
+SAMPLE
+Name data_jetht_Run2016C_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_JetHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 
 
 ######################################################
@@ -207,6 +226,16 @@ SAMPLE
 Name data_met_Run2016D_MINIAOD_23Sep2016-v1
 Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MET_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 
+## htmht ##
+SAMPLE
+Name data_htmht_Run2016D_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_HTMHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
+## jetht ##
+SAMPLE
+Name data_jetht_Run2016D_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_JetHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
 
 ######################################################
 ## 2016E Collection of 25ns PROMPTRECO Data Samples ##
@@ -276,6 +305,16 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2016E_SingleMuon_MINIAOD_23Sep2016
 SAMPLE
 Name data_met_Run2016E_MINIAOD_23Sep2016-v1
 Path /hadoop/cms/store/group/snt/run2_data/Run2016E_MET_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
+## HTMHT ##
+SAMPLE
+Name data_htmht_Run2016E_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_HTMHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
+## JetHT ##
+SAMPLE
+Name data_jetht_Run2016E_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_JetHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 
 
 ######################################################
@@ -347,6 +386,16 @@ SAMPLE
 Name data_met_Run2016F_MINIAOD_23Sep2016-v1
 Path /hadoop/cms/store/group/snt/run2_data/Run2016F_MET_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 
+## HTMHT ##
+SAMPLE
+Name data_htmht_Run2016F_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_HTMHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
+## JetHT ##
+SAMPLE
+Name data_jetht_Run2016F_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_JetHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
 
 ######################################################
 ## 2016G Collection of 25ns PROMPTRECO Data Samples ##
@@ -417,6 +466,16 @@ SAMPLE
 Name data_met_Run2016G_MINIAOD_23Sep2016-v1
 Path /hadoop/cms/store/group/snt/run2_data/Run2016G_MET_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 
+## HTMHT ##
+SAMPLE
+Name data_htmht_Run2016G_MINIAOD_23Sep2016-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_HTMHT_MINIAOD_23Sep2016-v2/merged/V08-00-14/
+
+## JetHT ##
+SAMPLE
+Name data_jetht_Run2016G_MINIAOD_23Sep2016-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_JetHT_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+
 
 ########################################################
 ## 2016H Collection of 25ns PROMPTRECOV2 Data Samples ##
@@ -452,6 +511,16 @@ SAMPLE
 Name data_met_Run2016H_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/group/snt/run2_data/Run2016H_MET_MINIAOD_PromptReco-v2/merged/V08-00-14/
 
+## htmht ##
+SAMPLE
+Name data_htmht_Run2016H_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_HTMHT_MINIAOD_PromptReco-v2/merged/V08-00-14/
+
+## jetht ##
+SAMPLE
+Name data_jetht_Run2016H_MINIAOD_PromptReco-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_JetHT_MINIAOD_PromptReco-v2/merged/V08-00-14/
+
 
 ########################################################
 ## 2016H Collection of 25ns PROMPTRECOV3 Data Samples ##
@@ -486,6 +555,16 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2016H_SingleMuon_MINIAOD_PromptRec
 SAMPLE
 Name data_met_Run2016H_MINIAOD_PromptReco-v3
 Path /hadoop/cms/store/group/snt/run2_data/Run2016H_MET_MINIAOD_PromptReco-v3/merged/V08-00-15/
+
+## HTMHT ##
+SAMPLE
+Name data_htmht_Run2016H_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_HTMHT_MINIAOD_PromptReco-v3/merged/V08-00-15/
+
+## JetHT ##
+SAMPLE
+Name data_jetht_Run2016H_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_JetHT_MINIAOD_PromptReco-v3/merged/V08-00-15/
 
 
 

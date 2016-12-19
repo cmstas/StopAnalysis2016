@@ -369,11 +369,15 @@ void EventTree::Reset ()
     HLT_SingleMu           = -9999.; 
     HLT_SingleEl           = -9999.;
     HLT_MET                = -9999.;
-    HLT_MET100_MHT100 = -9999.;
+    HLT_MET100_MHT100      = -9999.;
+    HLT_MET110_MHT110      = -9999.;
+    HLT_MET120_MHT120      = -9999.;
     HLT_DiEl               = -9999.;
     HLT_MuE                = -9999.;
     HLT_DiMu               = -9999.;
 
+    HLT_PFHT_unprescaled = -9999.;
+    HLT_PFHT_prescaled   = -9999.;
     HLT_Photon22_R9Id90_HE10_IsoM = -9999.;
     HLT_Photon30_R9Id90_HE10_IsoM = -9999.;
     HLT_Photon36_R9Id90_HE10_IsoM = -9999.;
@@ -676,6 +680,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_SingleMu", &HLT_SingleMu );
     tree->Branch("HLT_MET", &HLT_MET);
     tree->Branch("HLT_MET100_MHT100", &HLT_MET100_MHT100);
+    tree->Branch("HLT_MET110_MHT110", &HLT_MET110_MHT110);
+    tree->Branch("HLT_MET120_MHT120", &HLT_MET120_MHT120);
+    tree->Branch("HLT_PFHT_unprescaled", &HLT_PFHT_unprescaled);
+    tree->Branch("HLT_PFHT_prescaled", &HLT_PFHT_prescaled);
     tree->Branch("HLT_DiEl", &HLT_DiEl );
     tree->Branch("HLT_DiMu", &HLT_DiMu );
     tree->Branch("HLT_MuE", &HLT_MuE);

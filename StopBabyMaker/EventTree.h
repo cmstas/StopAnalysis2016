@@ -256,10 +256,14 @@ public:
     int HLT_SingleEl;
     int HLT_MET;
     int HLT_MET100_MHT100;
+    int HLT_MET110_MHT110;
+    int HLT_MET120_MHT120;
     int HLT_DiEl;
     int HLT_DiMu;
     int HLT_MuE;
 
+    int HLT_PFHT_unprescaled;
+    int HLT_PFHT_prescaled;
     int HLT_Photon22_R9Id90_HE10_IsoM;
     int HLT_Photon30_R9Id90_HE10_IsoM;
     int HLT_Photon36_R9Id90_HE10_IsoM;

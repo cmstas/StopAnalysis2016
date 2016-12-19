@@ -2599,7 +2599,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //////////////// 2015 Run II  //////////////////////
       if(!isSignalFromFileName){
 	StopEvt.HLT_MET = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_HBHECleaned_v") || passHLTTriggerPattern("HLT_PFMET170_NotCleaned_v"); 
-	StopEvt.HLT_MET100_MHT100 = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v");
+	StopEvt.HLT_MET100_MHT100 = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v");
+	StopEvt.HLT_MET110_MHT110 = passHLTTriggerPattern("HLT_PFMET110_PFMHT110_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v");
+	StopEvt.HLT_MET120_MHT120 = passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v");
 	StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele25_eta2p1_WPTight_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v") ||passHLTTriggerPattern("HLT_Ele27_eta2p1_WPLoose_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_eta2p1_WPTight_Gsf_v");
 	StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_v") || passHLTTriggerPattern("HLT_IsoTkMu20_v") || passHLTTriggerPattern("HLT_IsoMu22_v") || passHLTTriggerPattern("HLT_IsoTkMu22_v") || passHLTTriggerPattern("HLT_IsoMu24_v") || passHLTTriggerPattern("HLT_IsoTkMu24_v");
 	StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
@@ -2620,6 +2622,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.HLT_Photon120 = passHLTTriggerPattern("HLT_Photon120_v") > HLT_prescale(triggerName("HLT_Photon120_v")) ?  passHLTTriggerPattern("HLT_Photon120_v") : HLT_prescale(triggerName("HLT_Photon120_v"));
 	StopEvt.HLT_Photon250_NoHE = passHLTTriggerPattern("HLT_Photon250_NoHE_v") > HLT_prescale(triggerName("HLT_Photon250_NoHE_v")) ?  passHLTTriggerPattern("HLT_Photon250_NoHE_v") : HLT_prescale(triggerName("HLT_Photon250_NoHE_v"));	
 	StopEvt.HLT_CaloJet500_NoJetID = passHLTTriggerPattern("HLT_CaloJet500_NoJetID_v") > HLT_prescale(triggerName("HLT_CaloJet500_NoJetID_v")) ?  passHLTTriggerPattern("HLT_CaloJet500_NoJetID_v") : HLT_prescale(triggerName("HLT_CaloJet500_NoJetID_v"));
+	// HT triggers for trigger efficiency - from MT2
+	StopEvt.HLT_PFHT_unprescaled = passHLTTriggerPattern("HLT_PFHT800_v") || passHLTTriggerPattern("HLT_PFHT900_v");
+	int HT125 = passHLTTriggerPattern("HLT_PFHT125_v") ? HLT_prescale(triggerName("HLT_PFHT125_v")) : 0;
+	int HT200 = passHLTTriggerPattern("HLT_PFHT200_v") ? HLT_prescale(triggerName("HLT_PFHT200_v")) : 0;
+	int HT300 = passHLTTriggerPattern("HLT_PFHT300_v") ? HLT_prescale(triggerName("HLT_PFHT300_v")) : 0;
+	int HT350 = passHLTTriggerPattern("HLT_PFHT350_v") ? HLT_prescale(triggerName("HLT_PFHT350_v")) : 0;
+	int HT475 = passHLTTriggerPattern("HLT_PFHT475_v") ? HLT_prescale(triggerName("HLT_PFHT475_v")) : 0;
+	int HT600 = passHLTTriggerPattern("HLT_PFHT600_v") ? HLT_prescale(triggerName("HLT_PFHT600_v")) : 0;
+	//as we use those only for trigger efficiency measurements, we actually don't care about the exact prescale ...
+	if(HT125>0 || HT200>0 || HT300>0 || HT350>0 || HT475>0 || HT600>0)
+	  StopEvt.HLT_PFHT_prescaled = 1;
+	else
+	  StopEvt.HLT_PFHT_prescaled = 0;
       }
       
      ///////////////////////////////////////////////////////////
