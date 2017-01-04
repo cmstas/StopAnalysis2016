@@ -1380,7 +1380,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if( nVetoLeptons > 0 ) lep1.FillCommon( AllLeps.at(0).id, AllLeps.at(0).idx );
       if( nVetoLeptons > 1 ) lep2.FillCommon( AllLeps.at(1).id, AllLeps.at(1).idx );
 
-
+      //fill lep-dphi
+      if( nVetoLeptons > 0 ) {
+	lep1.dphiMET = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi);
+	lep1.dphiMET_jup = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_jup);
+	lep1.dphiMET_jdown = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_jdown);
+      }
+      if( nVetoLeptons > 1 ) {
+	lep2.dphiMET = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi);
+	lep2.dphiMET_jup = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_jup);
+	lep2.dphiMET_jdown = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_jdown);
+      }
       // Lepton SFs
       float lepSF_pt_cutoff = 99.999;
       float lepSF_pt_min    = 10.001;
@@ -1881,6 +1891,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(StopEvt.pfmet < skim_met) continue;
       nEvents_pass_skim_met++;
       */
+     
       if(nGoodLeptons < skim_nGoodLep) continue;
       nEvents_pass_skim_nGoodLep++;
 
@@ -2053,6 +2064,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         // ModTopness
         if(nVetoLeptons>0) StopEvt.topnessMod_jdown = CalcTopness_(1,StopEvt.pfmet_jdown,StopEvt.pfmet_phi_jdown,lep1.p4,mybjets_jdown,myaddjets_jdown);
       }
+
       
       vector<pair<float, int> > rankminDR; 
       vector<pair<float, int> > rankmaxDPhi;
@@ -2586,6 +2598,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       if(jets_jdown.ak4pfjets_p4.size()>1) StopEvt.mindphi_met_j1_j2_rl_jdown = getMinDphi(StopEvt.pfmet_phi_rl_jdown,jets_jdown.ak4pfjets_p4.at(0),jets_jdown.ak4pfjets_p4.at(1));
 
+      //fill lepDPhi _rl
+      if( nVetoLeptons > 0 ) {
+	lep1.dphiMET_rl = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_rl);
+	lep1.dphiMET_rl_jup = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_rl_jup);
+	lep1.dphiMET_rl_jdown = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_rl_jdown);
+      }
+      if( nVetoLeptons > 1 ) {
+	lep2.dphiMET_rl = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_rl);
+	lep2.dphiMET_rl_jup = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_rl_jup);
+	lep2.dphiMET_rl_jdown = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_rl_jdown);
+      }
       
 
       if(!(StopEvt.pfmet >= skim_met) && !(StopEvt.pfmet_rl >= skim_met) && !(StopEvt.pfmet_rl_jup >= skim_met) && !(StopEvt.pfmet_rl_jdown >= skim_met) && !(StopEvt.pfmet_jup >= skim_met) && !(StopEvt.pfmet_jdown >= skim_met)) continue;

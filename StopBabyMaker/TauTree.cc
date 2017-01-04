@@ -17,8 +17,8 @@ void TauTree::FillCommon (int idx,float tau_pt_cut, float tau_eta_cut)
     tau_leadtrack_p4.push_back(taus_pf_lead_chargecand_p4().at(idx));
     tau_leadneutral_p4.push_back(taus_pf_lead_neutrcand_p4().at(idx));
     tau_p4.push_back(taus_pf_p4().at(idx));
-    tau_isocand_p4.push_back(taus_pf_isocands_p4().at(idx));
-    tau_sigcand_p4.push_back(taus_pf_signalcands_p4().at(idx));
+    //tau_isocand_p4.push_back(taus_pf_isocands_p4().at(idx));//this does crash constantly
+    //tau_sigcand_p4.push_back(taus_pf_signalcands_p4().at(idx));//this does crash constantly
     tau_ID.push_back(taus_pf_IDs().at(idx));
     tau_passID.push_back(passTauID("decayModeFinding",idx) &&
 						 passTauID("byMediumCombinedIsolationDeltaBetaCorr3Hits",idx) );

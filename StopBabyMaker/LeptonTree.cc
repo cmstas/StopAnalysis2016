@@ -277,7 +277,15 @@ void LeptonTree::Reset()
     ip3d            = -9999.;
     ip3derr         = -9999.;
     is_pfmu         = false;
-*/   
+*/
+
+    dphiMET= -9999.;
+    dphiMET_jup= -9999.;
+    dphiMET_jdown= -9999.;
+    dphiMET_rl= -9999.;
+    dphiMET_rl_jup= -9999.;
+    dphiMET_rl_jdown= -9999.;
+
 }
 
 void LeptonTree::SetBranches(TTree* tree)
@@ -295,6 +303,13 @@ void LeptonTree::SetBranches(TTree* tree)
     tree->Branch(Form("%sp4"      , prefix_.c_str()) , "LorentzVector" , &p4      );
     tree->Branch(Form("%smcp4"    , prefix_.c_str()) , "LorentzVector" , &mcp4    );
     tree->Branch(Form("%smc_motherid"            , prefix_.c_str()) , &mc_motherid); 
+
+    tree->Branch(Form("%sdphiMET"   , prefix_.c_str()) , &dphiMET);
+    tree->Branch(Form("%sdphiMET_jup"   , prefix_.c_str()) , &dphiMET_jup);
+    tree->Branch(Form("%sdphiMET_jdown"   , prefix_.c_str()) , &dphiMET_jdown);
+    tree->Branch(Form("%sdphiMET_rl"   , prefix_.c_str()) , &dphiMET_rl);
+    tree->Branch(Form("%sdphiMET_rl_jup"   , prefix_.c_str()) , &dphiMET_rl_jup);
+    tree->Branch(Form("%sdphiMET_rl_jdown"   , prefix_.c_str()) , &dphiMET_rl_jdown);
 
 }
 
