@@ -101,6 +101,10 @@ public:
 
     float Mlb_closestb;
     float Mlb_lead_bdiscr;
+    float Mlb_closestb_jup;
+    float Mlb_lead_bdiscr_jup;
+    float Mlb_closestb_jdown;
+    float Mlb_lead_bdiscr_jdown;
     float Mlb_closestb_lep2;
     float Mlb_lead_bdiscr_lep2;
     float Mjjj;

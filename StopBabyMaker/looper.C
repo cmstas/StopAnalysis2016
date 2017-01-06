@@ -2067,6 +2067,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       
       vector<pair<float, int> > rankminDR; 
+      vector<pair<float, int> > rankminDR_jup; 
+      vector<pair<float, int> > rankminDR_jdown; 
       vector<pair<float, int> > rankmaxDPhi;
       vector<pair<float, int> > rankminDR_lep2;
       vector<pair<float, int> > rankmaxDPhi_lep2;
@@ -2084,7 +2086,23 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	mypair.first = dRbetweenVectors(jets.ak4pfjets_p4.at(idx),lep2.p4);
 	rankminDR_lep2.push_back(mypair);
       }
+      for (unsigned int idx = 0; idx < jets_jup.ak4pfjets_p4.size(); ++idx){
+	if(nVetoLeptons==0) continue;
+	pair<float, int> mypair;
+	mypair.second = idx;
+	mypair.first = dRbetweenVectors(jets_jup.ak4pfjets_p4.at(idx),lep1.p4);
+	rankminDR_jup.push_back(mypair);
+      }
+      for (unsigned int idx = 0; idx < jets_jdown.ak4pfjets_p4.size(); ++idx){
+	if(nVetoLeptons==0) continue;
+	pair<float, int> mypair;
+	mypair.second = idx;
+	mypair.first = dRbetweenVectors(jets_jdown.ak4pfjets_p4.at(idx),lep1.p4);
+	rankminDR_jdown.push_back(mypair);
+      }
       sort(rankminDR.begin(),        rankminDR.end(),        CompareIndexValueSmallest);
+      sort(rankminDR_jup.begin(),    rankminDR_jup.end(),    CompareIndexValueSmallest);
+      sort(rankminDR_jdown.begin(),  rankminDR_jdown.end(),  CompareIndexValueSmallest);
       sort(rankminDR_lep2.begin(),   rankminDR_lep2.end(),   CompareIndexValueSmallest);
       sort(rankmaxDPhi.begin(),      rankmaxDPhi.end(),      CompareIndexValueGreatest);
       sort(rankmaxDPhi_lep2.begin(), rankmaxDPhi_lep2.end(), CompareIndexValueGreatest);
@@ -2136,8 +2154,26 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  //StopEvt.Mjjj_lep2 = (jets.ak4pfjets_p4.at(jb21)+jets.ak4pfjets_p4.at(jb22)+jets.ak4pfjets_p4.at(jb23)).M();
 	}
 	
-      } // end if >0 jets      
-
+      } // end if >0 jets
+      if(jets_jup.ak4pfjets_p4.size()>0){
+	for (unsigned int idx = 0; idx < rankminDR_jup.size(); ++idx){
+	  if(nVetoLeptons==0) continue;
+	  if(!(jets_jup.ak4pfjets_passMEDbtag.at(rankminDR_jup[idx].second)) ) continue;
+	  StopEvt.Mlb_closestb_jup = (jets_jup.ak4pfjets_p4.at(rankminDR_jup[idx].second)+lep1.p4).M();
+	  break;
+	}
+	if(nVetoLeptons>0) StopEvt.Mlb_lead_bdiscr_jup = (jets_jup.ak4pfjets_p4.at(jetIndexSortedCSV_jup[0])+lep1.p4).M();
+      }
+      if(jets_jdown.ak4pfjets_p4.size()>0){
+	for (unsigned int idx = 0; idx < rankminDR_jdown.size(); ++idx){
+	  if(nVetoLeptons==0) continue;
+	  if(!(jets_jdown.ak4pfjets_passMEDbtag.at(rankminDR_jdown[idx].second)) ) continue;
+	  StopEvt.Mlb_closestb_jdown = (jets_jdown.ak4pfjets_p4.at(rankminDR_jdown[idx].second)+lep1.p4).M();
+	  break;
+	}
+	if(nVetoLeptons>0) StopEvt.Mlb_lead_bdiscr_jdown = (jets_jdown.ak4pfjets_p4.at(jetIndexSortedCSV_jdown[0])+lep1.p4).M();
+      }
+      
       if(fillZll){
       //
       // Zll Event Variables

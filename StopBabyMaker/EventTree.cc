@@ -272,6 +272,10 @@ void EventTree::Reset ()
     MT2_lb_bqq_mass_lep2   = -9999.; 
     Mlb_closestb           = -9999.; 
     Mlb_lead_bdiscr        = -9999.; 
+    Mlb_closestb_jup       = -9999.; 
+    Mlb_lead_bdiscr_jup    = -9999.;
+    Mlb_closestb_jdown     = -9999.; 
+    Mlb_lead_bdiscr_jdown  = -9999.;
     Mlb_closestb_lep2      = -9999.; 
     Mlb_lead_bdiscr_lep2   = -9999.; 
     Mjjj                   = -9999.; 
@@ -676,6 +680,11 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("topnessMod_jdown", &topnessMod_jdown);
     tree->Branch("topnessMod_rl_jdown", &topnessMod_rl_jdown);
     tree->Branch("Mlb_closestb", &Mlb_closestb); 
+    tree->Branch("Mlb_lead_bdiscr", &Mlb_lead_bdiscr);
+    tree->Branch("Mlb_closestb_jup", &Mlb_closestb_jup); 
+    tree->Branch("Mlb_lead_bdiscr_jup", &Mlb_lead_bdiscr_jup);
+    tree->Branch("Mlb_closestb_jdown", &Mlb_closestb_jdown); 
+    tree->Branch("Mlb_lead_bdiscr_jdown", &Mlb_lead_bdiscr_jdown);
     tree->Branch("HLT_SingleEl", &HLT_SingleEl );
     tree->Branch("HLT_SingleMu", &HLT_SingleMu );
     tree->Branch("HLT_MET", &HLT_MET);
@@ -723,7 +732,6 @@ void EventTree::SetExtraVariablesBranches (TTree* tree)
     tree->Branch("MT2_lb_b_mass", &MT2_lb_b_mass); 
     tree->Branch("MT2_lb_bqq", &MT2_lb_bqq); 
     tree->Branch("MT2_lb_bqq_mass", &MT2_lb_bqq_mass);
-    tree->Branch("Mlb_lead_bdiscr", &Mlb_lead_bdiscr);
     tree->Branch("Mjjj", &Mjjj);
     tree->Branch("Mjjj_lep2", &Mjjj_lep2);
  //   tree->Branch("calomet", &calomet);
