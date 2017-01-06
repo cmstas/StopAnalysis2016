@@ -243,15 +243,21 @@ void EventTree::Reset ()
     MT2W_rl              = -9999.;
     MT2W_jup             = -9999.;
     MT2W_jdown           = -9999.;
+    MT2W_rl_jup          = -9999.;
+    MT2W_rl_jdown        = -9999.;
     mindphi_met_j1_j2    = -9999.;
     mindphi_met_j1_j2_rl = -9999.;
     mindphi_met_j1_j2_jup= -9999.;
     mindphi_met_j1_j2_jdown= -9999.;
+    mindphi_met_j1_j2_rl_jup= -9999.;
+    mindphi_met_j1_j2_rl_jdown= -9999.;
     mt_met_lep           = -9999.;
     mt_met_lep2          = -9999.;
     mt_met_lep_rl        = -9999.;
     mt_met_lep_jup       = -9999.;
     mt_met_lep_jdown     = -9999.;
+    mt_met_lep_rl_jup    = -9999.;
+    mt_met_lep_rl_jdown  = -9999.;
     hadronic_top_chi2    = -9999.; 
     is_data              = false;
 
@@ -262,6 +268,8 @@ void EventTree::Reset ()
     topnessMod_rl          = -9999.;
     topnessMod_jup         = -9999.;
     topnessMod_jdown       = -9999.;
+    topnessMod_rl_jup      = -9999.;
+    topnessMod_rl_jdown    = -9999.;
     MT2_lb_b               = -9999.; 
     MT2_lb_b_lep2          = -9999.; 
     MT2_lb_b_mass          = -9999.; 
