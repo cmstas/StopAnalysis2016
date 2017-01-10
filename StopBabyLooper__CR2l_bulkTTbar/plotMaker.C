@@ -33,6 +33,8 @@ void plotMaker( bool plotByGenDecay=true ){
   // Intialize User Inputs
   //
   bool plotData  = true;
+  bool scaleToData = false;
+  bool plotEntriesPerBinWidth = false;
   
   TString inDir  = "Output/Histos/";
   TString outDir = "Output/Plots/";
@@ -50,10 +52,10 @@ void plotMaker( bool plotByGenDecay=true ){
   // Signal and Control Regions
   //
   std::vector<std::string> regionList;
-  regionList.push_back("ee");
+  //regionList.push_back("ee");
   regionList.push_back("emu");
-  regionList.push_back("mumu");
-  regionList.push_back("incl");
+  //regionList.push_back("mumu");
+  //regionList.push_back("incl");
 
 
   //
@@ -209,7 +211,7 @@ void plotMaker( bool plotByGenDecay=true ){
   double noRebin_xBins[2]{0.0,0.0}; // entries = nBins+1
   double noRebin_xBinsSF[1]{1.0};   // SFs to keep bins Events/width
 
-
+  
 
   // Plot Yields
   
@@ -594,6 +596,8 @@ void plotMaker( bool plotByGenDecay=true ){
   var_list_xaxis.push_back( "diLepPt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
@@ -1183,6 +1187,8 @@ void plotMaker( bool plotByGenDecay=true ){
   var_list_xaxis.push_back( "met" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
@@ -1361,13 +1367,27 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge0bTags);
   var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge0bTags);
 
-
+  
   // ge1bTags
   var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags" );
   var_list_title.push_back( "lep1lep2bbMet, >=1 bTags" );
   var_list_xaxis.push_back( "lep1lep2bbMet" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
@@ -1375,13 +1395,27 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_nBins.push_back(noRebin_nBins);
   var_rebin_xBins.push_back(noRebin_xBins);
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
-
+  
   // ge1bTags, Rebinned
   var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags" );
   var_list_title.push_back( "lep1lep2bbMet, >=1 bTags" );
   var_list_xaxis.push_back( "lep1lep2bbMet" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
@@ -1392,7 +1426,7 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags);
   var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags);
   var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);
-
+  
 
   // ge2bTags
   var_list_label.push_back( "h_lep1lep2bbMetPt__ge2bTags" );
@@ -1818,7 +1852,7 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBins.push_back(xRebins_mlb_ge2bTags);
   var_rebin_xBinsSF.push_back(xRebinsSF_mlb_ge2bTags);
 
-
+ 
 
   
   //
@@ -1849,6 +1883,7 @@ void plotMaker( bool plotByGenDecay=true ){
       
       // Get Data Data;
       TFile *f_data = NULL;
+      double norm_data = 0.0;
       if(plotData){
 	sampleInfo::sampleUtil data_util( sample_data.first );
 	genClassyInfo::Util data_genClassy( sample_data.second );
@@ -1875,15 +1910,19 @@ void plotMaker( bool plotByGenDecay=true ){
 	// Do rebin
 	if( var_doRebin[iVar] ){
 	  h_data = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	  for(int iBin=1; iBin<=(int)h_data->GetNbinsX(); iBin++){
-	    h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-	    h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	  if(plotEntriesPerBinWidth){
+	    for(int iBin=1; iBin<=(int)h_data->GetNbinsX(); iBin++){
+	      h_data->SetBinContent( iBin, h_data->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      h_data->SetBinError( iBin, h_data->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	    }
 	  }
 	}
 	else{
 	  h_data = (TH1F*)h_temp->Clone(hName_clone);
 	}
-	
+
+	norm_data = h_data->Integral(0,-1);
+
       } // end if plotting data
       
       
@@ -1892,6 +1931,7 @@ void plotMaker( bool plotByGenDecay=true ){
       std::pair<TH1F*,TH1F*> bkg_and_unc;
       std::vector< std::pair<TH1F*,TH1F*> > bkg_histos;
       std::vector<std::string> bkg_titles;
+      double norm_sumBkg = 0.0;
       for(int iBkg=0; iBkg<(int)bkgList.size(); iBkg++){
 	
 	sampleInfo::sampleUtil background( bkgList[iBkg].first );
@@ -1924,9 +1964,11 @@ void plotMaker( bool plotByGenDecay=true ){
 	// Do rebin
 	if( var_doRebin[iVar] ){
 	  h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	  for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
-	    h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-	    h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	  if(plotEntriesPerBinWidth){
+	    for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
+	      h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	    }
 	  }
 	}
 	else{
@@ -1935,14 +1977,15 @@ void plotMaker( bool plotByGenDecay=true ){
 	
 	
 	bkg_and_unc.first = h_clone;
-	
+	norm_sumBkg += h_clone->Integral(0,-1);
+
 	h_clone_unc = (TH1F*)h_clone->Clone(hName_clone+"__unc");
 	if( (int)sysList[iVar].size()==1 ){
 	  bkg_and_unc.second = h_clone_unc;
 	}
 	else{
 	  
-	  for(int iSys=0; iSys<(int)sysList[iVar].size(); iSys+=2){
+	  for(int iSys=1; iSys<(int)sysList[iVar].size(); iSys+=2){
 	    
 	    // Get Up Variation
 	    hName = var_list_label[iVar];
@@ -1954,7 +1997,11 @@ void plotMaker( bool plotByGenDecay=true ){
 	    hName += sysList[iVar][iSys].label;
 	    
 	    h_temp_up = (TH1F*)f_bkg->Get(hName);
-	    
+	    if(!h_temp_up){
+	      cout << "BAD BKG HISTO: " << hName << endl;
+	      cout << "  FROM FILE: " << f_name.Data() << endl;
+	    }
+
 	    hName_clone = hName;
 	    hName_clone += "__";
 	    hName_clone += background.label;
@@ -1964,16 +2011,18 @@ void plotMaker( bool plotByGenDecay=true ){
 	    // Do rebin
 	    if( var_doRebin[iVar] ){
 	      h_clone_up = (TH1F*)h_temp_up->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	      for(int iBin=1; iBin<=(int)h_clone_up->GetNbinsX(); iBin++){
-		h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-		h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      if(plotEntriesPerBinWidth){
+		for(int iBin=1; iBin<=(int)h_clone_up->GetNbinsX(); iBin++){
+		  h_clone_up->SetBinContent( iBin, h_clone_up->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone_up->SetBinError( iBin, h_clone_up->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		}
 	      }
 	    }
 	    else{
 	      h_clone_up = (TH1F*)h_temp_up->Clone(hName_clone);
 	    }
 	      
-
+	    
 	    // Get Down Variation
 	    hName = var_list_label[iVar];
 	    hName += "__lepFlav_";
@@ -1984,6 +2033,10 @@ void plotMaker( bool plotByGenDecay=true ){
 	    hName += sysList[iVar][iSys+1].label;
 	    
 	    h_temp_dn = (TH1F*)f_bkg->Get(hName);
+	    if(!h_temp_dn){
+	      cout << "BAD BKG HISTO: " << hName << endl;
+	      cout << "  FROM FILE: " << f_name.Data() << endl;
+	    }
 	    
 	    hName_clone = hName;
 	    hName_clone += "__";
@@ -1994,16 +2047,18 @@ void plotMaker( bool plotByGenDecay=true ){
 	    // Do rebin
 	    if( var_doRebin[iVar] ){
 	      h_clone_dn = (TH1F*)h_temp_dn->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	      for(int iBin=1; iBin<=(int)h_clone_dn->GetNbinsX(); iBin++){
-		h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-		h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      if(plotEntriesPerBinWidth){
+		for(int iBin=1; iBin<=(int)h_clone_dn->GetNbinsX(); iBin++){
+		  h_clone_dn->SetBinContent( iBin, h_clone_dn->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone_dn->SetBinError( iBin, h_clone_dn->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		}
 	      }
 	    }
 	    else{
 	      h_clone_dn = (TH1F*)h_temp_dn->Clone(hName_clone);
 	    }
 	    
-	      
+	    //cout << "Systematic = " << hName_clone << endl;
 	    for(int iBin=1; iBin<=(int)h_clone_up->GetNbinsX(); iBin++){
 	      double nom_val    = h_clone_unc->GetBinContent(iBin);
 	      double nom_err    = h_clone_unc->GetBinError(iBin);
@@ -2014,12 +2069,14 @@ void plotMaker( bool plotByGenDecay=true ){
 	      
 	      double max_diff = fabs(nom_val-up_val);
 	      max_diff = std::max( max_diff, fabs(nom_val-dn_val) );
-	    
-	      nom_err_sq += max_diff;
+	      //cout << "bin " << iBin << ", max_diff = " << max_diff << " (" << 100.0*max_diff/nom_val << "%)" << endl;
+	      
+	      nom_err_sq += pow(max_diff,2);
 	      nom_err     = sqrt(nom_err_sq);
 	      
 	      h_clone_unc->SetBinError(iBin,nom_err);
 	    } // end loop over bins
+	    //cout << endl;
 	    
 	  } // end loop over sys
 	  
@@ -2042,6 +2099,17 @@ void plotMaker( bool plotByGenDecay=true ){
 	
       } // end loop over files
       
+
+      // Norm background to data, if option set
+      double norm_bkgSF = 1.0;
+      if(scaleToData){
+	norm_bkgSF = norm_data/norm_sumBkg;
+	
+	for(int iBkg=0; iBkg<(int)bkg_histos.size(); iBkg++){
+	  bkg_histos[iBkg].first->Scale(norm_bkgSF);
+	  bkg_histos[iBkg].second->Scale(norm_bkgSF);
+	}
+      }
       
       // Signal
       std::vector<TFile*> sig_files;
@@ -2098,14 +2166,20 @@ void plotMaker( bool plotByGenDecay=true ){
 	    // Do rebin
 	    if( var_doRebin[iVar] ){
 	      h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
-	      for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
-		h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
-		h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+	      if(plotEntriesPerBinWidth){
+		for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
+		  h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		  h_clone->SetBinError( iBin, h_clone->GetBinError(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
+		}
 	      }
 	    }
 	    else{
 	      h_clone = (TH1F*)h_temp->Clone(hName_clone);
 	    }
+
+	    // If scaling bkg to data, apply same sf to signal
+	    if(scaleToData) h_clone->Scale(norm_bkgSF);
+
 	    sig_histos.push_back(h_clone);
 	    
 	    TString sig_title_temp = "";
@@ -2136,7 +2210,7 @@ void plotMaker( bool plotByGenDecay=true ){
       } // end loop over signal samples
       
       TFile *f_dummy = new TFile("Output/Plots/f_dummy.root", "recreate");
-
+      
       // Option String, Log Scale Plot
       std::string options = "";
       
@@ -2178,8 +2252,7 @@ void plotMaker( bool plotByGenDecay=true ){
       
       options += "--type Preliminary  ";
       //options += "--type Simulation  ";
-      
-      
+            
       dataMCplotMaker(h_data, bkg_histos, bkg_titles, var_list_title[iVar], cat_title_for_subtitle, options, sig_histos, sig_titles, colors);
       
       

@@ -62,16 +62,16 @@ int ttbarSystemPt_analyzer(){
 
   // Region List
   std::vector<std::string> regionList;
-  regionList.push_back("ee");
+  //regionList.push_back("ee");
   regionList.push_back("emu");
-  regionList.push_back("mumu");
-  regionList.push_back("incl");
+  //regionList.push_back("mumu");
+  //regionList.push_back("incl");
 
   std::vector<std::string> regionList_tex;
-  regionList_tex.push_back("$ee$");
+  //regionList_tex.push_back("$ee$");
   regionList_tex.push_back("$e\\mu$");
-  regionList_tex.push_back("$\\mu\\mu$");
-  regionList_tex.push_back("$ee/e\\mu/\\mu\\mu$");
+  //regionList_tex.push_back("$\\mu\\mu$");
+  //regionList_tex.push_back("$ee/e\\mu/\\mu\\mu$");
 
 
   // Gen Classification

@@ -246,10 +246,10 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
   
   // Signal and Control Regions
   std::vector<std::string> regionList;
-  regionList.push_back("ee");
+  //regionList.push_back("ee");
   regionList.push_back("emu");
-  regionList.push_back("mumu");
-  regionList.push_back("incl");
+  //regionList.push_back("mumu");
+  //regionList.push_back("incl");
 
 
   // Systematics List, currently using entire list 

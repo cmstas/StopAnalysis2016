@@ -149,10 +149,10 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
   // Signal and Control Regions
   //
   std::vector<std::string> regionList;
-  regionList.push_back("ee");
+  //regionList.push_back("ee");
   regionList.push_back("emu");
-  regionList.push_back("mumu");
-  regionList.push_back("incl");
+  //regionList.push_back("mumu");
+  //regionList.push_back("incl");
 
 
   //
