@@ -83,7 +83,7 @@ int skimBaby(TString inFileName="output.root", TString outFileName="skim.root"){
   t->SetBranchAddress("mt_met_lep_rl_jdown", &mt_rl_jdown);
 
   // MinDPhi(met,j1/j2)
-  float cut_minDPhi = 0.8;
+  float cut_minDPhi = 0.5;
   int nEvents_pass_minDPhi=0;
 
   float minDPhi=0.0;
