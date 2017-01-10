@@ -36,7 +36,11 @@ void mergeHadoopFiles(const TString& indir, const TString& outpath) {
 
   // Initialize pointers for each histogram
   TH1D *histos[nHistos];
-  for(int iHist=0; iHist<nHistos; iHist++) histos[iHist]=NULL;
+  bool h1Dexists[nHistos];
+  for(int iHist=0; iHist<nHistos; iHist++){
+    histos[iHist]=NULL;
+    h1Dexists[iHist]=false;
+  }
   TH3D *histos3D=NULL;
   TH2F *histos2D=NULL;
   bool h3Dexists = false;
@@ -60,17 +64,22 @@ void mergeHadoopFiles(const TString& indir, const TString& outpath) {
       
       // If this is the first file, then clone the histos
       if( firstFile ){
-	TH1D *h_temp = (TH1D*)file.Get( histNames[iHist] );
-	histos[iHist] = (TH1D*)h_temp->Clone();
-	histos[iHist]->SetDirectory(f_output);
+	if(file.GetListOfKeys()->Contains(histNames[iHist])) {
+	  cout << "1D file exists" << endl;
+	  h1Dexists[iHist] = true;
+	  TH1D *h_temp = (TH1D*)file.Get( histNames[iHist] );
+	  histos[iHist] = (TH1D*)h_temp->Clone();
+	  histos[iHist]->SetDirectory(f_output);
+	}
       }
       // If not the first file, then add the histos
-      else{
+      else if(h1Dexists[iHist]){
 	TH1D *h_temp = (TH1D*)file.Get( histNames[iHist] );
 	histos[iHist]->Add( h_temp );
       }
       
     } // end loop over histograms
+    
     if( firstFile ){
       if(file.GetListOfKeys()->Contains("h_counterSMS")) {
 	cout << "3D file exists" << endl;
@@ -83,6 +92,7 @@ void mergeHadoopFiles(const TString& indir, const TString& outpath) {
       TH3D *h_temp3D = (TH3D*)file.Get("h_counterSMS");
       histos3D->Add(h_temp3D);
     }
+
     if( firstFile ){
       if(file.GetListOfKeys()->Contains("histNEvts")) {
 	cout << "2D file exists" << endl;
@@ -130,8 +140,10 @@ void mergeHadoopFiles(const TString& indir, const TString& outpath) {
       for(int iHist=0; iHist<nHistos; iHist++) h_temp[iHist]=NULL;
 
       for(int iHist=0; iHist<nHistos; iHist++){
-	h_temp[iHist] = (TH1D*)histos[iHist]->Clone();
-	h_temp[iHist]->SetDirectory(outFile);
+	if(h1Dexists[iHist]){
+	  h_temp[iHist] = (TH1D*)histos[iHist]->Clone();
+	  h_temp[iHist]->SetDirectory(outFile);
+	}
       } // end loop over histograms
 
       // Clean up outfile
