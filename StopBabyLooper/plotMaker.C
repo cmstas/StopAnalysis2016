@@ -51,6 +51,7 @@ void plotMaker( bool plotByGenDecay=true ){
   std::vector<std::string> regionList;
   regionList.push_back("SR");
   regionList.push_back("CR0b");
+  regionList.push_back("CR0b_tightBTagHighMlb");
   regionList.push_back("CR2l");
   const int nRegions = regionList.size();
 
@@ -396,7 +397,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // lep1 pT, incl selection
   var_list_label.push_back( "h_lep1Pt__inclSelection" );
-  var_list_title.push_back( "Lepton p_{T}, inclusive selection" );
+  var_list_title.push_back( "Lepton p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -411,7 +412,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1 pT, ==2jets
   var_list_label.push_back( "h_lep1Pt__ee2jSelection" );
-  var_list_title.push_back( "Lepton p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "Lepton p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -426,7 +427,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1 pT, ==3jets
   var_list_label.push_back( "h_lep1Pt__ee3jSelection" );
-  var_list_title.push_back( "Lepton p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "Lepton p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -441,7 +442,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1 pT, >=4jets
   var_list_label.push_back( "h_lep1Pt__ge4jSelection" );
-  var_list_title.push_back( "Lepton p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "Lepton p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -458,7 +459,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep2 pT, incl selection
   var_list_label.push_back( "h_lep2Pt__inclSelection" );
-  var_list_title.push_back( "Trailing Lepton p_{T}, inclusive selection" );
+  var_list_title.push_back( "Trailing Lepton p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -473,7 +474,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep2 pT, ==2jets
   var_list_label.push_back( "h_lep2Pt__ee2jSelection" );
-  var_list_title.push_back( "Trailing Lepton p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "Trailing Lepton p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -488,7 +489,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep2 pT, ==3jets
   var_list_label.push_back( "h_lep2Pt__ee3jSelection" );
-  var_list_title.push_back( "Trailing Lepton p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "Trailing Lepton p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -503,7 +504,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep2 pT, >=4jets
   var_list_label.push_back( "h_lep2Pt__ge4jSelection" );
-  var_list_title.push_back( "Trailing Lepton p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "Trailing Lepton p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -520,7 +521,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet pT, incl selection
   var_list_label.push_back( "h_jetPt__inclSelection" );
-  var_list_title.push_back( "Selected Jets p_{T}, inclusive selection" );
+  var_list_title.push_back( "Selected Jets p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -535,7 +536,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet pT, ==2jets
   var_list_label.push_back( "h_jetPt__ee2jSelection" );
-  var_list_title.push_back( "Selected Jets p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "Selected Jets p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -550,7 +551,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet pT, ==3jets
   var_list_label.push_back( "h_jetPt__ee3jSelection" );
-  var_list_title.push_back( "Selected Jets p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "Selected Jets p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -565,7 +566,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet pT, >=4jets
   var_list_label.push_back( "h_jetPt__ge4jSelection" );
-  var_list_title.push_back( "Selected Jets p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "Selected Jets p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -582,7 +583,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet1 pT, incl selection
   var_list_label.push_back( "h_jet1Pt__inclSelection" );
-  var_list_title.push_back( "Leading Jet p_{T}, inclusive selection" );
+  var_list_title.push_back( "Leading Jet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -597,7 +598,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet1 pT, ==2jets
   var_list_label.push_back( "h_jet1Pt__ee2jSelection" );
-  var_list_title.push_back( "Leading Jet p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "Leading Jet p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -612,7 +613,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet1 pT, ==3jets
   var_list_label.push_back( "h_jet1Pt__ee3jSelection" );
-  var_list_title.push_back( "Leading Jet p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "Leading Jet p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -627,7 +628,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet1 pT, >=4jets
   var_list_label.push_back( "h_jet1Pt__ge4jSelection" );
-  var_list_title.push_back( "Leading Jet p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "Leading Jet p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -644,7 +645,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // jet2 pT, incl selection
   var_list_label.push_back( "h_jet2Pt__inclSelection" );
-  var_list_title.push_back( "Trailing Jet p_{T}, inclusive selection" );
+  var_list_title.push_back( "Trailing Jet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -659,7 +660,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet2 pT, ==2jets
   var_list_label.push_back( "h_jet2Pt__ee2jSelection" );
-  var_list_title.push_back( "Trailing Jet p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "Trailing Jet p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -674,7 +675,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet2 pT, ==3jets
   var_list_label.push_back( "h_jet2Pt__ee3jSelection" );
-  var_list_title.push_back( "Trailing Jet p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "Trailing Jet p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -689,7 +690,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // jet2 pT, >=4jets
   var_list_label.push_back( "h_jet2Pt__ge4jSelection" );
-  var_list_title.push_back( "Trailing Jet p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "Trailing Jet p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -706,7 +707,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // csvJet1 pT, incl selection
   var_list_label.push_back( "h_csvJet1Pt__inclSelection" );
-  var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, inclusive selection" );
+  var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -721,7 +722,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // csvJet1 pT, ==2jets
   var_list_label.push_back( "h_csvJet1Pt__ee2jSelection" );
-  var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -736,7 +737,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // csvJet1 pT, ==3jets
   var_list_label.push_back( "h_csvJet1Pt__ee3jSelection" );
-  var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -751,7 +752,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // csvJet1 pT, >=4jets
   var_list_label.push_back( "h_csvJet1Pt__ge4jSelection" );
-  var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -768,7 +769,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // csvJet2 pT, incl selection
   var_list_label.push_back( "h_csvJet2Pt__inclSelection" );
-  var_list_title.push_back( "Lepton p_{T}, inclusive selection" );
+  var_list_title.push_back( "Lepton p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -783,7 +784,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // csvJet2 pT, ==2jets
   var_list_label.push_back( "h_csvJet2Pt__ee2jSelection" );
-  var_list_title.push_back( "Lepton p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "Lepton p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -798,7 +799,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // csvJet2 pT, ==3jets
   var_list_label.push_back( "h_csvJet2Pt__ee3jSelection" );
-  var_list_title.push_back( "Lepton p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "Lepton p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -813,7 +814,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // csvJet2 pT, >=4jets
   var_list_label.push_back( "h_csvJet2Pt__ge4jSelection" );
-  var_list_title.push_back( "Lepton p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "Lepton p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -829,7 +830,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // met, incl selection
   var_list_label.push_back( "h_met__inclSelection" );
-  var_list_title.push_back( "MET, inclusive selection" );
+  var_list_title.push_back( "MET, >=2 jets" );
   var_list_xaxis.push_back( "MET [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -844,7 +845,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // met, ==2jets
   var_list_label.push_back( "h_met__ee2jSelection" );
-  var_list_title.push_back( "MET, ==2 jet selection" );
+  var_list_title.push_back( "MET, ==2 jets" );
   var_list_xaxis.push_back( "MET [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -859,7 +860,22 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // met, ==3jets
   var_list_label.push_back( "h_met__ee3jSelection" );
-  var_list_title.push_back( "MET, ==3 jet selection" );
+  var_list_title.push_back( "MET, ==3 jets" );
+  var_list_xaxis.push_back( "MET [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // met, <4jets
+  var_list_label.push_back( "h_met__lt4jSelection" );
+  var_list_title.push_back( "MET, <4 jets" );
   var_list_xaxis.push_back( "MET [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -874,7 +890,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // met, >=4jets
   var_list_label.push_back( "h_met__ge4jSelection" );
-  var_list_title.push_back( "MET, >=4 jet selection" );
+  var_list_title.push_back( "MET, >=4 jets" );
   var_list_xaxis.push_back( "MET [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -888,9 +904,47 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
 
+  // met, <4jets
+  var_list_label.push_back( "h_met__lt4jSelection" );
+  var_list_title.push_back( "MET, <4 jets" );
+  var_list_xaxis.push_back( "MET [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+
+  const int nRebins_met_lt4j = 10;
+  double xRebins_met_lt4j[nRebins_met_lt4j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 550.0, 650.0, 800.0 };
+  double xRebinsSF_met_lt4j[nRebins_met_lt4j]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,    0.5,  0.5,   0.5, (1.0/3.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_met_lt4j);
+  var_rebin_xBins.push_back(xRebins_met_lt4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_met_lt4j);
+
+  
+  // met, >=4jets
+  var_list_label.push_back( "h_met__ge4jSelection" );
+  var_list_title.push_back( "MET, >=4 jets" );
+  var_list_xaxis.push_back( "MET [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_met_ge4j = 10;
+  double xRebins_met_ge4j[nRebins_met_ge4j+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 550.0, 650.0, 800.0 };
+  double xRebinsSF_met_ge4j[nRebins_met_ge4j]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.5,    0.5,  0.5,   0.5, (1.0/3.0) };
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("fineRebin");
+  var_rebin_nBins.push_back(nRebins_met_ge4j);
+  var_rebin_xBins.push_back(xRebins_met_ge4j);
+  var_rebin_xBinsSF.push_back(xRebinsSF_met_ge4j);
+
+
   // lep1lep2bbPt, incl selection
   var_list_label.push_back( "h_lep1lep2bbPt__inclSelection" );
-  var_list_title.push_back( "lep1(lep2)bb system p_{T}, inclusive selection" );
+  var_list_title.push_back( "lep1(lep2)bb system p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "lep1(lep2)bb system p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -905,7 +959,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1lep2bbPt, ==2jets
   var_list_label.push_back( "h_lep1lep2bbPt__ee2jSelection" );
-  var_list_title.push_back( "lep1(lep2)bb system p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "lep1(lep2)bb system p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "lep1(lep2)bb system p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -920,7 +974,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1lep2bbPt, ==3jets
   var_list_label.push_back( "h_lep1lep2bbPt__ee3jSelection" );
-  var_list_title.push_back( "lep1(lep2)bb system p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "lep1(lep2)bb system p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "lep1(lep2)bb system p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -935,7 +989,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1lep2bbPt, >=4jets
   var_list_label.push_back( "h_lep1lep2bbPt__ge4jSelection" );
-  var_list_title.push_back( "lep1(lep2)bb system p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "lep1(lep2)bb system p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "lep1(lep2)bb system p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -952,7 +1006,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // lep1lep2bbMetPt, incl selection
   var_list_label.push_back( "h_lep1lep2bbMetPt__inclSelection" );
-  var_list_title.push_back( "lep1(lep2)bbMet system p_{T}, inclusive selection" );
+  var_list_title.push_back( "lep1(lep2)bbMet system p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "lep1(lep2)bbMet system p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -967,7 +1021,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1lep2bbMetPt, ==2jets
   var_list_label.push_back( "h_lep1lep2bbMetPt__ee2jSelection" );
-  var_list_title.push_back( "lep1(lep2)bbMet system p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "lep1(lep2)bbMet system p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "lep1(lep2)bbMet system p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -982,7 +1036,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1lep2bbMetPt, ==3jets
   var_list_label.push_back( "h_lep1lep2bbMetPt__ee3jSelection" );
-  var_list_title.push_back( "lep1(lep2)bbMet system p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "lep1(lep2)bbMet system p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "lep1(lep2)bbMet system p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -997,7 +1051,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // lep1lep2bbMetPt, >=4jets
   var_list_label.push_back( "h_lep1lep2bbMetPt__ge4jSelection" );
-  var_list_title.push_back( "lep1(lep2)bbMet system p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "lep1(lep2)bbMet system p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "lep1(lep2)bbMet system p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1014,7 +1068,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mt, incl selection
   var_list_label.push_back( "h_mt__inclSelection" );
-  var_list_title.push_back( "M_{T}, inclusive selection" );
+  var_list_title.push_back( "M_{T}, >=2 jets" );
   var_list_xaxis.push_back( "M_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1029,7 +1083,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mt, ==2jets
   var_list_label.push_back( "h_mt__ee2jSelection" );
-  var_list_title.push_back( "M_{T}, ==2 jet selection" );
+  var_list_title.push_back( "M_{T}, ==2 jets" );
   var_list_xaxis.push_back( "M_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1044,7 +1098,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mt, ==3jets
   var_list_label.push_back( "h_mt__ee3jSelection" );
-  var_list_title.push_back( "M_{T}, ==3 jet selection" );
+  var_list_title.push_back( "M_{T}, ==3 jets" );
   var_list_xaxis.push_back( "M_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1059,7 +1113,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mt, >=4jets
   var_list_label.push_back( "h_mt__ge4jSelection" );
-  var_list_title.push_back( "M_{T}, >=4 jet selection" );
+  var_list_title.push_back( "M_{T}, >=4 jets" );
   var_list_xaxis.push_back( "M_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1076,8 +1130,8 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // modTopness, incl selection
   var_list_label.push_back( "h_modTopness__inclSelection" );
-  var_list_title.push_back( "modified topness, inclusive selection" );
-  var_list_xaxis.push_back( "modified topness [GeV]" );
+  var_list_title.push_back( "modified topness, >=2 jets" );
+  var_list_xaxis.push_back( "modified topness" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1091,8 +1145,8 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // modTopness, ==2jets
   var_list_label.push_back( "h_modTopness__ee2jSelection" );
-  var_list_title.push_back( "modified topness, ==2 jet selection" );
-  var_list_xaxis.push_back( "modified topness [GeV]" );
+  var_list_title.push_back( "modified topness, ==2 jets" );
+  var_list_xaxis.push_back( "modified topness" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1106,8 +1160,8 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // modTopness, ==3jets
   var_list_label.push_back( "h_modTopness__ee3jSelection" );
-  var_list_title.push_back( "modified topness, ==3 jet selection" );
-  var_list_xaxis.push_back( "modified topness [GeV]" );
+  var_list_title.push_back( "modified topness, ==3 jets" );
+  var_list_xaxis.push_back( "modified topness" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1121,8 +1175,8 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // modTopness, >=4jets
   var_list_label.push_back( "h_modTopness__ge4jSelection" );
-  var_list_title.push_back( "modified topness, >=4 jet selection" );
-  var_list_xaxis.push_back( "modified topness [GeV]" );
+  var_list_title.push_back( "modified topness, >=4 jets" );
+  var_list_xaxis.push_back( "modified topness" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1137,7 +1191,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mt2w, incl selection
   var_list_label.push_back( "h_mt2w__inclSelection" );
-  var_list_title.push_back( "MT2W, inclusive selection" );
+  var_list_title.push_back( "MT2W, >=2 jets" );
   var_list_xaxis.push_back( "MT2W [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1152,7 +1206,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mt2w, ==2jets
   var_list_label.push_back( "h_mt2w__ee2jSelection" );
-  var_list_title.push_back( "MT2W, ==2 jet selection" );
+  var_list_title.push_back( "MT2W, ==2 jets" );
   var_list_xaxis.push_back( "MT2W [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1167,7 +1221,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mt2w, ==3jets
   var_list_label.push_back( "h_mt2w__ee3jSelection" );
-  var_list_title.push_back( "MT2W, ==3 jet selection" );
+  var_list_title.push_back( "MT2W, ==3 jets" );
   var_list_xaxis.push_back( "MT2W [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1182,7 +1236,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mt2w, >=4jets
   var_list_label.push_back( "h_mt2w__ge4jSelection" );
-  var_list_title.push_back( "MT2W, >=4 jet selection" );
+  var_list_title.push_back( "MT2W, >=4 jets" );
   var_list_xaxis.push_back( "MT2W [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1199,7 +1253,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, incl selection
   var_list_label.push_back( "h_mlb__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1214,7 +1268,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1229,7 +1283,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1244,7 +1298,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1259,7 +1313,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1276,7 +1330,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, incl selection
   var_list_label.push_back( "h_mlb__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1295,7 +1349,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1313,7 +1367,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1331,7 +1385,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1349,7 +1403,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1369,7 +1423,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, incl selection
   var_list_label.push_back( "h_mlb__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1388,7 +1442,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1406,7 +1460,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1424,7 +1478,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1442,7 +1496,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1462,7 +1516,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, modTopness<0.0 selection
   var_list_label.push_back( "h_mlb__lt0modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness<0.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness<0.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1477,7 +1531,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, modTopness>=0.0 selection
   var_list_label.push_back( "h_mlb__ge0modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness>=0.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness>=0.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1492,7 +1546,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, modTopness>=10.0 selection
   var_list_label.push_back( "h_mlb__ge10modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness>=10.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness>=10.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1509,7 +1563,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, modTopness<0.0 selection, fine rebin
   var_list_label.push_back( "h_mlb__lt0modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness<0.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness<0.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1528,7 +1582,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, modTopness>=0.0 selection, fine rebin
   var_list_label.push_back( "h_mlb__ge0modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness>=0.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness>=0.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1546,7 +1600,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, modTopness>=10.0 selection, fine rebin
   var_list_label.push_back( "h_mlb__ge10modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness>=10.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness>=10.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1565,7 +1619,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, modTopness<0.0 selection, coarse rebin
   var_list_label.push_back( "h_mlb__lt0modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness<0.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness<0.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1584,7 +1638,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, modTopness>=0.0 selection, coarse rebin
   var_list_label.push_back( "h_mlb__ge0modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness>=0.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness>=0.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1602,7 +1656,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, modTopness>=10.0 selection, coarse rebin
   var_list_label.push_back( "h_mlb__ge10modTopnessSelection" );
-  var_list_title.push_back( "M_{lb}, modTopness>=10.0 selection" );
+  var_list_title.push_back( "M_{lb}, modTopness>=10.0" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1622,7 +1676,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2, incl selection
   var_list_label.push_back( "h_mlb_lep2__inclSelection" );
-  var_list_title.push_back( "M_{lep2b}, inclusive selection" );
+  var_list_title.push_back( "M_{lep2b}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1637,7 +1691,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2, ==2jets
   var_list_label.push_back( "h_mlb_lep2__ee2jSelection" );
-  var_list_title.push_back( "M_{lep2b}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lep2b}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1652,7 +1706,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2, ==3jets
   var_list_label.push_back( "h_mlb_lep2__ee3jSelection" );
-  var_list_title.push_back( "M_{lep2b}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lep2b}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1667,7 +1721,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2, <4jets
   var_list_label.push_back( "h_mlb_lep2__lt4jSelection" );
-  var_list_title.push_back( "M_{lep2b}, <4 jet selection" );
+  var_list_title.push_back( "M_{lep2b}, <4 jets" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1682,7 +1736,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2, >=4jets
   var_list_label.push_back( "h_mlb_lep2__ge4jSelection" );
-  var_list_title.push_back( "M_{lep2b}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lep2b}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1699,7 +1753,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2, incl selection, rebin
   var_list_label.push_back( "h_mlb_lep2__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1718,7 +1772,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb_lep2__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1736,7 +1790,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb_lep2__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1754,7 +1808,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb_lep2__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1772,7 +1826,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb_lep2__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1792,7 +1846,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, incl selection
   var_list_label.push_back( "h_mlb_lep2__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1811,7 +1865,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb_lep2__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1829,7 +1883,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb_lep2__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1847,7 +1901,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb_lep2__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1865,7 +1919,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb_lep2__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1885,7 +1939,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_150to250met, incl selection
   var_list_label.push_back( "h_mlb_150to250met__inclSelection" );
-  var_list_title.push_back( "M_{lb}, nJet>=2, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lb}, nJet>=2, 150<met<250" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1900,7 +1954,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_150to250met, ==2jets
   var_list_label.push_back( "h_mlb_150to250met__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jet, 150<met<250" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1915,7 +1969,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_150to250met, ==3jets
   var_list_label.push_back( "h_mlb_150to250met__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jet, 150<met<250" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1930,7 +1984,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_150to250met, <4jets
   var_list_label.push_back( "h_mlb_150to250met__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lb}, <4 jet, 150<met<250" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1945,7 +1999,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_150to250met, >=4jets
   var_list_label.push_back( "h_mlb_150to250met__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jet, 150<met<250" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1961,7 +2015,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, incl selection, met sideband CR
   var_list_label.push_back( "h_mlb_150to250met__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1980,7 +2034,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb_150to250met__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -1998,7 +2052,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb_150to250met__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2016,7 +2070,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb_150to250met__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2034,7 +2088,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb_150to250met__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2054,7 +2108,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, incl selection
   var_list_label.push_back( "h_mlb_150to250met__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2073,7 +2127,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb_150to250met__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2091,7 +2145,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb_150to250met__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2109,7 +2163,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb_150to250met__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2127,7 +2181,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb_150to250met__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2147,7 +2201,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2_150to250met, incl selection
   var_list_label.push_back( "h_mlb_lep2_150to250met__inclSelection" );
-  var_list_title.push_back( "M_{lep2b}, nJet>=2, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lep2b}, nJet>=2, 150<met<250" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2162,7 +2216,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2_150to250met, ==2jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ee2jSelection" );
-  var_list_title.push_back( "M_{lep2b}, ==2 jet, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lep2b}, ==2 jet, 150<met<250" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2177,7 +2231,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2_150to250met, ==3jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ee3jSelection" );
-  var_list_title.push_back( "M_{lep2b}, ==3 jet, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lep2b}, ==3 jet, 150<met<250" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2192,7 +2246,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2_150to250met, <4jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__lt4jSelection" );
-  var_list_title.push_back( "M_{lep2b}, <4 jet, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lep2b}, <4 jet, 150<met<250" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2207,7 +2261,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2_150to250met, >=4jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ge4jSelection" );
-  var_list_title.push_back( "M_{lep2b}, >=4 jet, 150<met<250, selection" );
+  var_list_title.push_back( "M_{lep2b}, >=4 jet, 150<met<250" );
   var_list_xaxis.push_back( "M_{lep2b} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2223,7 +2277,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb_lep2_150to250met, incl selection
   var_list_label.push_back( "h_mlb_lep2_150to250met__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2242,7 +2296,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2260,7 +2314,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2278,7 +2332,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2296,7 +2350,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2316,7 +2370,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, incl selection
   var_list_label.push_back( "h_mlb_lep2_150to250met__inclSelection" );
-  var_list_title.push_back( "M_{lb}, inclusive selection" );
+  var_list_title.push_back( "M_{lb}, >=2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2335,7 +2389,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // mlb, ==2jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ee2jSelection" );
-  var_list_title.push_back( "M_{lb}, ==2 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==2 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2353,7 +2407,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, ==3jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ee3jSelection" );
-  var_list_title.push_back( "M_{lb}, ==3 jet selection" );
+  var_list_title.push_back( "M_{lb}, ==3 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2371,7 +2425,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, <4jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__lt4jSelection" );
-  var_list_title.push_back( "M_{lb}, <4 jet selection" );
+  var_list_title.push_back( "M_{lb}, <4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2389,7 +2443,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // mlb, >=4jets
   var_list_label.push_back( "h_mlb_lep2_150to250met__ge4jSelection" );
-  var_list_title.push_back( "M_{lb}, >=4 jet selection" );
+  var_list_title.push_back( "M_{lb}, >=4 jets" );
   var_list_xaxis.push_back( "M_{lb} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2409,7 +2463,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, incl selection
   var_list_label.push_back( "h_bJetPt__inclSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2424,7 +2478,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, ==2jets
   var_list_label.push_back( "h_bJetPt__ee2jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2439,7 +2493,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, ==3jets
   var_list_label.push_back( "h_bJetPt__ee3jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2454,7 +2508,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, <4jets
   var_list_label.push_back( "h_bJetPt__lt4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2469,7 +2523,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, >=4jets
   var_list_label.push_back( "h_bJetPt__ge4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2486,7 +2540,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // bJetPt, incl selection
   var_list_label.push_back( "h_bJetPt__inclSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2505,7 +2559,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // bJetPt, ==2jets
   var_list_label.push_back( "h_bJetPt__ee2jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2523,7 +2577,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, ==3jets
   var_list_label.push_back( "h_bJetPt__ee3jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2541,7 +2595,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, <4jets
   var_list_label.push_back( "h_bJetPt__lt4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2559,7 +2613,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, >=4jets
   var_list_label.push_back( "h_bJetPt__ge4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2579,7 +2633,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, incl selection
   var_list_label.push_back( "h_bJetPt__inclSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2598,7 +2652,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // bJetPt, ==2jets
   var_list_label.push_back( "h_bJetPt__ee2jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2616,7 +2670,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, ==3jets
   var_list_label.push_back( "h_bJetPt__ee3jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2634,7 +2688,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, <4jets
   var_list_label.push_back( "h_bJetPt__lt4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2652,7 +2706,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, >=4jets
   var_list_label.push_back( "h_bJetPt__ge4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2672,7 +2726,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, modTopness<0.0 selection
   var_list_label.push_back( "h_bJetPt__lt0modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2687,7 +2741,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, modTopness>=0.0 selection
   var_list_label.push_back( "h_bJetPt__ge0modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2702,7 +2756,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, modTopness>=10.0 selection
   var_list_label.push_back( "h_bJetPt__ge10modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2719,7 +2773,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // bJetPt, modTopness<0.0 selection, fine rebin
   var_list_label.push_back( "h_bJetPt__lt0modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2738,7 +2792,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // bJetPt, modTopness>=0.0 selection, fine rebin
   var_list_label.push_back( "h_bJetPt__ge0modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2756,7 +2810,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, modTopness>=10.0 selection, fine rebin
   var_list_label.push_back( "h_bJetPt__ge10modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2775,7 +2829,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, modTopness<0.0 selection, coarse rebin
   var_list_label.push_back( "h_bJetPt__lt0modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness<0.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2794,7 +2848,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // bJetPt, modTopness>=0.0 selection, coarse rebin
   var_list_label.push_back( "h_bJetPt__ge0modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=0.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2812,7 +2866,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, modTopness>=10.0 selection, coarse rebin
   var_list_label.push_back( "h_bJetPt__ge10modTopnessSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0 selection" );
+  var_list_title.push_back( "lead bJet p_{T}, modTopness>=10.0" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2831,7 +2885,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt_150to250met, incl selection
   var_list_label.push_back( "h_bJetPt_150to250met__inclSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, nJet>=2, 150<met<250, selection" );
+  var_list_title.push_back( "lead bJet p_{T}, nJet>=2, 150<met<250" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2846,7 +2900,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt_150to250met, ==2jets
   var_list_label.push_back( "h_bJetPt_150to250met__ee2jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==2 jet, 150<met<250, selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jet, 150<met<250" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2861,7 +2915,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt_150to250met, ==3jets
   var_list_label.push_back( "h_bJetPt_150to250met__ee3jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==3 jet, 150<met<250, selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jet, 150<met<250" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2876,7 +2930,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt_150to250met, <4jets
   var_list_label.push_back( "h_bJetPt_150to250met__lt4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, <4 jet, 150<met<250, selection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jet, 150<met<250" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2891,7 +2945,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt_150to250met, >=4jets
   var_list_label.push_back( "h_bJetPt_150to250met__ge4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, >=4 jet, 150<met<250, selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jet, 150<met<250" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2907,7 +2961,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, incl selection, met sideband CR
   var_list_label.push_back( "h_bJetPt_150to250met__inclSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2926,7 +2980,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // bJetPt, ==2jets
   var_list_label.push_back( "h_bJetPt_150to250met__ee2jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2944,7 +2998,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, ==3jets
   var_list_label.push_back( "h_bJetPt_150to250met__ee3jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2962,7 +3016,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, <4jets
   var_list_label.push_back( "h_bJetPt_150to250met__lt4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -2980,7 +3034,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, >=4jets
   var_list_label.push_back( "h_bJetPt_150to250met__ge4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3000,7 +3054,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, incl selection
   var_list_label.push_back( "h_bJetPt_150to250met__inclSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, inclusive selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3019,7 +3073,7 @@ void plotMaker( bool plotByGenDecay=true ){
   
   // bJetPt, ==2jets
   var_list_label.push_back( "h_bJetPt_150to250met__ee2jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3037,7 +3091,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, ==3jets
   var_list_label.push_back( "h_bJetPt_150to250met__ee3jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3055,7 +3109,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, <4jets
   var_list_label.push_back( "h_bJetPt_150to250met__lt4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, <4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, <4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3073,7 +3127,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // bJetPt, >=4jets
   var_list_label.push_back( "h_bJetPt_150to250met__ge4jSelection" );
-  var_list_title.push_back( "lead bJet p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "lead bJet p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "lead bJet p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3093,7 +3147,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen ttbarPt, incl selection
   var_list_label.push_back( "h_gen_ttbarPt__inclSelection" );
-  var_list_title.push_back( "Gen t#bar{t} system p_{T}, inclusive selection" );
+  var_list_title.push_back( "Gen t#bar{t} system p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3108,7 +3162,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen ttbarPt, ==2jets
   var_list_label.push_back( "h_gen_ttbarPt__ee2jSelection" );
-  var_list_title.push_back( "Gen t#bar{t} system p_{T}, ==2 jet selection" );
+  var_list_title.push_back( "Gen t#bar{t} system p_{T}, ==2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3123,7 +3177,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen ttbarPt, ==3jets
   var_list_label.push_back( "h_gen_ttbarPt__ee3jSelection" );
-  var_list_title.push_back( "Gen t#bar{t} system p_{T}, ==3 jet selection" );
+  var_list_title.push_back( "Gen t#bar{t} system p_{T}, ==3 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3138,7 +3192,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen ttbarPt, <4jets
   var_list_label.push_back( "h_gen_ttbarPt__lt4jSelection" );
-  var_list_title.push_back( "Gen t#bar{t} system p_{T}, <4 jet selection" );
+  var_list_title.push_back( "Gen t#bar{t} system p_{T}, <4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3154,7 +3208,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen ttbarPt, >=4jets
   var_list_label.push_back( "h_gen_ttbarPt__ge4jSelection" );
-  var_list_title.push_back( "Gen t#bar{t} system p_{T}, >=4 jet selection" );
+  var_list_title.push_back( "Gen t#bar{t} system p_{T}, >=4 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3170,7 +3224,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen lep2ID, incl selection
   var_list_label.push_back( "h_gen_lep2_id__inclSelection" );
-  var_list_title.push_back( "Gen 2nd Lepton pdgid, inclusive selection" );
+  var_list_title.push_back( "Gen 2nd Lepton pdgid, >=2 jets" );
   var_list_xaxis.push_back( "" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
@@ -3185,7 +3239,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen lep2ID, ==2jets
   var_list_label.push_back( "h_gen_lep2_id__ee2jSelection" );
-  var_list_title.push_back( "Gen 2nd Lepton pdgid, ==2 jet selection" );
+  var_list_title.push_back( "Gen 2nd Lepton pdgid, ==2 jets" );
   //var_list_title.push_back( "Gen 2nd Lepton pdgid, ==2 jet, modTop>6.4" );
   var_list_xaxis.push_back( "" );
   
@@ -3201,7 +3255,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen lep2ID, ==3jets
   var_list_label.push_back( "h_gen_lep2_id__ee3jSelection" );
-  var_list_title.push_back( "Gen 2nd Lepton pdgid, ==3 jet selection" );
+  var_list_title.push_back( "Gen 2nd Lepton pdgid, ==3 jets" );
   //var_list_title.push_back( "Gen 2nd Lepton pdgid, ==3 jet, mt2w>200" );
   var_list_xaxis.push_back( "" );
   
@@ -3217,7 +3271,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen lep2ID, <4jets
   var_list_label.push_back( "h_gen_lep2_id__lt4jSelection" );
-  var_list_title.push_back( "Gen 2nd Lepton pdgid, <4 jet selection" );
+  var_list_title.push_back( "Gen 2nd Lepton pdgid, <4 jets" );
   //var_list_title.push_back( "Gen 2nd Lepton pdgid, >=4 jet, mt2w<200" );
   var_list_xaxis.push_back( "" );
   
@@ -3234,7 +3288,7 @@ void plotMaker( bool plotByGenDecay=true ){
 
   // gen lep2ID, >=4jets
   var_list_label.push_back( "h_gen_lep2_id__ge4jSelection" );
-  var_list_title.push_back( "Gen 2nd Lepton pdgid, >=4 jet selection" );
+  var_list_title.push_back( "Gen 2nd Lepton pdgid, >=4 jets" );
   //var_list_title.push_back( "Gen 2nd Lepton pdgid, >=4 jet, mt2w>200" );
   var_list_xaxis.push_back( "" );
   
@@ -3383,7 +3437,7 @@ void plotMaker( bool plotByGenDecay=true ){
 	}
 	else{
 	  
-	  for(int iSys=0; iSys<(int)sysList[iVar].size(); iSys+=2){
+	  for(int iSys=1; iSys<(int)sysList[iVar].size(); iSys+=2){
 	    
 	    // Get Up Variation
 	    hName = var_list_label[iVar];
@@ -3460,7 +3514,7 @@ void plotMaker( bool plotByGenDecay=true ){
 	      double max_diff = fabs(nom_val-up_val);
 	      max_diff = std::max( max_diff, fabs(nom_val-dn_val) );
 	      
-	      nom_err_sq += max_diff;
+	      nom_err_sq += pow(max_diff,2);
 	      nom_err     = sqrt(nom_err_sq);
 	      
 	      h_clone_unc->SetBinError(iBin,nom_err);

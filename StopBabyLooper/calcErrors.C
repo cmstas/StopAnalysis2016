@@ -248,6 +248,7 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
   std::vector<std::string> regionList;
   regionList.push_back("SR");
   regionList.push_back("CR0b");
+  regionList.push_back("CR0b_tightBTagHighMlb");
   regionList.push_back("CR2l");
 
 
@@ -693,9 +694,12 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
 	// Loop over cateogry List
 	for(int iCat=0; iCat<(int)iCatList.size(); iCat++){
 	  
+	  TString regionListTitle = regionList[iReg];
+          regionListTitle.ReplaceAll("_", " ");
+
 	  fprintf(yFile, "\n \n \n \n");
 	  fprintf(yFile, "\\begin{table} \n");
-	  fprintf(yFile, "\\caption{ %s,~%s,~genClassy:~%s,~cateogry:~%s } \n", sample.tex.c_str(), regionList[iReg].c_str(), genClassy.tex.c_str(), iCatList[iCat].tex.c_str());
+	  fprintf(yFile, "\\caption{ %s,~%s,~genClassy:~%s,~cateogry:~%s } \n", sample.tex.c_str(), regionListTitle.Data(), genClassy.tex.c_str(), iCatList[iCat].tex.c_str());
 	  fprintf(yFile, "\\begin{tabular}{|l|c|c|c|c|} \\hline \n");
 	  fprintf(yFile, "Systematic & Nominal & Sys Up, (\\%%) & Sys Down, (\\%%) & \\%% Uncertainty");
 	  fprintf(yFile, "\\"); fprintf(yFile, "\\ \\hline \\hline \n");

@@ -146,6 +146,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
   std::vector<std::string> regionList;
   regionList.push_back("SR");
   regionList.push_back("CR0b");
+  regionList.push_back("CR0b_tightBTagHighMlb");
   regionList.push_back("CR2l");
 
 
@@ -931,8 +932,11 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 	
 
 	// Table Title
+	TString regionListTitle = regionList[iRegion];
+	regionListTitle.ReplaceAll("_", " ");
+
 	std::string table_title = "";
-	table_title += regionList[iRegion];
+	table_title += regionListTitle;
 	table_title += ", ";
 	table_title += systematicList[iSys].tex;
 	table_title += " Systematic, Yield Table for ";

@@ -139,6 +139,7 @@ int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_
   std::vector<std::string> regionList;
   regionList.push_back("SR");
   regionList.push_back("CR0b");
+  regionList.push_back("CR0b_tightBTagHighMlb");
   regionList.push_back("CR2l");
 
 
@@ -609,8 +610,11 @@ int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_
 	std::vector< std::vector<yieldHelper> > iTableList = fileList[iFile];
 
 	// Table Title
+	TString regionListTitle = regionList[iRegion];
+	regionListTitle.ReplaceAll("_", " ");
+
 	TString table_title = "";
-	table_title += regionList[iRegion];
+	table_title += regionListTitle;
 	table_title += ", ";
 	table_title += systematicList[iSys].tex;
 	table_title += " Systematic, Yield Table for ";

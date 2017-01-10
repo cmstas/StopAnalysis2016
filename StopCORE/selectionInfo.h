@@ -32,6 +32,11 @@ namespace selectionInfo{
   TH1D* get_cutflowHistoTemplate_CR0b();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR0b();
 
+  bool pass_CR0b_tightBTagHighMlb(int jesType=0);
+  std::vector<bool> get_selectionResults_CR0b_tightBTagHighMlb(int jesType=0);
+  TH1D* get_cutflowHistoTemplate_CR0b_tightBTagHighMlb();
+  vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR0b_tightBTagHighMlb();
+
   bool pass_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
   std::vector<bool> get_selectionResults_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
   TH1D* get_cutflowHistoTemplate_CR2l();

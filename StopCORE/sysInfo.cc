@@ -1431,7 +1431,10 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( sample_info->isSignal ) return;
 
   // ttbar, tW, and wJets only
-  if( sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
+  if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext4 &&
+      sample_info->id != sampleInfo::k_ttbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 &&
@@ -1582,7 +1585,10 @@ void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &we
   if( sample_info->isData ) return;
   if( sample_info->isSignal ) return;
 
-  if( sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
+  if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext4 &&
+      sample_info->id != sampleInfo::k_ttbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 &&
@@ -2062,6 +2068,17 @@ void sysInfo::evtWgtInfo::getISRnJetsWeight( double &weight_ISR, double &weight_
 
   if( sample_info->isData ) return;
   
+  if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext4 &&
+      sample_info->id != sampleInfo::k_ttbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 ) return;
+
+
   weight_ISR    = babyAnalyzer.weight_ISRnjets();
   weight_ISR_up = babyAnalyzer.weight_ISRnjets_UP();
   weight_ISR_dn = babyAnalyzer.weight_ISRnjets_DN();

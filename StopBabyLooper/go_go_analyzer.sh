@@ -70,6 +70,19 @@ root -l -b -q head.C pieCharts.C++ >& Output/Log/pieCharts.log
 echo "Calculating DiLepton Background Estimate..."
 echo ""
 root -l -b -q head.C bkgEstimate_diLepton.C++ >& Output/Log/bkgEstimate_diLepton.log
+sed -i 's/0\.0~-~0\.0~\\%/--/g' Output/BkgEstimate/bkgEst_lostLepton__*__uncertaintyTable__summary.tex
+
+echo "Calculating 1lep from W Background Estimate..."
+echo ""
+#root -l -b -q head.C bkgEstimate_1lepFromW.C++ >& Output/Log/bkgEstimate_1lepFromW.log
+
+echo "Calculating 1lep from Top Background Estimate..."
+echo ""
+root -l -b -q head.C bkgEstimate_1lepFromTop.C++ >& Output/Log/bkgEstimate_1lepFromTop.log
+
+echo "Calculating Z->NuNu Background Estimate..."
+echo ""
+root -l -b -q head.C bkgEstimate_ZtoNuNu.C++ >& Output/Log/bkgEstimate_ZtoNuNu.log
 
 # Create pdfs of latex files
 echo "Converting Tex to PDF..."

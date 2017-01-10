@@ -60,7 +60,7 @@ bool apply_vetoLep_sf_      = true; // this is actually the lost lepton sf, only
 bool apply_lepFS_sf_        = false;
 bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = true;
-bool apply_ttbarSysPt_sf_   = true;  // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
+bool apply_ttbarSysPt_sf_   = false;  // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
 bool apply_ISR_sf_          = true; // only !=1.0 for signal
 bool apply_sample_sf_       = false; // only !=1.0 for some WJetsHT samps
 
@@ -203,6 +203,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   std::vector<TString> regionList;
   regionList.push_back("SR");
   regionList.push_back("CR0b");
+  regionList.push_back("CR0b_tightBTagHighMlb");
   regionList.push_back("CR2l");
   const int nRegions = (int)regionList.size();
 
@@ -218,6 +219,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
     if(regionList[iReg]=="SR")   h_cutflow[iReg] = selectionInfo::get_cutflowHistoTemplate_SR();
     if(regionList[iReg]=="CR0b") h_cutflow[iReg] = selectionInfo::get_cutflowHistoTemplate_CR0b();
+    if(regionList[iReg]=="CR0b_tightBTagHighMlb") h_cutflow[iReg] = selectionInfo::get_cutflowHistoTemplate_CR0b_tightBTagHighMlb();
     if(regionList[iReg]=="CR2l"){
       h_cutflow[iReg] = selectionInfo::get_cutflowHistoTemplate_CR2l();
       h_cutflow[iReg]->GetXaxis()->SetBinLabel(4, ">=2 leptons (e/mu only)" );
@@ -302,7 +304,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //    histogram_name = "your_name_here"+"__"+regionList[i]+"__genClassy_"+genClassyObject.label+"__systematic_"+sysInfoObject.label;
   //
   //
-  //  Where regionList is the list of "SR", "CR0b", or "CR2l"
+  //  Where regionList is the list of "SR", "CR0b", "CR0b_tightBTagHighMlb" or "CR2l"
   //
   //    And systematicList[0] is the nominal selection
   //
@@ -324,7 +326,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // ICHEP SR bins, 12.9fb
   TH1D *h_yields_ICHEP_template = categoryInfo::getYieldHistoTemplate_SR_ICHEP();
   TH1D *h_yields_ICHEP[nHistosYields];
-  TH1D *h_nEntries_ICHEP[nHistosYields]; // For bkg estimates
   TH3D *h_yields_ICHEP_sigScan[nHistosYields];
   vector<int> passCats_ICHEP; 
   vector<int> passCats_ICHEP_jup;
@@ -334,7 +335,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // ICHEP SR bins, extended to 30fb
   TH1D *h_yields_ICHEP_ext30fb_template = categoryInfo::getYieldHistoTemplate_SR_ICHEP_ext30fb();
   TH1D *h_yields_ICHEP_ext30fb[nHistosYields];
-  TH1D *h_nEntries_ICHEP_ext30fb[nHistosYields]; // For bkg estimates
   TH3D *h_yields_ICHEP_ext30fb_sigScan[nHistosYields];
   vector<int> passCats_ICHEP_ext30fb; 
   vector<int> passCats_ICHEP_ext30fb_jup;
@@ -344,7 +344,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // ICHEP SR bins, extended to 30fb, mlb bins
   TH1D *h_yields_dev_ext30fb_mlb_v1_template = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v1();
   TH1D *h_yields_dev_ext30fb_mlb_v1[nHistosYields];
-  TH1D *h_nEntries_dev_ext30fb_mlb_v1[nHistosYields]; // For bkg estimates
   TH3D *h_yields_dev_ext30fb_mlb_v1_sigScan[nHistosYields];
   vector<int> passCats_dev_ext30fb_mlb_v1; 
   vector<int> passCats_dev_ext30fb_mlb_v1_jup;
@@ -353,7 +352,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // ICHEP SR bins, extended to 30fb, mlb bins with tight bTagging
   TH1D *h_yields_dev_ext30fb_mlb_v2_template = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2();
   TH1D *h_yields_dev_ext30fb_mlb_v2[nHistosYields];
-  TH1D *h_nEntries_dev_ext30fb_mlb_v2[nHistosYields]; // For bkg estimates
   TH3D *h_yields_dev_ext30fb_mlb_v2_sigScan[nHistosYields];
   vector<int> passCats_dev_ext30fb_mlb_v2; 
   vector<int> passCats_dev_ext30fb_mlb_v2_jup;
@@ -363,7 +361,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // ICHEP SR bins, extended to 30fb, bJetPt bins
   TH1D *h_yields_dev_ext30fb_bJetPt_v1_template = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_bJetPt_v1();
   TH1D *h_yields_dev_ext30fb_bJetPt_v1[nHistosYields];
-  TH1D *h_nEntries_dev_ext30fb_bJetPt_v1[nHistosYields]; // For bkg estimates
   TH3D *h_yields_dev_ext30fb_bJetPt_v1_sigScan[nHistosYields];
   vector<int> passCats_dev_ext30fb_bJetPt_v1; 
   vector<int> passCats_dev_ext30fb_bJetPt_v1_jup;
@@ -373,7 +370,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // Top Corridor SR bins, Dan
   TH1D *h_yields_corridor_template = categoryInfo::getYieldHistoTemplate_SR_corridor();
   TH1D *h_yields_corridor[nHistosYields];
-  TH1D *h_nEntries_corridor[nHistosYields]; // For bkg estimates
   TH3D *h_yields_corridor_sigScan[nHistosYields];
   vector<int> passCats_corridor; 
   vector<int> passCats_corridor_jup;
@@ -407,8 +403,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	else{
 	  h_yields_ICHEP[iHisto] = (TH1D*)h_yields_ICHEP_template->Clone(h_name_ICHEP);
 	  h_yields_ICHEP[iHisto]->SetDirectory(f_output);
-	  h_nEntries_ICHEP[iHisto] = (TH1D*)h_yields_ICHEP_template->Clone(h_name_ICHEP+"__nEntries");
-	  h_nEntries_ICHEP[iHisto]->SetDirectory(f_output);
 	}
 
 
@@ -422,8 +416,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	else{
 	  h_yields_ICHEP_ext30fb[iHisto] = (TH1D*)h_yields_ICHEP_ext30fb_template->Clone(h_name_ICHEP_ext30fb);
 	  h_yields_ICHEP_ext30fb[iHisto]->SetDirectory(f_output);
-	  h_nEntries_ICHEP_ext30fb[iHisto] = (TH1D*)h_yields_ICHEP_ext30fb_template->Clone(h_name_ICHEP_ext30fb+"__nEntries");
-	  h_nEntries_ICHEP_ext30fb[iHisto]->SetDirectory(f_output);
 	}
 
 	
@@ -437,9 +429,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	else{
 	  h_yields_dev_ext30fb_mlb_v1[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v1_template->Clone(h_name_dev_ext30fb_mlb_v1);
 	  h_yields_dev_ext30fb_mlb_v1[iHisto]->SetDirectory(f_output);
-	  h_nEntries_dev_ext30fb_mlb_v1[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v1_template->Clone(h_name_dev_ext30fb_mlb_v1+"__nEntries");
-	  h_nEntries_dev_ext30fb_mlb_v1[iHisto]->SetDirectory(f_output);
-       	}
+	}
 
 
 	// Dev Signal Regions, extended to 30fb, mlb bins with tight bTag
@@ -452,9 +442,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	else{
 	  h_yields_dev_ext30fb_mlb_v2[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v2_template->Clone(h_name_dev_ext30fb_mlb_v2);
 	  h_yields_dev_ext30fb_mlb_v2[iHisto]->SetDirectory(f_output);
-	  h_nEntries_dev_ext30fb_mlb_v2[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v2_template->Clone(h_name_dev_ext30fb_mlb_v2+"__nEntries");
-	  h_nEntries_dev_ext30fb_mlb_v2[iHisto]->SetDirectory(f_output);
-       	}
+	}
 
 	
 	// Dev Signal Regions, extended to 30fb, bJetPt bins
@@ -467,8 +455,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	else{
 	  h_yields_dev_ext30fb_bJetPt_v1[iHisto] = (TH1D*)h_yields_dev_ext30fb_bJetPt_v1_template->Clone(h_name_dev_ext30fb_bJetPt_v1);
 	  h_yields_dev_ext30fb_bJetPt_v1[iHisto]->SetDirectory(f_output);
-	  h_nEntries_dev_ext30fb_bJetPt_v1[iHisto] = (TH1D*)h_yields_dev_ext30fb_bJetPt_v1_template->Clone(h_name_dev_ext30fb_bJetPt_v1+"__nEntries");
-	  h_nEntries_dev_ext30fb_bJetPt_v1[iHisto]->SetDirectory(f_output);
 	}
 
 	
@@ -482,8 +468,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	else{
 	  h_yields_corridor[iHisto] = (TH1D*)h_yields_corridor_template->Clone(h_name_corridor);
 	  h_yields_corridor[iHisto]->SetDirectory(f_output);
-	  h_nEntries_corridor[iHisto] = (TH1D*)h_yields_corridor_template->Clone(h_name_corridor+"__nEntries");
-	  h_nEntries_corridor[iHisto]->SetDirectory(f_output);
 	}
 	
 	
@@ -556,6 +540,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_met_incl[nHistosVars];
   TH1D *h_met_ee2j[nHistosVars];
   TH1D *h_met_ee3j[nHistosVars];
+  TH1D *h_met_lt4j[nHistosVars];
   TH1D *h_met_ge4j[nHistosVars];
 
   // lep1lep2bbPt
@@ -912,25 +897,31 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	// Incl Selection
 	hName = "h_met__inclSelection";
 	hName += reg_gen_sys_name;
-	h_met_incl[iHisto] = new TH1D( hName, "MET;MET [GeV]", 24, 0.0, 600.0 );
+	h_met_incl[iHisto] = new TH1D( hName, "MET;MET [GeV]", 32, 0.0, 800.0 );
 	h_met_incl[iHisto]->SetDirectory(f_output);
       
 	// ==2j Selection
 	hName = "h_met__ee2jSelection";
 	hName += reg_gen_sys_name;
-	h_met_ee2j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 24, 0.0, 600.0 );
+	h_met_ee2j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 32, 0.0, 800.0 );
 	h_met_ee2j[iHisto]->SetDirectory(f_output);
 
 	// ==3j Selection
 	hName = "h_met__ee3jSelection";
 	hName += reg_gen_sys_name;
-	h_met_ee3j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 24, 0.0, 600.0 );
+	h_met_ee3j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 32, 0.0, 800.0 );
 	h_met_ee3j[iHisto]->SetDirectory(f_output);
       
+	// <4j Selection
+	hName = "h_met__lt4jSelection";
+	hName += reg_gen_sys_name;
+	h_met_lt4j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 32, 0.0, 800.0 );
+	h_met_lt4j[iHisto]->SetDirectory(f_output);
+
 	// >=4j Selection
 	hName = "h_met__ge4jSelection";
 	hName += reg_gen_sys_name;
-	h_met_ge4j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 24, 0.0, 600.0 );
+	h_met_ge4j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 32, 0.0, 800.0 );
 	h_met_ge4j[iHisto]->SetDirectory(f_output);
 
 
@@ -1536,14 +1527,14 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	  sample.id == sampleInfo::k_W2JetsToLNu_madgraph_pythia8 ||
 	  sample.id == sampleInfo::k_W3JetsToLNu_madgraph_pythia8 ||
 	  sample.id == sampleInfo::k_W4JetsToLNu_madgraph_pythia8    ){
-	if( genmet()>200.0 ) continue;
+	if( nupt()>200.0 ) continue;
       }
 
       bool passAnyRegion = false;
       bool passNominal = false;
       bool passJesUp = false;
       bool passJesDown = false;
-
+      
       for(int iReg=0; iReg<nRegions; iReg++){
 	
 	// Intialize Bools
@@ -1570,6 +1561,15 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	  }
 	}
 
+	if( regionList[iReg]=="CR0b_tightBTagHighMlb"){
+	  pass_evtSel[iReg] = selectionInfo::pass_CR0b_tightBTagHighMlb(0);
+	  cutflow = selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(0);
+	  if( !sample.isData && !analyzeFast_ ){
+	    pass_evtSel_jup[iReg]    = selectionInfo::pass_CR0b_tightBTagHighMlb(1);
+	    pass_evtSel_jdown[iReg]  = selectionInfo::pass_CR0b_tightBTagHighMlb(-1);
+	  }
+	}
+	
 	if( regionList[iReg]=="CR2l"){
 	  pass_evtSel[iReg] = selectionInfo::pass_CR2l(0, inclTaus_CR2l_, add2ndLepToMet_);
 	  cutflow = selectionInfo::get_selectionResults_CR2l(0, inclTaus_CR2l_, add2ndLepToMet_);
@@ -1625,6 +1625,15 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	passGenClassy[i] = genClassyList[i].eval_GenClassy();
       }
 
+      // Fix ZZ->2l2Nu, in baby is Z->NuNu, should be lostLep
+      if( sample.id==sampleInfo::k_ZZTo2L2Nu_powheg_pythia8 ){
+	for(int i=0; i<nGenClassy; i++){
+	  passGenClassy[i] = false;
+	  if( i==genClassyInfo::k_ge2lep ||
+	      i==genClassyInfo::k_incl      ) passGenClassy[i] = true;
+	}
+      }
+  
 
 
       ////////////////////////////
@@ -1871,6 +1880,29 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	if(minBJetIdx>=0) lep2b_TLV += ak4pfjets_p4().at(minBJetIdx);
       } // end if nvetoleps>1
 
+
+      // nTightTags
+      double tight_wp = 0.935;
+      
+      int nTightTags_nominal = 0;
+      vector<float> jet_csvv2 = ak4pfjets_CSV();
+      for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+	if( jet_csvv2[iJet] >= tight_wp ) nTightTags_nominal++;
+      }
+      
+      int nTightTags_jesup = 0;
+      jet_csvv2 = jup_ak4pfjets_CSV();
+      for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+	if( jet_csvv2[iJet] >= tight_wp ) nTightTags_jesup++;
+      }
+      
+      int nTightTags_jesdown = 0;
+      jet_csvv2 = jdown_ak4pfjets_CSV();
+      for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+	if( jet_csvv2[iJet] >= tight_wp ) nTightTags_jesdown++;
+      }
+      
+
       
       /////////////////////
       //                 //
@@ -1896,146 +1928,99 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
 	  for(int iSys=0; iSys<nSystematics; iSys++){
 	  
-	    if     (iSys==sysInfo::k_JESUp)  { if(!pass_evtSel_jup[iReg])   continue; }
-	    else if(iSys==sysInfo::k_JESDown){ if(!pass_evtSel_jdown[iReg]) continue; }
-	    else                             { if(!pass_evtSel[iReg])       continue; }
+	    if     (systematicList[iSys].id==sysInfo::k_JESUp)  { if(!pass_evtSel_jup[iReg])   continue; }
+	    else if(systematicList[iSys].id==sysInfo::k_JESDown){ if(!pass_evtSel_jdown[iReg]) continue; }
+	    else                                                { if(!pass_evtSel[iReg])       continue; }
 
 	    // Histo Index
 	    int iHisto = iReg*nGenClassy*nSystematics + iGen*nSystematics + iSys;
 	    
 	    // Event Weight for this Systematic
-	    double wgt = wgtInfo->sys_wgts[iSys];
+	    double wgt = wgtInfo->sys_wgts[systematicList[iSys].id];
 
 
 	    // ICHEP Signal Regions
 	    if( sample.isSignalScan ){
-	      if( iSys==sysInfo::k_JESUp )   fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP_jup,   mStop, mLSP, wgt );
-	      if( iSys==sysInfo::k_JESDown ) fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP_jdown, mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP_jup,   mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP_jdown, mStop, mLSP, wgt );
 	      else fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP, mStop, mLSP, wgt );
 	    }
 	    else{
-	      if( iSys==sysInfo::k_JESUp ){ 
-		fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP_jup, wgt );
-		fillHistos( h_nEntries_ICHEP[iHisto], passCats_ICHEP_jup, 1.0 ); 
-	      }
-	      else if( iSys==sysInfo::k_JESDown ){ 
-		fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP_jdown, wgt );
-		fillHistos( h_nEntries_ICHEP[iHisto], passCats_ICHEP_jdown, 1.0 );
-	      } 
-	      else{ 
-		fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP, wgt );
-		fillHistos( h_nEntries_ICHEP[iHisto], passCats_ICHEP, 1.0 );
-	      } 
+	      if( systematicList[iSys].id==sysInfo::k_JESUp ) fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP_jup, wgt );
+	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP_jdown, wgt );
+	      else fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP, wgt );
 	    }
 
 
 	    // ICHEP Signal Regions, extened to 30fb
 	    if( sample.isSignalScan ){
-	      if( iSys==sysInfo::k_JESUp )   fillHistosScan( h_yields_ICHEP_ext30fb_sigScan[iHisto], passCats_ICHEP_ext30fb_jup,   mStop, mLSP, wgt );
-	      if( iSys==sysInfo::k_JESDown ) fillHistosScan( h_yields_ICHEP_ext30fb_sigScan[iHisto], passCats_ICHEP_ext30fb_jdown, mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_ICHEP_ext30fb_sigScan[iHisto], passCats_ICHEP_ext30fb_jup,   mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_ICHEP_ext30fb_sigScan[iHisto], passCats_ICHEP_ext30fb_jdown, mStop, mLSP, wgt );
 	      else fillHistosScan( h_yields_ICHEP_ext30fb_sigScan[iHisto], passCats_ICHEP_ext30fb, mStop, mLSP, wgt );
 	    }
 	    else{
-	      if( iSys==sysInfo::k_JESUp ){ 
-		fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb_jup, wgt );
-		fillHistos( h_nEntries_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb_jup, 1.0 );
-	      } 
-	      else if( iSys==sysInfo::k_JESDown ){ 
-		fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb_jdown, wgt );
-		fillHistos( h_nEntries_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb_jdown, 1.0 );
-	      } 
-	      else{ 
-		fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb, wgt );
-		fillHistos( h_nEntries_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb, 1.0 );
-	      } 
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb_jup, wgt );
+	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb_jdown, wgt );
+	      else fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb, wgt );
 	    }
 	    
 
 	    // Dev Signal Regions, extened to 30fb, with mlb bins
 	    if( sample.isSignalScan ){
-	      if( iSys==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto], passCats_dev_ext30fb_mlb_v1_jup,   mStop, mLSP, wgt );
-	      if( iSys==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto], passCats_dev_ext30fb_mlb_v1_jdown, mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto], passCats_dev_ext30fb_mlb_v1_jup,   mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto], passCats_dev_ext30fb_mlb_v1_jdown, mStop, mLSP, wgt );
 	      else fillHistosScan( h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto], passCats_dev_ext30fb_mlb_v1, mStop, mLSP, wgt );
 	    }
 	    else{
-	      if( iSys==sysInfo::k_JESUp ){ 
-		fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jup, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jup, 1.0 );
-	      } 
-	      else if( iSys==sysInfo::k_JESDown ){ 
-		fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jdown, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jdown, 1.0 );
-	      } 
-	      else{ 
-		fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1, 1.0 );
-	      } 
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jup, wgt );
+	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jdown, wgt );
+	      else fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1, wgt );
 	    }
 	    
   
 	    // Dev Signal Regions, extened to 30fb, with mlb bins with tight bTagging
-	    if( sample.isSignalScan ){
-	      if( iSys==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2_jup,   mStop, mLSP, wgt );
-	      if( iSys==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, mStop, mLSP, wgt );
-	      else fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2, mStop, mLSP, wgt );
-	    }
-	    else{
-	      if( iSys==sysInfo::k_JESUp ){ 
-		fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jup, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jup, 1.0 );
-	      } 
-	      else if( iSys==sysInfo::k_JESDown ){ 
-		fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, 1.0 );
-	      } 
-	      else{ 
-		fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2, 1.0 );
-	      } 
+	    int nTightTags = nTightTags_nominal;
+	    if( systematicList[iSys].id==sysInfo::k_JESUp )   nTightTags = nTightTags_jesup;
+	    if( systematicList[iSys].id==sysInfo::k_JESDown ) nTightTags = nTightTags_jesdown;
+	    
+	    if( ( (regionList[iReg]=="SR" || regionList[iReg]=="CR2l") && ( (Mlb_closestb()>=175.0 && nTightTags>=1) || (Mlb_closestb()<175.0) ) ) ||
+		( (regionList[iReg]!="SR" && regionList[iReg]!="CR2l") )    ){
+	      if( sample.isSignalScan ){
+		if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2_jup,   mStop, mLSP, wgt );
+		if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, mStop, mLSP, wgt );
+		else fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2, mStop, mLSP, wgt );
+	      }
+	      else{
+		if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jup, wgt );
+		else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, wgt );
+		else fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2, wgt );
+	      }
 	    }
 
 
 	    // Dev Signal Regions, extened to 30fb, with bJetPt bins
 	    if( sample.isSignalScan ){
-	      if( iSys==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1_jup,   mStop, mLSP, wgt );
-	      if( iSys==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1_jdown, mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1_jup,   mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1_jdown, mStop, mLSP, wgt );
 	      else fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1, mStop, mLSP, wgt );
 	    }
 	    else{
-	      if( iSys==sysInfo::k_JESUp ){ 
-		fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jup, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jup, 1.0 );
-	      } 
-	      else if( iSys==sysInfo::k_JESDown ){ 
-		fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jdown, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jdown, 1.0 );
-	      } 
-	      else{ 
-		fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1, wgt );
-		fillHistos( h_nEntries_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1, 1.0 );
-	      } 
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jup, wgt );
+	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jdown, wgt );
+	      else fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1, wgt );
 	    }
 
 
 	    // Corridor Signal Regions
 	    if( sample.isSignalScan ){
-	      if( iSys==sysInfo::k_JESUp )   fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jup,   mStop, mLSP, wgt );
-	      if( iSys==sysInfo::k_JESDown ) fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jdown, mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jup,   mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jdown, mStop, mLSP, wgt );
 	      else fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor, mStop, mLSP, wgt );
 	    }
 	    else{
-	      if( iSys==sysInfo::k_JESUp ){ 
-		fillHistos( h_yields_corridor[iHisto], passCats_corridor_jup, wgt );
-		fillHistos( h_nEntries_corridor[iHisto], passCats_corridor_jup, 1.0 );
-	      } 
-	      else if( iSys==sysInfo::k_JESDown ){ 
-		fillHistos( h_yields_corridor[iHisto], passCats_corridor_jdown, wgt );
-		fillHistos( h_nEntries_corridor[iHisto], passCats_corridor_jdown, 1.0 );
-	      } 
-	      else{ 
-		fillHistos( h_yields_corridor[iHisto], passCats_corridor, wgt );
-		fillHistos( h_nEntries_corridor[iHisto], passCats_corridor, 1.0 );
-	      } 
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_corridor[iHisto], passCats_corridor_jup, wgt );
+	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_corridor[iHisto], passCats_corridor_jdown, wgt );
+	      else fillHistos( h_yields_corridor[iHisto], passCats_corridor, wgt );
 	    }
 
 
@@ -2048,211 +2033,220 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	  //
 	  if( pass_evtSel[iReg] ){
 
-	    for(int iMassPt=0; iMassPt<nMassPts; iMassPt++){
+	    int nTightTags = nTightTags_nominal;
+	    if( ( (regionList[iReg]=="SR" || regionList[iReg]=="CR2l") && ( (Mlb_closestb()>=175.0 && nTightTags>=1) || (Mlb_closestb()<175.0) ) ) ||
+		( (regionList[iReg]!="SR" && regionList[iReg]!="CR2l") )    ){
 
-	      if( sample.isSignalScan && mStop!=sample.massPtList[iMassPt].first && mLSP!=sample.massPtList[iMassPt].second ) continue;
-	      //if(!isnormal(wgt_nominal)) cout << "NaN/inf weight: nEntries=" << wgtInfo->nEvents << ", lepSF=" << wgtInfo->sf_lep << ", vetoLep="<< wgtInfo->sf_vetoLep << ", btagSF=" << wgtInfo->sf_bTag << endl;
-	      // Histo Index
-	      int iHisto = iReg*nGenClassy*nMassPts + iGen*nMassPts + iMassPt;
+	      for(int iMassPt=0; iMassPt<nMassPts; iMassPt++){
 
-	      // Vars 
-	      double nGoodJets = ngoodjets();
+		if( sample.isSignalScan && mStop!=sample.massPtList[iMassPt].first && mLSP!=sample.massPtList[iMassPt].second ) continue;
+		//if(!isnormal(wgt_nominal)) cout << "NaN/inf weight: nEntries=" << wgtInfo->nEvents << ", lepSF=" << wgtInfo->sf_lep << ", vetoLep="<< wgtInfo->sf_vetoLep << ", btagSF=" << wgtInfo->sf_bTag << endl;
+		// Histo Index
+		int iHisto = iReg*nGenClassy*nMassPts + iGen*nMassPts + iMassPt;
 
-	      double mt = mt_met_lep();
-	      if( add2ndLepToMet_ ) mt = mt_met_lep_rl();
+		// Vars 
+		double nGoodJets = ngoodjets();
 
-	      double modTopness = topnessMod();
-	      if( add2ndLepToMet_ ) modTopness = topnessMod();
+		double mt = mt_met_lep();
+		if( add2ndLepToMet_ ) mt = mt_met_lep_rl();
 
-	      double mt2w = MT2W();
-	      if( add2ndLepToMet_ ) mt2w = MT2W_rl();
+		double modTopness = topnessMod();
+		if( add2ndLepToMet_ ) modTopness = topnessMod();
+
+		double mt2w = MT2W();
+		if( add2ndLepToMet_ ) mt2w = MT2W_rl();
 	    
-	      double met = pfmet();
-	      if( add2ndLepToMet_ ) met = pfmet_rl();
+		double met = pfmet();
+		if( add2ndLepToMet_ ) met = pfmet_rl();
 
+		double mlb = Mlb_closestb();
+		if( regionList[iReg]=="CR0b" || regionList[iReg]=="CR0b_tightBTagHighMlb" ) mlb = ( lep1_p4() + ak4pfjets_leadbtag_p4() ).M();
 
-	      // Met Sideband CR area, met>=150
+		// Met Sideband CR area, met>=150
 
-	      if( met>=150 && met<250 ){
-		// mlb, met sideband CR
-		h_mlb_150to250met_incl[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-		if( nGoodJets==2 ) h_mlb_150to250met_ee2j[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-		if( nGoodJets==3 ) h_mlb_150to250met_ee3j[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-		if( nGoodJets<4 )  h_mlb_150to250met_lt4j[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-		if( nGoodJets>=4 ) h_mlb_150to250met_ge4j[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
+		if( met>=150 && met<250 ){
+		  // mlb, met sideband CR
+		  h_mlb_150to250met_incl[iHisto]->Fill( mlb, wgt_nominal );
+		  if( nGoodJets==2 ) h_mlb_150to250met_ee2j[iHisto]->Fill( mlb, wgt_nominal );
+		  if( nGoodJets==3 ) h_mlb_150to250met_ee3j[iHisto]->Fill( mlb, wgt_nominal );
+		  if( nGoodJets<4 )  h_mlb_150to250met_lt4j[iHisto]->Fill( mlb, wgt_nominal );
+		  if( nGoodJets>=4 ) h_mlb_150to250met_ge4j[iHisto]->Fill( mlb, wgt_nominal );
 	      
-		// mlb_lep2, met sideband CR
+		  // mlb_lep2, met sideband CR
+		  if(nvetoleps()>1 && minBJetIdx>=0){
+		    h_mlb_lep2_150to250met_incl[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
+		    if( nGoodJets==2 ) h_mlb_lep2_150to250met_ee2j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
+		    if( nGoodJets==3 ) h_mlb_lep2_150to250met_ee3j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
+		    if( nGoodJets<4 )  h_mlb_lep2_150to250met_lt4j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );	    
+		    if( nGoodJets>=4 ) h_mlb_lep2_150to250met_ge4j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );	    
+		  }
+
+		  // bJetPt, met sideband CR
+		  h_bJetPt_150to250met_incl[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		  if( nGoodJets==2 ) h_bJetPt_150to250met_ee2j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		  if( nGoodJets==3 ) h_bJetPt_150to250met_ee3j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		  if( nGoodJets<4 )  h_bJetPt_150to250met_lt4j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		  if( nGoodJets>=4 ) h_bJetPt_150to250met_ge4j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+	      
+		} // end if 150<met<250
+
+		// Signal Region Area, met>=250
+		if( met<250.0 ) continue;
+	    
+		// nJets
+		h_nJets[iHisto]->Fill( nGoodJets, wgt_nominal );
+	    
+		// nBTags
+		h_nBTags[iHisto]->Fill( ngoodbtags(), wgt_nominal );
+	    
+		// lep1 pT
+		h_lep1Pt_incl[iHisto]->Fill( lep1_p4().Pt(), wgt_nominal );
+		if( nGoodJets==2 ) h_lep1Pt_ee2j[iHisto]->Fill( lep1_p4().Pt(), wgt_nominal );
+		if( nGoodJets==3 ) h_lep1Pt_ee3j[iHisto]->Fill( lep1_p4().Pt(), wgt_nominal );
+		if( nGoodJets>=4 ) h_lep1Pt_ge4j[iHisto]->Fill( lep1_p4().Pt(), wgt_nominal );
+	    
+		// lep2 pT
+		if( nvetoleps()>1 ){
+		  h_lep2Pt_incl[iHisto]->Fill( lep2_p4().Pt(), wgt_nominal );
+		  if( nGoodJets==2 ) h_lep2Pt_ee2j[iHisto]->Fill( lep2_p4().Pt(), wgt_nominal );
+		  if( nGoodJets==3 ) h_lep2Pt_ee3j[iHisto]->Fill( lep2_p4().Pt(), wgt_nominal );
+		  if( nGoodJets>=4 ) h_lep2Pt_ge4j[iHisto]->Fill( lep2_p4().Pt(), wgt_nominal );
+		}
+	    
+		// jet pT
+		for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
+		  h_jetPt_incl[iHisto]->Fill( ak4pfjets_p4().at(iJet).Pt(), wgt_nominal );
+		  if( nGoodJets==2 ) h_jetPt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(iJet).Pt(), wgt_nominal );
+		  if( nGoodJets==3 ) h_jetPt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(iJet).Pt(), wgt_nominal );
+		  if( nGoodJets>=4 ) h_jetPt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(iJet).Pt(), wgt_nominal );
+		}
+	    
+		// jet1 pT
+		h_jet1Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(0).Pt(), wgt_nominal );
+		if( nGoodJets==2 ) h_jet1Pt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(0).Pt(), wgt_nominal );
+		if( nGoodJets==3 ) h_jet1Pt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(0).Pt(), wgt_nominal );
+		if( nGoodJets>=4 ) h_jet1Pt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(0).Pt(), wgt_nominal );
+	    
+		// jet2 pT
+		h_jet2Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), wgt_nominal );
+		if( nGoodJets==2 ) h_jet2Pt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), wgt_nominal );
+		if( nGoodJets==3 ) h_jet2Pt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), wgt_nominal );
+		if( nGoodJets>=4 ) h_jet2Pt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), wgt_nominal );
+	    
+		// csv jet1 pT
+		if(jet1_idx>=0){
+		  h_csvJet1Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), wgt_nominal );
+		  if( nGoodJets==2 ) h_csvJet1Pt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), wgt_nominal );
+		  if( nGoodJets==3 ) h_csvJet1Pt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), wgt_nominal );
+		  if( nGoodJets>=4 ) h_csvJet1Pt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), wgt_nominal );
+		}
+	    
+		// csv jet2 pT
+		if(jet2_idx>=0){
+		  h_csvJet2Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), wgt_nominal );
+		  if( nGoodJets==2 ) h_csvJet2Pt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), wgt_nominal );
+		  if( nGoodJets==3 ) h_csvJet2Pt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), wgt_nominal );
+		  if( nGoodJets>=4 ) h_csvJet2Pt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), wgt_nominal );
+		}
+	    
+		// met
+		h_met_incl[iHisto]->Fill( met, wgt_nominal );
+		if( nGoodJets==2 ) h_met_ee2j[iHisto]->Fill( met, wgt_nominal );
+		if( nGoodJets==3 ) h_met_ee3j[iHisto]->Fill( met, wgt_nominal );
+		if( nGoodJets<4 )  h_met_lt4j[iHisto]->Fill( met, wgt_nominal );
+		if( nGoodJets>=4 ) h_met_ge4j[iHisto]->Fill( met, wgt_nominal );
+	    
+		// lep1lep2bbPt
+		h_lep1lep2bbPt_incl[iHisto]->Fill( lep1lep2bb_pt, wgt_nominal );
+		if( nGoodJets==2 ) h_lep1lep2bbPt_ee2j[iHisto]->Fill( lep1lep2bb_pt, wgt_nominal );
+		if( nGoodJets==3 ) h_lep1lep2bbPt_ee3j[iHisto]->Fill( lep1lep2bb_pt, wgt_nominal );
+		if( nGoodJets>=4 ) h_lep1lep2bbPt_ge4j[iHisto]->Fill( lep1lep2bb_pt, wgt_nominal );
+	    
+		// lep1lep2bbMetPt
+		h_lep1lep2bbMetPt_incl[iHisto]->Fill( lep1lep2bbMet_pt, wgt_nominal );
+		if( nGoodJets==2 ) h_lep1lep2bbMetPt_ee2j[iHisto]->Fill( lep1lep2bbMet_pt, wgt_nominal );
+		if( nGoodJets==3 ) h_lep1lep2bbMetPt_ee3j[iHisto]->Fill( lep1lep2bbMet_pt, wgt_nominal );
+		if( nGoodJets>=4 ) h_lep1lep2bbMetPt_ge4j[iHisto]->Fill( lep1lep2bbMet_pt, wgt_nominal );
+	    
+		// mt
+		h_mt_incl[iHisto]->Fill( mt, wgt_nominal );
+		if( nGoodJets==2 ) h_mt_ee2j[iHisto]->Fill( mt, wgt_nominal );
+		if( nGoodJets==3 ) h_mt_ee3j[iHisto]->Fill( mt, wgt_nominal );
+		if( nGoodJets>=4 ) h_mt_ge4j[iHisto]->Fill( mt, wgt_nominal );
+	    
+		// modTopness
+		h_modTopness_incl[iHisto]->Fill( modTopness, wgt_nominal );
+		if( nGoodJets==2 ) h_modTopness_ee2j[iHisto]->Fill( modTopness, wgt_nominal );
+		if( nGoodJets==3 ) h_modTopness_ee3j[iHisto]->Fill( modTopness, wgt_nominal );
+		if( nGoodJets>=4 ) h_modTopness_ge4j[iHisto]->Fill( modTopness, wgt_nominal );
+	    
+		// mt2w
+		h_mt2w_incl[iHisto]->Fill( mt2w, wgt_nominal );
+		if( nGoodJets==2 ) h_mt2w_ee2j[iHisto]->Fill( mt2w, wgt_nominal );
+		if( nGoodJets==3 ) h_mt2w_ee3j[iHisto]->Fill( mt2w, wgt_nominal );
+		if( nGoodJets>=4 ) h_mt2w_ge4j[iHisto]->Fill( mt2w, wgt_nominal );
+	    
+		// mlb
+		h_mlb_incl[iHisto]->Fill( mlb, wgt_nominal );
+		if( nGoodJets==2 ) h_mlb_ee2j[iHisto]->Fill( mlb, wgt_nominal );
+		if( nGoodJets==3 ) h_mlb_ee3j[iHisto]->Fill( mlb, wgt_nominal );
+		if( nGoodJets<4 )  h_mlb_lt4j[iHisto]->Fill( mlb, wgt_nominal );
+		if( nGoodJets>=4 ) h_mlb_ge4j[iHisto]->Fill( mlb, wgt_nominal );
+
+		// mlb, modTopness bins
+		if(modTopness<0.0)   h_mlb_lt0modTopness[iHisto]->Fill( mlb, wgt_nominal );
+		if(modTopness>=0.0)  h_mlb_ge0modTopness[iHisto]->Fill( mlb, wgt_nominal );
+		if(modTopness>=10.0) h_mlb_ge10modTopness[iHisto]->Fill( mlb, wgt_nominal );
+	    
+		// mlb_lep2
 		if(nvetoleps()>1 && minBJetIdx>=0){
-		  h_mlb_lep2_150to250met_incl[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
-		  if( nGoodJets==2 ) h_mlb_lep2_150to250met_ee2j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
-		  if( nGoodJets==3 ) h_mlb_lep2_150to250met_ee3j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
-		  if( nGoodJets<4 )  h_mlb_lep2_150to250met_lt4j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );	    
-		  if( nGoodJets>=4 ) h_mlb_lep2_150to250met_ge4j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );	    
+		  h_mlb_lep2_incl[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
+		  if( nGoodJets==2 ) h_mlb_lep2_ee2j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
+		  if( nGoodJets==3 ) h_mlb_lep2_ee3j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
+		  if( nGoodJets<4 )  h_mlb_lep2_lt4j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );	    
+		  if( nGoodJets>=4 ) h_mlb_lep2_ge4j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );	    
 		}
 
-		// bJetPt, met sideband CR
-		h_bJetPt_150to250met_incl[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-		if( nGoodJets==2 ) h_bJetPt_150to250met_ee2j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-		if( nGoodJets==3 ) h_bJetPt_150to250met_ee3j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-		if( nGoodJets<4 )  h_bJetPt_150to250met_lt4j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-		if( nGoodJets>=4 ) h_bJetPt_150to250met_ge4j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-	      
-	      } // end if 150<met<250
+		// bJetPt
+		h_bJetPt_incl[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		if( nGoodJets==2 ) h_bJetPt_ee2j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		if( nGoodJets==3 ) h_bJetPt_ee3j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		if( nGoodJets<4 )  h_bJetPt_lt4j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		if( nGoodJets>=4 ) h_bJetPt_ge4j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
 
-	      // Signal Region Area, met>=250
-	      if( met<250.0 ) continue;
-	    
-	      // nJets
-	      h_nJets[iHisto]->Fill( nGoodJets, wgt_nominal );
-	    
-	      // nBTags
-	      h_nBTags[iHisto]->Fill( ngoodbtags(), wgt_nominal );
-	    
-	      // lep1 pT
-	      h_lep1Pt_incl[iHisto]->Fill( lep1_p4().Pt(), wgt_nominal );
-	      if( nGoodJets==2 ) h_lep1Pt_ee2j[iHisto]->Fill( lep1_p4().Pt(), wgt_nominal );
-	      if( nGoodJets==3 ) h_lep1Pt_ee3j[iHisto]->Fill( lep1_p4().Pt(), wgt_nominal );
-	      if( nGoodJets>=4 ) h_lep1Pt_ge4j[iHisto]->Fill( lep1_p4().Pt(), wgt_nominal );
-	    
-	      // lep2 pT
-	      if( nvetoleps()>1 ){
-		h_lep2Pt_incl[iHisto]->Fill( lep2_p4().Pt(), wgt_nominal );
-		if( nGoodJets==2 ) h_lep2Pt_ee2j[iHisto]->Fill( lep2_p4().Pt(), wgt_nominal );
-		if( nGoodJets==3 ) h_lep2Pt_ee3j[iHisto]->Fill( lep2_p4().Pt(), wgt_nominal );
-		if( nGoodJets>=4 ) h_lep2Pt_ge4j[iHisto]->Fill( lep2_p4().Pt(), wgt_nominal );
-	      }
-	    
-	      // jet pT
-	      for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
-		h_jetPt_incl[iHisto]->Fill( ak4pfjets_p4().at(iJet).Pt(), wgt_nominal );
-		if( nGoodJets==2 ) h_jetPt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(iJet).Pt(), wgt_nominal );
-		if( nGoodJets==3 ) h_jetPt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(iJet).Pt(), wgt_nominal );
-		if( nGoodJets>=4 ) h_jetPt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(iJet).Pt(), wgt_nominal );
-	      }
-	    
-	      // jet1 pT
-	      h_jet1Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(0).Pt(), wgt_nominal );
-	      if( nGoodJets==2 ) h_jet1Pt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(0).Pt(), wgt_nominal );
-	      if( nGoodJets==3 ) h_jet1Pt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(0).Pt(), wgt_nominal );
-	      if( nGoodJets>=4 ) h_jet1Pt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(0).Pt(), wgt_nominal );
-	    
-	      // jet2 pT
-	      h_jet2Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), wgt_nominal );
-	      if( nGoodJets==2 ) h_jet2Pt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), wgt_nominal );
-	      if( nGoodJets==3 ) h_jet2Pt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), wgt_nominal );
-	      if( nGoodJets>=4 ) h_jet2Pt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), wgt_nominal );
-	    
-	      // csv jet1 pT
-	      if(jet1_idx>=0){
-		h_csvJet1Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), wgt_nominal );
-		if( nGoodJets==2 ) h_csvJet1Pt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), wgt_nominal );
-		if( nGoodJets==3 ) h_csvJet1Pt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), wgt_nominal );
-		if( nGoodJets>=4 ) h_csvJet1Pt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), wgt_nominal );
-	      }
-	    
-	      // csv jet2 pT
-	      if(jet2_idx>=0){
-		h_csvJet2Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), wgt_nominal );
-		if( nGoodJets==2 ) h_csvJet2Pt_ee2j[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), wgt_nominal );
-		if( nGoodJets==3 ) h_csvJet2Pt_ee3j[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), wgt_nominal );
-		if( nGoodJets>=4 ) h_csvJet2Pt_ge4j[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), wgt_nominal );
-	      }
-	    
-	      // met
-	      h_met_incl[iHisto]->Fill( met, wgt_nominal );
-	      if( nGoodJets==2 ) h_met_ee2j[iHisto]->Fill( met, wgt_nominal );
-	      if( nGoodJets==3 ) h_met_ee3j[iHisto]->Fill( met, wgt_nominal );
-	      if( nGoodJets>=4 ) h_met_ge4j[iHisto]->Fill( met, wgt_nominal );
-	    
-	      // lep1lep2bbPt
-	      h_lep1lep2bbPt_incl[iHisto]->Fill( lep1lep2bb_pt, wgt_nominal );
-	      if( nGoodJets==2 ) h_lep1lep2bbPt_ee2j[iHisto]->Fill( lep1lep2bb_pt, wgt_nominal );
-	      if( nGoodJets==3 ) h_lep1lep2bbPt_ee3j[iHisto]->Fill( lep1lep2bb_pt, wgt_nominal );
-	      if( nGoodJets>=4 ) h_lep1lep2bbPt_ge4j[iHisto]->Fill( lep1lep2bb_pt, wgt_nominal );
-	    
-	      // lep1lep2bbMetPt
-	      h_lep1lep2bbMetPt_incl[iHisto]->Fill( lep1lep2bbMet_pt, wgt_nominal );
-	      if( nGoodJets==2 ) h_lep1lep2bbMetPt_ee2j[iHisto]->Fill( lep1lep2bbMet_pt, wgt_nominal );
-	      if( nGoodJets==3 ) h_lep1lep2bbMetPt_ee3j[iHisto]->Fill( lep1lep2bbMet_pt, wgt_nominal );
-	      if( nGoodJets>=4 ) h_lep1lep2bbMetPt_ge4j[iHisto]->Fill( lep1lep2bbMet_pt, wgt_nominal );
-	    
-	      // mt
-	      h_mt_incl[iHisto]->Fill( mt, wgt_nominal );
-	      if( nGoodJets==2 ) h_mt_ee2j[iHisto]->Fill( mt, wgt_nominal );
-	      if( nGoodJets==3 ) h_mt_ee3j[iHisto]->Fill( mt, wgt_nominal );
-	      if( nGoodJets>=4 ) h_mt_ge4j[iHisto]->Fill( mt, wgt_nominal );
-	    
-	      // modTopness
-	      h_modTopness_incl[iHisto]->Fill( modTopness, wgt_nominal );
-	      if( nGoodJets==2 ) h_modTopness_ee2j[iHisto]->Fill( modTopness, wgt_nominal );
-	      if( nGoodJets==3 ) h_modTopness_ee3j[iHisto]->Fill( modTopness, wgt_nominal );
-	      if( nGoodJets>=4 ) h_modTopness_ge4j[iHisto]->Fill( modTopness, wgt_nominal );
-	    
-	      // mt2w
-	      h_mt2w_incl[iHisto]->Fill( mt2w, wgt_nominal );
-	      if( nGoodJets==2 ) h_mt2w_ee2j[iHisto]->Fill( mt2w, wgt_nominal );
-	      if( nGoodJets==3 ) h_mt2w_ee3j[iHisto]->Fill( mt2w, wgt_nominal );
-	      if( nGoodJets>=4 ) h_mt2w_ge4j[iHisto]->Fill( mt2w, wgt_nominal );
-	    
-	      // mlb
-	      h_mlb_incl[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-	      if( nGoodJets==2 ) h_mlb_ee2j[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-	      if( nGoodJets==3 ) h_mlb_ee3j[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-	      if( nGoodJets<4 )  h_mlb_lt4j[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-	      if( nGoodJets>=4 ) h_mlb_ge4j[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-
-	      // mlb, modTopness bins
-	      if(modTopness<0.0)   h_mlb_lt0modTopness[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-	      if(modTopness>=0.0)  h_mlb_ge0modTopness[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-	      if(modTopness>=10.0) h_mlb_ge10modTopness[iHisto]->Fill( Mlb_closestb(), wgt_nominal );
-	    
-	      // mlb_lep2
-	      if(nvetoleps()>1 && minBJetIdx>=0){
-		h_mlb_lep2_incl[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
-		if( nGoodJets==2 ) h_mlb_lep2_ee2j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
-		if( nGoodJets==3 ) h_mlb_lep2_ee3j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );
-		if( nGoodJets<4 )  h_mlb_lep2_lt4j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );	    
-		if( nGoodJets>=4 ) h_mlb_lep2_ge4j[iHisto]->Fill( lep2b_TLV.M(), wgt_nominal );	    
-	      }
-
-	      // bJetPt
-	      h_bJetPt_incl[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-	      if( nGoodJets==2 ) h_bJetPt_ee2j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-	      if( nGoodJets==3 ) h_bJetPt_ee3j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-	      if( nGoodJets<4 )  h_bJetPt_lt4j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-	      if( nGoodJets>=4 ) h_bJetPt_ge4j[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-
-	      // bJetPt, modTopness bins
-	      if(modTopness<0.0)   h_bJetPt_lt0modTopness[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-	      if(modTopness>=0.0)  h_bJetPt_ge0modTopness[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
-	      if(modTopness>=10.0) h_bJetPt_ge10modTopness[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		// bJetPt, modTopness bins
+		if(modTopness<0.0)   h_bJetPt_lt0modTopness[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		if(modTopness>=0.0)  h_bJetPt_ge0modTopness[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
+		if(modTopness>=10.0) h_bJetPt_ge10modTopness[iHisto]->Fill( ak4pfjets_leadbtag_p4().Pt(), wgt_nominal );
 	    	    
-	      // Gen TTBar System
-	      if( sampleIsTTbar ){
-		h_gen_ttbarPt_incl[iHisto]->Fill( ttbarPt, wgt_nominal );
-		if( nGoodJets==2 ) h_gen_ttbarPt_ee2j[iHisto]->Fill( ttbarPt, wgt_nominal );
-		if( nGoodJets==3 ) h_gen_ttbarPt_ee3j[iHisto]->Fill( ttbarPt, wgt_nominal );
-		if( nGoodJets<4 )  h_gen_ttbarPt_lt4j[iHisto]->Fill( ttbarPt, wgt_nominal );
-		if( nGoodJets>=4 ) h_gen_ttbarPt_ge4j[iHisto]->Fill( ttbarPt, wgt_nominal );
-	      }
+		// Gen TTBar System
+		if( sampleIsTTbar ){
+		  h_gen_ttbarPt_incl[iHisto]->Fill( ttbarPt, wgt_nominal );
+		  if( nGoodJets==2 ) h_gen_ttbarPt_ee2j[iHisto]->Fill( ttbarPt, wgt_nominal );
+		  if( nGoodJets==3 ) h_gen_ttbarPt_ee3j[iHisto]->Fill( ttbarPt, wgt_nominal );
+		  if( nGoodJets<4 )  h_gen_ttbarPt_lt4j[iHisto]->Fill( ttbarPt, wgt_nominal );
+		  if( nGoodJets>=4 ) h_gen_ttbarPt_ge4j[iHisto]->Fill( ttbarPt, wgt_nominal );
+		}
 
-	      // Gen 2nd Lep ID
-	      if( !sample.isData && is2lep() && gen2ndLep__idx>=0 ){
-		h_gen_lep2_id_incl[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-		if( ngoodjets()==2 ) h_gen_lep2_id_ee2j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-		if( ngoodjets()==3 ) h_gen_lep2_id_ee3j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-		if( ngoodjets()<4 )  h_gen_lep2_id_lt4j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-		if( ngoodjets()>=4 ) h_gen_lep2_id_ge4j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		// Gen 2nd Lep ID
+		if( !sample.isData && is2lep() && gen2ndLep__idx>=0 ){
+		  h_gen_lep2_id_incl[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		  if( ngoodjets()==2 ) h_gen_lep2_id_ee2j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		  if( ngoodjets()==3 ) h_gen_lep2_id_ee3j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		  if( ngoodjets()<4 )  h_gen_lep2_id_lt4j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		  if( ngoodjets()>=4 ) h_gen_lep2_id_ge4j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
 
-		//h_gen_lep2_id_incl[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-		//if( ngoodjets()==2 && modTopness>6.4) h_gen_lep2_id_ee2j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-		//if( ngoodjets()==3 && mt2w>=200.0) h_gen_lep2_id_ee3j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-		//if( ngoodjets()>=4 && mt2w<200.0 )  h_gen_lep2_id_lt4j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-		//if( ngoodjets()>=4 && mt2w>=200.0) h_gen_lep2_id_ge4j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
-	      }
+		  //h_gen_lep2_id_incl[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		  //if( ngoodjets()==2 && modTopness>6.4) h_gen_lep2_id_ee2j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		  //if( ngoodjets()==3 && mt2w>=200.0) h_gen_lep2_id_ee3j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		  //if( ngoodjets()>=4 && mt2w<200.0 )  h_gen_lep2_id_lt4j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		  //if( ngoodjets()>=4 && mt2w>=200.0) h_gen_lep2_id_ge4j[iHisto]->Fill( fill_bin_genLep2ID, wgt_nominal );
+		}
 	    
 
-	    } // end loop over mass points (1 if not signal scan)
+	      } // end loop over mass points (1 if not signal scan)
+
+	    } // end if pass additional tight tagging requirement for high mlb
 
 	  } // end if pass event selection for nominal sys
 

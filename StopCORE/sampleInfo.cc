@@ -50,7 +50,10 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isSignal     = true;
     isSignalScan = true;
     isFastsim    = true;
-    baby_i_o.first  = "/nfs-7/userdata/stopRun2/analysis2016__SUS-16-028__12p9fb/stopBabies__v8.0.x_v8__20160729/Nominal/";
+    //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v14/skim/";
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v14/output/";
+    //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/output/";
+    //baby_i_o.first  = "/nfs-7/userdata/stopRun2/analysis2016__SUS-16-028__12p9fb/stopBabies__v8.0.x_v8__20160729/Nominal/";
     inputBabies.push_back("Signal_T2tt*.root");
     massPt.first = 800; massPt.second = 100;
     massPtList.push_back(massPt);
@@ -68,7 +71,8 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     tex    = "Data,~single~$e/\\mu$,~MET";
     isData = true;
     //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb
-    baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/";
+    //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/";
+    baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/output/";
     inputBabies.push_back("data_met*.root");
     inputBabies.push_back("data_single_electron*.root");
     inputBabies.push_back("data_single_muon*.root");
@@ -81,7 +85,8 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isData = true;
     //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/"; // 36p46fb 
-    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/skim/"; // 36p46fb fixed muE trig 
+    //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/skim/"; // 36p46fb fixed muE trig 
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/output/"; // 36p46fb fixed muE trig 
     inputBabies.push_back("data_met*.root");
     break;
 
@@ -120,7 +125,8 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isData = true;
     //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb 
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/";
-    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/skim/"; // 36p46fb fixed muE trig 
+    //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/skim/"; // 36p46fb fixed muE trig 
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/output/"; // 36p46fb fixed muE trig 
     inputBabies.push_back("data_muon_eg*.root");
     inputBabies.push_back("data_double_eg*.root");
     inputBabies.push_back("data_double_mu*.root");
@@ -552,7 +558,8 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "tbar_tch_4f_powheg_pythia8_25ns";
     title = "single tbar, t-channel, powheg pythia8";
     tex   = "single $\\bar{t}$,~t-channel,~powheg~pythia8";
-    baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
+    //baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
+    baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/output/";
     inputBabies.push_back("tbar_tch_4f_powheg_pythia8_25ns*.root");
     break;
 
@@ -577,7 +584,8 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "t_tW_5f_powheg_pythia8_25ns";
     title = "single t, W-channel, powheg pythia8";
     tex   = "single $t,~t-W$-channel,~powheg~pythia8";
-    baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
+    //baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
+    baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/output/";
     inputBabies.push_back("t_tW_5f_powheg_pythia8_25ns*.root");
     break;
 

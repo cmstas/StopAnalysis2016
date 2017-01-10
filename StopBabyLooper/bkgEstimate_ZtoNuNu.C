@@ -494,7 +494,7 @@ int bkgEstimate_ZtoNuNu(){
   // Dev, ext30fb,  mlb with tight bTagging
   bkgEstUtil bkgEst_ext30fb_mlb_v2;
  
-  bkgEst_ext30fb_mlb_v2.outName_base = "bkgEst_1lepFromTop__mlb_v2_bins";
+  bkgEst_ext30fb_mlb_v2.outName_base = "bkgEst_ZtoNuNu__mlb_v2_bins";
   bkgEst_ext30fb_mlb_v2.hName_base = "h_yields_SR_dev_ext30fb_mlb_v2";
 
   // Region A
@@ -1261,15 +1261,9 @@ int bkgEstimate_ZtoNuNu(){
     
   
     // Uncertainty Summary File
-    fprintf(uncFileSummaryV2, "Data Stats");
-    for(int iSR=0; iSR<nSRs; iSR++){
-      fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][0]);
-    }
-    fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \n");
-    
     fprintf(uncFileSummaryV2, "MC Stats");
     for(int iSR=0; iSR<nSRs; iSR++){
-      fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][1]);
+      fprintf(uncFileSummaryV2, " & %.1f\\%% ", cats_vs_sys[iSR][0]);
     }
     fprintf(uncFileSummaryV2, "\\"); fprintf(uncFileSummaryV2, "\\ \\hline \n");
     

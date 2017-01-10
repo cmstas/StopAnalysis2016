@@ -88,6 +88,21 @@ vector<int> categoryInfo::passCategory_SR_ICHEP( int jesType, bool add2ndLepToMe
     if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
   }
   
+  // Require dPhi(met,j1,2)>=0.8
+  double dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2();
+  if( add2ndLepToMet ){
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jdown();
+    else dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl();
+  }
+  else{
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jdown();
+  }
+  
+  if( dPhiMetJet<0.8 ) return result;
+
+
 
   // Incl
   result.push_back(16);
@@ -294,6 +309,21 @@ vector<int> categoryInfo::passCategory_SR_ICHEP_ext30fb( int jesType, bool add2n
   }
   
 
+  // Require dPhi(met,j1,2)>=0.8
+  double dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2();
+  if( add2ndLepToMet ){
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jdown();
+    else dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl();
+  }
+  else{
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jdown();
+  }
+  
+  if( dPhiMetJet<0.8 ) return result;
+
+
   if(nGoodJets==2&&modTopness>6.4) {
     if(     met>650) result.push_back(5);
     else if(met>550) result.push_back(4);
@@ -479,27 +509,19 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1( int jesType, bool 
     if(jesType==-1) modTopness = babyAnalyzer.topnessMod_jdown();
   }
 
+
   double mlb = babyAnalyzer.Mlb_closestb();
 
-  int nGoodBTags = babyAnalyzer.ngoodbtags(); 
-  if( jesType==1)  nGoodBTags = babyAnalyzer.jup_ngoodbtags();
-  if( jesType==-1) nGoodBTags = babyAnalyzer.jdown_ngoodbtags();
-  if(nGoodBTags==0){
-    vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
-    if( jesType==1 )  jet_csvv2 = babyAnalyzer.jup_ak4pfjets_CSV();
-    if( jesType==-1 ) jet_csvv2 = babyAnalyzer.jdown_ak4pfjets_CSV();
-    double max_csvv2 = -99.9;
-    int max_csvv2_idx = -1;
-    for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
-      if( jet_csvv2[iJet] >= max_csvv2 ){
-	max_csvv2 = jet_csvv2[iJet];
-	max_csvv2_idx = iJet;
-      }
-    }
-    if( jesType==0  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_p4().at(max_csvv2_idx) ).M();
-    if( jesType==1  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jup_ak4pfjets_p4().at(max_csvv2_idx) ).M();
-    if( jesType==-1 ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jdown_ak4pfjets_p4().at(max_csvv2_idx) ).M();
+  int nMedBTags = babyAnalyzer.ngoodbtags(); 
+  if( jesType==1)  nMedBTags = babyAnalyzer.jup_ngoodbtags();
+  if( jesType==-1) nMedBTags = babyAnalyzer.jdown_ngoodbtags();
+
+  if(nMedBTags==0){
+    if( jesType==1  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jup_ak4pfjets_leadbtag_p4() ).M();
+    if( jesType==-1 ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jdown_ak4pfjets_leadbtag_p4() ).M();
+    else              mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_leadbtag_p4() ).M();
   } // end if 0 bTags
+
 
   double met = babyAnalyzer.pfmet();
   if( add2ndLepToMet){
@@ -511,6 +533,21 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1( int jesType, bool 
     if(jesType==1)  met = babyAnalyzer.pfmet_jup();
     if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
   }
+
+
+  // Require dPhi(met,j1,2)>=0.8
+  double dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2();
+  if( add2ndLepToMet ){
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jdown();
+    else dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl();
+  }
+  else{
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jdown();
+  }
+  
+  if( dPhiMetJet<0.8 ) return result;
 
 
   //
@@ -819,14 +856,6 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   if( jesType==1 )  nGoodJets = babyAnalyzer.jup_ngoodjets();
   if( jesType==-1 ) nGoodJets = babyAnalyzer.jdown_ngoodjets();
 
-  int nTightTags = 0;
-  double tight_wp = 0.935;
-  vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
-  if( jesType==1 )  jet_csvv2 = babyAnalyzer.jup_ak4pfjets_CSV();
-  if( jesType==-1 ) jet_csvv2 = babyAnalyzer.jdown_ak4pfjets_CSV();
-  for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
-    if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
-  }
 
   double modTopness = babyAnalyzer.topnessMod();
   if( add2ndLepToMet){
@@ -839,25 +868,30 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
     if(jesType==-1) modTopness = babyAnalyzer.topnessMod_jdown();
   }
 
+
   double mlb = babyAnalyzer.Mlb_closestb();
   
-  int nGoodBTags = babyAnalyzer.ngoodbtags(); 
-  if( jesType==1)  nGoodBTags = babyAnalyzer.jup_ngoodbtags();
-  if( jesType==-1) nGoodBTags = babyAnalyzer.jdown_ngoodbtags();
-  if(nGoodBTags==0){
-    double max_csvv2 = -99.9;
-    int max_csvv2_idx = -1;
-    for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
-      if( jet_csvv2[iJet] >= max_csvv2 ){
-	max_csvv2 = jet_csvv2[iJet];
-	max_csvv2_idx = iJet;
-      }
-    }
-    if( jesType==0  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_p4().at(max_csvv2_idx) ).M();
-    if( jesType==1  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jup_ak4pfjets_p4().at(max_csvv2_idx) ).M();
-    if( jesType==-1 ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jdown_ak4pfjets_p4().at(max_csvv2_idx) ).M();
-  } // end if 0 bTags
-
+  int nMedBTags = babyAnalyzer.ngoodbtags(); 
+  if( jesType==1)  nMedBTags = babyAnalyzer.jup_ngoodbtags();
+  if( jesType==-1) nMedBTags = babyAnalyzer.jdown_ngoodbtags();
+  
+  int nTightTags = 0;
+  double tight_wp = 0.935;
+  vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
+  if( jesType==1 )  jet_csvv2 = babyAnalyzer.jup_ak4pfjets_CSV();
+  if( jesType==-1 ) jet_csvv2 = babyAnalyzer.jdown_ak4pfjets_CSV();
+  for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+    if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
+  }
+  
+  bool is0b = ( (nMedBTags==0) || (nMedBTags>=1 && nTightTags==0 && mlb>175.0) );
+  
+  if( is0b ){
+    if( jesType==1  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jup_ak4pfjets_leadbtag_p4() ).M();
+    if( jesType==-1 ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jdown_ak4pfjets_leadbtag_p4() ).M();
+    else              mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_leadbtag_p4() ).M();
+  } 
+  
   double met = babyAnalyzer.pfmet();
   if( add2ndLepToMet){
     if(jesType==0)  met = babyAnalyzer.pfmet_rl();
@@ -868,6 +902,21 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
     if(jesType==1)  met = babyAnalyzer.pfmet_jup();
     if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
   }
+
+
+  // Require dPhi(met,j1,2)>=0.8
+  double dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2();
+  if( add2ndLepToMet ){
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jdown();
+    else dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl();
+  }
+  else{
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jdown();
+  }
+  
+  if( dPhiMetJet<0.8 ) return result;
 
 
   //
@@ -883,12 +932,12 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   }
 
   // Region B
-  if( nGoodJets<4 && modTopness>=10.0 && mlb>=175 && (nTightTags>=1 || nGoodBTags==0) ){
+  if( nGoodJets<4 && modTopness>=10.0 && mlb>=175  ){
     if(     met>600) result.push_back(7);
     else if(met>450) result.push_back(6);
     else if(met>250) result.push_back(5);
   }
-
+  
   // Region C
   if( nGoodJets>=4 && modTopness<0 && mlb<175 ){
     if(     met>650) result.push_back(12);
@@ -899,7 +948,7 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   }
 
   // Region D
-  if( nGoodJets>=4 && modTopness<0 && mlb>=175 && (nTightTags>=1 || nGoodBTags==0) ){
+  if( nGoodJets>=4 && modTopness<0 && mlb>=175  ){
     if(     met>550) result.push_back(16);
     else if(met>450) result.push_back(15);
     else if(met>350) result.push_back(14);
@@ -914,7 +963,7 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   }
   
   // Region F
-  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && mlb>=175 && (nTightTags>=1 || nGoodBTags==0) ){
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && mlb>=175  ){
     if(     met>450) result.push_back(21);
     else if(met>250) result.push_back(20);
   }
@@ -928,7 +977,7 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   }
 
   // Region H
-  if( nGoodJets>=4 && modTopness>=10.0 && mlb>=175 && (nTightTags>=1 || nGoodBTags==0) ){
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb>=175  ){
     if(     met>450) result.push_back(27);
     else if(met>250) result.push_back(26);
   }
@@ -939,21 +988,21 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   if( nGoodJets<4 ){
     if(modTopness>=10.0){
       if(mlb<175 && met>450) result.push_back(28); 
-      if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>250) result.push_back(29); 
+      if(mlb>=175  && met>250) result.push_back(29); 
     }
   }
   if( nGoodJets>=4 ){
     if( modTopness<0.0 ){
       if( mlb<175  && met>550 ) result.push_back(30); 
-      if( mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>450 ) result.push_back(31); 
+      if( mlb>=175  && met>450 ) result.push_back(31); 
     }
     if( modTopness>=0.0 && modTopness<10.0 ){
       if( mlb<175  && met>350 ) result.push_back(32); 
-      if( mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>250 ) result.push_back(33); 
+      if( mlb>=175  && met>250 ) result.push_back(33); 
     }
     if( modTopness>=10.0 ){
       if( mlb<175  && met>450 ) result.push_back(34); 
-      if( mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>250 ) result.push_back(35); 
+      if( mlb>=175  && met>250 ) result.push_back(35); 
     }
   }
       
@@ -1022,19 +1071,19 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   // 150<met<250 CR bins
   if( nGoodJets<4 && modTopness>=10.0 ){
     if(mlb<175  && met>150 && met<=250) result.push_back(70); 
-    if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>150 && met<=250) result.push_back(71); 
+    if(mlb>=175  && met>150 && met<=250) result.push_back(71); 
   }
   if( nGoodJets>=4 && modTopness<0.0 ){
     if(mlb<175  && met>150 && met<=250) result.push_back(72); 
-    if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>150 && met<=250) result.push_back(73); 
+    if(mlb>=175  && met>150 && met<=250) result.push_back(73); 
   }
   if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 ){
     if(mlb<175  && met>150 && met<=250) result.push_back(74); 
-    if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>150 && met<=250) result.push_back(75); 
+    if(mlb>=175  && met>150 && met<=250) result.push_back(75); 
   }
   if( nGoodJets>=4 && modTopness>=10.0 ){
     if(mlb<175  && met>150 && met<=250) result.push_back(76); 
-    if(mlb>=175 && (nTightTags>=1 || nGoodBTags==0) && met>150 && met<=250) result.push_back(77); 
+    if(mlb>=175  && met>150 && met<=250) result.push_back(77); 
   }
   
      
@@ -1192,28 +1241,7 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1( int jesType, bo
   if(jesType==1) leadBJetPt = babyAnalyzer.jup_ak4pfjets_leadbtag_p4().Pt();
   if(jesType==-1) leadBJetPt = babyAnalyzer.jdown_ak4pfjets_leadbtag_p4().Pt();
 
-  int nGoodBTags = babyAnalyzer.ngoodbtags(); 
-  if( jesType==1)  nGoodBTags = babyAnalyzer.jup_ngoodbtags();
-  if( jesType==-1) nGoodBTags = babyAnalyzer.jdown_ngoodbtags();
-  if(nGoodBTags==0){
-    vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
-    if( jesType==1 )  jet_csvv2 = babyAnalyzer.jup_ak4pfjets_CSV();
-    if( jesType==-1 ) jet_csvv2 = babyAnalyzer.jdown_ak4pfjets_CSV();
-    double max_csvv2 = -99.9;
-    int max_csvv2_idx = -1;
-    for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
-      if( jet_csvv2[iJet] >= max_csvv2 ){
-	max_csvv2 = jet_csvv2[iJet];
-	max_csvv2_idx = iJet;
-      }
-    }
-    if( jesType==0  ) leadBJetPt = babyAnalyzer.ak4pfjets_p4().at(max_csvv2_idx).Pt();
-    if( jesType==1  ) leadBJetPt = babyAnalyzer.jup_ak4pfjets_p4().at(max_csvv2_idx).Pt();
-    if( jesType==-1 ) leadBJetPt = babyAnalyzer.jdown_ak4pfjets_p4().at(max_csvv2_idx).Pt();
-  } // end if 0 bTags
-
-  
-    
+        
   double met = babyAnalyzer.pfmet();
   if( add2ndLepToMet){
     if(jesType==0)  met = babyAnalyzer.pfmet_rl();
@@ -1224,6 +1252,22 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1( int jesType, bo
     if(jesType==1)  met = babyAnalyzer.pfmet_jup();
     if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
   }
+
+
+  // Require dPhi(met,j1,2)>=0.8
+  double dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2();
+  if( add2ndLepToMet ){
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jdown();
+    else dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl();
+  }
+  else{
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jdown();
+  }
+  
+  if( dPhiMetJet<0.8 ) return result;
+
 
 
   //
@@ -1468,28 +1512,27 @@ vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepT
 
 
   // Lead Jet pT
-  double leadJetPt = babyAnalyzer.ak4pfjets_p4().at(0).Pt();
-  if( jesType==1 )  leadJetPt = babyAnalyzer.jup_ak4pfjets_p4().at(0).Pt();
-  if( jesType==-1 ) leadJetPt = babyAnalyzer.jdown_ak4pfjets_p4().at(0).Pt();
+  //double leadJetPt = babyAnalyzer.ak4pfjets_p4().at(0).Pt();
+  //if( jesType==1 )  leadJetPt = babyAnalyzer.jup_ak4pfjets_p4().at(0).Pt();
+  //if( jesType==-1 ) leadJetPt = babyAnalyzer.jdown_ak4pfjets_p4().at(0).Pt();
   
   // Require leading jet to have pT > 200
-  if( leadJetPt <= 200.0 ) return result;  
+  //if( leadJetPt <= 200.0 ) return result;  
 
 
   // Lead Jet is bTagged
-  bool leadJet_isBTag = babyAnalyzer.ak4pfjets_passMEDbtag().at(0);
-  if( jesType==1 )  leadJet_isBTag = babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
-  if( jesType==-1 ) leadJet_isBTag = babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
+  //bool leadJet_isBTag = babyAnalyzer.ak4pfjets_passMEDbtag().at(0);
+  //if( jesType==1 )  leadJet_isBTag = babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
+  //if( jesType==-1 ) leadJet_isBTag = babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
 
   // Require leading jet to NOT be b-tagged
-  if( leadJet_isBTag ) return result;      
+  //if( leadJet_isBTag ) return result;      
 
 
   double lepPt = babyAnalyzer.lep1_p4().Pt();
 
-
-  // Require lepton pT < 100
-  if( lepPt>=100.0 ) return result;
+  // Require lepton pT < 150
+  if( lepPt>=150.0 ) return result;
 
 
   // dPhi(lep,met)
@@ -1500,10 +1543,23 @@ vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepT
   met_TLV.SetPxPyPzE( met*cos(met_phi), met*sin(met_phi), 0.0, met );
   dPhiLepMet = lep_TLV.DeltaPhi(met_TLV);
   
-  // Require dPhi(lep,met)< 1.5
-  if( fabs(dPhiLepMet) >= 1.5 ) return result;
-  
- 
+  // Require dPhi(lep,met)< 2.0
+  if( fabs(dPhiLepMet) >= 2.0 ) return result;
+
+  // Require dPhi(met,j1,2)>=0.5
+  double dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2();
+  if( add2ndLepToMet ){
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jdown();
+    else dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl();
+  }
+  else{
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jdown();
+  }
+
+  if( dPhiMetJet<0.5 ) return result;
+
 
   //  Inclusive Bin
   result.push_back(6);
@@ -1557,9 +1613,9 @@ vector<int> categoryInfo::passCategory_CR2l_bulkTTbar( int jesType, bool add2ndL
 
   vector<int> result;
 
-  int nGoodBTags = babyAnalyzer.ngoodbtags(); 
-  if( jesType==1)  nGoodBTags = babyAnalyzer.jup_ngoodbtags();
-  if( jesType==-1) nGoodBTags = babyAnalyzer.jdown_ngoodbtags();
+  int nMedBTags = babyAnalyzer.ngoodbtags(); 
+  if( jesType==1)  nMedBTags = babyAnalyzer.jup_ngoodbtags();
+  if( jesType==-1) nMedBTags = babyAnalyzer.jdown_ngoodbtags();
 
   
   double met = babyAnalyzer.pfmet();
@@ -1574,7 +1630,7 @@ vector<int> categoryInfo::passCategory_CR2l_bulkTTbar( int jesType, bool add2ndL
   }
   
 
-  if( nGoodBTags>=0 ){
+  if( nMedBTags>=0 ){
     
     // >=0 bTags
     if( met>50  ) result.push_back(1);
@@ -1583,10 +1639,10 @@ vector<int> categoryInfo::passCategory_CR2l_bulkTTbar( int jesType, bool add2ndL
     if( met>200 ) result.push_back(4);
     if( met>250 ) result.push_back(5);
 
-  } // >=0 nGoodBTags
+  } // >=0 nMedBTags
 
 
-  if( nGoodBTags>=1 ){
+  if( nMedBTags>=1 ){
     
     // >=1 bTags
     if( met>50  ) result.push_back(6);
@@ -1595,9 +1651,9 @@ vector<int> categoryInfo::passCategory_CR2l_bulkTTbar( int jesType, bool add2ndL
     if( met>200 ) result.push_back(9);
     if( met>250 ) result.push_back(10);
   
-  } // >=1 nGoodBTags
+  } // >=1 nMedBTags
 
-  if( nGoodBTags>=2 ){
+  if( nMedBTags>=2 ){
     
     // >=2 bTags
     if( met>50  ) result.push_back(11);
@@ -1606,7 +1662,7 @@ vector<int> categoryInfo::passCategory_CR2l_bulkTTbar( int jesType, bool add2ndL
     if( met>200 ) result.push_back(14);
     if( met>250 ) result.push_back(15);
 
-  } // >=0 nGoodBTags
+  } // >=0 nMedBTags
 
 
   return result;
