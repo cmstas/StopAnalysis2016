@@ -145,7 +145,14 @@ public:
     float filt_trkPOG_logerr_tmc;
     float filt_trkPOG_tmc;
     float filt_trkPOG_tms;
-
+    bool  filt_fastsimjets;
+    bool  filt_fastsimjets_jup;
+    bool  filt_fastsimjets_jdown;
+    bool  filt_jetWithBadMuon;
+    bool  filt_jetWithBadMuon_jup;
+    bool  filt_jetWithBadMuon_jdown;
+    bool  filt_pfovercalomet;
+    
     float dR_lep_leadb;
     float dR_lep2_leadb;    
     float mindphi_met_j1_j2;
@@ -231,9 +238,6 @@ public:
     float weight_loosebtagsf_fastsim_DN;
     int   NISRjets;
     int   NnonISRjets;
-    bool  filt_fastsimjets;
-    bool  filt_fastsimjets_jup;
-    bool  filt_fastsimjets_jdown;
     float hardgenpt;
     //sparms
 //    vecs  sparms_comment;

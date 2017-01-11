@@ -1281,7 +1281,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.pfmet = evt_pfmet();
 	StopEvt.pfmet_phi = evt_pfmetPhi();
       }
-      
+      StopEvt.filt_pfovercalomet = !(StopEvt.calomet>0&&StopEvt.pfmet/StopEvt.calomet>5);
+
       //
       //Lepton Variables
       //
@@ -1756,6 +1757,25 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         //jets_jdown.FillCommon(idx_alloverlapjets_jdown, jet_corrector_pfL1FastJetL2L3,btagprob_data_jdown,btagprob_mc_jdown,btagprob_heavy_UP_jdown, btagprob_heavy_DN_jdown, btagprob_light_UP_jdown,btagprob_light_DN_jdown,btagprob_FS_UP_jdown,btagprob_FS_DN_jdown,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,-1, false, skim_isFastsim);
 	jets_jdown.FillCommon(idx_alloverlapjets_jdown, jet_corrector_pfL1FastJetL2L3,btagprob_data_jdown,btagprob_mc_jdown,btagprob_heavy_UP_jdown, btagprob_heavy_DN_jdown, btagprob_light_UP_jdown,btagprob_light_DN_jdown,btagprob_FS_UP_jdown,btagprob_FS_DN_jdown,loosebtagprob_data_jdown,loosebtagprob_mc_jdown,loosebtagprob_heavy_UP_jdown, loosebtagprob_heavy_DN_jdown, loosebtagprob_light_UP_jdown,loosebtagprob_light_DN_jdown,loosebtagprob_FS_UP_jdown,loosebtagprob_FS_DN_jdown,tightbtagprob_data_jdown,tightbtagprob_mc_jdown,tightbtagprob_heavy_UP_jdown, tightbtagprob_heavy_DN_jdown, tightbtagprob_light_UP_jdown,tightbtagprob_light_DN_jdown,tightbtagprob_FS_UP_jdown,tightbtagprob_FS_DN_jdown,jet_overlep1_idx, jet_overlep2_idx,true,jetcorr_uncertainty_sys,-1, false, skim_isFastsim);
 
+	bool isbadmuonjet = false;
+	for(unsigned int jdx = 0; jdx<jets.ak4pfjets_p4.size(); ++jdx){
+	  jets.dphi_ak4pfjet_met[jdx] = getdphi(jets.ak4pfjets_p4[jdx].Phi(),StopEvt.pfmet_phi);
+	  if(jets.ak4pfjets_p4[jdx].Pt()>200 && jets.dphi_ak4pfjet_met[jdx]>(TMath::Pi()-0.4) && jets.ak4pfjets_muf[jdx]>0.5) isbadmuonjet = true;
+	}
+	StopEvt.filt_jetWithBadMuon = !isbadmuonjet;
+	isbadmuonjet = false;
+	for(unsigned int jdx = 0; jdx<jets_jup.ak4pfjets_p4.size(); ++jdx){
+	  jets_jup.dphi_ak4pfjet_met[jdx] = getdphi(jets_jup.ak4pfjets_p4[jdx].Phi(),StopEvt.pfmet_phi);
+	  if(jets_jup.ak4pfjets_p4[jdx].Pt()>200 && jets_jup.dphi_ak4pfjet_met[jdx]>(TMath::Pi()-0.4) && jets_jup.ak4pfjets_muf[jdx]>0.5) isbadmuonjet = true;
+	}
+	StopEvt.filt_jetWithBadMuon_jup = !isbadmuonjet;
+	isbadmuonjet = false;
+	for(unsigned int jdx = 0; jdx<jets_jdown.ak4pfjets_p4.size(); ++jdx){
+	  jets_jdown.dphi_ak4pfjet_met[jdx] = getdphi(jets_jdown.ak4pfjets_p4[jdx].Phi(),StopEvt.pfmet_phi);
+	  if(jets_jdown.ak4pfjets_p4[jdx].Pt()>200 && jets_jdown.dphi_ak4pfjet_met[jdx]>(TMath::Pi()-0.4) && jets_jdown.ak4pfjets_muf[jdx]>0.5) isbadmuonjet = true;
+	}
+	StopEvt.filt_jetWithBadMuon_jdown = !isbadmuonjet;
+	
       }
       if (!evt_isRealData()){
 	int NISRjets = 0;
@@ -1914,7 +1934,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	fastsimfilt = true;
 	break;
       }
-      StopEvt.filt_fastsimjets = fastsimfilt;
+      StopEvt.filt_fastsimjets = !fastsimfilt;
 
       // FastSim filter, JESup Jets
       bool fastsimfilt_jup = false;
@@ -1930,7 +1950,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	fastsimfilt_jup = true;
 	break;
       }
-      StopEvt.filt_fastsimjets_jup = fastsimfilt_jup;
+      StopEvt.filt_fastsimjets_jup = !fastsimfilt_jup;
 
       // FastSim filter, JESdn Jets
       bool fastsimfilt_jdown = false;
@@ -1946,7 +1966,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	fastsimfilt_jdown = true;
 	break;
       }
-      StopEvt.filt_fastsimjets_jdown = fastsimfilt_jdown;
+      StopEvt.filt_fastsimjets_jdown = !fastsimfilt_jdown;
 
       //
       // Photon Selection

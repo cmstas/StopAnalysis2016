@@ -350,10 +350,7 @@ void EventTree::Reset ()
     weight_ISRnjets_DN  = -9999;
     NISRjets            = -9999;
     NnonISRjets         = -9999;
-    filt_fastsimjets       = false;
-    filt_fastsimjets_jup   = false;
-    filt_fastsimjets_jdown = false;
-    
+
     sparms_names.clear();
   /*  sparms_filterEfficiency	= -9999.;
     sparms_pdfScale		= -9999.;
@@ -496,7 +493,14 @@ void EventTree::Reset ()
      filt_trkPOG_tms = false;
      filt_badChargedCandidateFilter = false;
      filt_badMuonFilter = false;
-
+    filt_fastsimjets       = false;
+    filt_fastsimjets_jup   = false;
+    filt_fastsimjets_jdown = false;
+    filt_jetWithBadMuon        = false;
+    filt_jetWithBadMuon_jup    = false;
+    filt_jetWithBadMuon_jdown  = false;
+    filt_pfovercalomet         = false;
+    
     nPhotons             = -9999;
     ph_selectedidx       = -9999;
     ph_ngoodjets         = -9999;
@@ -664,9 +668,6 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("weight_ISRnjets_DN", &weight_ISRnjets_DN);
     tree->Branch("NISRjets", &NISRjets);
     tree->Branch("NnonISRjets", &NnonISRjets);
-    tree->Branch("filt_fastsimjets", &filt_fastsimjets);
-    tree->Branch("filt_fastsimjets_jup", &filt_fastsimjets_jup);
-    tree->Branch("filt_fastsimjets_jdown", &filt_fastsimjets_jdown);
     tree->Branch("sparms_names", &sparms_names);
     tree->Branch("sparms_values", &sparms_values);
     tree->Branch("sparms_subProcessId", &sparms_subProcessId);
@@ -707,11 +708,8 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("nPhotons",             &nPhotons);
     tree->Branch("ph_ngoodjets",         &ph_ngoodjets);
     tree->Branch("ph_ngoodbtags",        &ph_ngoodbtags);
-    tree->Branch("filt_met", &filt_met);
     tree->Branch("hardgenpt", &hardgenpt);
-    tree->Branch("filt_badChargedCandidateFilter", &filt_badChargedCandidateFilter);
-    tree->Branch("filt_badMuonFilter", &filt_badMuonFilter);
-    tree->Branch("calomet", &calomet);
+   tree->Branch("calomet", &calomet);
     tree->Branch("calomet_phi", &calomet_phi);
 }
 
@@ -767,6 +765,17 @@ void EventTree::SetMETFilterBranches (TTree* tree)
     tree->Branch("filt_trkPOG_tms", &filt_trkPOG_tms);
     tree->Branch("firstGoodVtxIdx", &firstGoodVtxIdx);
 //    tree->Branch("filt_badChargedCandidateFilter", &filt_badChargedCandidateFilter);
+    tree->Branch("filt_badChargedCandidateFilter", &filt_badChargedCandidateFilter);
+    tree->Branch("filt_badMuonFilter", &filt_badMuonFilter);
+    tree->Branch("filt_met", &filt_met);
+    tree->Branch("filt_fastsimjets", &filt_fastsimjets);
+    tree->Branch("filt_fastsimjets_jup", &filt_fastsimjets_jup);
+    tree->Branch("filt_fastsimjets_jdown", &filt_fastsimjets_jdown);
+    tree->Branch("filt_jetWithBadMuon", &filt_jetWithBadMuon);
+    tree->Branch("filt_jetWithBadMuon_jup", &filt_jetWithBadMuon_jup);
+    tree->Branch("filt_jetWithBadMuon_jdown", &filt_jetWithBadMuon_jdown);
+    tree->Branch("filt_pfovercalomet", &filt_pfovercalomet);
+
 }
 
 void EventTree::SetPhotonBranches (TTree* tree)

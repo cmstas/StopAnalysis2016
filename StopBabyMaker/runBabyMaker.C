@@ -128,7 +128,7 @@ int main(int argc, char **argv){
   bool filltracks_  =  true;
   bool fillZll_  =  false;
   bool fillPhoton_  =  false;
-  bool fillMETfilt_  =  false;
+  bool fillMETfilt_  =  true;
   bool fill2ndlep_  =  false;
   bool fillExtraEvtVar_  =  false;
 
