@@ -914,43 +914,48 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2016H_SinglePhoton_MINIAOD_PromptR
 
 SAMPLE
 Name GJets_DR0p4_HT40to100
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/V08-00-16/
 
 SAMPLE
 Name GJets_DR0p4_HT100to200
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/V08-00-16/
 
 SAMPLE
 Name GJets_DR0p4_HT200to400
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/V08-00-16/
 
+## NOTE THIS SAMPLE IS NOT MORIOND17 - need to completely need to use inclusive one :-/
 SAMPLE
 Name GJets_DR0p4_HT400to600
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
 
 SAMPLE
 Name GJets_DR0p4_HT600toInf
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/V08-00-16/
 
 SAMPLE
 Name GJets_HT40to100
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/V08-00-16/
 
 SAMPLE
 Name GJets_HT100to200
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v4/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/V08-00-16/
 
 SAMPLE
 Name GJets_HT200to400
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/V08-00-16/
 
 SAMPLE
 Name GJets_HT400to600
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/V08-00-16/
 
 SAMPLE
 Name GJets_HT600toInf
-Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-05/
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/V08-00-16/
+
+SAMPLE
+Name GJets_HT600toInf_ext1
+Path /hadoop/cms/store/group/snt/run2_moriond17/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/V08-00-16/
 
 
 #############################################
