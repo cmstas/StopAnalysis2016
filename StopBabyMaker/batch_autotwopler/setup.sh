@@ -10,7 +10,8 @@ BABY_VERSION=v14
 
 TARBALL_NAME=forCondor_stopBabyMaker_80x
 
-INSTRUCTIONS_FILE=instructions.txt
+INSTRUCTIONS_FILE=instructions_2017.txt
+#INSTRUCTIONS_FILE=instructions.txt
 #INSTRUCTIONS_FILE=instructions_test.txt
 
 EXECUTABLE_NAME=condor_executable.sh

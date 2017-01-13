@@ -12,4 +12,4 @@ p.merging_scripts = [ "mergeScript.sh", "mergeHadoopFiles.C" ]
 p.exit_when_done = True
 
 # Main
-run.main(instructions="instructions.txt",params=p)
+run.main(instructions="instructions_2017.txt",params=p)
