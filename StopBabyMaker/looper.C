@@ -721,7 +721,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   if(!isDataFromFileName){
     pileupfile = new TFile("puWeights_2016data_36p6fbinv.root","READ");
     if(pileupfile->IsZombie()) {
-      std::cout << "Somehow puWeights_2016data_2p2fbinv.root is corrupted. Exit..." << std::endl;
+      std::cout << "Somehow puWeights_2016data_36p6fbinv.root is corrupted. Exit..." << std::endl;
       exit(0);
     }
     hPU     = (TH1D*)pileupfile->Get("puWeight");
