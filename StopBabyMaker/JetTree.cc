@@ -177,9 +177,14 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
     int nbtags_med = 0;
     int nbtags_tight = 0;
     int nbtags_loose = 0;
+    /* 2016 values
     static const float BTAG_MED = 0.800;
     static const float BTAG_LSE = 0.460;
     static const float BTAG_TGT = 0.935;
+    */
+    static const float BTAG_MED = 0.8484;
+    static const float BTAG_LSE = 0.5426;
+    static const float BTAG_TGT = 0.9535;
     float dPhiM = 0.;
     float btagdisc = 0.;   
     unsigned int leadbtag_idx = 0;
