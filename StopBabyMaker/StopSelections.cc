@@ -43,7 +43,8 @@ bool PassElectronPreSelections(unsigned int elIdx,float pt, float eta){
 bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
   if(mus_p4().at(muIdx).pt() < pt) return false;
   if(fabs(mus_p4().at(muIdx).eta()) > eta) return false;
-  if(!muonID(muIdx, STOP_tight_v2)) return false;  //mini-isolation applied at 0.1
+  if(!muonID(muIdx, STOP_medium_v3)) return false;
+//  if(!muonID(muIdx, STOP_tight_v2)) return false;  //mini-isolation applied at 0.1
   return true;
 }
 
