@@ -6,7 +6,7 @@
 #
 ANALYSIS_NAME=Stop_1l
 
-BABY_VERSION=v14
+BABY_VERSION=v14_Jan2017
 
 TARBALL_NAME=forCondor_stopBabyMaker_80x
 
@@ -19,11 +19,11 @@ EXECUTABLE_NAME=condor_executable.sh
 BATCH_DIR=`pwd`
 
 MAKER_NAME=StopBabyMaker
-MAKER_PATH=/home/users/jgwood/Stop_1Lepton/analysis2016__fullYear/CMSSW_8_0_5_patch1/src/StopAnalysis/
+MAKER_PATH=/home/users/isuarez/StopAnalysis2017/StopAnalysis/
 MAKER_DIR=$MAKER_PATH/$MAKER_NAME/
 
 CORE_NAME=CORE
-CORE_PATH=/home/users/jgwood/Stop_1Lepton/analysis2016__fullYear/CMSSW_8_0_5_patch1/src/
+CORE_PATH=/home/users/isuarez/
 CORE_DIR=$CORE_PATH/$CORE_NAME
 
 
@@ -88,7 +88,7 @@ if [ ! -d $TARBALL_NAME ]; then
     sed -i '1i COREPATH = ../CORE/' $CONDOR_DIR_NAME/$MAKER_NAME/Makefile
     
     cp -r $MAKER_DIR/xsec_stop_13TeV.root $CONDOR_DIR_NAME/$MAKER_NAME/
-    cp -r $MAKER_DIR/puWeights_2015data_2p2fbinv.root $CONDOR_DIR_NAME/$MAKER_NAME/
+    cp -r $MAKER_DIR/puWeights_2016data_2p2fbinv.root $CONDOR_DIR_NAME/$MAKER_NAME/
     cp -r $MAKER_DIR/*.dat $CONDOR_DIR_NAME/$MAKER_NAME/
     cp -r $MAKER_DIR/*.C $CONDOR_DIR_NAME/$MAKER_NAME/
     cp -r $MAKER_DIR/stop_variables/ $CONDOR_DIR_NAME/$MAKER_NAME/
