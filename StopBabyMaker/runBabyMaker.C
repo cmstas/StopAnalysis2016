@@ -45,6 +45,7 @@ int main(int argc, char **argv){
   //
   // Input sanitation
   //
+  //isFastsim = true does not work, need to use = 1
   if(argc<2){
     cout<<" runBabyMaker takes six arguments: ./runBabyMaker sample_name nevents file_number outpath samplelist isFastSim" << endl;
     cout<<" Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=-1 (-1=merged_ntuple_*.root), output=/nfs-7/userdata/stopRun2/, samplelist=sample_2016.dat, isFastSim=false by default"<<endl;
@@ -69,11 +70,12 @@ int main(int argc, char **argv){
   
   const char* suffix = file == -1 ? "" : Form("_%i", file);
 
-  char *input = "sample_2016.dat";
+  char *input = "sample_2017.dat";
   if(argc>5) input = argv[5];
 
   bool isFastsim = false;
   if(argc>6) isFastsim = atoi(argv[6]);
+  //isFastsim = true does not work, need to use = 1
 
   //
   // Initialize looper

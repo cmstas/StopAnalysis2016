@@ -56,27 +56,27 @@ void JetTree::InitBtagSFTool(bool isFastsim_) {
     TH2D* h_loose_btag_eff_c_temp = NULL;
     TH2D* h_loose_btag_eff_udsg_temp = NULL;
     if(isFastsim){
-      feff =  new TFile("btagsf/btageff__SMS-T1bbbb-T1qqqq_fastsim.root");
-      h_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_b");
-      h_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_c");
-      h_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
-      h_tight_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_b");
-      h_tight_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_c");
-      h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_udsg");
-      h_loose_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_b");
-      h_loose_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_c");
-      h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_udsg");
+      feff =  new TFile("btagsf/BTagEff_76X_T2ttT2bWT2tb.root");
+      h_btag_eff_b_temp = (TH2D*) feff->Get("MediumBEfficiency");
+      h_btag_eff_c_temp = (TH2D*) feff->Get("MediumCEfficiency");
+      h_btag_eff_udsg_temp = (TH2D*) feff->Get("MediumLEfficiency");
+      h_tight_btag_eff_b_temp = (TH2D*) feff->Get("TightBEfficiency");
+      h_tight_btag_eff_c_temp = (TH2D*) feff->Get("TightCEfficiency");
+      h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("TightLEfficiency");
+      h_loose_btag_eff_b_temp = (TH2D*) feff->Get("LooseBEfficiency");
+      h_loose_btag_eff_c_temp = (TH2D*) feff->Get("LooseCEfficiency");
+      h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("LooseLEfficiency");
     } else {
-      feff =  new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns.root");
-      h_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_b");
-      h_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_c");
-      h_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
-      h_tight_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_b");
-      h_tight_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_c");
-      h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_udsg");
-      h_loose_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_b");
-      h_loose_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_c");
-      h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_udsg");
+      feff =  new TFile("btagsf/BTagEff_Moriond17_TTandW.root");
+      h_btag_eff_b_temp = (TH2D*) feff->Get("MediumBEfficiency");
+      h_btag_eff_c_temp = (TH2D*) feff->Get("MediumCEfficiency");
+      h_btag_eff_udsg_temp = (TH2D*) feff->Get("MediumLEfficiency");
+      h_tight_btag_eff_b_temp = (TH2D*) feff->Get("TightBEfficiency");
+      h_tight_btag_eff_c_temp = (TH2D*) feff->Get("TightCEfficiency");
+      h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("TightLEfficiency");
+      h_loose_btag_eff_b_temp = (TH2D*) feff->Get("LooseBEfficiency");
+      h_loose_btag_eff_c_temp = (TH2D*) feff->Get("LooseCEfficiency");
+      h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("LooseLEfficiency");
     }
     h_btag_eff_b = (TH2D*) h_btag_eff_b_temp->Clone("h_btag_eff_b");
     h_btag_eff_c = (TH2D*) h_btag_eff_c_temp->Clone("h_btag_eff_c");
@@ -167,7 +167,6 @@ float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, int WP, bo
 
 void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float & btagprob_heavy_DN,float & btagprob_light_UP, float & btagprob_light_DN, float & btagprob_FS_UP, float & btagprob_FS_DN, float& loosebtagprob_data, float &loosebtagprob_mc, float &loosebtagprob_heavy_UP, float & loosebtagprob_heavy_DN, float & loosebtagprob_light_UP, float & loosebtagprob_light_DN, float & loosebtagprob_FS_UP, float & loosebtagprob_FS_DN, float& tightbtagprob_data, float &tightbtagprob_mc, float &tightbtagprob_heavy_UP, float & tightbtagprob_heavy_DN, float & tightbtagprob_light_UP, float & tightbtagprob_light_DN, float & tightbtagprob_FS_UP, float & tightbtagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim)
 {
-    
     // fill info for ak4pfjets
     int nGoodJets=0.;
     int nFailJets=0.;
