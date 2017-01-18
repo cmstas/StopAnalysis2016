@@ -73,6 +73,8 @@ root -l -b -q head.C diLepTriggerEfficiency_analyzer.C++ >& Output/Log/diLeptrig
 echo "Calculating ttbarSystemPt SF..."
 echo ""
 root -l -b -q head.C ttbarSystemPt_analyzer.C++ >& Output/Log/ttbarSystemPt_analyzer.log
+root -l -b -q head.C ttbarSystemPt_plotMaker.C++ >& Output/Log/ttbarSystemPt_plotMaker_byGenDecay.log
+root -l -b -q head.C ttbarSystemPt_plotMaker.C++'(false)' >& Output/Log/ttbarSystemPt_plotMaker_byProduction.log
 
 # Create pdfs of latex files
 echo "Converting Tex to PDF..."

@@ -74,7 +74,7 @@ sed -i 's/0\.0~-~0\.0~\\%/--/g' Output/BkgEstimate/bkgEst_lostLepton__*__uncerta
 
 echo "Calculating 1lep from W Background Estimate..."
 echo ""
-#root -l -b -q head.C bkgEstimate_1lepFromW.C++ >& Output/Log/bkgEstimate_1lepFromW.log
+root -l -b -q head.C bkgEstimate_1lepFromW.C++ >& Output/Log/bkgEstimate_1lepFromW.log
 
 echo "Calculating 1lep from Top Background Estimate..."
 echo ""

@@ -72,6 +72,27 @@ namespace stop_1l {
 	const float &weight_btagsf_light_DN() { return babyAnalyzer.weight_btagsf_light_DN(); }
 	const float &weight_btagsf_fastsim_UP() { return babyAnalyzer.weight_btagsf_fastsim_UP(); }
 	const float &weight_btagsf_fastsim_DN() { return babyAnalyzer.weight_btagsf_fastsim_DN(); }
+	const float &weight_analysisbtagsf() { return babyAnalyzer.weight_analysisbtagsf(); }
+	const float &weight_analysisbtagsf_heavy_UP() { return babyAnalyzer.weight_analysisbtagsf_heavy_UP(); }
+	const float &weight_analysisbtagsf_light_UP() { return babyAnalyzer.weight_analysisbtagsf_light_UP(); }
+	const float &weight_analysisbtagsf_heavy_DN() { return babyAnalyzer.weight_analysisbtagsf_heavy_DN(); }
+	const float &weight_analysisbtagsf_light_DN() { return babyAnalyzer.weight_analysisbtagsf_light_DN(); }
+	const float &weight_analysisbtagsf_fastsim_UP() { return babyAnalyzer.weight_analysisbtagsf_fastsim_UP(); }
+	const float &weight_analysisbtagsf_fastsim_DN() { return babyAnalyzer.weight_analysisbtagsf_fastsim_DN(); }
+	const float &weight_tightbtagsf() { return babyAnalyzer.weight_tightbtagsf(); }
+	const float &weight_tightbtagsf_heavy_UP() { return babyAnalyzer.weight_tightbtagsf_heavy_UP(); }
+	const float &weight_tightbtagsf_light_UP() { return babyAnalyzer.weight_tightbtagsf_light_UP(); }
+	const float &weight_tightbtagsf_heavy_DN() { return babyAnalyzer.weight_tightbtagsf_heavy_DN(); }
+	const float &weight_tightbtagsf_light_DN() { return babyAnalyzer.weight_tightbtagsf_light_DN(); }
+	const float &weight_tightbtagsf_fastsim_UP() { return babyAnalyzer.weight_tightbtagsf_fastsim_UP(); }
+	const float &weight_tightbtagsf_fastsim_DN() { return babyAnalyzer.weight_tightbtagsf_fastsim_DN(); }
+	const float &weight_loosebtagsf() { return babyAnalyzer.weight_loosebtagsf(); }
+	const float &weight_loosebtagsf_heavy_UP() { return babyAnalyzer.weight_loosebtagsf_heavy_UP(); }
+	const float &weight_loosebtagsf_light_UP() { return babyAnalyzer.weight_loosebtagsf_light_UP(); }
+	const float &weight_loosebtagsf_heavy_DN() { return babyAnalyzer.weight_loosebtagsf_heavy_DN(); }
+	const float &weight_loosebtagsf_light_DN() { return babyAnalyzer.weight_loosebtagsf_light_DN(); }
+	const float &weight_loosebtagsf_fastsim_UP() { return babyAnalyzer.weight_loosebtagsf_fastsim_UP(); }
+	const float &weight_loosebtagsf_fastsim_DN() { return babyAnalyzer.weight_loosebtagsf_fastsim_DN(); }
 	const float &weight_lepSF() { return babyAnalyzer.weight_lepSF(); }
 	const float &weight_lepSF_up() { return babyAnalyzer.weight_lepSF_up(); }
 	const float &weight_lepSF_down() { return babyAnalyzer.weight_lepSF_down(); }
@@ -116,24 +137,22 @@ namespace stop_1l {
 	const float &topnessMod_jdown() { return babyAnalyzer.topnessMod_jdown(); }
 	const float &topnessMod_rl_jdown() { return babyAnalyzer.topnessMod_rl_jdown(); }
 	const float &Mlb_closestb() { return babyAnalyzer.Mlb_closestb(); }
+	const float &Mlb_lead_bdiscr() { return babyAnalyzer.Mlb_lead_bdiscr(); }
+	const float &Mlb_closestb_jup() { return babyAnalyzer.Mlb_closestb_jup(); }
+	const float &Mlb_lead_bdiscr_jup() { return babyAnalyzer.Mlb_lead_bdiscr_jup(); }
+	const float &Mlb_closestb_jdown() { return babyAnalyzer.Mlb_closestb_jdown(); }
+	const float &Mlb_lead_bdiscr_jdown() { return babyAnalyzer.Mlb_lead_bdiscr_jdown(); }
 	const int &HLT_SingleEl() { return babyAnalyzer.HLT_SingleEl(); }
 	const int &HLT_SingleMu() { return babyAnalyzer.HLT_SingleMu(); }
 	const int &HLT_MET() { return babyAnalyzer.HLT_MET(); }
 	const int &HLT_MET100_MHT100() { return babyAnalyzer.HLT_MET100_MHT100(); }
+	const int &HLT_MET110_MHT110() { return babyAnalyzer.HLT_MET110_MHT110(); }
+	const int &HLT_MET120_MHT120() { return babyAnalyzer.HLT_MET120_MHT120(); }
+	const int &HLT_PFHT_unprescaled() { return babyAnalyzer.HLT_PFHT_unprescaled(); }
+	const int &HLT_PFHT_prescaled() { return babyAnalyzer.HLT_PFHT_prescaled(); }
 	const int &HLT_DiEl() { return babyAnalyzer.HLT_DiEl(); }
 	const int &HLT_DiMu() { return babyAnalyzer.HLT_DiMu(); }
 	const int &HLT_MuE() { return babyAnalyzer.HLT_MuE(); }
-	const int &HLT_Photon90_CaloIdL_PFHT500() { return babyAnalyzer.HLT_Photon90_CaloIdL_PFHT500(); }
-	const int &HLT_Photon22_R9Id90_HE10_IsoM() { return babyAnalyzer.HLT_Photon22_R9Id90_HE10_IsoM(); }
-	const int &HLT_Photon30_R9Id90_HE10_IsoM() { return babyAnalyzer.HLT_Photon30_R9Id90_HE10_IsoM(); }
-	const int &HLT_Photon36_R9Id90_HE10_IsoM() { return babyAnalyzer.HLT_Photon36_R9Id90_HE10_IsoM(); }
-	const int &HLT_Photon50_R9Id90_HE10_IsoM() { return babyAnalyzer.HLT_Photon50_R9Id90_HE10_IsoM(); }
-	const int &HLT_Photon75_R9Id90_HE10_IsoM() { return babyAnalyzer.HLT_Photon75_R9Id90_HE10_IsoM(); }
-	const int &HLT_Photon90_R9Id90_HE10_IsoM() { return babyAnalyzer.HLT_Photon90_R9Id90_HE10_IsoM(); }
-	const int &HLT_Photon120_R9Id90_HE10_IsoM() { return babyAnalyzer.HLT_Photon120_R9Id90_HE10_IsoM(); }
-	const int &HLT_Photon165_R9Id90_HE10_IsoM() { return babyAnalyzer.HLT_Photon165_R9Id90_HE10_IsoM(); }
-	const int &HLT_Photon175() { return babyAnalyzer.HLT_Photon175(); }
-	const int &HLT_Photon165_HE10() { return babyAnalyzer.HLT_Photon165_HE10(); }
 	const int &nPhotons() { return babyAnalyzer.nPhotons(); }
 	const int &ph_ngoodjets() { return babyAnalyzer.ph_ngoodjets(); }
 	const int &ph_ngoodbtags() { return babyAnalyzer.ph_ngoodbtags(); }
@@ -154,6 +173,12 @@ namespace stop_1l {
 	const ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > &lep1_p4() { return babyAnalyzer.lep1_p4(); }
 	const ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > &lep1_mcp4() { return babyAnalyzer.lep1_mcp4(); }
 	const int &lep1_mc_motherid() { return babyAnalyzer.lep1_mc_motherid(); }
+	const float &lep1_dphiMET() { return babyAnalyzer.lep1_dphiMET(); }
+	const float &lep1_dphiMET_jup() { return babyAnalyzer.lep1_dphiMET_jup(); }
+	const float &lep1_dphiMET_jdown() { return babyAnalyzer.lep1_dphiMET_jdown(); }
+	const float &lep1_dphiMET_rl() { return babyAnalyzer.lep1_dphiMET_rl(); }
+	const float &lep1_dphiMET_rl_jup() { return babyAnalyzer.lep1_dphiMET_rl_jup(); }
+	const float &lep1_dphiMET_rl_jdown() { return babyAnalyzer.lep1_dphiMET_rl_jdown(); }
 	const int &lep2_pdgid() { return babyAnalyzer.lep2_pdgid(); }
 	const int &lep2_production_type() { return babyAnalyzer.lep2_production_type(); }
 	const float &lep2_MiniIso() { return babyAnalyzer.lep2_MiniIso(); }
@@ -165,13 +190,18 @@ namespace stop_1l {
 	const ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > &lep2_p4() { return babyAnalyzer.lep2_p4(); }
 	const ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > &lep2_mcp4() { return babyAnalyzer.lep2_mcp4(); }
 	const int &lep2_mc_motherid() { return babyAnalyzer.lep2_mc_motherid(); }
+	const float &lep2_dphiMET() { return babyAnalyzer.lep2_dphiMET(); }
+	const float &lep2_dphiMET_jup() { return babyAnalyzer.lep2_dphiMET_jup(); }
+	const float &lep2_dphiMET_jdown() { return babyAnalyzer.lep2_dphiMET_jdown(); }
+	const float &lep2_dphiMET_rl() { return babyAnalyzer.lep2_dphiMET_rl(); }
+	const float &lep2_dphiMET_rl_jup() { return babyAnalyzer.lep2_dphiMET_rl_jup(); }
+	const float &lep2_dphiMET_rl_jdown() { return babyAnalyzer.lep2_dphiMET_rl_jdown(); }
 	const vector<float> &ph_sigmaIEtaEta_fill5x5() { return babyAnalyzer.ph_sigmaIEtaEta_fill5x5(); }
 	const vector<float> &ph_hOverE() { return babyAnalyzer.ph_hOverE(); }
 	const vector<float> &ph_r9() { return babyAnalyzer.ph_r9(); }
 	const vector<float> &ph_chiso() { return babyAnalyzer.ph_chiso(); }
 	const vector<float> &ph_nhiso() { return babyAnalyzer.ph_nhiso(); }
 	const vector<float> &ph_phiso() { return babyAnalyzer.ph_phiso(); }
-	const vector<bool> &ph_idCutBased() { return babyAnalyzer.ph_idCutBased(); }
 	const vector<int> &ph_overlapJetId() { return babyAnalyzer.ph_overlapJetId(); }
 	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &ph_p4() { return babyAnalyzer.ph_p4(); }
 	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &ph_mcp4() { return babyAnalyzer.ph_mcp4(); }
@@ -184,6 +214,9 @@ namespace stop_1l {
 	const vector<float> &ph_drMinParton() { return babyAnalyzer.ph_drMinParton(); }
 	const int &ngoodjets() { return babyAnalyzer.ngoodjets(); }
 	const int &ngoodbtags() { return babyAnalyzer.ngoodbtags(); }
+	const int &nloosebtags() { return babyAnalyzer.nloosebtags(); }
+	const int &ntightbtags() { return babyAnalyzer.ntightbtags(); }
+	const int &nanalysisbtags() { return babyAnalyzer.nanalysisbtags(); }
 	const float &ak4_HT() { return babyAnalyzer.ak4_HT(); }
 	const float &ak4_htratiom() { return babyAnalyzer.ak4_htratiom(); }
 	const vector<float> &dphi_ak4pfjet_met() { return babyAnalyzer.dphi_ak4pfjet_met(); }
@@ -200,6 +233,9 @@ namespace stop_1l {
 	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &ak4genjets_p4() { return babyAnalyzer.ak4genjets_p4(); }
 	const int &jup_ngoodjets() { return babyAnalyzer.jup_ngoodjets(); }
 	const int &jup_ngoodbtags() { return babyAnalyzer.jup_ngoodbtags(); }
+	const int &jup_nloosebtags() { return babyAnalyzer.jup_nloosebtags(); }
+	const int &jup_ntightbtags() { return babyAnalyzer.jup_ntightbtags(); }
+	const int &jup_nanalysisbtags() { return babyAnalyzer.jup_nanalysisbtags(); }
 	const float &jup_ak4_HT() { return babyAnalyzer.jup_ak4_HT(); }
 	const float &jup_ak4_htratiom() { return babyAnalyzer.jup_ak4_htratiom(); }
 	const vector<float> &jup_dphi_ak4pfjet_met() { return babyAnalyzer.jup_dphi_ak4pfjet_met(); }
@@ -216,6 +252,9 @@ namespace stop_1l {
 	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &jup_ak4genjets_p4() { return babyAnalyzer.jup_ak4genjets_p4(); }
 	const int &jdown_ngoodjets() { return babyAnalyzer.jdown_ngoodjets(); }
 	const int &jdown_ngoodbtags() { return babyAnalyzer.jdown_ngoodbtags(); }
+	const int &jdown_nloosebtags() { return babyAnalyzer.jdown_nloosebtags(); }
+	const int &jdown_ntightbtags() { return babyAnalyzer.jdown_ntightbtags(); }
+	const int &jdown_nanalysisbtags() { return babyAnalyzer.jdown_nanalysisbtags(); }
 	const float &jdown_ak4_HT() { return babyAnalyzer.jdown_ak4_HT(); }
 	const float &jdown_ak4_htratiom() { return babyAnalyzer.jdown_ak4_htratiom(); }
 	const vector<float> &jdown_dphi_ak4pfjet_met() { return babyAnalyzer.jdown_dphi_ak4pfjet_met(); }
