@@ -84,7 +84,6 @@ void EventTree::FillCommon (const std::string &root_file_name)
      // if(is_data) filt_badChargedCandidateFilter = badChargedCandidateFilterV2();
        filt_badMuonFilter = badMuonFilterV2(); //still some problems with MC
        filt_badChargedCandidateFilter = badChargedCandidateFilterV2();
-cout<<filt_badMuonFilter<<endl;
       filt_cscbeamhalo = filt_cscBeamHalo();
       filt_cscbeamhalo2015 = filt_cscBeamHalo2015();
       filt_globaltighthalo2016 = filt_globalTightHalo2016();
