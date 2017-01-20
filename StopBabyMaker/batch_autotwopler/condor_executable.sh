@@ -35,8 +35,8 @@ fi
     
 
 echo " Running BabyMaker:"
-echo "    ./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2016.dat $ISFASTSIM"
-./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2016.dat $ISFASTSIM
+echo "    ./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2017.dat $ISFASTSIM"
+./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2017.dat $ISFASTSIM
 
 # Perform Skim
 root -l -b -q skimBaby.C++'("'${SAMPLE_NAME}_${IMERGED}.root'", "'${OUTPUT_NAMES[1]}'")'
