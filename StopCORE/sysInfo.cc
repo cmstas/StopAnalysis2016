@@ -372,7 +372,8 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   h_sig_counter = NULL;
   h_sig_counter_nEvents = NULL;
   h_bkg_counter = NULL;
-  h_cr2lTrigger_sf = NULL;
+  h_cr2lTrigger_sf_el = NULL;
+  h_cr2lTrigger_sf_mu = NULL;
 
   // Get Signal XSection File
   if( sample_info->isSignal ){
@@ -382,8 +383,11 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
   // Get SR trigger histos
   if( !sample_info->isData ){
-    f_cr2lTrigger_sf = new TFile("../StopCORE/inputs/trigger/triggerefficiency_2lCR.root","read");
-    h_cr2lTrigger_sf = (TH2D*)f_cr2lTrigger_sf->Get("twoDefficiencypass");
+    //f_cr2lTrigger_sf = new TFile("../StopCORE/inputs/trigger/triggerefficiency_2lCR.root","read");
+    //h_cr2lTrigger_sf = (TH2D*)f_cr2lTrigger_sf->Get("twoDefficiencypass");
+    f_cr2lTrigger_sf = new TFile("../StopCORE/inputs/trigger/TriggerEff_2016.root","read");
+    h_cr2lTrigger_sf_el = (TEfficiency*)f_cr2lTrigger_sf->Get("Efficiency_ge2l_metrl_el");
+    h_cr2lTrigger_sf_mu = (TEfficiency*)f_cr2lTrigger_sf->Get("Efficiency_ge2l_metrl_mu");
   }
 
   // Initialize bTag SF machinery
@@ -569,8 +573,8 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   // top pT Reweighting
   getTopPtWeight( sf_topPt, sf_topPt_up, sf_topPt_dn );
 
-  // MET resolution scale factors
-  getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
+  // MET resolution scale factors - moved to looper level
+  //getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
   
   // ttbar system pT scale factor 
   getTTbarSysPtSF( sf_ttbarSysPt, sf_ttbarSysPt_up, sf_ttbarSysPt_dn );
@@ -642,8 +646,8 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   evt_wgt *= wgt_topPt;
   
   // Apply met resolution sf
-  double wgt_metRes = sf_metRes;
-  evt_wgt *= wgt_metRes;
+  //double wgt_metRes = sf_metRes;
+  //evt_wgt *= wgt_metRes;
     
   // Apply ttbar system pT SF (will be 1 if not ttbar/tW 2l) 
   double wgt_ttbarSysPt = sf_ttbarSysPt;
@@ -748,12 +752,12 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 
     // MetRes SF Up
     else if( iSys==k_metResUp ){
-      sys_wgt *= sf_metRes_up/wgt_metRes;
+      //sys_wgt *= sf_metRes_up/wgt_metRes;
     }
 
     // MetRes SF Dn
     else if( iSys==k_metResDown ){
-      sys_wgt *= sf_metRes_dn/wgt_metRes;
+      //sys_wgt *= sf_metRes_dn/wgt_metRes;
     }
 
     // TTbar/tW System pT Up
@@ -984,7 +988,7 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 }
 
 //////////////////////////////////////////////////////////////////////
-
+/*
 void sysInfo::evtWgtInfo::getCR2lTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn ){
 
   wgt_trigger = 1.0;
@@ -1046,6 +1050,62 @@ void sysInfo::evtWgtInfo::getCR2lTriggerWeight( double &wgt_trigger, double &wgt
 }
 
 //////////////////////////////////////////////////////////////////////
+*/
+
+void sysInfo::evtWgtInfo::getCR2lTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn ){
+
+  wgt_trigger = 1.0;
+  wgt_trigger_up = 1.0;
+  wgt_trigger_dn = 1.0;
+
+  if( !apply_cr2lTrigger_sf ) return;
+
+  if( sample_info->isData ) return;
+
+  if( !add2ndLepToMet ) return;
+
+  // Flag for 1 reco lepton events, since there should be no difference
+  //  in the two variables since pfmet_rl is initialized with pfmet
+  double eps=0.001;
+  if( babyAnalyzer.pfmet()<(babyAnalyzer.pfmet_rl()+eps) &&
+      babyAnalyzer.pfmet()>(babyAnalyzer.pfmet_rl()-eps)    ) return;
+
+  double sf_val    = 1.0;
+  double sf_err_up = 0.0;
+  double sf_err_dn = 0.0;
+
+  double met = babyAnalyzer.pfmet_rl();
+  double max_met = 499.9;
+  double min_met = 250.1;
+  met = std::min( std::max(met,min_met), max_met );
+
+  double lep_pt = babyAnalyzer.lep1_p4().Pt();
+  double max_lep = 49.9;
+  double min_lep = 20.1;
+  lep_pt = std::min( std::max(lep_pt,min_lep), max_lep );
+
+  if( abs(babyAnalyzer.lep1_pdgid())==11 ){
+    int bin   = h_cr2lTrigger_sf_el->FindFixBin( lep_pt, met );
+    sf_val    = h_cr2lTrigger_sf_el->GetEfficiency( bin );
+    sf_err_up = h_cr2lTrigger_sf_el->GetEfficiencyErrorUp( bin );
+    sf_err_dn = h_cr2lTrigger_sf_el->GetEfficiencyErrorLow( bin );
+  }
+  if( abs(babyAnalyzer.lep1_pdgid())==13 ){
+    int bin   = h_cr2lTrigger_sf_mu->FindFixBin( lep_pt, met );
+    sf_val    = h_cr2lTrigger_sf_mu->GetEfficiency( bin );
+    sf_err_up = h_cr2lTrigger_sf_mu->GetEfficiencyErrorUp( bin );
+    sf_err_dn = h_cr2lTrigger_sf_mu->GetEfficiencyErrorLow( bin );
+  }
+ 
+  wgt_trigger = sf_val;
+  wgt_trigger_up = sf_val + sf_err_up;
+  wgt_trigger_dn = sf_val - sf_err_dn;
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 
 void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ){
 
@@ -1417,20 +1477,15 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   weight_metRes_dn = 1.0;
 
   if(!apply_metRes_sf) return;
-  
-  double met = babyAnalyzer.pfmet();
-  if(add2ndLepToMet) met = babyAnalyzer.pfmet_rl();
 
-  double mt2w = babyAnalyzer.MT2W();
-  if(add2ndLepToMet) mt2w = babyAnalyzer.MT2W_rl();
 
   double sf_val = 1.0;
   double sf_err = 0.0;
-
+  
   if( sample_info->isData ) return;
   if( sample_info->isSignal ) return;
 
-  // ttbar, tW, and wJets only
+  // ttbar, tW
   if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext4 &&
       sample_info->id != sampleInfo::k_ttbar_madgraph_pythia8 &&
@@ -1441,128 +1496,321 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
-      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_amcnlo_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT600ToInf_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_WNJetsToLNu_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_W1JetsToLNu_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_W2JetsToLNu_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_W3JetsToLNu_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_W4JetsToLNu_madgraph_pythia8 && 
-      sample_info->id != sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 &&
-      sample_info->id != sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8    ) return;
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 
+      ) return;
   
 
-  if( babyAnalyzer.ngoodjets()==2 ){
+  // 2lep events only
+  if( !babyAnalyzer.is2lep() ) return;
 
+
+
+  // nJets bin
+  int nJets = babyAnalyzer.ngoodjets();  
+  //in case of evaluating for JES variatione events, use nominal nJets, is <2, then use 2jet 
+  if( nJets<2 ) nJets = 2;
+
+  
+  // modTopness bin
+  double modTop = babyAnalyzer.topnessMod();
+  if( add2ndLepToMet ) modTop = babyAnalyzer.topnessMod_rl();
+
+  
+  // mlb bin
+  double mlb = babyAnalyzer.Mlb_closestb();
+  int nMedBTags = babyAnalyzer.ngoodbtags();
+  
+  int nTightTags = 0;
+  double tight_wp = 0.935;
+  vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
+  for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+    if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
+  }
+  bool is0b = ( (nMedBTags==0) || (nMedBTags>=1 && nTightTags==0 && mlb>175.0) );
+  if( is0b ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_leadbtag_p4() ).M();
+ 
+
+  // Met bin
+  double met = babyAnalyzer.pfmet();
+  if(add2ndLepToMet) met = babyAnalyzer.pfmet_rl();
+  
+  // in case of evaluating for JES variation events, then use nominal pfmet, and if nominal<250, use lowest met bin
+  if( met<250.0 ) met = 250.0;
+  
+
+  
+  
+  
+  //
+  // Find SF
+  //
+
+  // Region A
+  if( nJets<4 && modTop>=10 && mlb<175 ){
+  
     if( met>=250.0 && met<350.0 ){
-      sf_val = 1.080;
-      sf_err = 0.007;
+      sf_val = 0.98;
+      sf_err = 0.01;
     }
-
+  
     if( met>=350.0 && met<450.0 ){
-      sf_val = 0.895;
-      sf_err = 0.011;
+      sf_val = 1.07;
+      sf_err = 0.01;
     }
-
-    if( met>=450.0 ){
-      sf_val = 0.679;
-      sf_err = 0.046;
+  
+    if( met>=450.0 && met<600.0 ){
+      sf_val = 1.14;
+      sf_err = 0.02;
     }
+  
+    if( met>=600.0 ){
+      sf_val = 1.24;
+      sf_err = 0.03;
+    }
+    
+  } // end if region A
 
-  } // end if nJets==2
 
-  if( babyAnalyzer.ngoodjets()==3 ){
+  // Region B
+  if( nJets<4 && modTop>=10 && mlb>=175 ){
+  
+    if( met>=250.0 && met<450.0 ){
+      sf_val = 0.99;
+      sf_err = 0.00;
+    }
+    
+    if( met>=450.0 && met<600.0 ){
+      sf_val = 1.14;
+      sf_err = 0.02;
+    }
+  
+    if( met>=600.0 ){
+      sf_val = 1.24;
+      sf_err = 0.03;
+    }
+    
+  } // end if region B
 
+
+  // Region C
+  if( nJets>=4 && modTop<0.0 && mlb<175 ){
+    
     if( met>=250.0 && met<350.0 ){
-      sf_val = 1.066;
-      sf_err = 0.024;
+      sf_val = 0.98;
+      sf_err = 0.01;
     }
-
+    
     if( met>=350.0 && met<450.0 ){
-      sf_val = 0.976;
-      sf_err = 0.073;
+      sf_val = 1.06;
+      sf_err = 0.02;
+    }
+  
+    if( met>=450.0 && met<550.0 ){
+      sf_val = 1.12;
+      sf_err = 0.05;
+    }
+  
+    if( met>=550.0 && met<650.0 ){
+      sf_val = 1.21;
+      sf_err = 0.05;
+    }
+  
+    if( met>=650.0 ){
+      sf_val = 1.18;
+      sf_err = 0.05;
+    }
+      
+  } // end if region C
+
+
+  // Region D
+  if( nJets>=4 && modTop<0.0 && mlb>=175.0 ){
+    
+    if( met>=250.0 && met<350.0 ){
+      sf_val = 0.98;
+      sf_err = 0.01;
+    }
+    
+    if( met>=350.0 && met<450.0 ){
+      sf_val = 1.06;
+      sf_err = 0.02;
     }
 
     if( met>=450.0 && met<550.0 ){
-      sf_val = 0.784;
-      sf_err = 0.022;
+      sf_val = 1.12;
+      sf_err = 0.05;
     }
-    
+
     if( met>=550.0 ){
-      sf_val = 0.664;
-      sf_err = 0.024;
+      sf_val = 1.20;
+      sf_err = 0.04;
+    }
+      
+  } // end if region D
+       
+        
+  // Region E
+  if( nJets>=4 && modTop>=0.0 && modTop<10.0 && mlb<175 ){
+
+    if( met>=250.0 && met<350.0 ){
+      sf_val = 0.97;
+      sf_err = 0.01;
+    }
+    
+    if( met>=350.0 && met<550.0 ){
+      sf_val = 1.08;
+      sf_err = 0.02;
     }
 
-  } // end if nJets==3
-
-  if( babyAnalyzer.ngoodjets()>=4 ){
-
-    if( mt2w<200.0 ){
-
-      if( met>=250.0 && met<350.0 ){
-	sf_val = 1.080;
-	sf_err = 0.015;
-      }
-
-      if( met>=350.0 && met<450.0  ){
-	sf_val = 0.935;
-	sf_err = 0.018;
-      }
-
-      if( met>=450.0 ){
-	sf_val = 0.766;
-	sf_err = 0.020;
-      }
-
-    } // end if MT2W<200.0
+    if( met>=550.0 ){
+      sf_val = 1.13;
+      sf_err = 0.03;
+    }
     
-    if( mt2w>=200.0 ){
-      
-      if( met>=250.0 && met<350.0 ){
-	sf_val = 1.080;
-	sf_err = 0.015;
-      }
+  } // end if region E
 
-      if( met>=350.0 && met<450.0  ){
-	sf_val = 0.935;
-	sf_err = 0.018;
-      }
 
-      if( met>=450.0 && met<550.0  ){
-	sf_val = 0.866;
-	sf_err = 0.028;
-      }
+  // Region F
+  if( nJets>=4 && modTop>=0.0 && modTop<10.0 && mlb<175 ){
 
-      if( met>=550.0 && met<650.0  ){
-	sf_val = 0.766;
-	sf_err = 0.020;
-      }
-
-      if( met>=650.0 ){
-	sf_val = 0.590;
-	sf_err = 0.047;
-      }
-
-    } // end if MT2W>=200.0
+    if( met>=250.0 && met<450.0 ){
+      sf_val = 0.99;
+      sf_err = 0.01;
+    }
     
+    if( met>=450.0 ){
+      sf_val = 1.12;
+      sf_err = 0.02;
+    }
+    
+  } // end if region F
 
-  } // end if nJets>=4
-  
+
+  // Region G
+  if( nJets>=4 && modTop>=10.0 && mlb<175 ){
+
+    if( met>=250.0 && met<350.0 ){
+      sf_val = 0.97;
+      sf_err = 0.01;
+    }
+    
+    if( met>=350.0 && met<450.0 ){
+      sf_val = 1.08;
+      sf_err = 0.02;
+    }
+
+    if( met>=450.0 && met<600.0 ){
+      sf_val = 1.12;
+      sf_err = 0.03;
+    }
+
+    if( met>=600.0 ){
+      sf_val = 1.11;
+      sf_err = 0.04;
+    }
+    
+  } // end if region G
+
+
+  // Region H
+  if( nJets>=4 && modTop>=10.0 && mlb>=175 ){
+
+    if( met>=250.0 && met<450.0 ){
+      sf_val = 0.99;
+      sf_err = 0.01;
+    }
+    
+    if( met>=450.0 ){
+      sf_val = 1.12;
+      sf_err = 0.02;
+    }
+    
+  } // end if region H
+
 
   // 50% uncertainty on difference between no sf and applying it
-  sf_err = fabs(0.5*(1.0-sf_val));
+  //sf_err = fabs(0.5*(1.0-sf_val));
+
+  weight_metRes    = sf_val;
+  weight_metRes_up = (sf_val + sf_err);
+  weight_metRes_dn = (sf_val - sf_err);
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void sysInfo::evtWgtInfo::getMetResWeight_corridor( double &weight_metRes, double &weight_metRes_up, double &weight_metRes_dn ){
+
+  weight_metRes    = 1.0;
+  weight_metRes_up = 1.0;
+  weight_metRes_dn = 1.0;
+
+  if(!apply_metRes_sf) return;
+
+
+  double sf_val = 1.0;
+  double sf_err = 0.0;
+  
+  if( sample_info->isData ) return;
+  if( sample_info->isSignal ) return;
+
+  // ttbar, tW
+  if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext4 &&
+      sample_info->id != sampleInfo::k_ttbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 
+      ) return;
+  
+
+  // 2lep events only
+  if( !babyAnalyzer.is2lep() ) return;
+
+
+  // Met bin
+  double met = babyAnalyzer.pfmet();
+  if(add2ndLepToMet) met = babyAnalyzer.pfmet_rl();
+  
+  // in case of evaluating for JES variation events, then use nominal pfmet, and if nominal<250, use lowest met bin
+  if( met<250.0 ) met = 250.0;
+  
+ 
+  
+  //
+  // Find SF
+  //
+  
+  if( met>=250.0 && met<350.0 ){
+    sf_val = 0.97;
+    sf_err = 0.02;
+  }
+  
+  if( met>=350.0 && met<450.0 ){
+    sf_val = 1.05;
+    sf_err = 0.03;
+  }
+  
+  if( met>=450.0 && met<550.0 ){
+    sf_val = 1.14;
+    sf_err = 0.05;
+  }
+  
+  if( met>=600.0 ){
+    sf_val = 1.14;
+    sf_err = 0.06;
+  }
+    
+
+
+  // 50% uncertainty on difference between no sf and applying it
+  //sf_err = fabs(0.5*(1.0-sf_val));
 
   weight_metRes    = sf_val;
   weight_metRes_up = (sf_val + sf_err);
@@ -2040,7 +2288,7 @@ void sysInfo::evtWgtInfo::getISRWeight( double &weight_ISR, double &weight_ISR_u
   if(!apply_ISR_sf) return;
 
   if( sample_info->isData ) return;
-  if( !sample_info->isSignal ) return;
+  //if( !sample_info->isSignal ) return;
 
   weight_ISR    = babyAnalyzer.weight_ISR();
   weight_ISR_up = babyAnalyzer.weight_ISRup();

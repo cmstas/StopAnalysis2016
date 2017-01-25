@@ -113,9 +113,6 @@ namespace stop_1l {
 	const float &weight_ISRnjets_DN() { return babyAnalyzer.weight_ISRnjets_DN(); }
 	const int &NISRjets() { return babyAnalyzer.NISRjets(); }
 	const int &NnonISRjets() { return babyAnalyzer.NnonISRjets(); }
-	const bool &filt_fastsimjets() { return babyAnalyzer.filt_fastsimjets(); }
-	const bool &filt_fastsimjets_jup() { return babyAnalyzer.filt_fastsimjets_jup(); }
-	const bool &filt_fastsimjets_jdown() { return babyAnalyzer.filt_fastsimjets_jdown(); }
 	const vector<string> &sparms_names() { return babyAnalyzer.sparms_names(); }
 	const vector<float> &sparms_values() { return babyAnalyzer.sparms_values(); }
 	const int &sparms_subProcessId() { return babyAnalyzer.sparms_subProcessId(); }
@@ -156,10 +153,7 @@ namespace stop_1l {
 	const int &nPhotons() { return babyAnalyzer.nPhotons(); }
 	const int &ph_ngoodjets() { return babyAnalyzer.ph_ngoodjets(); }
 	const int &ph_ngoodbtags() { return babyAnalyzer.ph_ngoodbtags(); }
-	const float &filt_met() { return babyAnalyzer.filt_met(); }
 	const float &hardgenpt() { return babyAnalyzer.hardgenpt(); }
-	const float &filt_badChargedCandidateFilter() { return babyAnalyzer.filt_badChargedCandidateFilter(); }
-	const float &filt_badMuonFilter() { return babyAnalyzer.filt_badMuonFilter(); }
 	const float &calomet() { return babyAnalyzer.calomet(); }
 	const float &calomet_phi() { return babyAnalyzer.calomet_phi(); }
 	const int &lep1_pdgid() { return babyAnalyzer.lep1_pdgid(); }
@@ -384,4 +378,32 @@ namespace stop_1l {
 	const vector<bool> &isoTracks_isVetoTrack() { return babyAnalyzer.isoTracks_isVetoTrack(); }
 	const vector<bool> &isoTracks_isVetoTrack_v2() { return babyAnalyzer.isoTracks_isVetoTrack_v2(); }
 	const vector<bool> &isoTracks_isVetoTrack_v3() { return babyAnalyzer.isoTracks_isVetoTrack_v3(); }
+	const float &filt_cscbeamhalo() { return babyAnalyzer.filt_cscbeamhalo(); }
+	const float &filt_cscbeamhalo2015() { return babyAnalyzer.filt_cscbeamhalo2015(); }
+	const float &filt_globaltighthalo2016() { return babyAnalyzer.filt_globaltighthalo2016(); }
+	const float &filt_globalsupertighthalo2016() { return babyAnalyzer.filt_globalsupertighthalo2016(); }
+	const float &filt_ecallaser() { return babyAnalyzer.filt_ecallaser(); }
+	const float &filt_ecaltp() { return babyAnalyzer.filt_ecaltp(); }
+	const float &filt_eebadsc() { return babyAnalyzer.filt_eebadsc(); }
+	const float &filt_goodvtx() { return babyAnalyzer.filt_goodvtx(); }
+	const float &filt_badevents() { return babyAnalyzer.filt_badevents(); }
+	const float &filt_hbhenoise() { return babyAnalyzer.filt_hbhenoise(); }
+	const float &filt_hbheisonoise() { return babyAnalyzer.filt_hbheisonoise(); }
+	const float &filt_hcallaser() { return babyAnalyzer.filt_hcallaser(); }
+	const float &filt_trkfail() { return babyAnalyzer.filt_trkfail(); }
+	const float &filt_trkPOG() { return babyAnalyzer.filt_trkPOG(); }
+	const float &filt_trkPOG_logerr_tmc() { return babyAnalyzer.filt_trkPOG_logerr_tmc(); }
+	const float &filt_trkPOG_tmc() { return babyAnalyzer.filt_trkPOG_tmc(); }
+	const float &filt_trkPOG_tms() { return babyAnalyzer.filt_trkPOG_tms(); }
+	const int &firstGoodVtxIdx() { return babyAnalyzer.firstGoodVtxIdx(); }
+	const float &filt_badChargedCandidateFilter() { return babyAnalyzer.filt_badChargedCandidateFilter(); }
+	const float &filt_badMuonFilter() { return babyAnalyzer.filt_badMuonFilter(); }
+	const float &filt_met() { return babyAnalyzer.filt_met(); }
+	const bool &filt_fastsimjets() { return babyAnalyzer.filt_fastsimjets(); }
+	const bool &filt_fastsimjets_jup() { return babyAnalyzer.filt_fastsimjets_jup(); }
+	const bool &filt_fastsimjets_jdown() { return babyAnalyzer.filt_fastsimjets_jdown(); }
+	const bool &filt_jetWithBadMuon() { return babyAnalyzer.filt_jetWithBadMuon(); }
+	const bool &filt_jetWithBadMuon_jup() { return babyAnalyzer.filt_jetWithBadMuon_jup(); }
+	const bool &filt_jetWithBadMuon_jdown() { return babyAnalyzer.filt_jetWithBadMuon_jdown(); }
+	const bool &filt_pfovercalomet() { return babyAnalyzer.filt_pfovercalomet(); }
 }

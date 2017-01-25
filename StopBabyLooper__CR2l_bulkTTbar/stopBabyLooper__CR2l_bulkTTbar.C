@@ -1391,6 +1391,13 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
       double mt2w = MT2W();
       if(add2ndLepToMet_) mt2w = MT2W_rl();
+
+
+      double metResSF = 1.0; double metResSF_up = 1.0; double metResSF_dn = 1.0;
+      if(!analyzeFast_ && !sample.isData && apply_metRes_sf_){
+	wgtInfo->getMetResWeight( metResSF, metResSF_up, metResSF_dn );
+      }
+      
       
       /////////////////////
       //                 //
@@ -1427,6 +1434,20 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	
 	      // Event Weight for this Systematic
 	      double wgt = wgtInfo->sys_wgts[systematicList[iSys].id];
+
+	      // metResSFs setup to ==1 if not ttbar/tW->2l
+	      if( systematicList[iSys].id==sysInfo::k_metResUp ){
+		//wgt *= metResSF_up;
+		wgt *= (1.0+(metResSF-1.0));
+	      }
+	      else if( systematicList[iSys].id==sysInfo::k_metResDown ){
+		//wgt *= metResSF_dn;
+		wgt *= (1.0-(metResSF-1.0));
+	      }
+	      else{
+		//wgt *= metResSF;
+	      }
+	    
 
 
 	      // CR2l Bulk TTbar Regions

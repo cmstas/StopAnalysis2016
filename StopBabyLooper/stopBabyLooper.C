@@ -93,7 +93,7 @@ int stopBabyLooper(){
   //sampleList.clear();
   //sampleList.push_back( sampleInfo::k_single_lepton_met );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
-  //sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 ); 
+  //sampleList.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM ); 
   //sampleList.push_back( sampleInfo::k_T2tt ); 
   
 
@@ -1478,16 +1478,16 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
     if(readFast) TTreeCache::SetLearnEntries(10);
     if(readFast) tree->SetCacheSize(128*1024*1024);
     babyAnalyzer.Init(tree);
-
+    
     // Get weight histogram from baby
     wgtInfo->getWeightHistogramFromBaby( file );
-            
+    
     // Loop over Events in current file
     if( nEventsTotal >= nEventsChain ) continue;
     unsigned int nEventsTree = tree->GetEntriesFast();
     for( unsigned int event = 0; event < nEventsTree; ++event) {
 
-
+      
       ///////////////////////
       //                   //
       // Get Event Content //
@@ -1641,7 +1641,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       // Check Yield Cateogries //
       //                        //
       ////////////////////////////
-   
+      /*
       // ICHEP 12.9fb Singal Regions
       passCats_ICHEP.clear(); 
       passCats_ICHEP_jup.clear();
@@ -1656,17 +1656,17 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       passCats_dev_ext30fb_mlb_v1.clear(); 
       passCats_dev_ext30fb_mlb_v1_jup.clear();
       passCats_dev_ext30fb_mlb_v1_jdown.clear();
-    
+      */
       // ICHEP extended to 30fb, with mlb with tight bTag bins Singal Regions
       passCats_dev_ext30fb_mlb_v2.clear(); 
       passCats_dev_ext30fb_mlb_v2_jup.clear();
       passCats_dev_ext30fb_mlb_v2_jdown.clear();
-    
+      /*
       // ICHEP extended to 30fb, with bJetPt bins Singal Regions
       passCats_dev_ext30fb_bJetPt_v1.clear(); 
       passCats_dev_ext30fb_bJetPt_v1_jup.clear();
       passCats_dev_ext30fb_bJetPt_v1_jdown.clear();
-    
+      */
       // Top Corridor Singal Regions
       passCats_corridor.clear(); 
       passCats_corridor_jup.clear();
@@ -1674,29 +1674,29 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
       
       if( passNominal ){
-	passCats_ICHEP = categoryInfo::passCategory_SR_ICHEP(0, add2ndLepToMet_);
-	passCats_ICHEP_ext30fb = categoryInfo::passCategory_SR_ICHEP_ext30fb(0, add2ndLepToMet_);
-	passCats_dev_ext30fb_mlb_v1 = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(0, add2ndLepToMet_);
+	//passCats_ICHEP = categoryInfo::passCategory_SR_ICHEP(0, add2ndLepToMet_);
+	//passCats_ICHEP_ext30fb = categoryInfo::passCategory_SR_ICHEP_ext30fb(0, add2ndLepToMet_);
+	//passCats_dev_ext30fb_mlb_v1 = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(0, add2ndLepToMet_);
 	passCats_dev_ext30fb_mlb_v2 = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(0, add2ndLepToMet_);
-	passCats_dev_ext30fb_bJetPt_v1 = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(0, add2ndLepToMet_);
+	//passCats_dev_ext30fb_bJetPt_v1 = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(0, add2ndLepToMet_);
 	passCats_corridor = categoryInfo::passCategory_SR_corridor(0, add2ndLepToMet_);
       }
       // No JES for data
       if( !sample.isData && !analyzeFast_){
 	if( passJesUp ){
-	  passCats_ICHEP_jup = categoryInfo::passCategory_SR_ICHEP(1, add2ndLepToMet_);
-	  passCats_ICHEP_ext30fb_jup = categoryInfo::passCategory_SR_ICHEP_ext30fb(1, add2ndLepToMet_);
-	  passCats_dev_ext30fb_mlb_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(1, add2ndLepToMet_);
+	  //passCats_ICHEP_jup = categoryInfo::passCategory_SR_ICHEP(1, add2ndLepToMet_);
+	  //passCats_ICHEP_ext30fb_jup = categoryInfo::passCategory_SR_ICHEP_ext30fb(1, add2ndLepToMet_);
+	  //passCats_dev_ext30fb_mlb_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(1, add2ndLepToMet_);
 	  passCats_dev_ext30fb_mlb_v2_jup = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(1, add2ndLepToMet_);
-	  passCats_dev_ext30fb_bJetPt_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(1, add2ndLepToMet_);
+	  //passCats_dev_ext30fb_bJetPt_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(1, add2ndLepToMet_);
 	  passCats_corridor_jup = categoryInfo::passCategory_SR_corridor(1, add2ndLepToMet_);
 	}
 	if( passJesDown ){
-	  passCats_ICHEP_jdown = categoryInfo::passCategory_SR_ICHEP(-1, add2ndLepToMet_);
-	  passCats_ICHEP_ext30fb_jdown = categoryInfo::passCategory_SR_ICHEP_ext30fb(-1, add2ndLepToMet_);
-	  passCats_dev_ext30fb_mlb_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(-1, add2ndLepToMet_);
+	  //passCats_ICHEP_jdown = categoryInfo::passCategory_SR_ICHEP(-1, add2ndLepToMet_);
+	  //passCats_ICHEP_ext30fb_jdown = categoryInfo::passCategory_SR_ICHEP_ext30fb(-1, add2ndLepToMet_);
+	  //passCats_dev_ext30fb_mlb_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(-1, add2ndLepToMet_);
 	  passCats_dev_ext30fb_mlb_v2_jdown = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(-1, add2ndLepToMet_);
-	  passCats_dev_ext30fb_bJetPt_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(-1, add2ndLepToMet_);
+	  //passCats_dev_ext30fb_bJetPt_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(-1, add2ndLepToMet_);
 	  passCats_corridor_jdown = categoryInfo::passCategory_SR_corridor(-1, add2ndLepToMet_);
 	}
       } // end if not data or analyzeFast
@@ -1913,6 +1913,15 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       int mStop = mass_stop();
       int mLSP  = mass_lsp();
 
+      double metResSF = 1.0; double metResSF_up = 1.0; double metResSF_dn = 1.0;
+      double metResSF_corr = 1.0; double metResSF_corr_up = 1.0; double metResSF_corr_dn = 1.0;
+      
+      if(!analyzeFast_ && !sample.isData && apply_metRes_sf_){
+	wgtInfo->getMetResWeight( metResSF, metResSF_up, metResSF_dn );
+	wgtInfo->getMetResWeight_corridor( metResSF_corr, metResSF_corr_up, metResSF_corr_dn );
+      }
+      
+      
       for(int iReg=0; iReg<nRegions; iReg++){
    
 	if( !pass_evtSel[iReg] && 
@@ -1937,8 +1946,27 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    
 	    // Event Weight for this Systematic
 	    double wgt = wgtInfo->sys_wgts[systematicList[iSys].id];
+	    double wgt_corridor = wgt;
 
-
+	    // metResSFs setup to ==1 if not ttbar/tW->2l
+	    if( systematicList[iSys].id==sysInfo::k_metResUp ){
+	      //wgt *= metResSF_up;
+	      //wgt_corridor *= metResSF_corr_up;
+	      wgt *= (1.0+(metResSF-1.0));
+	      wgt_corridor *= (1.0+(metResSF_corr-1.0));
+	    }
+	    else if( systematicList[iSys].id==sysInfo::k_metResDown ){
+	      //wgt *= metResSF_dn;
+	      //wgt_corridor *= metResSF_corr_dn;
+	      wgt *= (1.0-(metResSF-1.0));
+	      wgt_corridor *= (1.0-(metResSF_corr-1.0));
+	    }
+	    else{
+	      //wgt *= metResSF;
+	      //wgt_corridor *= metResSF_corr;
+	    }
+	    
+	    /*
 	    // ICHEP Signal Regions
 	    if( sample.isSignalScan ){
 	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP_jup,   mStop, mLSP, wgt );
@@ -1976,8 +2004,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jdown, wgt );
 	      else fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1, wgt );
 	    }
+	    */
 	    
-  
 	    // Dev Signal Regions, extened to 30fb, with mlb bins with tight bTagging
 	    int nTightTags = nTightTags_nominal;
 	    if( systematicList[iSys].id==sysInfo::k_JESUp )   nTightTags = nTightTags_jesup;
@@ -1997,7 +2025,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      }
 	    }
 
-
+	    /*
 	    // Dev Signal Regions, extened to 30fb, with bJetPt bins
 	    if( sample.isSignalScan ){
 	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1_jup,   mStop, mLSP, wgt );
@@ -2009,18 +2037,18 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jdown, wgt );
 	      else fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1, wgt );
 	    }
-
+	    */
 
 	    // Corridor Signal Regions
 	    if( sample.isSignalScan ){
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jup,   mStop, mLSP, wgt );
-	      if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jdown, mStop, mLSP, wgt );
-	      else fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor, mStop, mLSP, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jup,   mStop, mLSP, wgt_corridor );
+	      if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jdown, mStop, mLSP, wgt_corridor );
+	      else fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor, mStop, mLSP, wgt_corridor );
 	    }
 	    else{
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_corridor[iHisto], passCats_corridor_jup, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_corridor[iHisto], passCats_corridor_jdown, wgt );
-	      else fillHistos( h_yields_corridor[iHisto], passCats_corridor, wgt );
+	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_corridor[iHisto], passCats_corridor_jup, wgt_corridor );
+	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_corridor[iHisto], passCats_corridor_jdown, wgt_corridor );
+	      else fillHistos( h_yields_corridor[iHisto], passCats_corridor, wgt_corridor );
 	    }
 
 

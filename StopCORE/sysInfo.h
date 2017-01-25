@@ -13,7 +13,9 @@
 // ROOT
 #include "TFile.h"
 #include "TH1.h"
+#include "TH2.h"
 #include "TH3.h"
+#include "TEfficiency.h"
 #include "Math/GenVector/VectorUtil.h"
 
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
@@ -128,8 +130,10 @@ namespace sysInfo{
   
     // SR trigger efficiency histos
     TFile *f_cr2lTrigger_sf;
-    TH2D *h_cr2lTrigger_sf;
-
+    TEfficiency *h_cr2lTrigger_sf_el;
+    TEfficiency *h_cr2lTrigger_sf_mu;
+    //TH2D *h_cr2lTrigger_sf;
+    
     // bTag machinery
     bool useBTagSFs_fromUtils;
     //eventWeight_bTagSF *bTagSFUtil;
@@ -278,6 +282,8 @@ namespace sysInfo{
     void getTopPtWeight( double &weight_topPt, double &weight_topPt_up, double &weight_topPt_dn );
 
     void getMetResWeight( double &weight_metRes, double &weight_metRes_up, double &weight_metRes_dn );
+    
+    void getMetResWeight_corridor( double &weight_metRes, double &weight_metRes_up, double &weight_metRes_dn );
 
     void getTTbarSysPtSF( double &weight_ttbarSysPt, double &weight_ttbarSysPt_up, double &weight_ttbarSysPt_dn );
 

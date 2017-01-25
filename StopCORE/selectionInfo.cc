@@ -80,9 +80,14 @@ std::vector<bool> selectionInfo::get_selectionResults_SR(int jesType){
   temp_result=false;
   if( !babyAnalyzer.is_data() ) temp_result=true;
   else{
-    if( babyAnalyzer.filt_met() &&
-	babyAnalyzer.filt_badChargedCandidateFilter() &&
-	babyAnalyzer.filt_badMuonFilter()                ) temp_result=true;
+    //if( babyAnalyzer.filt_met() &&
+    //babyAnalyzer.filt_badChargedCandidateFilter() &&
+    //babyAnalyzer.filt_badMuonFilter()                ) temp_result=true;
+    if( babyAnalyzer.filt_met() && 
+	babyAnalyzer.filt_badChargedCandidateFilter() && 
+	babyAnalyzer.filt_jetWithBadMuon() &&
+	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
+    
   }
   result.push_back(temp_result);
 
@@ -93,7 +98,8 @@ std::vector<bool> selectionInfo::get_selectionResults_SR(int jesType){
   else{
     if( (babyAnalyzer.HLT_SingleEl() && abs(babyAnalyzer.lep1_pdgid())==11) ||
 	(babyAnalyzer.HLT_SingleMu() && abs(babyAnalyzer.lep1_pdgid())==13) ||
-	(babyAnalyzer.HLT_MET())        ) temp_result = true;
+	(babyAnalyzer.HLT_MET()) ||
+	(babyAnalyzer.HLT_MET100_MHT100()) ) temp_result = true;
   }
   result.push_back(temp_result);
 
@@ -296,9 +302,13 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b(int jesType){
   temp_result=false;
   if( !babyAnalyzer.is_data() ) temp_result=true;
   else{
-    if( babyAnalyzer.filt_met() &&
-	babyAnalyzer.filt_badChargedCandidateFilter() &&
-	babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
+    //if( babyAnalyzer.filt_met() &&
+    //babyAnalyzer.filt_badChargedCandidateFilter() &&
+    //babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
+    if( babyAnalyzer.filt_met() && 
+	babyAnalyzer.filt_badChargedCandidateFilter() && 
+	babyAnalyzer.filt_jetWithBadMuon() &&
+	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
   }
   result.push_back(temp_result);
 
@@ -309,7 +319,8 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b(int jesType){
   else{
     if( (babyAnalyzer.HLT_SingleEl() && abs(babyAnalyzer.lep1_pdgid())==11) ||
 	(babyAnalyzer.HLT_SingleMu() && abs(babyAnalyzer.lep1_pdgid())==13) ||
-	(babyAnalyzer.HLT_MET())        ) temp_result = true;
+	(babyAnalyzer.HLT_MET()) ||
+	(babyAnalyzer.HLT_MET100_MHT100())         ) temp_result = true;
   }
   result.push_back(temp_result);
 
@@ -513,9 +524,13 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(int 
   temp_result=false;
   if( !babyAnalyzer.is_data() ) temp_result=true;
   else{
-    if( babyAnalyzer.filt_met() &&
-	babyAnalyzer.filt_badChargedCandidateFilter() &&
-	babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
+    //if( babyAnalyzer.filt_met() &&
+    //babyAnalyzer.filt_badChargedCandidateFilter() &&
+    //babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
+    if( babyAnalyzer.filt_met() && 
+	babyAnalyzer.filt_badChargedCandidateFilter() && 
+	babyAnalyzer.filt_jetWithBadMuon() &&
+	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
   }
   result.push_back(temp_result);
 
@@ -526,7 +541,8 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(int 
   else{
     if( (babyAnalyzer.HLT_SingleEl() && abs(babyAnalyzer.lep1_pdgid())==11) ||
 	(babyAnalyzer.HLT_SingleMu() && abs(babyAnalyzer.lep1_pdgid())==13) ||
-	(babyAnalyzer.HLT_MET())        ) temp_result = true;
+	(babyAnalyzer.HLT_MET()) ||
+	(babyAnalyzer.HLT_MET100_MHT100())        ) temp_result = true;
   }
   result.push_back(temp_result);
 
@@ -737,9 +753,13 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
   temp_result=false;
   if( !babyAnalyzer.is_data() ) temp_result=true;
   else{
-    if( babyAnalyzer.filt_met() &&
-	babyAnalyzer.filt_badChargedCandidateFilter() &&
-	babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
+    //if( babyAnalyzer.filt_met() &&
+    //babyAnalyzer.filt_badChargedCandidateFilter() &&
+    //babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
+    if( babyAnalyzer.filt_met() && 
+	babyAnalyzer.filt_badChargedCandidateFilter() && 
+	babyAnalyzer.filt_jetWithBadMuon() &&
+	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
   }
   result.push_back(temp_result);
 
@@ -750,7 +770,8 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
   else{
     if( ( babyAnalyzer.HLT_SingleEl() && (abs(babyAnalyzer.lep1_pdgid())==11 || abs(babyAnalyzer.lep2_pdgid())==11) ) ||
 	( babyAnalyzer.HLT_SingleMu() && (abs(babyAnalyzer.lep1_pdgid())==13 || abs(babyAnalyzer.lep2_pdgid())==13) ) ||
-	( babyAnalyzer.HLT_MET())        ) temp_result = true;
+	( babyAnalyzer.HLT_MET()) ||
+	( babyAnalyzer.HLT_MET100_MHT100()) ) temp_result = true;
   }
   result.push_back(temp_result);
 
@@ -993,9 +1014,13 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
   temp_result=false;
   if( !babyAnalyzer.is_data() ) temp_result=true;
   else{
-    if( babyAnalyzer.filt_met() &&
-	babyAnalyzer.filt_badChargedCandidateFilter() &&
-	babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
+    //if( babyAnalyzer.filt_met() &&
+    //babyAnalyzer.filt_badChargedCandidateFilter() &&
+    //babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
+    if( babyAnalyzer.filt_met() && 
+	babyAnalyzer.filt_badChargedCandidateFilter() && 
+	babyAnalyzer.filt_jetWithBadMuon() &&
+	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
   }
   result.push_back(temp_result);
 
@@ -1022,6 +1047,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
 
   // 4) diLepton
   temp_result=false;
+  /*
   if( babyAnalyzer.lep1_p4().Pt()>30.0 && 
       babyAnalyzer.lep2_p4().Pt()>15.0 &&
       babyAnalyzer.lep1_MiniIso()<0.1 &&
@@ -1037,6 +1063,23 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
 	 fabs(babyAnalyzer.lep2_p4().Eta())<1.4442 && 
 	 babyAnalyzer.lep2_passMediumID()             ) )    ) temp_result = true;
   result.push_back(temp_result);
+  */
+  if( babyAnalyzer.lep1_p4().Pt()>30.0 && 
+      babyAnalyzer.lep2_p4().Pt()>15.0 &&
+      babyAnalyzer.lep1_MiniIso()<0.1 &&
+      babyAnalyzer.lep2_MiniIso()<0.1 &&
+      ( (abs(babyAnalyzer.lep1_pdgid())==13 && 
+	 babyAnalyzer.lep1_passMediumID()        ) || 
+	(abs(babyAnalyzer.lep1_pdgid())==11 && 
+	 fabs(babyAnalyzer.lep1_p4().Eta())<1.4442 && 
+	 babyAnalyzer.lep1_passMediumID()             ) ) &&
+      ( (abs(babyAnalyzer.lep2_pdgid())==13 && 
+	 babyAnalyzer.lep2_passMediumID()       ) || 
+	(abs(babyAnalyzer.lep2_pdgid())==11 && 
+	 fabs(babyAnalyzer.lep2_p4().Eta())<1.4442 && 
+	 babyAnalyzer.lep2_passMediumID()             ) )    ) temp_result = true;
+  result.push_back(temp_result);
+
 
 
   // 5) Opposite sign charge leptons

@@ -16,11 +16,12 @@ namespace sampleInfo{
   // NAMESPACE VARS
   //
   
-  const std::string baby_inputDir = "/nfs-6/userdata/dsklein/stop-babies/skims_minDPhi05_v11/";
+  const std::string baby_inputDir = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v18/skim/"; // 2017Moriond MC
+
+  //const std::string baby_inputDir = "/nfs-6/userdata/dsklein/stop-babies/skims_minDPhi05_v11/"; // First stable skim for main + corridor
   
-  //const std::string baby_inputDir = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v11/skim/";
-  //const std::string baby_inputDir = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v11/output/";
-  
+  //const std::string baby_inputDir = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v11/skim/"; // First draft of AN
+    
   //const std::string baby_inputDir = "/nfs-7/userdata/stopRun2/analysis2016__SUS-16-028__12p9fb/stopBabies__v8.0.x_v8__20160729/Nominal/"; // 12.9/fb ICHEP results
   
   const std::string baby_outputDir = "Output/Histos/";

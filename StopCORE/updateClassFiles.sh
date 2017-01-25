@@ -1,7 +1,8 @@
 #! /bin/bash
 
 # This will track the settings used in the makeCMS3ClassFiles.C
-UPDATED_BABY_FILE=/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v16_Moriond17MC/skim/ttbar_diLept_madgraph_pythia8_ext1_25ns.root
+UPDATED_BABY_FILE=/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v18/skim/ttbar_diLept_madgraph_pythia8_ext1_25ns.root
+#UPDATED_BABY_FILE=/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v16_Moriond17MC/skim/ttbar_diLept_madgraph_pythia8_ext1_25ns.root
 #UPDATED_BABY_FILE=/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v11/skim/ttbar_diLept_madgraph_pythia8_ext1_25ns.root
 #UPDATED_BABY_FILE=/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v8.0x_v10/output/ttbar_diLept_madgraph_pythia8_ext1_25ns.root
 #UPDATED_BABY_FILE=/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v10/output/ttbar_diLept_madgraph_pythia8_ext1_25ns.root
