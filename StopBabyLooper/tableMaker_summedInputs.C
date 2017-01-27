@@ -33,7 +33,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
   //
   // Configuration Variables
   //
-  bool blindSR = true;
+  bool blindSR = false;
 
   bool usePsuedoData = false;
 
