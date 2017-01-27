@@ -270,7 +270,7 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
   std::vector< std::vector<yieldHelper> > fileList;
   std::vector<yieldHelper> catList;
   yieldHelper cat;
-  
+  /*
   //
   // Yields, 2016 ICHEP, 12.9fb
   //
@@ -457,7 +457,7 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
     
   fileList.push_back( catList );
   catList.clear();
-
+  */
 
   //
   // Yields, dev ext30fb, mlb with tight bTagging
@@ -537,8 +537,8 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
   fileList.push_back( catList );
   catList.clear();
 
-
-
+  
+  /*
   //
   // Yields, dev ext30fb, lead bJet pT
   //
@@ -620,7 +620,7 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
     
   fileList.push_back( catList );
   catList.clear();
-
+  */
 
   //
   // Yields, Top Corridor

@@ -81,11 +81,11 @@ std::vector<bool> selectionInfo::get_selectionResults_SR(int jesType){
   if( !babyAnalyzer.is_data() ) temp_result=true;
   else{
     //if( babyAnalyzer.filt_met() &&
-    //babyAnalyzer.filt_badChargedCandidateFilter() &&
-    //babyAnalyzer.filt_badMuonFilter()                ) temp_result=true;
+    //	babyAnalyzer.filt_badChargedCandidateFilter() &&
+    //	babyAnalyzer.filt_badMuonFilter()                ) temp_result=true;
     if( babyAnalyzer.filt_met() && 
-	babyAnalyzer.filt_badChargedCandidateFilter() && 
-	babyAnalyzer.filt_jetWithBadMuon() &&
+    	babyAnalyzer.filt_badChargedCandidateFilter() && 
+    	babyAnalyzer.filt_jetWithBadMuon() &&
 	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
     
   }
@@ -306,9 +306,9 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b(int jesType){
     //babyAnalyzer.filt_badChargedCandidateFilter() &&
     //babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
     if( babyAnalyzer.filt_met() && 
-	babyAnalyzer.filt_badChargedCandidateFilter() && 
-	babyAnalyzer.filt_jetWithBadMuon() &&
-	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
+    	babyAnalyzer.filt_badChargedCandidateFilter() && 
+    	babyAnalyzer.filt_jetWithBadMuon() &&
+    	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
   }
   result.push_back(temp_result);
 
@@ -528,9 +528,9 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(int 
     //babyAnalyzer.filt_badChargedCandidateFilter() &&
     //babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
     if( babyAnalyzer.filt_met() && 
-	babyAnalyzer.filt_badChargedCandidateFilter() && 
-	babyAnalyzer.filt_jetWithBadMuon() &&
-	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
+    	babyAnalyzer.filt_badChargedCandidateFilter() && 
+    	babyAnalyzer.filt_jetWithBadMuon() &&
+    	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
   }
   result.push_back(temp_result);
 
@@ -610,6 +610,10 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(int 
   // 9) nTagJets==0, include tight tagging requirement for high mlb bins
   temp_result=false;
 
+  int nTightTags = babyAnalyzer.ntightbtags();
+  if(jesType==1)  nTightTags = babyAnalyzer.jup_ntightbtags();
+  if(jesType==-1) nTightTags = babyAnalyzer.jdown_ntightbtags();
+  /*
   int nTightTags = 0;
   double tight_wp = 0.935;
   vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
@@ -618,6 +622,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(int 
   for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
     if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
   }
+  */
 
   int nMedTags = babyAnalyzer.ngoodbtags();
   if(jesType==1)  nMedTags = babyAnalyzer.jup_ngoodbtags();
@@ -757,9 +762,9 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
     //babyAnalyzer.filt_badChargedCandidateFilter() &&
     //babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
     if( babyAnalyzer.filt_met() && 
-	babyAnalyzer.filt_badChargedCandidateFilter() && 
-	babyAnalyzer.filt_jetWithBadMuon() &&
-	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
+    	babyAnalyzer.filt_badChargedCandidateFilter() && 
+    	babyAnalyzer.filt_jetWithBadMuon() &&
+    	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
   }
   result.push_back(temp_result);
 
@@ -1019,8 +1024,8 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
     //babyAnalyzer.filt_badMuonFilter()                 ) temp_result=true;
     if( babyAnalyzer.filt_met() && 
 	babyAnalyzer.filt_badChargedCandidateFilter() && 
-	babyAnalyzer.filt_jetWithBadMuon() &&
-	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
+    	babyAnalyzer.filt_jetWithBadMuon() &&
+    	babyAnalyzer.filt_pfovercalomet()                 ) temp_result=true;
   }
   result.push_back(temp_result);
 

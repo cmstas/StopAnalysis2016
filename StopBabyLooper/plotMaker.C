@@ -211,7 +211,7 @@ void plotMaker( bool plotByGenDecay=true ){
   double noRebin_xBinsSF[1]{1.0};   // SFs to keep bins Events/width
 
 
-
+  /*
   // Yields, ICHEP
   var_list_label.push_back( "h_yields_SR_ICHEP" );
   var_list_title.push_back( "ICHEP Yields" );
@@ -276,7 +276,7 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_nBins.push_back(nRebins_yields_SR_dev_ext30fb_mlb_v1);
   var_rebin_xBins.push_back(xRebins_yields_SR_dev_ext30fb_mlb_v1);
   var_rebin_xBinsSF.push_back(xRebinsSF_yields_SR_dev_ext30fb_mlb_v1);
-
+  */
 
   // Yields, dev mlb with tight bTagging
   var_list_label.push_back( "h_yields_SR_dev_ext30fb_mlb_v2" );
@@ -299,7 +299,7 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBins.push_back(xRebins_yields_SR_dev_ext30fb_mlb_v2);
   var_rebin_xBinsSF.push_back(xRebinsSF_yields_SR_dev_ext30fb_mlb_v2);
 
-
+  /*
   // Yields, dev bJetPt
   var_list_label.push_back( "h_yields_SR_dev_ext30fb_bJetPt_v1" );
   var_list_title.push_back( "Yields" );
@@ -320,7 +320,7 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_nBins.push_back(nRebins_yields_SR_dev_ext30fb_bJetPt_v1);
   var_rebin_xBins.push_back(xRebins_yields_SR_dev_ext30fb_bJetPt_v1);
   var_rebin_xBinsSF.push_back(xRebinsSF_yields_SR_dev_ext30fb_bJetPt_v1);
-
+  */
 
   // Yields, dev top corridor
   var_list_label.push_back( "h_yields_SR_corridor" );

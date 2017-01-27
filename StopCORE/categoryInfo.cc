@@ -875,6 +875,10 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   if( jesType==1)  nMedBTags = babyAnalyzer.jup_ngoodbtags();
   if( jesType==-1) nMedBTags = babyAnalyzer.jdown_ngoodbtags();
   
+  int nTightTags = babyAnalyzer.ntightbtags();
+  if(jesType==1)  nTightTags = babyAnalyzer.jup_ntightbtags();
+  if(jesType==-1) nTightTags = babyAnalyzer.jdown_ntightbtags();
+  /*
   int nTightTags = 0;
   double tight_wp = 0.935;
   vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
@@ -883,7 +887,7 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
     if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
   }
-  
+  */
   bool is0b = ( (nMedBTags==0) || (nMedBTags>=1 && nTightTags==0 && mlb>175.0) );
   
   if( is0b ){

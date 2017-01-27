@@ -151,7 +151,7 @@ int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_
   std::vector<yieldHelper> catList;
   yieldHelper cat;
   
-
+  /*
   //
   // Yields, 2016 ICHEP, 12.9fb
   //
@@ -358,7 +358,7 @@ int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_
 
   fileList.push_back( tableList );
   tableList.clear();
-
+  */
 
   //
   // Yields, dev ext30fb, mlb with tight bTagging
@@ -453,7 +453,7 @@ int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_
   fileList.push_back( tableList );
   tableList.clear();
 
-
+  /*
   //
   // Yields, dev ext30fb, lead bJet pT
   //
@@ -552,7 +552,7 @@ int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_
   fileList.push_back( tableList );
   tableList.clear();
 
-  
+  */
 
   //
   // Yields, Top Corridor

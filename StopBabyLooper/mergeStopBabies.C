@@ -91,7 +91,7 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   // DYJets
   addSet.first = sampleInfo::k_DYJetsToLL;
   addSet.second.push_back( mergeUtil(sampleInfo::k_DYJetsToLL_m10To50_amcnlo_pythia8,use_zeroed_samp,false) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_DYJetsToLL_m50_amcnlo_pythia8,use_zeroed_samp,false) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_DYJetsToLL_m50_amcnlo_pythia8,use_zeroed_samp,false) );
   addList.push_back(addSet);
   addSet.second.clear();
  

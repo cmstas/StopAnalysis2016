@@ -1496,12 +1496,39 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
-      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_amcnlo_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WNJetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W1JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W2JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W3JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W4JetsToLNu_madgraph_pythia8 && 
+      sample_info->id != sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8
       ) return;
   
 
   // 2lep events only
-  if( !babyAnalyzer.is2lep() ) return;
+  //if( !babyAnalyzer.is2lep() ) return;
 
 
 
@@ -1520,12 +1547,15 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   double mlb = babyAnalyzer.Mlb_closestb();
   int nMedBTags = babyAnalyzer.ngoodbtags();
   
+  int nTightTags = babyAnalyzer.ntightbtags();
+  /*
   int nTightTags = 0;
   double tight_wp = 0.935;
   vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
   for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
     if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
   }
+  */
   bool is0b = ( (nMedBTags==0) || (nMedBTags>=1 && nTightTags==0 && mlb>175.0) );
   if( is0b ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_leadbtag_p4() ).M();
  
@@ -1729,7 +1759,7 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
 
 
   // 50% uncertainty on difference between no sf and applying it
-  //sf_err = fabs(0.5*(1.0-sf_val));
+  sf_err = fabs(0.5*(1.0-sf_val));
 
   weight_metRes    = sf_val;
   weight_metRes_up = (sf_val + sf_err);
@@ -1810,7 +1840,7 @@ void sysInfo::evtWgtInfo::getMetResWeight_corridor( double &weight_metRes, doubl
 
 
   // 50% uncertainty on difference between no sf and applying it
-  //sf_err = fabs(0.5*(1.0-sf_val));
+  sf_err = fabs(0.5*(1.0-sf_val));
 
   weight_metRes    = sf_val;
   weight_metRes_up = (sf_val + sf_err);
@@ -2107,6 +2137,13 @@ void sysInfo::evtWgtInfo::getWJetsHFXSecSF( double &weight_hfXsec_up, double &we
       sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_WNJetsToLNu_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_W1JetsToLNu_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_W2JetsToLNu_madgraph_pythia8 &&
@@ -2190,10 +2227,15 @@ void sysInfo::evtWgtInfo::getPDFWeight( double &weight_pdf_up, double &weight_pd
     weight_pdf_dn *= (nEvents/h_bkg_counter->GetBinContent(11));
   }
 
+  /*
   if( weight_pdf_up<0.0 || weight_pdf_dn<0.0 ){
     weight_pdf_up = 1.0;
     weight_pdf_dn = 1.0;
   }
+  */
+  if( weight_pdf_up<0.0 ) weight_pdf_up = fabs(weight_pdf_up);
+  if( weight_pdf_dn<0.0 ) weight_pdf_dn = fabs(weight_pdf_dn);
+ 
 
   return;
 }

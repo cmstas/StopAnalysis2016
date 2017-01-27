@@ -158,7 +158,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
   std::vector<yieldHelper> catList;
   yieldHelper cat;
   
-
+  /*
   //
   // Yields, 2016 ICHEP, 12.9fb
   //
@@ -457,7 +457,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 
   fileList.push_back( tableList );
   tableList.clear();
-
+  */
 
   //
   // Yields, dev ext30fb, mlb with tight bTagging
@@ -646,8 +646,8 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
   fileList.push_back( tableList );
   tableList.clear();
 
-
-
+  
+  /*
   //
   // Yields, dev ext30fb, lead bJet pT
   //
@@ -838,7 +838,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 
   fileList.push_back( tableList );
   tableList.clear();
-
+  */
   
 
   //

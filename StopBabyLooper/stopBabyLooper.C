@@ -1882,6 +1882,10 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
 
       // nTightTags
+      int nTightTags_nominal = babyAnalyzer.ntightbtags();
+      int nTightTags_jesup   = babyAnalyzer.jup_ntightbtags();
+      int nTightTags_jesdown = babyAnalyzer.jdown_ntightbtags();
+      /*
       double tight_wp = 0.935;
       
       int nTightTags_nominal = 0;
@@ -1901,7 +1905,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
 	if( jet_csvv2[iJet] >= tight_wp ) nTightTags_jesdown++;
       }
-      
+      */
 
       
       /////////////////////
@@ -1950,20 +1954,20 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
 	    // metResSFs setup to ==1 if not ttbar/tW->2l
 	    if( systematicList[iSys].id==sysInfo::k_metResUp ){
-	      //wgt *= metResSF_up;
-	      //wgt_corridor *= metResSF_corr_up;
-	      wgt *= (1.0+(metResSF-1.0));
-	      wgt_corridor *= (1.0+(metResSF_corr-1.0));
+	      wgt *= metResSF_up;
+	      wgt_corridor *= metResSF_corr_up;
+	      //wgt *= (1.0+(metResSF-1.0));
+	      //wgt_corridor *= (1.0+(metResSF_corr-1.0));
 	    }
 	    else if( systematicList[iSys].id==sysInfo::k_metResDown ){
-	      //wgt *= metResSF_dn;
-	      //wgt_corridor *= metResSF_corr_dn;
-	      wgt *= (1.0-(metResSF-1.0));
-	      wgt_corridor *= (1.0-(metResSF_corr-1.0));
+	      wgt *= metResSF_dn;
+	      wgt_corridor *= metResSF_corr_dn;
+	      //wgt *= (1.0-(metResSF-1.0));
+	      //wgt_corridor *= (1.0-(metResSF_corr-1.0));
 	    }
 	    else{
-	      //wgt *= metResSF;
-	      //wgt_corridor *= metResSF_corr;
+	      wgt *= metResSF;
+	      wgt_corridor *= metResSF_corr;
 	    }
 	    
 	    /*
