@@ -99,7 +99,8 @@ std::vector<bool> selectionInfo::get_selectionResults_SR(int jesType){
     if( (babyAnalyzer.HLT_SingleEl() && abs(babyAnalyzer.lep1_pdgid())==11) ||
 	(babyAnalyzer.HLT_SingleMu() && abs(babyAnalyzer.lep1_pdgid())==13) ||
 	(babyAnalyzer.HLT_MET()) ||
-	(babyAnalyzer.HLT_MET100_MHT100()) ) temp_result = true;
+	(babyAnalyzer.HLT_MET110_MHT110()) ||
+	(babyAnalyzer.HLT_MET120_MHT120())    ) temp_result = true;
   }
   result.push_back(temp_result);
 
@@ -320,7 +321,8 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b(int jesType){
     if( (babyAnalyzer.HLT_SingleEl() && abs(babyAnalyzer.lep1_pdgid())==11) ||
 	(babyAnalyzer.HLT_SingleMu() && abs(babyAnalyzer.lep1_pdgid())==13) ||
 	(babyAnalyzer.HLT_MET()) ||
-	(babyAnalyzer.HLT_MET100_MHT100())         ) temp_result = true;
+	(babyAnalyzer.HLT_MET110_MHT110()) ||
+	(babyAnalyzer.HLT_MET120_MHT120())    ) temp_result = true;
   }
   result.push_back(temp_result);
 
@@ -542,7 +544,8 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(int 
     if( (babyAnalyzer.HLT_SingleEl() && abs(babyAnalyzer.lep1_pdgid())==11) ||
 	(babyAnalyzer.HLT_SingleMu() && abs(babyAnalyzer.lep1_pdgid())==13) ||
 	(babyAnalyzer.HLT_MET()) ||
-	(babyAnalyzer.HLT_MET100_MHT100())        ) temp_result = true;
+	(babyAnalyzer.HLT_MET110_MHT110()) ||
+	(babyAnalyzer.HLT_MET120_MHT120())    ) temp_result = true;
   }
   result.push_back(temp_result);
 
@@ -776,7 +779,8 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
     if( ( babyAnalyzer.HLT_SingleEl() && (abs(babyAnalyzer.lep1_pdgid())==11 || abs(babyAnalyzer.lep2_pdgid())==11) ) ||
 	( babyAnalyzer.HLT_SingleMu() && (abs(babyAnalyzer.lep1_pdgid())==13 || abs(babyAnalyzer.lep2_pdgid())==13) ) ||
 	( babyAnalyzer.HLT_MET()) ||
-	( babyAnalyzer.HLT_MET100_MHT100()) ) temp_result = true;
+	( babyAnalyzer.HLT_MET110_MHT110()) ||
+	( babyAnalyzer.HLT_MET120_MHT120())    ) temp_result = true;
   }
   result.push_back(temp_result);
 
