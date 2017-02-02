@@ -263,6 +263,7 @@ public:
     int HLT_SingleMu; 
     int HLT_SingleEl;
     int HLT_MET;
+    int HLT_MET_MHT;
     int HLT_MET100_MHT100;
     int HLT_MET110_MHT110;
     int HLT_MET120_MHT120;
