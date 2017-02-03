@@ -6,7 +6,7 @@
 #
 ANALYSIS_NAME=Stop_1l
 
-BABY_VERSION=v17
+BABY_VERSION=v20
 
 TARBALL_NAME=forCondor_stopBabyMaker_80x
 
@@ -19,11 +19,11 @@ EXECUTABLE_NAME=condor_executable.sh
 BATCH_DIR=`pwd`
 
 MAKER_NAME=StopBabyMaker
-MAKER_PATH=/home/users/isuarez/StopAnalysis2017/StopAnalysis/
+MAKER_PATH=/home/users/jgwood/Stop_1Lepton/analysis2016__fullYear/CMSSW_8_0_5_patch1/src/StopAnalysis/
 MAKER_DIR=$MAKER_PATH/$MAKER_NAME/
 
 CORE_NAME=CORE
-CORE_PATH=/home/users/isuarez/
+CORE_PATH=/home/users/jgwood/Stop_1Lepton/analysis2016__fullYear/CMSSW_8_0_5_patch1/src/
 CORE_DIR=$CORE_PATH/$CORE_NAME
 
 

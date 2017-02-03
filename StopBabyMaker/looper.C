@@ -416,18 +416,18 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     cout << "  Grabbing lepton scale factors " << endl;
     
     // Electron file
-    f_el_SF          = new TFile("lepsf/analysis2016_12p9fb/scaleFactors.root", "read");
-    f_el_SF_tracking = new TFile("lepsf/analysis2016_12p9fb/egammaEffi.txt_SF2D.root", "read");
+    f_el_SF          = new TFile("lepsf/analysis2016_36p46fb/scaleFactors.root", "read");
+    f_el_SF_tracking = new TFile("lepsf/analysis2016_36p46fb/egammaEffi.txt_EGM2D.root", "read");
     
     // Muon files
-    f_mu_SF_id       = new TFile("lepsf/analysis2016_12p9fb/TnP_MuonID_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read"); // double unc
-    f_mu_SF_iso      = new TFile("lepsf/analysis2016_12p9fb/TnP_MuonID_NUM_MiniIsoTight_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc
-    f_mu_SF_ip       = new TFile("lepsf/analysis2016_12p9fb/TnP_MuonID_NUM_TightIP2D_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc
+    f_mu_SF_id       = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read"); 
+    f_mu_SF_iso      = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_MiniIsoTight_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc
+    f_mu_SF_ip       = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_TightIP2D_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc
     f_mu_SF_tracking = new TFile("lepsf/analysis2016_12p9fb/muons_tracking_sf.root", "read"); 
     
-    f_mu_SF_veto_id  = new TFile("lepsf/analysis2016_12p9fb/TnP_MuonID_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
-    f_mu_SF_veto_iso = new TFile("lepsf/analysis2016_12p9fb/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root", "read");
-    f_mu_SF_veto_ip  = new TFile("lepsf/analysis2016_12p9fb/TnP_MuonID_NUM_MediumIP2D_DENOM_LooseID_VAR_map_pt_eta.root", "read"); // double unc for this
+    f_mu_SF_veto_id  = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
+    f_mu_SF_veto_iso = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root", "read");
+    f_mu_SF_veto_ip  = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_MediumIP2D_DENOM_LooseID_VAR_map_pt_eta.root", "read"); // double unc for this
     
     // Fastsim/Fullsim el files
     f_el_FS_ID  = new TFile("lepsf/analysis2016_12p9fb/sf_el_mediumCB.root", "read");
@@ -446,29 +446,29 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     f_mu_veto_FS_Ip  = new TFile("lepsf/analysis2016_12p9fb/sf_mu_looseIP2D.root", "read"); // double unc for this
 
     // Veto lepton reco efficiency files
-    f_vetoLep_eff = new TFile("lepsf/analysis2016_12p9fb/lepeff__ttbar_diLept_madgraph_pythia8_ext1_25ns__80x.root", "read");
+    f_vetoLep_eff = new TFile("lepsf/analysis2016_36p46fb/lepeff__moriond17__ttbar_powheg_pythia8_25ns.root", "read");
 
 
     // Grab selected el histos
-    TH2D *h_el_SF_id_temp       = (TH2D*)f_el_SF->Get("GsfElectronToMedium");
+    TH2D *h_el_SF_id_temp       = (TH2D*)f_el_SF->Get("GsfElectronToCutBasedSpring15M");
     TH2D *h_el_SF_iso_temp      = (TH2D*)f_el_SF->Get("MVAVLooseElectronToMini");
     TH2D *h_el_SF_tracking_temp = (TH2D*)f_el_SF_tracking->Get("EGamma_SF2D");
 
     // Grab veto el histos
-    TH2D *h_el_SF_veto_id_temp  = (TH2D*)f_el_SF->Get("GsfElectronToVeto");
+    TH2D *h_el_SF_veto_id_temp  = (TH2D*)f_el_SF->Get("GsfElectronToCutBasedSpring15V");
     TH2D *h_el_SF_veto_iso_temp = (TH2D*)f_el_SF->Get("MVAVLooseElectronToMini2");
 
 
     // Grab selected mu histos
-    TH2D *h_mu_SF_id_temp  = (TH2D*)f_mu_SF_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0");
-    TH2D *h_mu_SF_iso_temp = (TH2D*)f_mu_SF_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_Medium2016_pass");
-    TH2D *h_mu_SF_ip_temp  = (TH2D*)f_mu_SF_ip->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_Medium2016_pass");
+    TH2D *h_mu_SF_id_temp  = (TH2D*)f_mu_SF_id->Get("SF");
+    TH2D *h_mu_SF_iso_temp = (TH2D*)f_mu_SF_iso->Get("SF");
+    TH2D *h_mu_SF_ip_temp  = (TH2D*)f_mu_SF_ip->Get("SF");
     TGraphAsymmErrors *h_mu_SF_tracking_temp  = (TGraphAsymmErrors*)f_mu_SF_tracking->Get("ratio_eta");
 
     // Grab veto mu histos
-    TH2D *h_mu_SF_veto_id_temp  = (TH2D*)f_mu_SF_veto_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0");
-    TH2D *h_mu_SF_veto_iso_temp = (TH2D*)f_mu_SF_veto_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_PF_pass");
-    TH2D *h_mu_SF_veto_ip_temp  = (TH2D*)f_mu_SF_veto_ip->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_PF_pass");
+    TH2D *h_mu_SF_veto_id_temp  = (TH2D*)f_mu_SF_veto_id->Get("SF");
+    TH2D *h_mu_SF_veto_iso_temp = (TH2D*)f_mu_SF_veto_iso->Get("SF");
+    TH2D *h_mu_SF_veto_ip_temp  = (TH2D*)f_mu_SF_veto_ip->Get("SF");
     
 
     // Grab fastsim/fullsim selected el histos
@@ -515,12 +515,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     TH2D *h_mu_SF_id  = (TH2D*)h_mu_SF_id_temp->Clone("h_mu_SF_id");
     TH2D *h_mu_SF_iso = (TH2D*)h_mu_SF_iso_temp->Clone("h_mu_SF_iso");
     TH2D *h_mu_SF_ip  = (TH2D*)h_mu_SF_ip_temp->Clone("h_mu_SF_ip");
-    // Double unc. on selected muon id sfs, since not for our exact wp
-    for(int x=1; x<=(int)h_mu_SF_id->GetNbinsX(); x++){
-      for(int y=1; y<=(int)h_mu_SF_id->GetNbinsY(); y++){
-	h_mu_SF_id->SetBinError(x,y,h_mu_SF_id->GetBinError(x,y)*2.0);
-      }
-    }
     // Double unc. on selected muon iso sfs, since not for our exact wp
     for(int x=1; x<=(int)h_mu_SF_iso->GetNbinsX(); x++){
       for(int y=1; y<=(int)h_mu_SF_iso->GetNbinsY(); y++){
@@ -582,12 +576,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     TH2D* h_mu_FS_ID  = (TH2D*)h_mu_FS_ID_temp->Clone("h_mu_FS_ID");
     TH2D* h_mu_FS_Iso = (TH2D*)h_mu_FS_Iso_temp->Clone("h_mu_FS_Iso");
     TH2D* h_mu_FS_Ip  = (TH2D*)h_mu_FS_Ip_temp->Clone("h_mu_FS_Ip");
-    // Double unc. on selected muon FS id sfs, since not for our exact wp
-    for(int x=1; x<=(int)h_mu_FS_ID->GetNbinsX(); x++){
-      for(int y=1; y<=(int)h_mu_FS_ID->GetNbinsY(); y++){
-	h_mu_FS_ID->SetBinError(x,y,h_mu_FS_ID->GetBinError(x,y)*2.0);
-      }
-    }
     // Double unc. on selected muon FS iso sfs, since not for our exact wp
     for(int x=1; x<=(int)h_mu_FS_Iso->GetNbinsX(); x++){
       for(int y=1; y<=(int)h_mu_FS_Iso->GetNbinsY(); y++){
@@ -623,84 +611,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     // Lepton efficiencies for Lost Leptons
     h_el_vetoLepEff = (TH2D*)h_el_vetoLepEff_temp->Clone("h_el_vetoLepEff");
     h_mu_vetoLepEff = (TH2D*)h_mu_vetoLepEff_temp->Clone("h_mu_vetoLepEff");
-    
-    
-    
-    /*
-    f_el_SF       = new TFile("lepsf/analysis2015/kinematicBinSFele.root", "read");
-
-    f_mu_SF_id    = new TFile("lepsf/analysis2015/TnP_MuonID_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
-    f_mu_SF_iso   = new TFile("lepsf/analysis2015/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
-
-    f_mu_SF_veto_id  = new TFile("lepsf/analysis2015/TnP_MuonID_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
-    f_mu_SF_veto_iso = new TFile("lepsf/analysis2015/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root");
-
-    
-    f_el_FS_ID       = new TFile("lepsf/analysis2015/sf_el_mediumCB.root", "read");
-    f_el_FS_Iso      = new TFile("lepsf/analysis2015/sf_el_mini01.root", "read");
-
-    f_mu_FS_ID       = new TFile("lepsf/analysis2015/sf_mu_mediumID.root", "read");
-    f_mu_FS_Iso      = new TFile("lepsf/analysis2015/sf_mu_mini02.root", "read");
-    
-    f_vetoLep_eff = new TFile("lepsf/analysis2015/lepeff__ttbar_powheg_pythia8_25ns__SRcuts.root", "read");
-       
-    
-    TH2D *h_el_SF_id_temp       = (TH2D*)f_el_SF->Get("CutBasedMedium");
-    TH2D *h_el_SF_iso_temp      = (TH2D*)f_el_SF->Get("MiniIso0p1_vs_AbsEta");
-
-    TH2D *h_el_SF_veto_id_temp  = (TH2D*)f_el_SF->Get("CutBasedVeto");
-    TH2D *h_el_SF_veto_iso_temp = (TH2D*)f_el_SF->Get("MiniIso0p4_vs_AbsEta");
-    
-    TH2D *h_mu_SF_id_temp   = (TH2D*)f_mu_SF_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_tag_IsoMu20_pass");
-    TH2D *h_mu_SF_iso_temp  = (TH2D*)f_mu_SF_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_PF_pass_&_tag_IsoMu20_pass");
-
-    TH2D *h_mu_SF_veto_id_temp  = (TH2D*)f_mu_SF_veto_id->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_tag_IsoMu20_pass");
-    TH2D *h_mu_SF_veto_iso_temp = (TH2D*)f_mu_SF_veto_iso->Get("pt_abseta_PLOT_pair_probeMultiplicity_bin0_&_tag_combRelIsoPF04dBeta_bin0_&_tag_pt_bin0_&_PF_pass_&_tag_IsoMu20_pass");
-    
-    TH2D *h_el_FS_ID_temp  = (TH2D*)f_el_FS_ID->Get("histo2D");
-    TH2D *h_el_FS_Iso_temp = (TH2D*)f_el_FS_Iso->Get("histo2D");
-    
-    TH2D *h_mu_FS_ID_temp  = (TH2D*)f_mu_FS_ID->Get("histo2D");
-    TH2D *h_mu_FS_Iso_temp = (TH2D*)f_mu_FS_Iso->Get("histo2D");
-    
-    TH2D *h_el_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_rebin_Eff_el");
-    TH2D *h_mu_vetoLepEff_temp = (TH2D*)f_vetoLep_eff->Get("h2_lepEff_vetoSel_rebin_Eff_mu");
-    
-    //BabyFile->cd();
-    
-    TH2D *h_el_SF_id  = (TH2D*)h_el_SF_id_temp->Clone("h_el_SF_id");
-    TH2D *h_el_SF_iso = (TH2D*)h_el_SF_iso_temp->Clone("h_el_SF_iso");
-    TH2D *h_mu_SF_id  = (TH2D*)h_mu_SF_id_temp->Clone("h_mu_SF_id");
-    TH2D *h_mu_SF_iso = (TH2D*)h_mu_SF_iso_temp->Clone("h_mu_SF_iso");
-    
-    TH2D *h_el_SF_veto_id  = (TH2D*)h_el_SF_veto_id_temp->Clone("h_el_SF_veto_id");
-    TH2D *h_el_SF_veto_iso = (TH2D*)h_el_SF_veto_iso_temp->Clone("h_el_SF_veto_iso");
-    TH2D *h_mu_SF_veto_id  = (TH2D*)h_mu_SF_veto_id_temp->Clone("h_mu_SF_veto_id");
-    TH2D *h_mu_SF_veto_iso = (TH2D*)h_mu_SF_veto_iso_temp->Clone("h_mu_SF_veto_iso");
-    
-    h_el_FS          = (TH2D*)h_el_FS_ID_temp->Clone("h_el_FS");
-    h_el_FS->Multiply(h_el_FS_Iso_temp);
-
-    h_mu_FS          = (TH2D*)h_mu_FS_ID_temp->Clone("h_mu_FS");
-    h_mu_FS->Multiply(h_mu_FS_Iso_temp);
-
-
-    h_el_vetoLepEff = (TH2D*)h_el_vetoLepEff_temp->Clone("h_el_vetoLepEff");
-    h_mu_vetoLepEff = (TH2D*)h_mu_vetoLepEff_temp->Clone("h_mu_vetoLepEff");
-
-    h_el_SF = (TH2D*)h_el_SF_id->Clone("h_el_SF");
-    h_el_SF->Multiply(h_el_SF_iso);
-
-    h_el_SF_veto = (TH2D*)h_el_SF_veto_id->Clone("h_el_SF_veto");
-    h_el_SF_veto->Multiply(h_el_SF_veto_iso);
-
-    h_mu_SF = (TH2D*)h_mu_SF_id->Clone("h_mu_SF");
-    h_mu_SF->Multiply(h_mu_SF_iso);
-
-    h_mu_SF_veto = (TH2D*)h_mu_SF_veto_id->Clone("h_mu_SF_veto");
-    h_mu_SF_veto->Multiply(h_mu_SF_veto_iso);
-    */
-  }
+     
+  } // end if applying lepton SFs
   
 
   TFile *fxsec;
@@ -875,22 +787,73 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
   // files for RunIISpring15 MC
   if (isDataFromFileName) {
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
-    jetcorr_uncertainty_filename = "jecfiles/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
-  } else if(isSignalFromFileName){
+
+    if(filestr.find("2016B") != std::string::npos ||
+       filestr.find("2016C") != std::string::npos ||
+       filestr.find("2016D") != std::string::npos    ){
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016BCDV3_DATA/Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016BCDV3_DATA/Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016BCDV3_DATA/Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016BCDV3_DATA/Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt");
+      jetcorr_uncertainty_filename = "jecfiles/Summer16_23Sep2016BCDV3_DATA/Summer16_23Sep2016BCDV3_DATA_Uncertainty_AK4PFchs.txt";
+    }
+
+    if(filestr.find("2016E") != std::string::npos ||
+       filestr.find("2016F") != std::string::npos    ){
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016EFV3_DATA/Summer16_23Sep2016EFV3_DATA_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016EFV3_DATA/Summer16_23Sep2016EFV3_DATA_L2Relative_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016EFV3_DATA/Summer16_23Sep2016EFV3_DATA_L3Absolute_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016EFV3_DATA/Summer16_23Sep2016EFV3_DATA_L2L3Residual_AK4PFchs.txt");
+      jetcorr_uncertainty_filename = "jecfiles/Summer16_23Sep2016EFV3_DATA/Summer16_23Sep2016EFV3_DATA_Uncertainty_AK4PFchs.txt";
+    }
+
+    if(filestr.find("2016G") != std::string::npos){
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016GV3_DATA/Summer16_23Sep2016GV3_DATA_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016GV3_DATA/Summer16_23Sep2016GV3_DATA_L2Relative_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016GV3_DATA/Summer16_23Sep2016GV3_DATA_L3Absolute_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016GV3_DATA/Summer16_23Sep2016GV3_DATA_L2L3Residual_AK4PFchs.txt");
+      jetcorr_uncertainty_filename = "jecfiles/Summer16_23Sep2016GV3_DATA/Summer16_23Sep2016GV3_DATA_Uncertainty_AK4PFchs.txt";
+    }
+
+    if(filestr.find("2016H") != std::string::npos){
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L2Relative_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L3Absolute_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L2L3Residual_AK4PFchs.txt");
+      jetcorr_uncertainty_filename = "jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_Uncertainty_AK4PFchs.txt";
+    }
+
+    // Run independent from ICHEP
+    //jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
+    //jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt");
+    //jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
+    //jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
+    //jetcorr_uncertainty_filename = "jecfiles/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
+  } 
+  
+  else if(isSignalFromFileName){
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_FastSimV1_L1FastJet_AK4PFchs.txt");
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_FastSimV1_L2Relative_AK4PFchs.txt");
     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_FastSimV1_L3Absolute_AK4PFchs.txt");
     jetcorr_uncertainty_filename = "jecfiles/Spring16_FastSimV1_Uncertainty_AK4PFchs.txt";
   }  
+  
   else {
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt");
-    jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt");
-    jetcorr_uncertainty_filename = "jecfiles/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt";
+    
+    // ICHEP16 samples
+    if(filestr.find("Spring16") != std::string::npos){
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt");
+      jetcorr_uncertainty_filename = "jecfiles/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt";
+    }
+    // Moriond17 samples
+    else{
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt");
+      jetcorr_uncertainty_filename = "jecfiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_Uncertainty_AK4PFchs.txt";
+    }
   }
 
   cout << "applying JEC from the following files:" << endl;

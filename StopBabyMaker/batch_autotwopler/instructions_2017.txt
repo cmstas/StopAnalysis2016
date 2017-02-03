@@ -244,10 +244,10 @@ BABY ANALYSIS VERSION /MET/Run2016H-PromptReco-v3/MINIAOD TARBALL.tar.gz EXECUTA
 BABY ANALYSIS VERSION /TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ttbar_singleLeptFromT_madgraph_pythia8_25ns
 
 ## ttbar - singleLepFromT - ext1 - madgraph pythia8 ###
-#BABY ANALYSIS VERSION /TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ttbar_singleLeptFromT_madgraph_pythia8_ext1_25ns
+BABY ANALYSIS VERSION /TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ttbar_singleLeptFromT_madgraph_pythia8_ext1_25ns
 
 ## ttbar - singleLepFromTbar - madgraph pythia8 ###
-#BABY ANALYSIS VERSION /TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ttbar_singleLeptFromTbar_madgraph_pythia8_25ns
+BABY ANALYSIS VERSION /TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ttbar_singleLeptFromTbar_madgraph_pythia8_25ns
 
 ## ttbar - singleLepFromTbar - ext1 - madgraph pythia8 ###
 BABY ANALYSIS VERSION /TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ttbar_singleLeptFromTbar_madgraph_pythia8_ext1_25ns
@@ -281,6 +281,9 @@ BABY ANALYSIS VERSION /ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-ma
 ## t - t channel - lepDecays ##
 #BABY ANALYSIS VERSION /ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root t_tch_4f_powheg_pythia8_25ns
 
+## t - t channel - inclDecays ##
+BABY ANALYSIS VERSION /ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root t_tch_4f_powheg_pythia8_inclDecays_25ns
+
 ## s channel ##
 BABY ANALYSIS VERSION /ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root t_sch_4f_amcnlo_pythia8_25ns
 
@@ -302,7 +305,7 @@ BABY ANALYSIS VERSION /ST_tW_top_5f_NoFullyHadronicDecays_13TeV-powheg_TuneCUETP
 ############
 
 ## DYJets - m10to50 - amcnlo pythia8 ##
-#BABY ANALYSIS VERSION /DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root DYJetsToLL_m10To50_amcnlo_pythia8_25ns
+BABY ANALYSIS VERSION /DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root DYJetsToLL_m10To50_amcnlo_pythia8_25ns
 
 ## DYJets - m50 - amcnlo pythia8 ##
 BABY ANALYSIS VERSION /DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_HCALDebug_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root DYJetsToLL_m50_madgraph_pythia8_25ns
@@ -358,7 +361,7 @@ BABY ANALYSIS VERSION /WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-py
 BABY ANALYSIS VERSION /WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WJetsToLNu_HT1200To2500_madgraph_pythia8_25ns
 
 ## W+jets - lv - HT binned [1200,2500] - ext1 - madgraph pythia8 ##
-#BABY ANALYSIS VERSION /WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1_25ns
+BABY ANALYSIS VERSION /WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1_25ns
 
 ## W+jets - lv - HT binned [2500+] - madgraph pythia8 ##
 BABY ANALYSIS VERSION /WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WJetsToLNu_HT2500ToInf_madgraph_pythia8_25ns
@@ -418,7 +421,7 @@ BABY ANALYSIS VERSION /WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIISumme
 BABY ANALYSIS VERSION /WWTo2L2Nu_13TeV-powheg/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WWTo2l2Nu_powheg_25ns
 
 ## WZ - pythia8 ##
-#BABY ANALYSIS VERSION /WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WZ_pythia8_25ns
+BABY ANALYSIS VERSION /WZ_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WZ_pythia8_25ns
 
 ## WZ - 3lv - powheg pythia8 ##
 BABY ANALYSIS VERSION /WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WZTo3LNu_powheg_pythia8_25ns
@@ -433,7 +436,7 @@ BABY ANALYSIS VERSION /WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/RunIISummer1
 BABY ANALYSIS VERSION /WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v3/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root WZTo1LNu2Q_amcnlo_pythia8_25ns
 
 ## ZZ - pythia8 ##
-#BABY ANALYSIS VERSION /ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ZZ_pythia8_25ns
+BABY ANALYSIS VERSION /ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ZZ_pythia8_25ns
 
 ## ZZ - 2l2q - amcnlo pythia8 ##
 BABY ANALYSIS VERSION /ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ZZTo2L2Q_amcnlo_pythia8_25ns
@@ -471,7 +474,7 @@ BABY ANALYSIS VERSION /TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pyth
 BABY ANALYSIS VERSION /ttZJets_13TeV_madgraphMLM/RunIISummer16MiniAODv2-80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root ttZJets_13TeV_madgraphMLM
 
 ## ttZ - qq - amcnlo pythia8 ##
-#BABY ANALYSIS VERSION /TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root TTZToQQ_amcnlo_pythia8_25ns
+BABY ANALYSIS VERSION /TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root TTZToQQ_amcnlo_pythia8_25ns
 
 ## ttZ - ll/vv - amcnlo pythia8 ##
 BABY ANALYSIS VERSION /TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM TARBALL.tar.gz EXECUTABLE -1 output.root,skim.root TTZToLLNuNu_M-10_amcnlo_pythia8_25ns
