@@ -18,7 +18,7 @@ void JetTree::InitBtagSFTool(bool isFastsim_) {
     isFastsim = isFastsim_;
     //calib = calib_;
     calib = new BTagCalibration("csvv2", "btagsf/CSVv2Moriond17_2017_1_26_BtoH.csv"); // 25s version of SFs - slimmed version removed mujets and iterativefit from original one
-    calib_fastsim = new BTagCalibration("CSV", "btagsf/CSV_13TEV_Combined_14_7_2016.csv"); // 25ns fastsim version of SFs
+    calib_fastsim = new BTagCalibration("CSV", "btagsf/fastsim_csvv2_ttbar_26_1_2017.csv"); // 25ns fastsim version of SFs
     reader_heavy      = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central"); // central
     reader_heavy_UP   = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
     reader_heavy_DN   = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down

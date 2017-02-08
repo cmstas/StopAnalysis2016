@@ -2331,7 +2331,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //std::cout << "[babymaker::looper]: tau  vars" << std::endl;
       int vetotaus=0;
       double tau_pt  = 20.0;
-      double tau_eta = 2.4;  
+      double tau_eta = 2.3;  
       
       Taus.tau_IDnames = taus_pf_IDnames();
       
