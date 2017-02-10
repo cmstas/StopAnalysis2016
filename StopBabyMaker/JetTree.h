@@ -61,16 +61,16 @@ public:
     int nanalysisbtags;
     float ak4_HT;
 
-    int ngoodjets_jup;
-    int ngoodjets_jdown;
-    int ngoodbtags_jup;
-    int ngoodbtags_jdown;
-    int nloosebtags_jup;
-    int nloosebtags_jdown;
-    int ntightbtags_jup;
-    int ntightbtags_jdown;
-    int nanalysisbtags_jup;
-    int nanalysisbtags_jdown;
+    //int ngoodjets_jup;
+    //int ngoodjets_jdown;
+    //int ngoodbtags_jup;
+    //int ngoodbtags_jdown;
+    //int nloosebtags_jup;
+    //int nloosebtags_jdown;
+    //int ntightbtags_jup;
+    //int ntightbtags_jdown;
+    //int nanalysisbtags_jup;
+    //int nanalysisbtags_jdown;
     
     float ak4_htssm;
     float ak4_htosm;

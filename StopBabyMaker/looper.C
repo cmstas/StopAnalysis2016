@@ -876,6 +876,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // btagging scale factor//
   //    
    jets.InitBtagSFTool(skim_isFastsim); 
+   jets_jup.InitBtagSFTool(skim_isFastsim); 
+   jets_jdown.InitBtagSFTool(skim_isFastsim); 
    //jets_jup.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim);   
   // jets_jdown.InitBtagSFTool(h_btag_eff_b,h_btag_eff_c,h_btag_eff_udsg, skim_isFastsim);
 
@@ -1879,9 +1881,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(nGoodLeptons < skim_nGoodLep) continue;
       nEvents_pass_skim_nGoodLep++;
 
-      if(!(jets.ngoodjets >= skim_nJets) && !(jets.ngoodjets_jup >= skim_nJets) && !(jets.ngoodjets_jdown >= skim_nJets)) continue;
+      if(!(jets.ngoodjets >= skim_nJets) && !(jets_jup.ngoodjets >= skim_nJets) && !(jets_jdown.ngoodjets >= skim_nJets)) continue;
       nEvents_pass_skim_nJets++;
-      if(!(jets.ngoodbtags >= skim_nBJets) && !(jets.ngoodbtags_jup >= skim_nBJets) && !(jets.ngoodbtags_jdown >= skim_nBJets)) continue;
+      if(!(jets.ngoodbtags >= skim_nBJets) && !(jets_jup.ngoodbtags >= skim_nBJets) && !(jets_jdown.ngoodbtags >= skim_nBJets)) continue;
       nEvents_pass_skim_nBJets++;
 
       // FastSim filter, Nominal Jets
