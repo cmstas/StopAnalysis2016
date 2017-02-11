@@ -919,7 +919,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Progress
       //
       CMS3::progress(nEvents_processed, nEventsToDo);
-
+ 
       //
       // Intialize Baby NTuple Branches
       //
@@ -936,7 +936,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     counterhist->Fill(22,1.);
     if(!evt_isRealData()){
        //error on pdf replicas
-      if(genweights().size()>109){ 
+      if(genweights().size()>110){ 
         for(int ipdf=9;ipdf<109;ipdf++){
            average_of_weights += cms3.genweights().at(ipdf);        
            }// average of weights
@@ -1016,7 +1016,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         float SMSaverage_of_weights= 0;
         //error on pdf replicas
 	//fastsim has first genweights bin being ==1
-        if(genweights().size()>110){ //fix segfault
+        if(genweights().size()>111){ //fix segfault
           for(int ipdf=10;ipdf<110;ipdf++){
             SMSaverage_of_weights += cms3.genweights().at(ipdf);
           }// average of weights

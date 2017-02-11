@@ -311,7 +311,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
         ak4pfjets_cm.push_back(pfjets_chargedMultiplicity().at(jindex));
         ak4pfjets_nm.push_back(cms3.pfjets_neutralMultiplicity().at(jindex));
 	
-	if (!evt_isRealData()) {
+	if (!evt_isRealData() && pfjets_mc3dr().size()>0) {
           ak4pfjets_mc3dr.push_back(pfjets_mc3dr().at(jindex));
           ak4pfjets_mc3id.push_back(pfjets_mc3_id().at(jindex));
           ak4pfjets_mc3idx.push_back(pfjets_mc3idx().at(jindex));

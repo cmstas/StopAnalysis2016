@@ -73,7 +73,6 @@ void EventTree::FillCommon (const std::string &root_file_name)
     calomet_phi = evt_calometPhi();
 
     is_data = evt_isRealData();
-
     // the recommended met filters //
     if(!signal){
       if(nvtxs>0) filt_met = true;
@@ -108,7 +107,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
       xsec     = evt_xsec_incl();
       kfactor  = evt_kfactor();
 //      pu_nvtxs = puInfo_nPUvertices().at(6);
-      pu_ntrue = puInfo_trueNumInteractions().at(0);
+      if(puInfo_trueNumInteractions().size()>0) pu_ntrue = puInfo_trueNumInteractions().at(0);
       genweights = cms3.genweights();
       genweightsID = cms3.genweightsID();
 
@@ -142,9 +141,9 @@ void EventTree::FillCommon (const std::string &root_file_name)
 
  
     }
-    dataset = evt_dataset().at(0).Data();
+    if(evt_dataset().size()>0) dataset = evt_dataset().at(0).Data();
     filename = root_file_name;
-    cms3tag = evt_CMS3tag().at(0).Data();
+    if(evt_CMS3tag().size()>0) cms3tag = evt_CMS3tag().at(0).Data();
 
     firstGoodVtxIdx = firstGoodVertex();   
  
