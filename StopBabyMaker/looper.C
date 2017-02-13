@@ -410,6 +410,54 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
   // Matching requirement for gen/reco leptons
   double matched_dr = 0.1;
+
+      float xmin_h_el_SF = 1;
+    float xmax_h_el_SF = 1;
+    float ymin_h_el_SF = 1;
+    float ymax_h_el_SF = 1;
+    float xmin_h_el_SF_veto = 1;
+    float xmax_h_el_SF_veto = 1;
+    float ymin_h_el_SF_veto = 1;
+    float ymax_h_el_SF_veto = 1;
+    float xmin_h_el_SF_tracking = 1;
+    float xmax_h_el_SF_tracking = 1;
+    float ymin_h_el_SF_tracking = 1;
+    float ymax_h_el_SF_tracking = 1;
+    float xmin_h_mu_SF = 1;
+    float xmax_h_mu_SF = 1;
+    float ymin_h_mu_SF = 1;
+    float ymax_h_mu_SF = 1;
+    float xmin_h_mu_SF_tracking = 1;
+    float xmax_h_mu_SF_tracking = 1;
+    float xmin_h_mu_SF_veto = 1;
+    float xmax_h_mu_SF_veto = 1;
+    float ymin_h_mu_SF_veto = 1;
+    float ymax_h_mu_SF_veto = 1;
+    float xmin_h_el_FS = 1;
+    float xmax_h_el_FS = 1;
+    float ymin_h_el_FS = 1;
+    float ymax_h_el_FS = 1;
+    float xmin_h_el_veto_FS = 1;
+    float xmax_h_el_veto_FS = 1;
+    float ymin_h_el_veto_FS = 1;
+    float ymax_h_el_veto_FS = 1;
+    float xmin_h_mu_FS = 1;
+    float xmax_h_mu_FS = 1;
+    float ymin_h_mu_FS = 1;
+    float ymax_h_mu_FS = 1;
+    float xmin_h_mu_veto_FS = 1;
+    float xmax_h_mu_veto_FS = 1;
+    float ymin_h_mu_veto_FS = 1;
+    float ymax_h_mu_veto_FS = 1;
+    float xmin_h_el_vetoLepEff = 1;
+    float xmax_h_el_vetoLepEff = 1;
+    float ymin_h_el_vetoLepEff = 1;
+    float ymax_h_el_vetoLepEff = 1;
+    float xmin_h_mu_vetoLepEff = 1;
+    float xmax_h_mu_vetoLepEff = 1;
+    float ymin_h_mu_vetoLepEff = 1;
+    float ymax_h_mu_vetoLepEff = 1;
+
   
   if( (skim_applyLeptonSFs || skim_applyVetoLeptonSFs) && !isDataFromFileName){
 
@@ -500,16 +548,27 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     TH2D *h_el_SF_iso = (TH2D*)h_el_SF_iso_temp->Clone("h_el_SF_iso");
     h_el_SF = (TH2D*)h_el_SF_id->Clone("h_el_SF");
     h_el_SF->Multiply(h_el_SF_iso);
+    xmin_h_el_SF = h_el_SF->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_el_SF = h_el_SF->GetXaxis()->GetBinLowEdge(h_el_SF->GetNbinsX()+1)-0.01;
+    ymin_h_el_SF = h_el_SF->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_el_SF = h_el_SF->GetYaxis()->GetBinLowEdge(h_el_SF->GetNbinsY()+1)-0.01;
     
     // Get final fullsim, selected el, tracking sfs
     h_el_SF_tracking = (TH2D*)h_el_SF_tracking_temp->Clone("h_el_SF_iso");
+    xmin_h_el_SF_tracking = h_el_SF_tracking->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_el_SF_tracking = h_el_SF_tracking->GetXaxis()->GetBinLowEdge(h_el_SF_tracking->GetNbinsX()+1)-0.01;
+    ymin_h_el_SF_tracking = h_el_SF_tracking->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_el_SF_tracking = h_el_SF_tracking->GetYaxis()->GetBinLowEdge(h_el_SF_tracking->GetNbinsY()+1)-0.01;
     
     // Get final fullsim, veto el, sfs
     TH2D *h_el_SF_veto_id  = (TH2D*)h_el_SF_veto_id_temp->Clone("h_el_SF_veto_id");
     TH2D *h_el_SF_veto_iso = (TH2D*)h_el_SF_veto_iso_temp->Clone("h_el_SF_veto_iso");
     h_el_SF_veto = (TH2D*)h_el_SF_veto_id->Clone("h_el_SF_veto");
     h_el_SF_veto->Multiply(h_el_SF_veto_iso);
-    
+    xmin_h_el_SF_veto = h_el_SF_veto->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_el_SF_veto = h_el_SF_veto->GetXaxis()->GetBinLowEdge(h_el_SF_veto->GetNbinsX()+1)-0.01;
+    ymin_h_el_SF_veto = h_el_SF_veto->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_el_SF_veto = h_el_SF_veto->GetYaxis()->GetBinLowEdge(h_el_SF_veto->GetNbinsY()+1)-0.01;
     
     // Get final fullsim, selected mu, sfs
     TH2D *h_mu_SF_id  = (TH2D*)h_mu_SF_id_temp->Clone("h_mu_SF_id");
@@ -530,7 +589,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     h_mu_SF = (TH2D*)h_mu_SF_id->Clone("h_mu_SF");
     h_mu_SF->Multiply(h_mu_SF_iso);
     h_mu_SF->Multiply(h_mu_SF_ip);
-    
+    xmin_h_mu_SF = h_mu_SF->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_mu_SF = h_mu_SF->GetXaxis()->GetBinLowEdge(h_mu_SF->GetNbinsX()+1)-0.01;
+    ymin_h_mu_SF = h_mu_SF->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_mu_SF = h_mu_SF->GetYaxis()->GetBinLowEdge(h_mu_SF->GetNbinsY()+1)-0.01;
 
     // Get final fullsim, selected muon, tracking sfs, convert TGraphErrors
     int nX = h_mu_SF_tracking_temp->GetN();
@@ -543,7 +605,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       h_mu_SF_tracking->SetBinContent(i+1,y_val[i]);
       h_mu_SF_tracking->SetBinError(i+1,std::max(y_err_up[i],y_err_low[i]));
     }
-    
+    xmin_h_mu_SF_tracking = h_mu_SF_tracking->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_mu_SF_tracking = h_mu_SF_tracking->GetXaxis()->GetBinLowEdge(h_mu_SF_tracking->GetNbinsX()+1)-0.01;
+    //float ymin_h_mu_SF_tracking = h_mu_SF_tracking->GetYaxis()->GetBinLowEdge(1)+0.01;
+    //float ymax_h_mu_SF_tracking = h_mu_SF_tracking->GetYaxis()->GetBinLowEdge(h_mu_SF_tracking->GetNbinsY()+1)-0.01;
+ 
 
     // Get final fullsim, veto mu, sfs
     TH2D *h_mu_SF_veto_id  = (TH2D*)h_mu_SF_veto_id_temp->Clone("h_mu_SF_veto_id");
@@ -558,20 +624,32 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     h_mu_SF_veto = (TH2D*)h_mu_SF_veto_id->Clone("h_mu_SF_veto");
     h_mu_SF_veto->Multiply(h_mu_SF_veto_iso);
     h_mu_SF_veto->Multiply(h_mu_SF_veto_ip);
-    
+    xmin_h_mu_SF_veto = h_mu_SF_veto->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_mu_SF_veto = h_mu_SF_veto->GetXaxis()->GetBinLowEdge(h_mu_SF_veto->GetNbinsX()+1)-0.01;
+    ymin_h_mu_SF_veto = h_mu_SF_veto->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_mu_SF_veto = h_mu_SF_veto->GetYaxis()->GetBinLowEdge(h_mu_SF_veto->GetNbinsY()+1)-0.01;
+
 
     // Get final fullsim/fastsim, selected el, sfs
     TH2D* h_el_FS_ID  = (TH2D*)h_el_FS_ID_temp->Clone("h_el_FS_ID");
     TH2D* h_el_FS_Iso = (TH2D*)h_el_FS_Iso_temp->Clone("h_el_FS_Iso");
     h_el_FS = (TH2D*)h_el_FS_ID->Clone("h_el_FS");
     h_el_FS->Multiply(h_el_FS_Iso);
-    
+    xmin_h_el_FS = h_el_FS->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_el_FS = h_el_FS->GetXaxis()->GetBinLowEdge(h_el_FS->GetNbinsX()+1)-0.01;
+    ymin_h_el_FS = h_el_FS->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_el_FS = h_el_FS->GetYaxis()->GetBinLowEdge(h_el_FS->GetNbinsY()+1)-0.01;
+
     // Get final fullsim/fastsim, veto el, sfs
     TH2D* h_el_veto_FS_ID  = (TH2D*)h_el_veto_FS_ID_temp->Clone("h_el_veto_FS_ID");
     TH2D* h_el_veto_FS_Iso = (TH2D*)h_el_veto_FS_Iso_temp->Clone("h_el_veto_FS_Iso");
     h_el_veto_FS = (TH2D*)h_el_veto_FS_ID->Clone("h_el_FS");
     h_el_veto_FS->Multiply(h_el_veto_FS_Iso);
-    
+    xmin_h_el_veto_FS = h_el_veto_FS->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_el_veto_FS = h_el_veto_FS->GetXaxis()->GetBinLowEdge(h_el_veto_FS->GetNbinsX()+1)-0.01;
+    ymin_h_el_veto_FS = h_el_veto_FS->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_el_veto_FS = h_el_veto_FS->GetYaxis()->GetBinLowEdge(h_el_veto_FS->GetNbinsY()+1)-0.01;
+  
     // Get final fullsim/fastsim, selected mu, sfs
     TH2D* h_mu_FS_ID  = (TH2D*)h_mu_FS_ID_temp->Clone("h_mu_FS_ID");
     TH2D* h_mu_FS_Iso = (TH2D*)h_mu_FS_Iso_temp->Clone("h_mu_FS_Iso");
@@ -591,6 +669,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     h_mu_FS = (TH2D*)h_mu_FS_ID->Clone("h_mu_FS");
     h_mu_FS->Multiply(h_mu_FS_Iso);
     h_mu_FS->Multiply(h_mu_FS_Ip);
+    xmin_h_mu_FS = h_mu_FS->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_mu_FS = h_mu_FS->GetXaxis()->GetBinLowEdge(h_mu_FS->GetNbinsX()+1)-0.01;
+    ymin_h_mu_FS = h_mu_FS->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_mu_FS = h_mu_FS->GetYaxis()->GetBinLowEdge(h_mu_FS->GetNbinsY()+1)-0.01;
     
     // Get final fullsim/fastsim, veto mu, sfs
     TH2D* h_mu_veto_FS_ID  = (TH2D*)h_mu_veto_FS_ID_temp->Clone("h_mu_veto_FS_ID");
@@ -605,12 +687,23 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     h_mu_veto_FS = (TH2D*)h_mu_veto_FS_ID->Clone("h_mu_veto_FS");
     h_mu_veto_FS->Multiply(h_mu_veto_FS_Iso);
     h_mu_veto_FS->Multiply(h_mu_veto_FS_Ip);
-    
+    xmin_h_mu_veto_FS = h_mu_veto_FS->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_mu_veto_FS = h_mu_veto_FS->GetXaxis()->GetBinLowEdge(h_mu_veto_FS->GetNbinsX()+1)-0.01;
+    ymin_h_mu_veto_FS = h_mu_veto_FS->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_mu_veto_FS = h_mu_veto_FS->GetYaxis()->GetBinLowEdge(h_mu_veto_FS->GetNbinsY()+1)-0.01;
 
 
     // Lepton efficiencies for Lost Leptons
     h_el_vetoLepEff = (TH2D*)h_el_vetoLepEff_temp->Clone("h_el_vetoLepEff");
     h_mu_vetoLepEff = (TH2D*)h_mu_vetoLepEff_temp->Clone("h_mu_vetoLepEff");
+    xmin_h_el_vetoLepEff = h_el_vetoLepEff->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_el_vetoLepEff = h_el_vetoLepEff->GetXaxis()->GetBinLowEdge(h_el_vetoLepEff->GetNbinsX()+1)-0.01;
+    ymin_h_el_vetoLepEff = h_el_vetoLepEff->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_el_vetoLepEff = h_el_vetoLepEff->GetYaxis()->GetBinLowEdge(h_el_vetoLepEff->GetNbinsY()+1)-0.01;
+    xmin_h_mu_vetoLepEff = h_mu_vetoLepEff->GetXaxis()->GetBinLowEdge(1)+0.01;
+    xmax_h_mu_vetoLepEff = h_mu_vetoLepEff->GetXaxis()->GetBinLowEdge(h_mu_vetoLepEff->GetNbinsX()+1)-0.01;
+    ymin_h_mu_vetoLepEff = h_mu_vetoLepEff->GetYaxis()->GetBinLowEdge(1)+0.01;
+    ymax_h_mu_vetoLepEff = h_mu_vetoLepEff->GetYaxis()->GetBinLowEdge(h_mu_vetoLepEff->GetNbinsY()+1)-0.01;
      
   } // end if applying lepton SFs
   
@@ -1382,20 +1475,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(skim_applyLeptonSFs && !StopEvt.is_data && nVetoLeptons>0){
 	
 	if(abs(lep1.pdgid) == pdg_el){
-	  int binX = h_el_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()), lepSF_pt_min ) );
-	  int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
+	  int binX = h_el_SF->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_SF, (float)lep1.p4.Pt()), xmin_h_el_SF ) );
+	  int binY = h_el_SF->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_SF, float(fabs(lep1.p4.Eta())) ), ymin_h_el_SF ) );
 	  lepSF    = h_el_SF->GetBinContent( binX, binY );
 	  lepSF_Up = lepSF + h_el_SF->GetBinError( binX, binY );
 	  lepSF_Dn = lepSF - h_el_SF->GetBinError( binX, binY );
 
-	  binX = h_el_SF_tracking->GetXaxis()->FindBin( std::max( std::min(2.39,(double)lep1.p4.Eta()),-2.39) );
-	  binY = h_el_SF_tracking->GetYaxis()->FindBin( std::max( std::min(199.0,(double)lep1.p4.Pt()), 21.0 ) );
+	  binX = h_el_SF_tracking->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_SF_tracking, float(fabs(lep1.p4.Eta())) ),xmin_h_el_SF_tracking) );
+	  binY = h_el_SF_tracking->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_SF_tracking,(float)lep1.p4.Pt()), ymin_h_el_SF_tracking ) );
 	  lepSF *= h_el_SF_tracking->GetBinContent( binX, binY );
 	  lepSF_Up *= ( h_el_SF_tracking->GetBinContent(binX,binY) + h_el_SF_tracking->GetBinError(binX,binY) );
 	  lepSF_Dn *= ( h_el_SF_tracking->GetBinContent(binX,binY) - h_el_SF_tracking->GetBinError(binX,binY) );
 	  
 	  if(skim_isFastsim){
-	    int bin_FS  = h_el_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), lepSF_FS_pt_min ), fabs(lep1.p4.Eta()) );
+	    int bin_FS  = h_el_FS->FindBin( std::max( std::min(xmax_h_el_FS, (float)lep1.p4.Pt()), xmin_h_el_FS ), std::max( std::min(ymax_h_el_FS, float(fabs(lep1.p4.Eta()))), ymin_h_el_FS ) );
 	    lepSF_FS    = h_el_FS->GetBinContent(bin_FS);
 	    lepSF_FS_Up = lepSF_FS + h_el_FS->GetBinError(bin_FS);
 	    lepSF_FS_Dn = lepSF_FS + h_el_FS->GetBinError(bin_FS);
@@ -1404,19 +1497,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	}
 	
 	if(abs(lep1.pdgid) == pdg_mu){
-	  int binX = h_mu_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep1.p4.Pt()), lepSF_pt_min ) );
-	  int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep1.p4.Eta()) );
+	  int binX = h_mu_SF->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_SF, (float)lep1.p4.Pt()), xmin_h_mu_SF ) );
+	  int binY = h_mu_SF->GetYaxis()->FindBin( std::max( std::min(ymax_h_mu_SF, float(fabs(lep1.p4.Eta())) ), ymin_h_mu_SF ) );
 	  lepSF    = h_mu_SF->GetBinContent( binX, binY );
 	  lepSF_Up = lepSF + h_mu_SF->GetBinError( binX, binY );
 	  lepSF_Dn = lepSF - h_mu_SF->GetBinError( binX, binY );
 
-	  binX = h_mu_SF_tracking->GetXaxis()->FindBin( std::max(-2.2,(double)lep1.p4.Eta()) );
+	  binX = h_mu_SF_tracking->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_SF_tracking,(float)lep1.p4.Eta()), xmin_h_mu_SF_tracking ) );
 	  lepSF *= h_mu_SF_tracking->GetBinContent( binX );
 	  lepSF_Up *= ( h_mu_SF_tracking->GetBinContent(binX) + h_mu_SF_tracking->GetBinError(binX) );
 	  lepSF_Dn *= ( h_mu_SF_tracking->GetBinContent(binX) - h_mu_SF_tracking->GetBinError(binX) );
 	  
 	  if(skim_isFastsim){
-	    int bin_FS  = h_mu_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep1.p4.Pt()), lepSF_FS_pt_min ), fabs(lep1.p4.Eta()) );
+	    int bin_FS  = h_mu_FS->FindBin( std::max( std::min(xmax_h_mu_FS, (float)lep1.p4.Pt()), xmin_h_mu_FS ), std::max( std::min(ymax_h_mu_FS, float(fabs(lep1.p4.Eta()))), ymin_h_mu_FS ) );
 	    lepSF_FS    = h_mu_FS->GetBinContent(bin_FS);
 	    lepSF_FS_Up = lepSF_FS + h_mu_FS->GetBinError(bin_FS);
 	    lepSF_FS_Dn = lepSF_FS + h_mu_FS->GetBinError(bin_FS);
@@ -1432,36 +1525,36 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(abs(lep2.pdgid) == pdg_el){
 
 	  if(nGoodLeptons>1){
-	    int binX = h_el_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
-	    int binY = h_el_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	    int binX = h_el_SF->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_SF, (float)lep2.p4.Pt() ), xmin_h_el_SF ) );
+	    int binY = h_el_SF->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_SF, (float)lep2.p4.Eta()), ymin_h_el_SF ) );
 	    lepSF    *= h_el_SF->GetBinContent( binX, binY );
 	    lepSF_Up *= ( lepSF + h_el_SF->GetBinError( binX, binY ) );
 	    lepSF_Dn *= ( lepSF - h_el_SF->GetBinError( binX, binY ) );
 	    
 	    if(skim_isFastsim){
-	      int bin_FS  = h_el_FS->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ), fabs(lep2.p4.Eta()) );
+	      int bin_FS  = h_el_FS->FindBin( std::max( std::min(xmax_h_el_FS, (float)lep2.p4.Pt()), xmin_h_el_FS ), std::max( std::min(ymax_h_el_FS, float(fabs(lep2.p4.Eta())) ), ymin_h_el_FS ) );
 	      lepSF_FS    *= h_el_FS->GetBinContent(bin_FS);
 	      lepSF_FS_Up *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
 	      lepSF_FS_Dn *= (lepSF_FS + h_el_FS->GetBinError(bin_FS));
 	    }
 	  } // end if 2 good electrons
 	  else{
-	    int binX = h_el_SF_veto->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
-	    int binY = h_el_SF_veto->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	    int binX = h_el_SF_veto->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_SF_veto, (float)lep2.p4.Pt()), xmin_h_el_SF_veto ) );
+	    int binY = h_el_SF_veto->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_SF_veto, float(fabs(lep2.p4.Eta())) ), ymin_h_el_SF_veto ) );
 	    lepSF    *= h_el_SF_veto->GetBinContent( binX, binY );
 	    lepSF_Up *= ( lepSF + h_el_SF_veto->GetBinError( binX, binY ) );
 	    lepSF_Dn *= ( lepSF - h_el_SF_veto->GetBinError( binX, binY ) );
 	    
 	    if(skim_isFastsim){
-	      int bin_FS  = h_el_veto_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), lepSF_FS_pt_min ), fabs(lep2.p4.Eta()) );
+	      int bin_FS  = h_el_veto_FS->FindBin( std::max( std::min(xmax_h_el_veto_FS, (float)lep2.p4.Pt()), xmin_h_el_veto_FS ), std::max( std::min(ymax_h_el_veto_FS,float(fabs(lep2.p4.Eta())) ),ymin_h_el_veto_FS ) );
 	      lepSF_FS    *= h_el_veto_FS->GetBinContent(bin_FS);
 	      lepSF_FS_Up *= (lepSF_FS + h_el_veto_FS->GetBinError(bin_FS));
 	      lepSF_FS_Dn *= (lepSF_FS + h_el_veto_FS->GetBinError(bin_FS));
 	    }
 	  }
 	  
-	  int binX = h_el_SF_tracking->GetXaxis()->FindBin( std::max( std::min(2.39, (double)lep2.p4.Eta()), -2.39) );
-	  int binY = h_el_SF_tracking->GetYaxis()->FindBin( std::max( std::min(199.0, (double)lep2.p4.Pt()), 21.0) );
+	  int binX = h_el_SF_tracking->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_SF_tracking, float(fabs(lep1.p4.Eta())) ),xmin_h_el_SF_tracking) );
+	  int binY = h_el_SF_tracking->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_SF_tracking,(float)lep1.p4.Pt()), ymin_h_el_SF_tracking ) );
 	  lepSF *= h_el_SF_tracking->GetBinContent( binX, binY );
 	  lepSF_Up *= ( h_el_SF_tracking->GetBinContent(binX,binY) + h_el_SF_tracking->GetBinError(binX,binY) );
 	  lepSF_Dn *= ( h_el_SF_tracking->GetBinContent(binX,binY) - h_el_SF_tracking->GetBinError(binX,binY) );
@@ -1472,14 +1565,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(abs(lep2.pdgid) == pdg_mu){
 
 	  if(nGoodLeptons>1){
-	    int binX = h_mu_SF->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
-	    int binY = h_mu_SF->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	    int binX = h_mu_SF->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_SF, (float)lep2.p4.Pt()), xmin_h_mu_SF ) );
+	    int binY = h_mu_SF->GetYaxis()->FindBin( std::max( std::min(ymax_h_mu_SF, float(fabs(lep2.p4.Eta())) ), ymin_h_mu_SF ) );
 	    lepSF    *= h_mu_SF->GetBinContent( binX, binY );
 	    lepSF_Up *= ( lepSF + h_mu_SF->GetBinError( binX, binY ) );
 	    lepSF_Dn *= ( lepSF - h_mu_SF->GetBinError( binX, binY ) );
 	    
 	    if(skim_isFastsim){
-	      int bin_FS  = h_mu_FS->FindBin( std::max( std::min(lepSF_FS_pt_cutoff, (float)lep2.p4.Pt()), lepSF_FS_pt_min ), fabs(lep2.p4.Eta()) );
+	      int bin_FS  = h_mu_FS->FindBin( std::max( std::min(xmax_h_mu_FS, (float)lep2.p4.Pt()), xmin_h_mu_FS ), std::max( std::min(ymax_h_mu_FS, float(fabs(lep2.p4.Eta()) )), ymin_h_mu_FS ) );
 	      lepSF_FS    *= h_mu_FS->GetBinContent(bin_FS);
 	      lepSF_FS_Up *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
 	      lepSF_FS_Dn *= lepSF_FS + h_mu_FS->GetBinError(bin_FS);
@@ -1487,14 +1580,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  } // end if 2 good leptons
 	  
 	  else{
-	    int binX = h_mu_SF_veto->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ) );
-	    int binY = h_mu_SF_veto->GetYaxis()->FindBin( fabs(lep2.p4.Eta()) );
+	    int binX = h_mu_SF_veto->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_SF_veto, (float)lep2.p4.Pt()), xmin_h_mu_SF_veto ) );
+	    int binY = h_mu_SF_veto->GetYaxis()->FindBin( std::max( std::min(ymax_h_mu_SF_veto, float(fabs(lep2.p4.Eta()))), ymin_h_mu_SF_veto ) );
 	    lepSF    *= h_mu_SF_veto->GetBinContent( binX, binY );
 	    lepSF_Up *= ( lepSF + h_mu_SF_veto->GetBinError( binX, binY ) );
 	    lepSF_Dn *= ( lepSF - h_mu_SF_veto->GetBinError( binX, binY ) );
 	    
 	    if(skim_isFastsim){
-	      int bin_FS  = h_mu_veto_FS->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)lep2.p4.Pt()), lepSF_pt_min ), fabs(lep2.p4.Eta()) );
+	      int bin_FS  = h_mu_veto_FS->FindBin( std::max( std::min(xmax_h_mu_veto_FS, (float)lep2.p4.Pt()), xmin_h_mu_veto_FS ), std::max( std::min(ymax_h_mu_veto_FS, float(fabs(lep2.p4.Eta()))), ymin_h_mu_veto_FS ) );
 	      lepSF_FS    *= h_mu_veto_FS->GetBinContent(bin_FS);
 	      lepSF_FS_Up *= lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
 	      lepSF_FS_Dn *= lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
@@ -1502,7 +1595,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  }
 	} // end if 2nd lep is mu
 	
-	int binX = h_mu_SF_tracking->GetXaxis()->FindBin( std::max(-2.23,(double)lep2.p4.Eta()) );
+	int binX = h_mu_SF_tracking->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_SF_tracking,(float)lep1.p4.Eta()), xmin_h_mu_SF_tracking ) );
 	lepSF *= h_mu_SF_tracking->GetBinContent( binX );
 	lepSF_Up *= ( h_mu_SF_tracking->GetBinContent(binX) + h_mu_SF_tracking->GetBinError(binX) );
 	lepSF_Dn *= ( h_mu_SF_tracking->GetBinContent(binX) - h_mu_SF_tracking->GetBinError(binX) );
@@ -1524,16 +1617,31 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if( abs(gen_leps.id.at(iGen))==11 ) h_vetoLep_eff = h_el_vetoLepEff;
 	  if( abs(gen_leps.id.at(iGen))==13 ) h_vetoLep_eff = h_mu_vetoLepEff;
 	  
-	  int binX_eff = h_vetoLep_eff->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)gen_leps.p4.at(iGen).Pt()), lepSF_pt_min ) );
-	  int binY_eff = h_vetoLep_eff->GetYaxis()->FindBin( fabs(gen_leps.p4.at(iGen).Eta()) );
+	  int binX_eff = 1;
+	  int binY_eff = 1;
+	  if( abs(gen_leps.id.at(iGen))==11 ) {
+	    binX_eff = h_vetoLep_eff->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_vetoLepEff, (float)gen_leps.p4.at(iGen).Pt()), xmin_h_el_vetoLepEff ) );
+	    binY_eff = h_vetoLep_eff->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_vetoLepEff, float(fabs(gen_leps.p4.at(iGen).Eta()))), ymin_h_el_vetoLepEff ) );
+	  }
+	  else {
+	    binX_eff = h_vetoLep_eff->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_vetoLepEff, (float)gen_leps.p4.at(iGen).Pt()), xmin_h_mu_vetoLepEff ) );
+	    binY_eff = h_vetoLep_eff->GetYaxis()->FindBin( std::max( std::min(ymax_h_mu_vetoLepEff, float(fabs(gen_leps.p4.at(iGen).Eta()))), ymin_h_mu_vetoLepEff ) );
+	  }
 	  double vetoEff = h_vetoLep_eff->GetBinContent( binX_eff, binY_eff );
 	  
 	  TH2D *h_lep_sf = NULL;
 	  if( abs(gen_leps.id.at(iGen))==11 ) h_lep_sf = h_el_SF_veto;
 	  if( abs(gen_leps.id.at(iGen))==13 ) h_lep_sf = h_mu_SF_veto;
 
-	  int binX_sf = h_lep_sf->GetXaxis()->FindBin( std::max( std::min(lepSF_pt_cutoff, (float)gen_leps.p4.at(iGen).Pt()), lepSF_pt_min ) );
-	  int binY_sf = h_lep_sf->GetYaxis()->FindBin( fabs(gen_leps.p4.at(iGen).Eta()) );
+	  int binX_sf=1;
+	  int binY_sf=1;
+	  if( abs(gen_leps.id.at(iGen))==11 ) {
+	    binX_sf = h_lep_sf->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_SF_veto, (float)gen_leps.p4.at(iGen).Pt()), xmin_h_el_SF_veto ) );
+	    binY_sf = h_lep_sf->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_SF_veto, float(fabs(gen_leps.p4.at(iGen).Eta()))), ymin_h_el_SF_veto ) );
+	  } else {
+	    binX_sf = h_lep_sf->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_SF_veto, (float)gen_leps.p4.at(iGen).Pt()), xmin_h_mu_SF_veto ) );
+	    binY_sf = h_lep_sf->GetYaxis()->FindBin( std::max( std::min(ymax_h_mu_SF_veto, float(fabs(gen_leps.p4.at(iGen).Eta()))), ymin_h_mu_SF_veto ) );
+	  }
 	  
 	  double vetoLepSF_temp    = h_lep_sf->GetBinContent( binX_sf, binY_sf );
 	  double vetoLepSF_temp_Up = vetoLepSF_temp + h_lep_sf->GetBinError( binX_sf, binY_sf );
@@ -1560,6 +1668,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.weight_lepSF      = lepSF;
       StopEvt.weight_lepSF_up   = lepSF_Up;
       StopEvt.weight_lepSF_down = lepSF_Dn;
+      if(lepSF==0) cout << "FUCK" << endl;
 
       StopEvt.weight_vetoLepSF      = vetoLepSF;
       StopEvt.weight_vetoLepSF_up   = vetoLepSF_Up;
