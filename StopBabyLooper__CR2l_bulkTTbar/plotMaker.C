@@ -43,7 +43,8 @@ void plotMaker( bool plotByGenDecay=true ){
   
   //double lumi    = 12.9; // 2016 ICHEp
   //double lumi    = 29.53; // 2016 intermediate status update
-  double lumi    = 36.46; // 2016 final lumi
+  //double lumi    = 36.46; // 2016 preapproval lumi
+  double lumi    = 36.814; // 2016 final lumi
   
   double sig_SF  = 1.0;
 
@@ -220,6 +221,23 @@ void plotMaker( bool plotByGenDecay=true ){
   var_list_title.push_back( "CR2l bulkTTbar Region Yields" );
   var_list_xaxis.push_back( "Yields" );
 
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+  // Plot nVtxs
+
+  // ge0bTags
+  var_list_label.push_back( "h_nVtx" );
+  var_list_title.push_back( "Number of Primary Vertices" );
+  var_list_xaxis.push_back( "nVtx" );
+  
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
@@ -540,6 +558,203 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_nBins.push_back(nRebins_lep2Pt_ge2bTags);
   var_rebin_xBins.push_back(xRebins_lep2Pt_ge2bTags);
   var_rebin_xBinsSF.push_back(xRebinsSF_lep2Pt_ge2bTags);
+
+
+  // Plot elPt
+  
+  // ge0bTags
+  var_list_label.push_back( "h_elPt__ge0bTags" );
+  var_list_title.push_back( "elPt, >=0 bTags" );
+  var_list_xaxis.push_back( "elPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge0bTags, Rebinned
+  var_list_label.push_back( "h_elPt__ge0bTags" );
+  var_list_title.push_back( "elPt, >=0 bTags" );
+  var_list_xaxis.push_back( "elPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_elPt_ge0bTags = 10;
+  double xRebins_elPt_ge0bTags[nRebins_elPt_ge0bTags+1]{ 0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 160.0, 180.0, 200.0 };
+  double xRebinsSF_elPt_ge0bTags[nRebins_elPt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_elPt_ge0bTags);
+  var_rebin_xBins.push_back(xRebins_elPt_ge0bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_elPt_ge0bTags);
+
+
+  // ge1bTags
+  var_list_label.push_back( "h_elPt__ge1bTags" );
+  var_list_title.push_back( "elPt, >=1 bTags" );
+  var_list_xaxis.push_back( "elPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_elPt__ge1bTags" );
+  var_list_title.push_back( "elPt, >=1 bTags" );
+  var_list_xaxis.push_back( "elPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_elPt_ge1bTags = 10;
+  double xRebins_elPt_ge1bTags[nRebins_elPt_ge1bTags+1]{ 0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 160.0, 180.0, 200.0 };
+  double xRebinsSF_elPt_ge1bTags[nRebins_elPt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_elPt_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_elPt_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_elPt_ge1bTags);
+
+
+  // ge2bTags
+  var_list_label.push_back( "h_elPt__ge2bTags" );
+  var_list_title.push_back( "elPt, >=2 bTags" );
+  var_list_xaxis.push_back( "elPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge2bTags, Rebinned
+  var_list_label.push_back( "h_elPt__ge2bTags" );
+  var_list_title.push_back( "elPt, >=2 bTags" );
+  var_list_xaxis.push_back( "elPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_elPt_ge2bTags = 10;
+  double xRebins_elPt_ge2bTags[nRebins_elPt_ge2bTags+1]{ 0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 160.0, 180.0, 200.0 };
+  double xRebinsSF_elPt_ge2bTags[nRebins_elPt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_elPt_ge2bTags);
+  var_rebin_xBins.push_back(xRebins_elPt_ge2bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_elPt_ge2bTags);
+
+
+
+  // Plot muPt
+  
+  // ge0bTags
+  var_list_label.push_back( "h_muPt__ge0bTags" );
+  var_list_title.push_back( "muPt, >=0 bTags" );
+  var_list_xaxis.push_back( "muPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge0bTags, Rebinned
+  var_list_label.push_back( "h_muPt__ge0bTags" );
+  var_list_title.push_back( "muPt, >=0 bTags" );
+  var_list_xaxis.push_back( "muPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_muPt_ge0bTags = 10;
+  double xRebins_muPt_ge0bTags[nRebins_muPt_ge0bTags+1]{ 0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 160.0, 180.0, 200.0 };
+  double xRebinsSF_muPt_ge0bTags[nRebins_muPt_ge0bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_muPt_ge0bTags);
+  var_rebin_xBins.push_back(xRebins_muPt_ge0bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_muPt_ge0bTags);
+
+
+  // ge1bTags
+  var_list_label.push_back( "h_muPt__ge1bTags" );
+  var_list_title.push_back( "muPt, >=1 bTags" );
+  var_list_xaxis.push_back( "muPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_muPt__ge1bTags" );
+  var_list_title.push_back( "muPt, >=1 bTags" );
+  var_list_xaxis.push_back( "muPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_muPt_ge1bTags = 10;
+  double xRebins_muPt_ge1bTags[nRebins_muPt_ge1bTags+1]{ 0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 160.0, 180.0, 200.0 };
+  double xRebinsSF_muPt_ge1bTags[nRebins_muPt_ge1bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_muPt_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_muPt_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_muPt_ge1bTags);
+
+
+  // ge2bTags
+  var_list_label.push_back( "h_muPt__ge2bTags" );
+  var_list_title.push_back( "muPt, >=2 bTags" );
+  var_list_xaxis.push_back( "muPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // ge2bTags, Rebinned
+  var_list_label.push_back( "h_muPt__ge2bTags" );
+  var_list_title.push_back( "muPt, >=2 bTags" );
+  var_list_xaxis.push_back( "muPt" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_muPt_ge2bTags = 10;
+  double xRebins_muPt_ge2bTags[nRebins_muPt_ge2bTags+1]{ 0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 160.0, 180.0, 200.0 };
+  double xRebinsSF_muPt_ge2bTags[nRebins_muPt_ge2bTags]{   0.2,  0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2,   0.2 };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_muPt_ge2bTags);
+  var_rebin_xBins.push_back(xRebins_muPt_ge2bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_muPt_ge2bTags);
 
 
   // Plot diLepPt

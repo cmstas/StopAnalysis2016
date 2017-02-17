@@ -317,7 +317,23 @@ sysInfo::Util::Util( sysInfo::ID systematic ){
     tex         = "Signal~X-Section,~Down";
     hasOwnBabies = false;
     break; 
-    
+
+  case( k_puUp ):
+    id          = systematic;
+    label       = "pileupUp";
+    title       = "Pileup Reweight, Up";
+    tex         = "Pileup~Reweight,~Up";
+    hasOwnBabies = false;
+    break; 
+
+  case( k_puDown ):
+    id          = systematic;
+    label       = "pileupDn";
+    title       = "Pileup Reweight, Down";
+    tex         = "Pileup~Reweight,~Down";
+    hasOwnBabies = false;
+    break; 
+
   default:
     std::cout << "Could not find systematic info from systematic enum provided!" << std::endl;
     id           = systematic;
@@ -340,7 +356,8 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
   // Utilty Var Constants
   dr_matched = 0.1;
-  lumi       = 36.46; // Current lumi
+  lumi       = 36.814; // Current lumi
+  //lumi       = 36.46; // Pre-approval, frozen lumi
   //lumi       = 29.53; // lumi for intermediate status update
   //lumi       = 12.9; // ICHEP lumi
   lumi_err   = lumi*0.062; // 6.2% for ICHEP lumi uncertainty
@@ -356,6 +373,7 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   apply_metRes_sf       = false;
   apply_ttbarSysPt_sf   = false;
   apply_ISR_sf          = false;
+  apply_pu_sf           = false;
   apply_sample_sf       = false;
 
   // Decision to use Utilities vs direct from baby for bTag and lep SFs
@@ -374,6 +392,9 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   h_bkg_counter = NULL;
   h_cr2lTrigger_sf_el = NULL;
   h_cr2lTrigger_sf_mu = NULL;
+  h_pu_wgt = NULL;
+  h_pu_wgt_up = NULL;
+  h_pu_wgt_dn = NULL;
 
   // Get Signal XSection File
   if( sample_info->isSignal ){
@@ -383,8 +404,6 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
   // Get SR trigger histos
   if( !sample_info->isData ){
-    //f_cr2lTrigger_sf = new TFile("../StopCORE/inputs/trigger/triggerefficiency_2lCR.root","read");
-    //h_cr2lTrigger_sf = (TH2D*)f_cr2lTrigger_sf->Get("twoDefficiencypass");
     f_cr2lTrigger_sf = new TFile("../StopCORE/inputs/trigger/TriggerEff_2016.root","read");
     h_cr2lTrigger_sf_el = (TEfficiency*)f_cr2lTrigger_sf->Get("Efficiency_ge2l_metrl_el");
     h_cr2lTrigger_sf_mu = (TEfficiency*)f_cr2lTrigger_sf->Get("Efficiency_ge2l_metrl_mu");
@@ -400,7 +419,14 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   if( !sample_info->isData && useLepSFs_fromUtils ){
     lepSFUtil  = new eventWeight_lepSF( sample_info->isFastsim );
   }
-   
+
+  // Get pileup wgt histo
+  if( !sample_info->isData ){
+    f_pu = new TFile("../StopCORE/inputs/pileup/pileup_wgts.root", "read");
+    h_pu_wgt = (TH1D*)f_pu->Get("h_pileup_wgt");
+    h_pu_wgt_up = (TH1D*)f_pu->Get("h_pileup_wgt_up");
+    h_pu_wgt_dn = (TH1D*)f_pu->Get("h_pileup_wgt_down");
+  }
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -475,7 +501,16 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_bTagEffHF_dn = 1.0;
   sf_bTagEffLF_up = 1.0;
   sf_bTagEffLF_dn = 1.0;
-  
+  sf_bTag_FS_up = 1.0;
+  sf_bTag_FS_dn = 1.0;
+  sf_bTag_tight = 1.0;
+  sf_bTagEffHF_tight_up = 1.0;
+  sf_bTagEffHF_tight_dn = 1.0;
+  sf_bTagEffLF_tight_up = 1.0;
+  sf_bTagEffLF_tight_dn = 1.0;
+  sf_bTag_tight_FS_up = 1.0;
+  sf_bTag_tight_FS_dn = 1.0;
+    
   sf_lep = 1.0;
   sf_lep_up = 1.0;
   sf_lep_dn = 1.0;
@@ -525,6 +560,10 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_lumi = 1.0;
   sf_lumi_up = 1.0;
   sf_lumi_dn = 1.0;
+
+  sf_pu = 1.0;
+  sf_pu_up = 1.0;
+  sf_pu_dn = 1.0;
   
   sf_xsec_up = 1.0;
   sf_xsec_dn = 1.0;
@@ -565,7 +604,10 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   getCR2lTriggerWeight( sf_cr2lTrigger, sf_cr2lTrigger_up, sf_cr2lTrigger_dn );
   
   // btag
-  getBTagWeight( sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn ); 
+  getBTagWeight( sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn, sf_bTag_FS_up, sf_bTag_FS_dn ); 
+
+  // btag, tightWP
+  getBTagWeight_tightWP( sf_bTag_tight, sf_bTagEffHF_tight_up, sf_bTagEffHF_tight_dn, sf_bTagEffLF_tight_up, sf_bTagEffLF_tight_dn, sf_bTag_tight_FS_up, sf_bTag_tight_FS_dn ); 
   
   // lepSFs
   getLepSFWeight( sf_lep, sf_lep_up, sf_lep_dn, sf_lepFS, sf_lepFS_up, sf_lepFS_dn, sf_vetoLep, sf_vetoLep_up, sf_vetoLep_dn );
@@ -585,6 +627,9 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   // ISR Correction
   //if( sample_info->isSignal ) getISRWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
   getISRnJetsWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
+
+  // Pileup Reweighting
+  getPileupWeight( sf_pu, sf_pu_up, sf_pu_dn );
   
   // Sample Scale Factor
   sf_sample = getSampleWeight( sample_info->id );
@@ -656,6 +701,10 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   // Apply ISR SF ( switched to ISRnjets )
   double wgt_ISR = sf_ISR;
   evt_wgt *= wgt_ISR;
+
+  // Apply Pileup Wgt
+  double wgt_pu = sf_pu;
+  evt_wgt *= wgt_pu;
   
   // Apply sample weight (for WJets stitching)
   double wgt_sample = sf_sample;
@@ -859,7 +908,17 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     else if( iSys==k_xsecDown ){
       sys_wgt *= (sf_xsec_dn/xsec);
     }
-     
+    
+    // Pileup Up
+    else if( iSys==k_puUp ){
+      sys_wgt *= (sf_pu_up/wgt_pu);
+    }
+
+    // Pileup Dn
+    else if( iSys==k_puDown ){
+      sys_wgt *= (sf_pu_dn/wgt_pu);
+    }
+    
 
     // Fill Array Element
     sys_wgts[iSys] = sys_wgt;
@@ -950,8 +1009,10 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // DiElectron Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==22 ){
-    sf_val = 0.869669; // 36.46fb
-    sf_err = 0.00456458;
+    sf_val = 0.869221; // 36.46fb, updated JECs
+    sf_err = 0.00452205;
+    //sf_val = 0.869669; // 36.46fb
+    //sf_err = 0.00456458;
     //sf_val = 0.884591; // 29.53fb
     //sf_err = 0.00811308;
     //sf_val = 0.883481; // 12.9fb ICHEP
@@ -960,8 +1021,10 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // MuE Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==24 ){
-    sf_val = 0.86165; // 36.46fb
-    sf_err = 0.00255978;
+    sf_val = 0.86275; // 36.46fb, updated JECs
+    sf_err = 0.00207544;
+    //sf_val = 0.86165; // 36.46fb
+    //sf_err = 0.00255978;
     //sf_val = 0.908511; // 29.53fb
     //sf_err = 0.00420534;
     //sf_val = 0.893801; // 12.9fb ICHEP
@@ -970,8 +1033,10 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // DiMuon Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==26 ){
-    sf_val = 0.819581; // 36.46fb
-    sf_err = 0.00406059;
+    sf_val = 0.813382; // 36.46fb, updated JECs
+    sf_err = 0.00295138;
+    //sf_val = 0.819581; // 36.46fb
+    //sf_err = 0.00406059;
     //sf_val = 0.858291; // 29.53fb
     //sf_err = 0.00666499;
     //sf_val = 0.841817; // 12.9fb ICHEP
@@ -1106,14 +1171,15 @@ void sysInfo::evtWgtInfo::getCR2lTriggerWeight( double &wgt_trigger, double &wgt
 
 //////////////////////////////////////////////////////////////////////
 
-
-void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ){
+void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
 
   wgt_btagsf       = 1.0;
   wgt_btagsf_hf_up = 1.0;
   wgt_btagsf_hf_dn = 1.0;
   wgt_btagsf_lf_up = 1.0;
   wgt_btagsf_lf_dn = 1.0;
+  wgt_btagsf_fs_up = 1.0;
+  wgt_btagsf_fs_dn = 1.0;
 
   if( !apply_bTag_sf ) return;
 
@@ -1126,6 +1192,11 @@ void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_
     wgt_btagsf_hf_dn = babyAnalyzer.weight_btagsf_heavy_DN();
     wgt_btagsf_lf_up = babyAnalyzer.weight_btagsf_light_UP();
     wgt_btagsf_lf_dn = babyAnalyzer.weight_btagsf_light_DN();
+    
+    if( sample_info->isFastsim ){
+      wgt_btagsf_fs_up = babyAnalyzer.weight_btagsf_fastsim_UP();
+      wgt_btagsf_fs_dn = babyAnalyzer.weight_btagsf_fastsim_DN();
+    }
   }
   
   // Normalization
@@ -1139,6 +1210,11 @@ void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_
     wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,17)) );
     wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,16)) );
     wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,18)) );
+    
+    if( sample_info->isFastsim ){
+      wgt_btagsf_fs_up = ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,22)) );
+      wgt_btagsf_fs_dn = ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,23)) );
+    }
   }
   else{
     wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(14) );
@@ -1146,6 +1222,73 @@ void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_
     wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(17) );
     wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(16) );
     wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(18) );
+
+    if( sample_info->isFastsim ){
+      wgt_btagsf_fs_up = ( nEvents / h_bkg_counter->GetBinContent(23) );
+      wgt_btagsf_fs_dn = ( nEvents / h_bkg_counter->GetBinContent(24) );
+    }
+  }
+  
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, double &wgt_btagsf_hf_tight_up, double &wgt_btagsf_hf_tight_dn, double &wgt_btagsf_lf_tight_up, double &wgt_btagsf_lf_tight_dn, double &wgt_btagsf_tight_fs_up, double &wgt_btagsf_tight_fs_dn ){
+
+  wgt_btagsf_tight       = 1.0;
+  wgt_btagsf_hf_tight_up = 1.0;
+  wgt_btagsf_hf_tight_dn = 1.0;
+  wgt_btagsf_lf_tight_up = 1.0;
+  wgt_btagsf_lf_tight_dn = 1.0;
+  wgt_btagsf_tight_fs_up = 1.0;
+  wgt_btagsf_tight_fs_dn = 1.0;
+
+  if( !apply_bTag_sf ) return;
+
+  if( useBTagSFs_fromUtils ){
+    //getBTagWeight_fromUtils( wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn ); 
+  }
+  else{
+    wgt_btagsf_tight       = babyAnalyzer.weight_tightbtagsf();
+    wgt_btagsf_hf_tight_up = babyAnalyzer.weight_tightbtagsf_heavy_UP();
+    wgt_btagsf_hf_tight_dn = babyAnalyzer.weight_tightbtagsf_heavy_DN();
+    wgt_btagsf_lf_tight_up = babyAnalyzer.weight_tightbtagsf_light_UP();
+    wgt_btagsf_lf_tight_dn = babyAnalyzer.weight_tightbtagsf_light_DN();
+    
+    if( sample_info->isFastsim ){
+      wgt_btagsf_tight_fs_up = babyAnalyzer.weight_tightbtagsf_fastsim_UP();
+      wgt_btagsf_tight_fs_dn = babyAnalyzer.weight_tightbtagsf_fastsim_DN();
+    }
+  }
+  
+  // Normalization
+  getNEvents( nEvents );
+  
+  if( sample_info->isSignal ){
+    getSusyMasses(mStop,mLSP);
+  
+    wgt_btagsf_tight       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,37)) );
+    wgt_btagsf_hf_tight_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,38)) );
+    wgt_btagsf_hf_tight_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,40)) );
+    wgt_btagsf_lf_tight_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,39)) );
+    wgt_btagsf_lf_tight_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,41)) );
+
+    if( sample_info->isFastsim ){
+      wgt_btagsf_tight_fs_up = ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,42)) );
+      wgt_btagsf_tight_fs_dn = ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,43)) );
+    }
+  }
+  else{
+    wgt_btagsf_tight       *= ( nEvents / h_bkg_counter->GetBinContent(37) );
+    wgt_btagsf_hf_tight_up *= ( nEvents / h_bkg_counter->GetBinContent(38) );
+    wgt_btagsf_hf_tight_dn *= ( nEvents / h_bkg_counter->GetBinContent(40) );
+    wgt_btagsf_lf_tight_up *= ( nEvents / h_bkg_counter->GetBinContent(39) );
+    wgt_btagsf_lf_tight_dn *= ( nEvents / h_bkg_counter->GetBinContent(41) );
+
+    if( sample_info->isFastsim ){
+      wgt_btagsf_tight_fs_up = ( nEvents / h_bkg_counter->GetBinContent(42) );
+      wgt_btagsf_tight_fs_dn = ( nEvents / h_bkg_counter->GetBinContent(43) );
+    }
   }
   
 }
@@ -1579,23 +1722,31 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( nJets<4 && modTop>=10 && mlb<175 ){
   
     if( met>=250.0 && met<350.0 ){
-      sf_val = 0.98;
+      sf_val = 0.99;
       sf_err = 0.01;
+      //sf_val = 0.98; // SUS-16-051 preapproval
+      //sf_err = 0.01;
     }
   
     if( met>=350.0 && met<450.0 ){
-      sf_val = 1.07;
+      sf_val = 1.04;
       sf_err = 0.01;
+      //sf_val = 1.07;
+      //sf_err = 0.01;
     }
   
     if( met>=450.0 && met<600.0 ){
-      sf_val = 1.14;
-      sf_err = 0.02;
+      sf_val = 1.11;
+      sf_err = 0.01;
+      //sf_val = 1.14;
+      //sf_err = 0.02;
     }
   
     if( met>=600.0 ){
-      sf_val = 1.24;
+      sf_val = 1.17;
       sf_err = 0.03;
+      //sf_val = 1.24;
+      //sf_err = 0.03;
     }
     
   } // end if region A
@@ -1605,18 +1756,24 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( nJets<4 && modTop>=10 && mlb>=175 ){
   
     if( met>=250.0 && met<450.0 ){
-      sf_val = 0.99;
-      sf_err = 0.00;
+      sf_val = 1.00;
+      sf_err = 0.01;
+      //sf_val = 0.99;
+      //sf_err = 0.00;
     }
     
     if( met>=450.0 && met<600.0 ){
-      sf_val = 1.14;
-      sf_err = 0.02;
+      sf_val = 1.11;
+      sf_err = 0.01;
+      //sf_val = 1.14;
+      //sf_err = 0.02;
     }
   
     if( met>=600.0 ){
-      sf_val = 1.24;
-      sf_err = 0.03;
+      sf_val = 1.17;
+      sf_err = 0.02;
+      //sf_val = 1.24;
+      //sf_err = 0.03;
     }
     
   } // end if region B
@@ -1626,28 +1783,38 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( nJets>=4 && modTop<0.0 && mlb<175 ){
     
     if( met>=250.0 && met<350.0 ){
-      sf_val = 0.98;
+      sf_val = 0.99;
       sf_err = 0.01;
+      //sf_val = 0.98;
+      //sf_err = 0.01;
     }
     
     if( met>=350.0 && met<450.0 ){
-      sf_val = 1.06;
-      sf_err = 0.02;
+      sf_val = 1.05;
+      sf_err = 0.01;
+      //sf_val = 1.06;
+      //sf_err = 0.02;
     }
   
     if( met>=450.0 && met<550.0 ){
-      sf_val = 1.12;
-      sf_err = 0.05;
+      sf_val = 1.07;
+      sf_err = 0.04;
+      //sf_val = 1.12;
+      //sf_err = 0.05;
     }
   
     if( met>=550.0 && met<650.0 ){
-      sf_val = 1.21;
-      sf_err = 0.05;
+      sf_val = 1.10;
+      sf_err = 0.04;
+      //sf_val = 1.21;
+      //sf_err = 0.05;
     }
   
     if( met>=650.0 ){
-      sf_val = 1.18;
+      sf_val = 1.14;
       sf_err = 0.05;
+      //sf_val = 1.18;
+      //sf_err = 0.05;
     }
       
   } // end if region C
@@ -1657,23 +1824,31 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( nJets>=4 && modTop<0.0 && mlb>=175.0 ){
     
     if( met>=250.0 && met<350.0 ){
-      sf_val = 0.98;
+      sf_val = 0.99;
       sf_err = 0.01;
+      //sf_val = 0.98;
+      //sf_err = 0.01;
     }
     
     if( met>=350.0 && met<450.0 ){
-      sf_val = 1.06;
-      sf_err = 0.02;
+      sf_val = 1.05;
+      sf_err = 0.01;
+      //sf_val = 1.06;
+      //sf_err = 0.02;
     }
 
     if( met>=450.0 && met<550.0 ){
-      sf_val = 1.12;
-      sf_err = 0.05;
+      sf_val = 1.07;
+      sf_err = 0.04;
+      //sf_val = 1.12;
+      //sf_err = 0.05;
     }
 
     if( met>=550.0 ){
-      sf_val = 1.20;
-      sf_err = 0.04;
+      sf_val = 1.11;
+      sf_err = 0.03;
+      //sf_val = 1.20;
+      //sf_err = 0.04;
     }
       
   } // end if region D
@@ -1683,18 +1858,24 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( nJets>=4 && modTop>=0.0 && modTop<10.0 && mlb<175 ){
 
     if( met>=250.0 && met<350.0 ){
-      sf_val = 0.97;
+      sf_val = 0.98;
       sf_err = 0.01;
+      //sf_val = 0.97;
+      //sf_err = 0.01;
     }
     
     if( met>=350.0 && met<550.0 ){
-      sf_val = 1.08;
-      sf_err = 0.02;
+      sf_val = 1.06;
+      sf_err = 0.01;
+      //sf_val = 1.08;
+      //sf_err = 0.02;
     }
 
     if( met>=550.0 ){
-      sf_val = 1.13;
+      sf_val = 1.10;
       sf_err = 0.03;
+      //sf_val = 1.13;
+      //sf_err = 0.03;
     }
     
   } // end if region E
@@ -1706,11 +1887,15 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
     if( met>=250.0 && met<450.0 ){
       sf_val = 0.99;
       sf_err = 0.01;
+      //sf_val = 0.99;
+      //sf_err = 0.01;
     }
     
     if( met>=450.0 ){
-      sf_val = 1.12;
+      sf_val = 1.07;
       sf_err = 0.02;
+      //sf_val = 1.12;
+      //sf_err = 0.02;
     }
     
   } // end if region F
@@ -1720,23 +1905,31 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   if( nJets>=4 && modTop>=10.0 && mlb<175 ){
 
     if( met>=250.0 && met<350.0 ){
-      sf_val = 0.97;
+      sf_val = 0.98;
       sf_err = 0.01;
+      //sf_val = 0.97;
+      //sf_err = 0.01;
     }
     
     if( met>=350.0 && met<450.0 ){
-      sf_val = 1.08;
-      sf_err = 0.02;
+      sf_val = 1.06;
+      sf_err = 0.01;
+      //sf_val = 1.08;
+      //sf_err = 0.02;
     }
 
     if( met>=450.0 && met<600.0 ){
-      sf_val = 1.12;
-      sf_err = 0.03;
+      sf_val = 1.07;
+      sf_err = 0.02;
+      //sf_val = 1.12;
+      //sf_err = 0.03;
     }
 
     if( met>=600.0 ){
-      sf_val = 1.11;
+      sf_val = 1.08;
       sf_err = 0.04;
+      //sf_val = 1.11;
+      //sf_err = 0.04;
     }
     
   } // end if region G
@@ -1748,11 +1941,15 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
     if( met>=250.0 && met<450.0 ){
       sf_val = 0.99;
       sf_err = 0.01;
+      //sf_val = 0.99;
+      //sf_err = 0.01;
     }
     
     if( met>=450.0 ){
-      sf_val = 1.12;
+      sf_val = 1.07;
       sf_err = 0.02;
+      //sf_val = 1.12;
+      //sf_err = 0.02;
     }
     
   } // end if region H
@@ -1796,12 +1993,39 @@ void sysInfo::evtWgtInfo::getMetResWeight_corridor( double &weight_metRes, doubl
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
-      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 && 
+      sample_info->id != sampleInfo::k_WJetsToLNu &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_amcnlo_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT100To200_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT200To400_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT400To600_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT600To800_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT800To1200_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT1200To2500_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WJetsToLNu_HT2500ToInf_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_WNJetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W1JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W2JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W3JetsToLNu_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W4JetsToLNu_madgraph_pythia8 && 
+      sample_info->id != sampleInfo::k_W1JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W2JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W3JetsToLNu_NuPt200_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_W4JetsToLNu_NuPt200_madgraph_pythia8
       ) return;
   
 
   // 2lep events only
-  if( !babyAnalyzer.is2lep() ) return;
+  //if( !babyAnalyzer.is2lep() ) return;
 
 
   // Met bin
@@ -1818,23 +2042,31 @@ void sysInfo::evtWgtInfo::getMetResWeight_corridor( double &weight_metRes, doubl
   //
   
   if( met>=250.0 && met<350.0 ){
-    sf_val = 0.97;
+    sf_val = 0.98;
     sf_err = 0.02;
+    //sf_val = 0.97; // 2016 SUS-16-051 pre-approval #s
+    //sf_err = 0.02;
   }
   
   if( met>=350.0 && met<450.0 ){
-    sf_val = 1.05;
-    sf_err = 0.03;
+    sf_val = 1.04;
+    sf_err = 0.02;
+    //sf_val = 1.05;
+    //sf_err = 0.03;
   }
   
   if( met>=450.0 && met<550.0 ){
-    sf_val = 1.14;
-    sf_err = 0.05;
+    sf_val = 1.07;
+    sf_err = 0.04;
+    //sf_val = 1.14;
+    //sf_err = 0.05;
   }
   
   if( met>=600.0 ){
-    sf_val = 1.14;
-    sf_err = 0.06;
+    sf_val = 1.07;
+    sf_err = 0.05;
+    //sf_val = 1.14;
+    //sf_err = 0.06;
   }
     
 
@@ -2414,6 +2646,34 @@ void sysInfo::evtWgtInfo::getXSecWeight( double &weight_xsec, double &weight_xse
   weight_xsec    = xsec_val;
   weight_xsec_up = (xsec_val+xsec_err);
   weight_xsec_dn = (xsec_val-xsec_err);
+
+  return;
+
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void sysInfo::evtWgtInfo::getPileupWeight( double &weight_pu, double &weight_pu_up, double &weight_pu_dn ){
+
+  weight_pu    = 1.0;
+  weight_pu_up = 1.0;
+  weight_pu_dn = 1.0;
+  
+  if(!apply_pu_sf) return;
+  
+  if( sample_info->isData ) return;
+
+  if( sample_info->isSignal ) return;
+  
+  //weight_pu    = h_pu_wgt->GetBinContent(h_pu_wgt->FindBin(babyAnalyzer.pu_ntrue()));
+  //weight_pu_up = h_pu_wgt_up->GetBinContent(h_pu_wgt_up->FindBin(babyAnalyzer.pu_ntrue()));
+  //weight_pu_dn = h_pu_wgt_dn->GetBinContent(h_pu_wgt_dn->FindBin(babyAnalyzer.pu_ntrue()));
+  //weight_pu    = h_pu_wgt->GetBinContent(std::min(h_pu_wgt->GetNbinsX(),h_pu_wgt->FindBin(babyAnalyzer.pu_ntrue())+1));
+  //weight_pu_up = h_pu_wgt_up->GetBinContent(std::min(h_pu_wgt_up->GetNbinsX(),h_pu_wgt_up->FindBin(babyAnalyzer.pu_ntrue())+1));
+  //weight_pu_dn = h_pu_wgt_dn->GetBinContent(std::min(h_pu_wgt_dn->GetNbinsX(),h_pu_wgt_dn->FindBin(babyAnalyzer.pu_ntrue())+1));
+  weight_pu    = babyAnalyzer.weight_PU();
+  weight_pu_up = babyAnalyzer.weight_PUup();
+  weight_pu_dn = babyAnalyzer.weight_PUdown();
 
   return;
 

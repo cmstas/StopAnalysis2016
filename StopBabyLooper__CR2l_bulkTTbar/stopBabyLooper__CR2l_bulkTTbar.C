@@ -52,7 +52,7 @@ bool useBTagSFs_fromUtils_  = false;
 bool useLepSFs_fromUtils_   = false;
         
 bool apply_diLepTrigger_sf_ = true;  // for ee/emu/mumu triggers only
-bool apply_bTag_sf_         = false;  // event weight, product of all jet wgts
+bool apply_bTag_sf_         = true;  // event weight, product of all jet wgts
 bool apply_lep_sf_          = true;  // both lep1 and lep2 (if available) are multiplied together
 bool apply_vetoLep_sf_      = true;  // this is actually the lost lepton sf, only !=1 if there is >=2 genLeptons and ==1 recoLeptons in the event
 bool apply_lepFS_sf_        = false;
@@ -60,6 +60,7 @@ bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = true;
 bool apply_ttbarSysPt_sf_   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
 bool apply_ISR_sf_          = true; // only !=1.0 for signal
+bool apply_pu_sf_           = true; 
 bool apply_sample_sf_       = false; // only !=1.0 for some WJetsHT samps
   
 
@@ -235,6 +236,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   wgtInfo->apply_metRes_sf       = apply_metRes_sf_;
   wgtInfo->apply_ttbarSysPt_sf   = apply_ttbarSysPt_sf_;
   wgtInfo->apply_ISR_sf          = apply_ISR_sf_;
+  wgtInfo->apply_pu_sf           = apply_pu_sf_;
   wgtInfo->apply_sample_sf       = apply_sample_sf_;
   
   
@@ -461,6 +463,10 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //                      //
   //////////////////////////
 
+  // nVtx
+  TH1D *h_nVtx[nLepFlav][nGenClassy];
+  TH1D *h_nTrueVtx[nLepFlav][nGenClassy];
+  
   // nBTags
   TH1D *h_nBTags[nLepFlav][nGenClassy];
   
@@ -484,6 +490,17 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_lep2Pt_ge1bTags[nLepFlav][nGenClassy];
   TH1D *h_lep2Pt_ge2bTags[nLepFlav][nGenClassy];
 
+  // el pT
+  TH1D *h_elPt_ge0bTags[nLepFlav][nGenClassy];
+  TH1D *h_elPt_ge1bTags[nLepFlav][nGenClassy];
+  TH1D *h_elPt_ge2bTags[nLepFlav][nGenClassy];
+
+  // mu pT
+  TH1D *h_muPt_ge0bTags[nLepFlav][nGenClassy];
+  TH1D *h_muPt_ge1bTags[nLepFlav][nGenClassy];
+  TH1D *h_muPt_ge2bTags[nLepFlav][nGenClassy];
+
+  
   // diLep pT
   TH1D *h_diLepPt_ge0bTags[nLepFlav][nGenClassy];
   //TH1D *h_diLepPt_ge1bTags[nLepFlav][nGenClassy]; // moved to section with all systematics
@@ -562,6 +579,19 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       TString flav_gen_sys_name = flav_gen_name;
       flav_gen_sys_name += "__systematic_";
       flav_gen_sys_name += systematicList[0].label;
+
+
+      // NVtx
+      hName = "h_nVtx";
+      hName += flav_gen_sys_name;
+      h_nVtx[iFlav][iGen] = new TH1D( hName, "Number of Primary Vertices;nVtx", 60, 0.0, 60.0);
+      h_nVtx[iFlav][iGen]->SetDirectory(f_output);
+
+      // NVtx
+      hName = "h_nTrueVtx";
+      hName += flav_gen_sys_name;
+      h_nTrueVtx[iFlav][iGen] = new TH1D( hName, "Number of True Primary Vertices;nVtx", 60, 0.0, 60.0);
+      h_nTrueVtx[iFlav][iGen]->SetDirectory(f_output);
 
 
       // NBTags
@@ -644,6 +674,44 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       hName += flav_gen_sys_name;
       h_lep2Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Trailing Lepton pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
       h_lep2Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+
+
+      // el pT, ge0bTags
+      hName = "h_elPt__ge0bTags";
+      hName += flav_gen_sys_name;
+      h_elPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Electron pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_elPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // el pT, ge1bTags
+      hName = "h_elPt__ge1bTags";
+      hName += flav_gen_sys_name;
+      h_elPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Electron pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_elPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // el pT, ge2bTags
+      hName = "h_elPt__ge2bTags";
+      hName += flav_gen_sys_name;
+      h_elPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Electron pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_elPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+
+
+      // mu pT, ge0bTags
+      hName = "h_muPt__ge0bTags";
+      hName += flav_gen_sys_name;
+      h_muPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Muon pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_muPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // mu pT, ge1bTags
+      hName = "h_muPt__ge1bTags";
+      hName += flav_gen_sys_name;
+      h_muPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Muon pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_muPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+
+      // mu pT, ge2bTags
+      hName = "h_muPt__ge2bTags";
+      hName += flav_gen_sys_name;
+      h_muPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Muon pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_muPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
 
       
       // diLep pT, ge0bTags
@@ -1089,10 +1157,10 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       }
 
       // Evt Selection
-      pass_evtSel = selectionInfo::pass_CR2l_bulkTTbar(0, -1, add2ndLepToMet_);
+      pass_evtSel = selectionInfo::pass_CR2l_bulkTTbar(0, add2ndLepToMet_);
 
-      if( !sample.isData && !analyzeFast_ ) pass_evtSel_jup   = selectionInfo::pass_CR2l_bulkTTbar(1,  -1, add2ndLepToMet_);
-      if( !sample.isData && !analyzeFast_ ) pass_evtSel_jdown = selectionInfo::pass_CR2l_bulkTTbar(-1, -1, add2ndLepToMet_);
+      if( !sample.isData && !analyzeFast_ ) pass_evtSel_jup   = selectionInfo::pass_CR2l_bulkTTbar(1,  add2ndLepToMet_);
+      if( !sample.isData && !analyzeFast_ ) pass_evtSel_jdown = selectionInfo::pass_CR2l_bulkTTbar(-1, add2ndLepToMet_);
 
       bool passAnyRegion = false;
       if( pass_evtSel || pass_evtSel_jup || pass_evtSel_jdown ) passAnyRegion=true;
@@ -1330,54 +1398,107 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
       LorentzVector lep1lep2bbMet_TLV(0.0,0.0,0.0,0.0);
       double lep1lep2bbMet_pt = -99.9;
+
+      LorentzVector lep1lep2bbMet_TLV_jup(0.0,0.0,0.0,0.0);
+      double lep1lep2bbMet_pt_jup = -99.9;
+      
+      LorentzVector lep1lep2bbMet_TLV_jdown(0.0,0.0,0.0,0.0);
+      double lep1lep2bbMet_pt_jdown = -99.9;
       
       lep1lep2bb_TLV += lep1_p4();
       lep1lep2bb_TLV += lep2_p4();
-      
+
+      lep1lep2bbMet_TLV_jup = lep1lep2bb_TLV;
+      lep1lep2bbMet_TLV_jdown = lep1lep2bb_TLV;
+     
+
+      // Nominal
       int jet1_idx = -1;
+      int jet2_idx = -1;
       double max_csv = -99.9;
+      double second_csv = -99.9;
       for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
 	if( ak4pfjets_CSV().at(iJet) > max_csv ){
 	  jet1_idx = iJet;
 	  max_csv  = ak4pfjets_CSV().at(iJet);
 	}
       }
+      for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
+	if( iJet==jet1_idx ) continue;
+	if( ak4pfjets_CSV().at(iJet) > second_csv ){
+	  jet2_idx = iJet;
+	 second_csv = ak4pfjets_CSV().at(iJet);
+	} 
+      }
       if(jet1_idx>=0){
 	lep1lep2bb_TLV += ak4pfjets_p4().at(jet1_idx);
 	csvJet1_TLV += ak4pfjets_p4().at(jet1_idx);
 	csvJet1_pt = csvJet1_TLV.Pt();
-      }
-	
-      int jet2_idx = -1;
-      max_csv = -99.9;
-      for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
-	if( iJet==jet1_idx ) continue;
-	if( ak4pfjets_CSV().at(iJet) > max_csv ){
-	  jet2_idx = iJet;
-	  max_csv = ak4pfjets_CSV().at(iJet);
-	}
       }
       if(jet2_idx>=0){
 	lep1lep2bb_TLV += ak4pfjets_p4().at(jet2_idx);
 	csvJet2_TLV += ak4pfjets_p4().at(jet2_idx);
 	csvJet2_pt = csvJet2_TLV.Pt();
       }
-	
+
       lep1lep2bb_pt = lep1lep2bb_TLV.Pt();
      
-      
       // lep1 lep2 b b MET TLV
       lep1lep2bbMet_TLV = lep1lep2bb_TLV;
-
-      if( add2ndLepToMet_ ){
-	LorentzVector met_TLV( pfmet_rl()*cos(pfmet_phi_rl()), pfmet_rl()*sin(pfmet_phi_rl()), 0.0, pfmet_rl() );
-	lep1lep2bbMet_TLV += met_TLV;
-      }
-      else{
-	LorentzVector met_TLV( pfmet()*cos(pfmet_phi()), pfmet()*sin(pfmet_phi()), 0.0, pfmet() );
-	lep1lep2bbMet_TLV += met_TLV;
-      }
+      
+      LorentzVector met_TLV( pfmet()*cos(pfmet_phi()), pfmet()*sin(pfmet_phi()), 0.0, pfmet() );
+      lep1lep2bbMet_TLV += met_TLV;
+      
       lep1lep2bbMet_pt = lep1lep2bbMet_TLV.Pt();
+
+
+      // lep1 lep2 bb MET TLV JEC Up
+      jet1_idx = -1;
+      jet2_idx = -1;
+      max_csv = -99.9;
+      second_csv = -99.9;
+      for(int iJet=0; iJet<(int)jup_ak4pfjets_p4().size(); iJet++){
+	if( jup_ak4pfjets_CSV().at(iJet) > max_csv ){
+	  jet1_idx = iJet;
+	  max_csv  = jup_ak4pfjets_CSV().at(iJet);
+	}
+      }
+      for(int iJet=0; iJet<(int)jup_ak4pfjets_p4().size(); iJet++){
+	if( iJet==jet1_idx ) continue;
+	else if( jup_ak4pfjets_CSV().at(iJet) > second_csv ){
+	  jet2_idx = iJet;
+	  second_csv  = jup_ak4pfjets_CSV().at(iJet);
+	} 
+      }
+      if(jet1_idx>=0) lep1lep2bbMet_TLV_jup += jup_ak4pfjets_p4().at(jet1_idx);
+      if(jet2_idx>=0) lep1lep2bbMet_TLV_jup += jup_ak4pfjets_p4().at(jet2_idx);
+      
+      LorentzVector met_TLV_jup( pfmet_jup()*cos(pfmet_phi_jup()), pfmet_jup()*sin(pfmet_phi_jup()), 0.0, pfmet_jup() );
+      lep1lep2bbMet_TLV_jup += met_TLV_jup;
+
+      // lep1 lep2 bb MET TLV JEC Down
+      jet1_idx = -1;
+      jet2_idx = -1;
+      max_csv = -99.9;
+      second_csv = -99.9;
+      for(int iJet=0; iJet<(int)jdown_ak4pfjets_p4().size(); iJet++){
+	if( jdown_ak4pfjets_CSV().at(iJet) > max_csv ){
+	  jet1_idx = iJet;
+	  max_csv  = jdown_ak4pfjets_CSV().at(iJet);
+	}
+      }
+      for(int iJet=0; iJet<(int)jdown_ak4pfjets_p4().size(); iJet++){
+	if( iJet==jet1_idx ) continue;
+	if( jdown_ak4pfjets_CSV().at(iJet) > second_csv ){
+	  jet2_idx = iJet;
+	 second_csv  = jdown_ak4pfjets_CSV().at(iJet);
+	} 
+      }
+      if(jet1_idx>=0) lep1lep2bbMet_TLV_jdown += jdown_ak4pfjets_p4().at(jet1_idx);
+      if(jet2_idx>=0) lep1lep2bbMet_TLV_jdown += jdown_ak4pfjets_p4().at(jet2_idx);
+      
+      LorentzVector met_TLV_jdown( pfmet_jdown()*cos(pfmet_phi_jdown()), pfmet_jdown()*sin(pfmet_phi_jdown()), 0.0, pfmet_jdown() );
+      lep1lep2bbMet_TLV_jdown += met_TLV_jdown;
 
     
       double met = pfmet();
@@ -1430,8 +1551,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
 	      // Histo Index
 	      int iHisto = iFlav*nGenClassy*nSystematics + iGen*nSystematics + iSys;
-	      //int iHisto = iGen*nSystematics + iSys;
-	
+	      
 	      // Event Weight for this Systematic
 	      double wgt = wgtInfo->sys_wgts[systematicList[iSys].id];
 
@@ -1481,8 +1601,11 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		if(add2ndLepToMet_) met = pfmet_rl_jdown();
 		else                met = pfmet_jdown();
 	      }
-	      
-	      
+	      else{
+		if(add2ndLepToMet_) met = pfmet_rl();
+		else                met = pfmet();
+	      }
+
 	      // met
 	      if(systematicList[iSys].id==sysInfo::k_JESUp){
 		if( jup_ngoodbtags()>=1 ){
@@ -1492,7 +1615,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		  if(lep1lep2bbMet_pt>150) h_met_ge1bTags_ge150ttbarSysPt[iHisto]->Fill( met, wgt );
 		}
 	      }
-	      if(systematicList[iSys].id==sysInfo::k_JESDown){
+	      else if(systematicList[iSys].id==sysInfo::k_JESDown){
 		if( jdown_ngoodbtags()>=1 ){
 		  h_met_ge1bTags[iHisto]->Fill( met, wgt );
 		  if(lep1lep2bbMet_pt>50)  h_met_ge1bTags_ge50ttbarSysPt[iHisto]->Fill( met, wgt );
@@ -1518,7 +1641,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		  if(met>150) h_diLepPt_ge1bTags_ge150met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
 		}
 	      }
-	      if(systematicList[iSys].id==sysInfo::k_JESDown){
+	      else if(systematicList[iSys].id==sysInfo::k_JESDown){
 		if( jdown_ngoodbtags()>=1 ){
 		  h_diLepPt_ge1bTags[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
 		  if(met>100) h_diLepPt_ge1bTags_ge100met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
@@ -1537,16 +1660,16 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      // lep1lep2bbMet
 	      if(systematicList[iSys].id==sysInfo::k_JESUp){
 		if( jup_ngoodbtags()>=1 ){
-		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
+		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
+		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
+		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
 		}
 	      }
-	      if(systematicList[iSys].id==sysInfo::k_JESDown){
+	      else if(systematicList[iSys].id==sysInfo::k_JESDown){
 		if( jdown_ngoodbtags()>=1 ){
-		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
+		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
+		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
+		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
 		}
 	      }
 	      else{
@@ -1567,6 +1690,12 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    //
 	    if( pass_evtSel ){
 	    
+	      // nVtx
+	      h_nVtx[iFlav][iGen]->Fill( nvtxs(), wgt_nominal );
+	      
+	      // nTruVtx
+	      if( !sample.isData ) h_nTrueVtx[iFlav][iGen]->Fill( pu_ntrue(), wgt_nominal );
+	      
 	      // nBTags
 	      h_nBTags[iFlav][iGen]->Fill( ngoodbtags(), wgt_nominal );
 
@@ -1592,6 +1721,30 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      if( ngoodbtags()>=1 ) h_lep2Pt_ge1bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
 	      if( ngoodbtags()>=2 ) h_lep2Pt_ge2bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
 
+	      // el pT
+	      if( abs(lep1_pdgid())==11){
+		if( ngoodbtags()>=0 ) h_elPt_ge0bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
+		if( ngoodbtags()>=1 ) h_elPt_ge1bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
+		if( ngoodbtags()>=2 ) h_elPt_ge2bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
+	      }
+	      if( abs(lep2_pdgid())==11){
+		if( ngoodbtags()>=0 ) h_elPt_ge0bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
+		if( ngoodbtags()>=1 ) h_elPt_ge1bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
+		if( ngoodbtags()>=2 ) h_elPt_ge2bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
+	      }
+
+	      // mu pT
+	      if( abs(lep1_pdgid())==13){
+		if( ngoodbtags()>=0 ) h_muPt_ge0bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
+		if( ngoodbtags()>=1 ) h_muPt_ge1bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
+		if( ngoodbtags()>=2 ) h_muPt_ge2bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
+	      }
+	      if( abs(lep2_pdgid())==13){
+		if( ngoodbtags()>=0 ) h_muPt_ge0bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
+		if( ngoodbtags()>=1 ) h_muPt_ge1bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
+		if( ngoodbtags()>=2 ) h_muPt_ge2bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
+	      }
+	      
 	      // diLep pT
 	      if( ngoodbtags()>=0 ) h_diLepPt_ge0bTags[iFlav][iGen]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt_nominal );
 	      //if( ngoodbtags()>=1 ) h_diLepPt_ge1bTags[iFlav][iGen]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt_nominal );

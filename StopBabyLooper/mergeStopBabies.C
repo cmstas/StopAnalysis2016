@@ -54,8 +54,8 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   // ttbar
   addSet.first = sampleInfo::k_ttbar;
   //addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_powheg_pythia8_ext4) );
-  //addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1) );
   addList.push_back(addSet);
@@ -67,15 +67,19 @@ int mergeStopBabies( std::string f_input_dir, std::string f_output_dir, bool use
   addSet.second.push_back( mergeUtil(sampleInfo::k_t_sch_4f_amcnlo_pythia8,use_zeroed_samp,false) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_t_tch_4f_powheg_pythia8) );
   addSet.second.push_back( mergeUtil(sampleInfo::k_tbar_tch_4f_powheg_pythia8) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tW_5f_powheg_pythia8) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tbarW_5f_powheg_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_t_tW_5f_powheg_pythia8) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_t_tbarW_5f_powheg_pythia8) );
   addList.push_back(addSet);
   addSet.second.clear();
 
   // single t, tW
   addSet.first = sampleInfo::k_singleT_tW;
-  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tW_5f_powheg_pythia8) );
-  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tbarW_5f_powheg_pythia8) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays) );
+  addSet.second.push_back( mergeUtil(sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_t_tW_5f_powheg_pythia8) );
+  //addSet.second.push_back( mergeUtil(sampleInfo::k_t_tbarW_5f_powheg_pythia8) );
   addList.push_back(addSet);
   addSet.second.clear();
 

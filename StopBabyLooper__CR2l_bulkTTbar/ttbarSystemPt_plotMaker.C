@@ -43,7 +43,8 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
   
   //double lumi    = 12.9; // 2016 ICHEp
   //double lumi    = 29.53; // 2016 intermediate status update
-  double lumi    = 36.46; // 2016 final lumi
+  //double lumi    = 36.46; // 2016 preapproval lumi
+  double lumi    = 36.841; // 2016 final lumi
   
   double sig_SF  = 1.0;
 
@@ -369,6 +370,36 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);
 
 
+  // ge1bTags, Rebinned, ISR
+  var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags" );
+  var_list_title.push_back( "lep1lep2bbMet, >=1 bTags" );
+  var_list_xaxis.push_back( "lep1lep2bbMet" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("_rebinned__errorBand_sys_JES_and_ISR");
+  var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);
+
+
 
   // ge1bTags, Rebinned, metRes
   var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags" );
@@ -515,6 +546,36 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
   
   var_doRebin.push_back(true);
   var_rebin_labels.push_back("_rebinned__errorBand_sys_Q2");
+  var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);
+
+
+  // ge1bTags, Rebinned, all sys
+  var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags" );
+  var_list_title.push_back( "lep1lep2bbMet, >=1 bTags" );
+  var_list_xaxis.push_back( "lep1lep2bbMet" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("_rebinned__errorBand_sys_all");
   var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags);
   var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags);
   var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);

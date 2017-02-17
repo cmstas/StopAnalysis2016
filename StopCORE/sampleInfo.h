@@ -15,8 +15,14 @@ namespace sampleInfo{
   //
   // NAMESPACE VARS
   //
-  
-  const std::string baby_inputDir = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v18/skim/"; // 2017Moriond MC
+
+  const std::string baby_inputDir = "/nfs-7/userdata/haweber/tupler_babies/merged/Stop_1l/v22/skim/"; // 2017Moriond MC, updated sfs, fixed bugs again
+
+  //const std::string baby_inputDir = "/nfs-7/userdata/haweber/tupler_babies/merged/Stop_1l/v21/skim/"; // 2017Moriond MC, updated sfs, fixed bugs
+
+  //const std::string baby_inputDir = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v20/skim/"; // 2017Moriond MC, updated sfs
+
+  //const std::string baby_inputDir = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v18/skim/"; // 2017Moriond MC, frozen PAS fro pre-approval
 
   //const std::string baby_inputDir = "/nfs-6/userdata/dsklein/stop-babies/skims_minDPhi05_v11/"; // First stable skim for main + corridor
   
@@ -91,6 +97,8 @@ namespace sampleInfo{
 	   k_singleT_non_tW,
 	   k_t_tW_5f_powheg_pythia8,
 	   k_t_tbarW_5f_powheg_pythia8,
+	   k_t_tW_5f_powheg_pythia8_noHadDecays,
+	   k_t_tbarW_5f_powheg_pythia8_noHadDecays,
 	   k_rare,
 	   k_diBoson,
 	   k_WW,

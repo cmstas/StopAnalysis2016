@@ -72,6 +72,8 @@ namespace sysInfo{
            k_ISRDown,
            k_xsecUp,
            k_xsecDown,
+	   k_puUp,
+	   k_puDown,
            k_nSys
   };
 
@@ -119,6 +121,9 @@ namespace sysInfo{
 
     // Sample info 
     sampleInfo::sampleUtil *sample_info;
+    
+    // Lost lepton analyis uses met with 2nd lepton removed
+    bool add2ndLepToMet;
   
     // Counter histograms stored in babies
     TH1D *h_bkg_counter;
@@ -142,9 +147,12 @@ namespace sysInfo{
     bool useLepSFs_fromUtils;
     eventWeight_lepSF *lepSFUtil;
 
-    // Lost lepton analyis uses met with 2nd lepton removed
-    bool add2ndLepToMet;
-
+    // Pileup weight machinery;
+    TFile *f_pu;
+    TH1D *h_pu_wgt;
+    TH1D *h_pu_wgt_up;
+    TH1D *h_pu_wgt_dn;
+    
     //
     // Utility Vars
     //
@@ -183,7 +191,17 @@ namespace sysInfo{
     double sf_bTagEffHF_dn;
     double sf_bTagEffLF_up;
     double sf_bTagEffLF_dn;
-
+    double sf_bTag_FS_up;
+    double sf_bTag_FS_dn;
+    double sf_bTag_tight;
+    double sf_bTagEffHF_tight_up;
+    double sf_bTagEffHF_tight_dn;
+    double sf_bTagEffLF_tight_up;
+    double sf_bTagEffLF_tight_dn;
+    double sf_bTag_tight_FS_up;
+    double sf_bTag_tight_FS_dn;
+    
+    
     bool   apply_lep_sf;
     double sf_lep;
     double sf_lep_up;
@@ -218,6 +236,11 @@ namespace sysInfo{
     double sf_ISR;
     double sf_ISR_up;
     double sf_ISR_dn;
+
+    bool apply_pu_sf;
+    double sf_pu;
+    double sf_pu_up;
+    double sf_pu_dn;
 
     bool   apply_sample_sf;
     double sf_sample;
@@ -271,7 +294,9 @@ namespace sysInfo{
 
     void getCR2lTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
 
-    void getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn );
+    void getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn );
+    
+    void getBTagWeight_tightWP( double &wgt_btagsf_tight, double &wgt_btagsf_hf_tight_up, double &wgt_btagsf_hf_tight_dn, double &wgt_btagsf_lf_tight_up, double &wgt_btagsf_lf_tight_dn, double &wgt_btagsf_tight_fs_up, double &wgt_btagsf_tight_fs_dn );
   
     void getBTagWeight_fromUtils( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ); 
   
@@ -302,6 +327,8 @@ namespace sysInfo{
     void getISRWeight( double &weight_ISR, double &weight_ISR_up, double &weight_ISR_dn );
 
     void getISRnJetsWeight( double &weight_ISR, double &weight_ISR_up, double &weight_ISR_dn );
+    
+    void getPileupWeight( double &weight_pu, double &weight_pu_up, double &weight_pu_dn );
 
     double getSampleWeight( sampleInfo::ID sample );
 

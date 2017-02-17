@@ -583,7 +583,8 @@ int tableMaker_allInputs( std::string f_input_dir="Output/Histos/", std::string 
   //
   sysInfo::vect_util systematicList;
   systematicList.push_back( sysInfo::Util(sysInfo::k_nominal) ); 
-
+  systematicList.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_JESDown) );
 
 
     
