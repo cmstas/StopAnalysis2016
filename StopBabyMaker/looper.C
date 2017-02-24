@@ -410,54 +410,53 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
   // Matching requirement for gen/reco leptons
   double matched_dr = 0.1;
-
-      float xmin_h_el_SF = 1;
-    float xmax_h_el_SF = 1;
-    float ymin_h_el_SF = 1;
-    float ymax_h_el_SF = 1;
-    float xmin_h_el_SF_veto = 1;
-    float xmax_h_el_SF_veto = 1;
-    float ymin_h_el_SF_veto = 1;
-    float ymax_h_el_SF_veto = 1;
-    float xmin_h_el_SF_tracking = 1;
-    float xmax_h_el_SF_tracking = 1;
-    float ymin_h_el_SF_tracking = 1;
-    float ymax_h_el_SF_tracking = 1;
-    float xmin_h_mu_SF = 1;
-    float xmax_h_mu_SF = 1;
-    float ymin_h_mu_SF = 1;
-    float ymax_h_mu_SF = 1;
-    float xmin_h_mu_SF_tracking = 1;
-    float xmax_h_mu_SF_tracking = 1;
-    float xmin_h_mu_SF_veto = 1;
-    float xmax_h_mu_SF_veto = 1;
-    float ymin_h_mu_SF_veto = 1;
-    float ymax_h_mu_SF_veto = 1;
-    float xmin_h_el_FS = 1;
-    float xmax_h_el_FS = 1;
-    float ymin_h_el_FS = 1;
-    float ymax_h_el_FS = 1;
-    float xmin_h_el_veto_FS = 1;
-    float xmax_h_el_veto_FS = 1;
-    float ymin_h_el_veto_FS = 1;
-    float ymax_h_el_veto_FS = 1;
-    float xmin_h_mu_FS = 1;
-    float xmax_h_mu_FS = 1;
-    float ymin_h_mu_FS = 1;
-    float ymax_h_mu_FS = 1;
-    float xmin_h_mu_veto_FS = 1;
-    float xmax_h_mu_veto_FS = 1;
-    float ymin_h_mu_veto_FS = 1;
-    float ymax_h_mu_veto_FS = 1;
-    float xmin_h_el_vetoLepEff = 1;
-    float xmax_h_el_vetoLepEff = 1;
-    float ymin_h_el_vetoLepEff = 1;
-    float ymax_h_el_vetoLepEff = 1;
-    float xmin_h_mu_vetoLepEff = 1;
-    float xmax_h_mu_vetoLepEff = 1;
-    float ymin_h_mu_vetoLepEff = 1;
-    float ymax_h_mu_vetoLepEff = 1;
-
+  
+  float xmin_h_el_SF = 1;
+  float xmax_h_el_SF = 1;
+  float ymin_h_el_SF = 1;
+  float ymax_h_el_SF = 1;
+  float xmin_h_el_SF_veto = 1;
+  float xmax_h_el_SF_veto = 1;
+  float ymin_h_el_SF_veto = 1;
+  float ymax_h_el_SF_veto = 1;
+  float xmin_h_el_SF_tracking = 1;
+  float xmax_h_el_SF_tracking = 1;
+  float ymin_h_el_SF_tracking = 1;
+  float ymax_h_el_SF_tracking = 1;
+  float xmin_h_mu_SF = 1;
+  float xmax_h_mu_SF = 1;
+  float ymin_h_mu_SF = 1;
+  float ymax_h_mu_SF = 1;
+  float xmin_h_mu_SF_tracking = 1;
+  float xmax_h_mu_SF_tracking = 1;
+  float xmin_h_mu_SF_veto = 1;
+  float xmax_h_mu_SF_veto = 1;
+  float ymin_h_mu_SF_veto = 1;
+  float ymax_h_mu_SF_veto = 1;
+  float xmin_h_el_FS = 1;
+  float xmax_h_el_FS = 1;
+  float ymin_h_el_FS = 1;
+  float ymax_h_el_FS = 1;
+  float xmin_h_el_veto_FS = 1;
+  float xmax_h_el_veto_FS = 1;
+  float ymin_h_el_veto_FS = 1;
+  float ymax_h_el_veto_FS = 1;
+  float xmin_h_mu_FS = 1;
+  float xmax_h_mu_FS = 1;
+  float ymin_h_mu_FS = 1;
+  float ymax_h_mu_FS = 1;
+  float xmin_h_mu_veto_FS = 1;
+  float xmax_h_mu_veto_FS = 1;
+  float ymin_h_mu_veto_FS = 1;
+  float ymax_h_mu_veto_FS = 1;
+  float xmin_h_el_vetoLepEff = 1;
+  float xmax_h_el_vetoLepEff = 1;
+  float ymin_h_el_vetoLepEff = 1;
+  float ymax_h_el_vetoLepEff = 1;
+  float xmin_h_mu_vetoLepEff = 1;
+  float xmax_h_mu_vetoLepEff = 1;
+  float ymin_h_mu_vetoLepEff = 1;
+  float ymax_h_mu_vetoLepEff = 1;
   
   if( (skim_applyLeptonSFs || skim_applyVetoLeptonSFs) && !isDataFromFileName){
 
@@ -471,7 +470,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     f_mu_SF_id       = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root", "read"); 
     f_mu_SF_iso      = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_MiniIsoTight_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc
     f_mu_SF_ip       = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_TightIP2D_DENOM_MediumID_VAR_map_pt_eta.root", "read"); // double unc
-    f_mu_SF_tracking = new TFile("lepsf/analysis2016_12p9fb/muons_tracking_sf.root", "read"); 
+    f_mu_SF_tracking = new TFile("lepsf/analysis2016_36p46fb/Tracking_EfficienciesAndSF_BCDEFGH.root", "read"); 
     
     f_mu_SF_veto_id  = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root", "read");
     f_mu_SF_veto_iso = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.root", "read");
@@ -565,6 +564,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     TH2D *h_el_SF_veto_iso = (TH2D*)h_el_SF_veto_iso_temp->Clone("h_el_SF_veto_iso");
     h_el_SF_veto = (TH2D*)h_el_SF_veto_id->Clone("h_el_SF_veto");
     h_el_SF_veto->Multiply(h_el_SF_veto_iso);
+    // Double unc. on veto electron sfs, since we go lower in pT
+    for(int x=1; x<=(int)h_el_SF_veto->GetNbinsX(); x++){
+      for(int y=1; y<=(int)h_el_SF_veto->GetNbinsY(); y++){
+	h_el_SF_veto->SetBinError(x,y,h_el_SF_veto->GetBinError(x,y)*2.0);
+      }
+    }
     xmin_h_el_SF_veto = h_el_SF_veto->GetXaxis()->GetBinLowEdge(1)+0.01;
     xmax_h_el_SF_veto = h_el_SF_veto->GetXaxis()->GetBinLowEdge(h_el_SF_veto->GetNbinsX()+1)-0.01;
     ymin_h_el_SF_veto = h_el_SF_veto->GetYaxis()->GetBinLowEdge(1)+0.01;
