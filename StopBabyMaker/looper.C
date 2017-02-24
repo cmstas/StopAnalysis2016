@@ -510,7 +510,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     TH2D *h_mu_SF_id_temp  = (TH2D*)f_mu_SF_id->Get("SF");
     TH2D *h_mu_SF_iso_temp = (TH2D*)f_mu_SF_iso->Get("SF");
     TH2D *h_mu_SF_ip_temp  = (TH2D*)f_mu_SF_ip->Get("SF");
-    TGraphAsymmErrors *h_mu_SF_tracking_temp  = (TGraphAsymmErrors*)f_mu_SF_tracking->Get("ratio_eta");
+    //TGraphAsymmErrors *h_mu_SF_tracking_temp  = (TGraphAsymmErrors*)f_mu_SF_tracking->Get("ratio_eta");
+    TGraphAsymmErrors *h_mu_SF_tracking_temp  = (TGraphAsymmErrors*)f_mu_SF_tracking->Get("ratio_eff_aeta_dr030e030_corr");
 
     // Grab veto mu histos
     TH2D *h_mu_SF_veto_id_temp  = (TH2D*)f_mu_SF_veto_id->Get("SF");
