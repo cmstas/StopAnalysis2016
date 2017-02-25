@@ -60,8 +60,8 @@ bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = true;
 bool apply_ttbarSysPt_sf_   = false; // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
 bool apply_ISR_sf_          = true; // only !=1.0 for signal
-bool apply_pu_sf_           = true; 
-bool apply_sample_sf_       = false; // only !=1.0 for some WJetsHT samps
+bool apply_pu_sf_           = false; 
+bool apply_sample_sf_       = true; // only !=1.0 for some WJetsHT samps
   
 
 //
@@ -351,7 +351,10 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_lep1lep2bbMetPt_ge1bTags[nHistos];
   TH1D *h_lep1lep2bbMetPt_ge1bTags_ge100met[nHistos];
   TH1D *h_lep1lep2bbMetPt_ge1bTags_ge150met[nHistos];
-  
+
+  TH1D *h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[nHistos];
+  TH1D *h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[nHistos];
+  TH1D *h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[nHistos];
   
   // Loop over lepFlavs, genClassifications and systematics
   for(int iFlav=0; iFlav<nLepFlav; iFlav++){
@@ -449,8 +452,26 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=1 bTags, MET>150;p_{T} [GeV]", 24, 0.0, 600.0 );
 	h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->SetDirectory(f_output);
 
-      
 
+	// lep1lep2bbMet pT, ge1bTags, nVtx 0to12
+	hName = "h_lep1lep2bbMetPt__ge1bTags_0to12nVtx";
+	hName += flav_gen_sys_name;
+	h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=1 bTags, 0<nVtx<12;p_{T} [GeV]", 24, 0.0, 600.0 );
+	h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->SetDirectory(f_output);
+
+	// lep1lep2bbMet pT, ge1bTags, nVtx 12to24
+	hName = "h_lep1lep2bbMetPt__ge1bTags_12to24nVtx";
+	hName += flav_gen_sys_name;
+	h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=1 bTags, 12<nVtx<24;p_{T} [GeV]", 24, 0.0, 600.0 );
+	h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->SetDirectory(f_output);
+
+	// lep1lep2bbMet pT, ge1bTags, nVtx >=24
+	hName = "h_lep1lep2bbMetPt__ge1bTags_ge24nVtx";
+	hName += flav_gen_sys_name;
+	h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=1 bTags, nVtx>=24;p_{T} [GeV]", 24, 0.0, 600.0 );
+	h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->SetDirectory(f_output);
+
+	
        
       } // end loop over systematics
     } // end loop over gen classifications
@@ -465,6 +486,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
   // nVtx
   TH1D *h_nVtx[nLepFlav][nGenClassy];
+  TH1D *h_nVtx_noPUwgt[nLepFlav][nGenClassy];
   TH1D *h_nTrueVtx[nLepFlav][nGenClassy];
   
   // nBTags
@@ -586,6 +608,12 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       hName += flav_gen_sys_name;
       h_nVtx[iFlav][iGen] = new TH1D( hName, "Number of Primary Vertices;nVtx", 60, 0.0, 60.0);
       h_nVtx[iFlav][iGen]->SetDirectory(f_output);
+
+      // NVtx, no pileup wgt
+      hName = "h_nVtx_noPUwgt";
+      hName += flav_gen_sys_name;
+      h_nVtx_noPUwgt[iFlav][iGen] = new TH1D( hName, "Number of Primary Vertices, without pileup weight;nVtx", 60, 0.0, 60.0);
+      h_nVtx_noPUwgt[iFlav][iGen]->SetDirectory(f_output);
 
       // NVtx
       hName = "h_nTrueVtx";
@@ -1128,7 +1156,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       wgtInfo->getEventWeights( analyzeFast_ );
 
       double wgt_nominal = wgtInfo->sys_wgts[sysInfo::k_nominal];
-
+      double wgt_nominal_noPU = wgt_nominal;
+      if(!sample.isData && apply_pu_sf_) wgt_nominal_noPU = (1.0/wgtInfo->sf_pu);
       
       
       /////////////////////
@@ -1663,6 +1692,9 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
 		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
 		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
+		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
+		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
+		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
 		}
 	      }
 	      else if(systematicList[iSys].id==sysInfo::k_JESDown){
@@ -1670,6 +1702,9 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
 		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
 		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
+		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
+		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
+		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
 		}
 	      }
 	      else{
@@ -1677,6 +1712,9 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
 		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
 		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
+		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
+		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
+		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
 		}
 	      }
 
@@ -1692,6 +1730,10 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    
 	      // nVtx
 	      h_nVtx[iFlav][iGen]->Fill( nvtxs(), wgt_nominal );
+	      
+	      // nVtx, no pileup weight
+	      if( sample.isData ) h_nVtx_noPUwgt[iFlav][iGen]->Fill( nvtxs(), wgt_nominal );
+	      else                h_nVtx_noPUwgt[iFlav][iGen]->Fill( nvtxs(), wgt_nominal_noPU );
 	      
 	      // nTruVtx
 	      if( !sample.isData ) h_nTrueVtx[iFlav][iGen]->Fill( pu_ntrue(), wgt_nominal );

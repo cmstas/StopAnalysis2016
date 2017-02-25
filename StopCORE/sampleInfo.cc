@@ -609,8 +609,6 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "t_tW_5f_powheg_pythia8_noHadDecays_25ns";
     title = "single t, W-channel, powheg pythia8, no had decays";
     tex   = "single $t,~t-W$-channel,~powheg~pythia8,~no~had~decyas";
-    //baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/";
-    //baby_i_o.first  = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/output/";
     inputBabies.push_back("t_tW_5f_powheg_pythia8_noHadDecays_25ns*.root");
     break;
 
@@ -620,7 +618,23 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     tex   = "single $\\bar{t},~t-W$-channel,~powheg~pythia8,~no~had~decays";
     inputBabies.push_back("t_tbarW_5f_powheg_pythia8_noHadDecays_25ns*.root");
     break;
-    
+  
+  case( k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 ):
+    label = "t_tW_5f_powheg_pythia8_noHadDecays_ext1_25ns";
+    title = "single t, W-channel, powheg pythia8, no had decays, ext1";
+    tex   = "single $t,~t-W$-channel,~powheg~pythia8,~no~had~decyas~ext1";
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v23/skim/";
+    inputBabies.push_back("t_tW_5f_powheg_pythia8_noHadDecays_ext1_25ns*.root");
+    break;
+
+  case( k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 ):
+    label = "t_tbarW_5f_powheg_pythia8_noHadDecays_ext1_25ns";
+    title = "single tbar, W-channel, powheg pythia8, no had decays, ext1";
+    tex   = "single $\\bar{t},~t-W$-channel,~powheg~pythia8,~no~had~decays,~ext1";
+    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v23/skim/";
+    inputBabies.push_back("t_tbarW_5f_powheg_pythia8_noHadDecays_ext1_25ns*.root");
+    break;
+  
   case( k_rare ):
     label = "rare_25ns";
     title = "Rare";
@@ -952,7 +966,8 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
   result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
   result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
   result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1);
-  
+  result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8);
+
   // MC, DYJets
   result.push_back( sampleInfo::k_DYJetsToLL_m10To50_amcnlo_pythia8 );
   result.push_back( sampleInfo::k_DYJetsToLL_m50_amcnlo_pythia8 );
@@ -983,6 +998,8 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
   result.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8 );
   result.push_back( sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays );
   result.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays );
+  result.push_back( sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 );
+  result.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 );
   
   // MC, diBoson
   result.push_back( sampleInfo::k_WWTo2l2Nu_powheg );
@@ -1034,6 +1051,7 @@ sampleInfo::vect_id sampleInfo::getSampleList_CR2l_bulkTTbar(){
   result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
   result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
   result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1);
+  result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8);
   
   // MC, DYJets
   result.push_back( sampleInfo::k_DYJetsToLL_m10To50_amcnlo_pythia8 );
@@ -1065,7 +1083,9 @@ sampleInfo::vect_id sampleInfo::getSampleList_CR2l_bulkTTbar(){
   result.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8 );
   result.push_back( sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays );
   result.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays );
-    
+  result.push_back( sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 );
+  result.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 );
+  
   // MC, diBoson
   result.push_back( sampleInfo::k_WWTo2l2Nu_powheg );
   result.push_back( sampleInfo::k_WWToLNuQQ_powheg );

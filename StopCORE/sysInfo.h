@@ -74,6 +74,8 @@ namespace sysInfo{
            k_xsecDown,
 	   k_puUp,
 	   k_puDown,
+	   k_tauSFUp,
+	   k_tauSFDown,
            k_nSys
   };
 
@@ -152,6 +154,10 @@ namespace sysInfo{
     TH1D *h_pu_wgt;
     TH1D *h_pu_wgt_up;
     TH1D *h_pu_wgt_dn;
+
+    // Tau Wgt Machinery 
+    TFile *f_lepEff;
+    TH2D *h_recoEff_tau;
     
     //
     // Utility Vars
@@ -211,6 +217,11 @@ namespace sysInfo{
     double sf_vetoLep;
     double sf_vetoLep_up;
     double sf_vetoLep_dn;
+
+    bool   apply_tau_sf;
+    double sf_tau;
+    double sf_tau_up;
+    double sf_tau_dn;
   
     bool   apply_lepFS_sf;
     double sf_lepFS;
@@ -301,6 +312,8 @@ namespace sysInfo{
     void getBTagWeight_fromUtils( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ); 
   
     void getLepSFWeight( double &weight_lepSF, double &weight_lepSF_Up, double &weight_lepSF_Dn, double &weight_lepFSSF, double &weight_lepFSSF_Up, double &weight_lepFSSF_Dn, double &weight_vetoLepSF, double &weight_vetoLepSF_Up, double &weight_vetoLepSF_Dn );
+
+    void getTauSFWeight( double &weight_tau, double &weight_tau_up, double &weight_tau_dn );
 
     void getLepSFWeight_fromUtils( double &weight_lepSF, double &weight_lepSF_Up, double &weight_lepSF_Dn, double &weight_lepFSSF, double &weight_lepFSSF_Up, double &weight_lepFSSF_Dn, double &weight_vetoLepSF, double &weight_vetoLepSF_Up, double &weight_vetoLepSF_Dn ); 
   

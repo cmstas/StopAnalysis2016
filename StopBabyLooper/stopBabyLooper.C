@@ -57,13 +57,14 @@ bool apply_cr2lTrigger_sf_  = true; // only !=1 if pfmet!=pfmet_rl ie no weight 
 bool apply_bTag_sf_         = true; // event weight, product of all jet wgts
 bool apply_lep_sf_          = true; // both lep1 and lep2 (if available) are multiplied together
 bool apply_vetoLep_sf_      = true; // this is actually the lost lepton sf, only !=1 if there is >=2 genLeptons and ==1 recoLeptons in the event
+bool apply_tau_sf_          = true;
 bool apply_lepFS_sf_        = false;
 bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = true;
 bool apply_ttbarSysPt_sf_   = false;  // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
 bool apply_ISR_sf_          = true; // only !=1.0 for signal
 bool apply_pu_sf_           = true;
-bool apply_sample_sf_       = false; // only !=1.0 for some WJetsHT samps
+bool apply_sample_sf_       = true; // only !=1.0 for some WJetsHT samps
 
   
 
@@ -248,6 +249,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   wgtInfo->apply_bTag_sf         = apply_bTag_sf_;
   wgtInfo->apply_lep_sf          = apply_lep_sf_;
   wgtInfo->apply_vetoLep_sf      = apply_vetoLep_sf_;
+  wgtInfo->apply_tau_sf          = apply_tau_sf_;
   wgtInfo->apply_lepFS_sf        = apply_lepFS_sf_;
   wgtInfo->apply_topPt_sf        = apply_topPt_sf_;
   wgtInfo->apply_metRes_sf       = apply_metRes_sf_;

@@ -44,7 +44,7 @@ void plotMaker( bool plotByGenDecay=true ){
   //double lumi    = 12.9; // 2016 ICHEp
   //double lumi    = 29.53; // 2016 intermediate status update
   //double lumi    = 36.46; // 2016 preapproval lumi
-  double lumi    = 36.814; // 2016 final lumi
+  double lumi    = 35.867; // 2016 final lumi
   
   double sig_SF  = 1.0;
 
@@ -1673,6 +1673,187 @@ void plotMaker( bool plotByGenDecay=true ){
   var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge2bTags);
   var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge2bTags);
   var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge2bTags);
+
+
+
+  // ge1bTags, 0<=nVtx<12
+  var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags_0to12nVtx" );
+  var_list_title.push_back( "lep1lep2bbMet, >=1 bTags, 0<=nVtx<12" );
+  var_list_xaxis.push_back( "lep1lep2bbMet" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+  
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags_0to12nVtx" );
+  var_list_title.push_back( "lep1lep2bbMet, >=1 bTags, 0<=nVts<12" );
+  var_list_xaxis.push_back( "lep1lep2bbMet" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_lep1lep2bbMet_ge1bTags_0to12nVtx = 8;
+  double xRebins_lep1lep2bbMet_ge1bTags_0to12nVtx[nRebins_lep1lep2bbMet_ge1bTags_0to12nVtx+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_lep1lep2bbMet_ge1bTags_0to12nVtx[nRebins_lep1lep2bbMet_ge1bTags_0to12nVtx]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags_0to12nVtx);
+  var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags_0to12nVtx);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags_0to12nVtx);
+
+
+  // ge1bTags, 12<=nVtx<24
+  var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags_12to24nVtx" );
+  var_list_title.push_back( "lep1lep2bbMet, >=1 bTags, 12<=nVtx<24" );
+  var_list_xaxis.push_back( "lep1lep2bbMet" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+  
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags_12to24nVtx" );
+  var_list_title.push_back( "lep1lep2bbMet, >=1 bTags, 12<=nVts<24" );
+  var_list_xaxis.push_back( "lep1lep2bbMet" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_lep1lep2bbMet_ge1bTags_12to24nVtx = 8;
+  double xRebins_lep1lep2bbMet_ge1bTags_12to24nVtx[nRebins_lep1lep2bbMet_ge1bTags_12to24nVtx+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_lep1lep2bbMet_ge1bTags_12to24nVtx[nRebins_lep1lep2bbMet_ge1bTags_12to24nVtx]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags_12to24nVtx);
+  var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags_12to24nVtx);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags_12to24nVtx);
+
+
+  // ge1bTags, nVtx>=24
+  var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags_ge24nVtx" );
+  var_list_title.push_back( "lep1lep2bbMet, >=1 bTags, nVtx>=24" );
+  var_list_xaxis.push_back( "lep1lep2bbMet" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(noRebin);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+  
+  // ge1bTags, Rebinned
+  var_list_label.push_back( "h_lep1lep2bbMetPt__ge1bTags_ge24nVtx" );
+  var_list_title.push_back( "lep1lep2bbMet, >=1 bTags, nVtx>=24" );
+  var_list_xaxis.push_back( "lep1lep2bbMet" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  //sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  const int nRebins_lep1lep2bbMet_ge1bTags_ge24nVtx = 8;
+  double xRebins_lep1lep2bbMet_ge1bTags_ge24nVtx[nRebins_lep1lep2bbMet_ge1bTags_ge24nVtx+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
+  double xRebinsSF_lep1lep2bbMet_ge1bTags_ge24nVtx[nRebins_lep1lep2bbMet_ge1bTags_ge24nVtx]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  var_doRebin.push_back(true);
+  var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags_ge24nVtx);
+  var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags_ge24nVtx);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags_ge24nVtx);
 
   
 

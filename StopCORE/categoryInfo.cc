@@ -780,7 +780,7 @@ TH1D* categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2(){
 
   // Coarser MET bins for bkg estimates
   result->GetXaxis()->SetBinLabel(28, "lt4jets_ge10modTop_lt175mlb_450toInfmet");
-  result->GetXaxis()->SetBinLabel(29, "lt4jets_ge10modTop_ge175mlb_250toInfmet");
+  result->GetXaxis()->SetBinLabel(29, "lt4jets_ge10modTop_ge175mlb_450toInfmet");
   result->GetXaxis()->SetBinLabel(30, "ge4jets_lt0modTop_lt175mlb_550toInfmet");
   result->GetXaxis()->SetBinLabel(31, "ge4jets_lt0modTop_ge175mlb_450toInfmet");
   result->GetXaxis()->SetBinLabel(32, "ge4jets_0to10modTop_lt175mlb_350toInfmet");
@@ -992,7 +992,7 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   if( nGoodJets<4 ){
     if(modTopness>=10.0){
       if(mlb<175 && met>450) result.push_back(28); 
-      if(mlb>=175  && met>250) result.push_back(29); 
+      if(mlb>=175  && met>450) result.push_back(29); 
     }
   }
   if( nGoodJets>=4 ){
@@ -1525,12 +1525,12 @@ vector<int> categoryInfo::passCategory_SR_corridor( int jesType, bool add2ndLepT
 
 
   // Lead Jet is bTagged
-  //bool leadJet_isBTag = babyAnalyzer.ak4pfjets_passMEDbtag().at(0);
-  //if( jesType==1 )  leadJet_isBTag = babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
-  //if( jesType==-1 ) leadJet_isBTag = babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
+  bool leadJet_isBTag = babyAnalyzer.ak4pfjets_passMEDbtag().at(0);
+  if( jesType==1 )  leadJet_isBTag = babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
+  if( jesType==-1 ) leadJet_isBTag = babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
 
   // Require leading jet to NOT be b-tagged
-  //if( leadJet_isBTag ) return result;      
+  if( leadJet_isBTag ) return result;      
 
 
   double lepPt = babyAnalyzer.lep1_p4().Pt();

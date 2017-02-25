@@ -108,16 +108,24 @@ int bkgEstimate_diLepton(){
   
   sysInfo::vect_util systematicList;
   systematicList.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_JESUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_metResDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_bTagEffHFUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_bTagEffHFDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_bTagEffLFUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_bTagEffLFDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_metResUp) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_tauSFUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_tauSFDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_puUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_puDown) );
   //systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtUp) );
   //systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
@@ -126,10 +134,6 @@ int bkgEstimate_diLepton(){
   systematicList.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_q2Up) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_q2Down) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerUp) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerDown) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
   
   const int nSys = (int)systematicList.size();
 
@@ -732,7 +736,7 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>600$");
   
   // Region B
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(29);  // Yes Extrapolation, if so bin=29
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(5);  // No Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<450$");
@@ -889,7 +893,7 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>600$");
   
   // Region B
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(29);  // Yes Extrapolation, if so bin=29
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(5);  // No Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<450$");

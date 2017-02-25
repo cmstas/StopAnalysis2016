@@ -334,6 +334,22 @@ sysInfo::Util::Util( sysInfo::ID systematic ){
     hasOwnBabies = false;
     break; 
 
+  case( k_tauSFUp ):
+    id          = systematic;
+    label       = "tauSFUp";
+    title       = "Tau Efficiency SF, Up";
+    tex         = "$\\tau$~Efficiency~SF,~Up";
+    hasOwnBabies = false;
+    break; 
+
+  case( k_tauSFDown ):
+    id          = systematic;
+    label       = "tauSFDn";
+    title       = "Tau Efficiency SF, Down";
+    tex         = "$\\tau$~Efficiency~SF,~Down";
+    hasOwnBabies = false;
+    break; 
+ 
   default:
     std::cout << "Could not find systematic info from systematic enum provided!" << std::endl;
     id           = systematic;
@@ -356,11 +372,13 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
   // Utilty Var Constants
   dr_matched = 0.1;
-  lumi       = 36.814; // Current lumi
+  lumi       = 35.867; // Current lumi
+  //lumi       = 36.814; // Current lumi
   //lumi       = 36.46; // Pre-approval, frozen lumi
   //lumi       = 29.53; // lumi for intermediate status update
   //lumi       = 12.9; // ICHEP lumi
-  lumi_err   = lumi*0.062; // 6.2% for ICHEP lumi uncertainty
+  lumi_err   = lumi*0.026; // 2.6% uncertainty for Moriond17 
+  //lumi_err   = lumi*0.062; // 6.2% for ICHEP lumi uncertainty
 
   // Initialize Switches for additional SFs
   apply_diLepTrigger_sf = false;
@@ -368,6 +386,7 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   apply_bTag_sf         = false;
   apply_lep_sf          = false;
   apply_vetoLep_sf      = false;
+  apply_tau_sf          = false;
   apply_lepFS_sf        = false;
   apply_topPt_sf        = false;
   apply_metRes_sf       = false;
@@ -395,6 +414,7 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   h_pu_wgt = NULL;
   h_pu_wgt_up = NULL;
   h_pu_wgt_dn = NULL;
+  h_recoEff_tau = NULL;
 
   // Get Signal XSection File
   if( sample_info->isSignal ){
@@ -427,6 +447,13 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
     h_pu_wgt_up = (TH1D*)f_pu->Get("h_pileup_wgt_up");
     h_pu_wgt_dn = (TH1D*)f_pu->Get("h_pileup_wgt_down");
   }
+
+  // Get lep reco histo 
+  if( !sample_info->isData ){
+    f_lepEff = new TFile("../StopCORE/inputs/lepsf/lepeff__moriond17__ttbar_powheg_pythia8_25ns__20170223.root", "read");
+    h_recoEff_tau = (TH2D*)f_lepEff->Get("h2_lepEff_vetoSel_Eff_tau");
+  }
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -518,7 +545,11 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_vetoLep = 1.0;
   sf_vetoLep_up = 1.0;
   sf_vetoLep_dn = 1.0;
-  
+
+  sf_tau = 1.0;
+  sf_tau_up = 1.0;
+  sf_tau_dn = 1.0;
+    
   sf_lepFS = 1.0;
   sf_lepFS_up = 1.0;
   sf_lepFS_dn = 1.0;
@@ -611,6 +642,9 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   
   // lepSFs
   getLepSFWeight( sf_lep, sf_lep_up, sf_lep_dn, sf_lepFS, sf_lepFS_up, sf_lepFS_dn, sf_vetoLep, sf_vetoLep_up, sf_vetoLep_dn );
+
+  // tau SF
+  getTauSFWeight( sf_tau, sf_tau_up, sf_tau_dn );
  
   // top pT Reweighting
   getTopPtWeight( sf_topPt, sf_topPt_up, sf_topPt_dn );
@@ -685,6 +719,10 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   // Apply lepton scale factor
   double wgt_lep = sf_lep*sf_vetoLep*sf_lepFS;
   evt_wgt *= wgt_lep;
+
+  // Apply tau sf
+  double wgt_tau = sf_tau;
+  evt_wgt *= wgt_tau;
   
   // Apply top pT sf
   double wgt_topPt = sf_topPt;
@@ -777,6 +815,16 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     // Lepton SF Dn
     else if( iSys==k_lepSFDown ){
       sys_wgt *= (sf_lep_dn*sf_vetoLep_dn*sf_lepFS)/wgt_lep;
+    }
+
+    // Tau SF Up
+    else if( iSys==k_tauSFUp ){
+      sys_wgt *= (sf_tau_up)/wgt_tau;
+    }
+
+    // Tau SF Dn
+    else if( iSys==k_tauSFDown ){
+      sys_wgt *= (sf_tau_dn)/wgt_tau;
     }
 
     // Lepton SF FastSim/FullsSim Up
@@ -1212,8 +1260,8 @@ void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_
     wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,18)) );
     
     if( sample_info->isFastsim ){
-      wgt_btagsf_fs_up = ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,22)) );
-      wgt_btagsf_fs_dn = ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,23)) );
+      wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,22)) );
+      wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,23)) );
     }
   }
   else{
@@ -1224,8 +1272,8 @@ void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_
     wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(18) );
 
     if( sample_info->isFastsim ){
-      wgt_btagsf_fs_up = ( nEvents / h_bkg_counter->GetBinContent(23) );
-      wgt_btagsf_fs_dn = ( nEvents / h_bkg_counter->GetBinContent(24) );
+      wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(23) );
+      wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(24) );
     }
   }
   
@@ -1274,8 +1322,8 @@ void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, doubl
     wgt_btagsf_lf_tight_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,41)) );
 
     if( sample_info->isFastsim ){
-      wgt_btagsf_tight_fs_up = ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,42)) );
-      wgt_btagsf_tight_fs_dn = ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,43)) );
+      wgt_btagsf_tight_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,42)) );
+      wgt_btagsf_tight_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,43)) );
     }
   }
   else{
@@ -1286,8 +1334,8 @@ void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, doubl
     wgt_btagsf_lf_tight_dn *= ( nEvents / h_bkg_counter->GetBinContent(41) );
 
     if( sample_info->isFastsim ){
-      wgt_btagsf_tight_fs_up = ( nEvents / h_bkg_counter->GetBinContent(42) );
-      wgt_btagsf_tight_fs_dn = ( nEvents / h_bkg_counter->GetBinContent(43) );
+      wgt_btagsf_tight_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(42) );
+      wgt_btagsf_tight_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(43) );
     }
   }
   
@@ -1418,6 +1466,8 @@ void sysInfo::evtWgtInfo::getLepSFWeight_fromUtils( double &weight_lepSF, double
   weight_vetoLepSF = 1.0;
   weight_vetoLepSF_Up = 1.0;
   weight_vetoLepSF_Dn = 1.0;
+
+  if( sample_info->isData ) return;
 
   std::vector< double > recoLep_pt, recoLep_eta, genLostLep_pt, genLostLep_eta;
   std::vector< int > recoLep_pdgid, genLostLep_pdgid;
@@ -1553,6 +1603,57 @@ void sysInfo::evtWgtInfo::getLepSFWeight_fromUtils( double &weight_lepSF, double
 
 //////////////////////////////////////////////////////////////////////
 
+void sysInfo::evtWgtInfo::getTauSFWeight( double &weight_tau, double &weight_tau_up, double &weight_tau_dn ){
+
+  weight_tau = 1.0;
+  weight_tau_up = 1.0;
+  weight_tau_dn = 1.0;
+  
+  if( !apply_tau_sf ) return;
+  
+  if( sample_info->isData ) return;
+
+  if( !babyAnalyzer.is2lep() ) return;
+
+  // Check if there is had tau in event
+  for(int iGen=0; iGen<(int)babyAnalyzer.genleps_p4().size(); iGen++){
+    if( abs(babyAnalyzer.genleps_id().at(iGen))!=15 ) continue; // Looking for a tau
+    if( !babyAnalyzer.genleps_isLastCopy().at(iGen) ) continue; // Must be last copy in truth history
+    if( !babyAnalyzer.genleps_fromHardProcessFinalState().at(iGen) && !babyAnalyzer.genleps_fromHardProcessDecayed().at(iGen) ) continue; // Must be from hard process
+    if( babyAnalyzer.genleps_gentaudecay().at(iGen)!=3 && babyAnalyzer.genleps_gentaudecay().at(iGen)!=4 ) continue; // Must be hadronically decaying
+    if( babyAnalyzer.genleps_p4().at(iGen).Pt()<20.0 ) continue; // Must be in pT acceptance
+    if( fabs(babyAnalyzer.genleps_p4().at(iGen).Eta())>2.3 ) continue; // Must be in eta acceptance
+
+    // Get reco tau eff
+    int binX = h_recoEff_tau->GetXaxis()->FindBin( babyAnalyzer.genleps_p4().at(iGen).Pt() );
+    int binY = h_recoEff_tau->GetYaxis()->FindBin( fabs(babyAnalyzer.genleps_p4().at(iGen).Eta()) );
+    double eff = h_recoEff_tau->GetBinContent( binX, binY );
+
+    double sf = 0.91;
+    double sf_up = 0.91+0.05;
+    double sf_dn = 0.91-0.05;
+
+    if( eff>0.0 ){
+      // If passes tau filter, means tau was lost
+      if( babyAnalyzer.PassTauVeto() && babyAnalyzer.PassTrackVeto() ){
+	weight_tau = (1.0-(eff*sf))/(1.0-eff);
+	weight_tau_up = (1.0-(eff*sf_up))/(1.0-eff);
+	weight_tau_dn = (1.0-(eff*sf_dn))/(1.0-eff);
+      }
+      // Else, tau was found
+      else if( !babyAnalyzer.PassTauVeto() && babyAnalyzer.PassTrackVeto() ){
+	weight_tau = sf;
+	weight_tau_up = sf_up;
+	weight_tau_dn = sf_dn;
+      }
+    } // end if eff>0.0	
+  } // end loop over gen leps  
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 void sysInfo::evtWgtInfo::getTopPtWeight( double &weight_topPt, double &weight_topPt_up, double &weight_topPt_dn ){
 
   weight_topPt    = 1.0;
@@ -1640,6 +1741,10 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
       sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 &&
       sample_info->id != sampleInfo::k_WJetsToLNu &&
       sample_info->id != sampleInfo::k_WJetsToLNu_amcnlo_pythia8 &&
       sample_info->id != sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 &&
@@ -1882,7 +1987,7 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
 
 
   // Region F
-  if( nJets>=4 && modTop>=0.0 && modTop<10.0 && mlb<175 ){
+  if( nJets>=4 && modTop>=0.0 && modTop<10.0 && mlb>=175 ){
 
     if( met>=250.0 && met<450.0 ){
       sf_val = 0.99;
@@ -1994,6 +2099,10 @@ void sysInfo::evtWgtInfo::getMetResWeight_corridor( double &weight_metRes, doubl
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
       sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 && 
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 &&
       sample_info->id != sampleInfo::k_WJetsToLNu &&
       sample_info->id != sampleInfo::k_WJetsToLNu_amcnlo_pythia8 &&
       sample_info->id != sampleInfo::k_WJetsToLNu_HT100ToInf_madgraph_pythia8 &&
@@ -2062,7 +2171,7 @@ void sysInfo::evtWgtInfo::getMetResWeight_corridor( double &weight_metRes, doubl
     //sf_err = 0.05;
   }
   
-  if( met>=600.0 ){
+  if( met>=550.0 ){
     sf_val = 1.07;
     sf_err = 0.05;
     //sf_val = 1.14;
@@ -2105,38 +2214,17 @@ void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &we
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
       sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
       sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
-      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8  ) return;
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1  ) return;
 
   if( !babyAnalyzer.is2lep() ) return;
 
 
   // Get ttbar/tW system pT
   LorentzVector system_LV(0.0,0.0,0.0,0.0);
-
-  /*
-  // Grab top quarks
-  for(int iGen=0; iGen<(int)babyAnalyzer.genqs_p4().size(); iGen++){
-    if( abs(babyAnalyzer.genqs_id().at(iGen))==6 &&
-	babyAnalyzer.genqs_isLastCopy().at(iGen) ){
-      system_LV += babyAnalyzer.genqs_p4().at(iGen);
-    }
-  }
-
-  // If tW grab the W
-  if( sample_info->id == sampleInfo::k_t_tW_5f_powheg_pythia8 ||
-      sample_info->id == sampleInfo::k_t_tbarW_5f_powheg_pythia8 ){
-    for(int iGen=0; iGen<(int)babyAnalyzer.genbosons_p4().size(); iGen++){
-      if( abs(babyAnalyzer.genbosons_id().at(iGen))==24 &&
-	  babyAnalyzer.genbosons_isHardProcess().at(iGen) &&
-	  babyAnalyzer.genbosons_isLastCopy().at(iGen) ){
-	system_LV += babyAnalyzer.genbosons_p4().at(iGen);
-      }
-    }
-  }
-
-  // Get system Pt
-  double system_pt = system_LV.Pt();
-  */
 
   // Lep1 LV
   system_LV += babyAnalyzer.lep1_p4();
@@ -2688,6 +2776,30 @@ double sysInfo::evtWgtInfo::getSampleWeight( sampleInfo::ID sample ){
   if(!apply_sample_sf ) return result;
 
   switch( sample ){
+
+  case(sampleInfo::k_ttbar_diLept_madgraph_pythia8):
+    result = (5689986.0)/(23198554.0+5689986.0);
+    break;
+    
+  case(sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1):
+    result = (23198554.0)/(23198554.0+5689986.0);
+    break;
+    
+  case(sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays):
+    result = (4473156.0)/(4473156.0+3145334.0);
+    break;
+  
+  case(sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1):
+    result = (3145334.0)/(4473156.0+3145334.0);
+    break;
+
+  case(sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays):
+    result = (5029568.0)/(5029568.0+3146940.0);
+    break;
+
+  case(sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1):
+    result = (3146940.0)/(5029568.0+3146940.0);
+    break;
 
   default:
     break;

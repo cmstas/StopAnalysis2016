@@ -99,6 +99,8 @@ namespace sampleInfo{
 	   k_t_tbarW_5f_powheg_pythia8,
 	   k_t_tW_5f_powheg_pythia8_noHadDecays,
 	   k_t_tbarW_5f_powheg_pythia8_noHadDecays,
+	   k_t_tW_5f_powheg_pythia8_noHadDecays_ext1,
+	   k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1,
 	   k_rare,
 	   k_diBoson,
 	   k_WW,
