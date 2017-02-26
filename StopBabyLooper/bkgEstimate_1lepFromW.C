@@ -61,7 +61,7 @@ void printLatexHeader( FILE *file ){
 //
 // Main
 //
-int bkgEstimate_diLepton(){
+int bkgEstimate_1lepFromW(){
 
 
   TH1::SetDefaultSumw2();
@@ -77,7 +77,7 @@ int bkgEstimate_diLepton(){
   //double rescale     = 40.0/29.53; // rescale to new lumi
 
   TString regionName_SR = "SR";
-  TString regionName_CR = "CR2l";
+  TString regionName_CR = "CR0b";
   
    
   //
@@ -96,7 +96,7 @@ int bkgEstimate_diLepton(){
     f_CR_data = new TFile(inDir+"data_single_lepton_met.root", "read");
   }
   
-  genClassyInfo::Util genClassy_ge2lep( genClassyInfo::k_ge2lep );
+  genClassyInfo::Util genClassy_1lepFromW( genClassyInfo::k_ee1lep_fromW );
   genClassyInfo::Util genClassy_incl( genClassyInfo::k_incl );
   
   
@@ -108,16 +108,28 @@ int bkgEstimate_diLepton(){
   
   sysInfo::vect_util systematicList;
   systematicList.push_back( sysInfo::Util(sysInfo::k_nominal) );
-  //systematicList.push_back( sysInfo::Util(sysInfo::k_JESUp) );
-  //systematicList.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_metResDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_bTagEffHFUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_bTagEffHFDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_bTagEffLFUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_bTagEffLFDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_metResUp) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_tauSFUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_tauSFDown) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_nuPtSF_Up) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_nuPtSF_Down) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_WwidthSF_Up) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_WwidthSF_Down) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_hfXsec_Up) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_hfXsec_Down) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_puUp) );
+  systematicList.push_back( sysInfo::Util(sysInfo::k_puDown) );
   //systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtUp) );
   //systematicList.push_back( sysInfo::Util(sysInfo::k_ttbarSysPtDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
@@ -126,10 +138,6 @@ int bkgEstimate_diLepton(){
   systematicList.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_q2Up) );
   systematicList.push_back( sysInfo::Util(sysInfo::k_q2Down) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerUp) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_cr2lTriggerDown) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
-  systematicList.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
   
   const int nSys = (int)systematicList.size();
 
@@ -149,7 +157,7 @@ int bkgEstimate_diLepton(){
   //
   bkgEstUtil bkgEst_ICHEP;
 
-  bkgEst_ICHEP.outName_base = "bkgEst_lostLepton__ICHEP_bins";
+  bkgEst_ICHEP.outName_base = "bkgEst_1lepFromW__ICHEP_bins";
   bkgEst_ICHEP.hName_base = "h_yields_SR_ICHEP";
   bkgEst_ICHEP.forceOneTF = false;
   bkgEst_ICHEP.useFractionInCR = false;
@@ -242,7 +250,7 @@ int bkgEstimate_diLepton(){
   //
   bkgEstUtil bkgEst_ICHEP_ext30fb;
 
-  bkgEst_ICHEP_ext30fb.outName_base = "bkgEst_lostLepton__ICHEP_ext30fb_bins";
+  bkgEst_ICHEP_ext30fb.outName_base = "bkgEst_1lepFromW__ICHEP_ext30fb_bins";
   bkgEst_ICHEP_ext30fb.hName_base = "h_yields_SR_ICHEP_ext30fb";
   bkgEst_ICHEP_ext30fb.forceOneTF = false;
   bkgEst_ICHEP_ext30fb.useFractionInCR = false;
@@ -367,7 +375,7 @@ int bkgEstimate_diLepton(){
   bkgEstUtil bkgEst_ext30fb_mlb;
  
   // met extrapolation
-  bkgEst_ext30fb_mlb.outName_base = "bkgEst_lostLepton__mlb_v1_bins";
+  bkgEst_ext30fb_mlb.outName_base = "bkgEst_1lepFromW__mlb_v1_bins";
   bkgEst_ext30fb_mlb.hName_base = "h_yields_SR_dev_ext30fb_mlb_v1";
   bkgEst_ext30fb_mlb.forceOneTF = false;
   bkgEst_ext30fb_mlb.useFractionInCR = false;
@@ -536,7 +544,7 @@ int bkgEstimate_diLepton(){
   bkgEstUtil bkgEst_ext30fb_mlb_inclMlbBins;
  
   // mlb extrapolation
-  bkgEst_ext30fb_mlb_inclMlbBins.outName_base = "bkgEst_lostLepton__mlb_v1_inclMlb_bins";
+  bkgEst_ext30fb_mlb_inclMlbBins.outName_base = "bkgEst_1lepFromW__mlb_v1_inclMlb_bins";
   bkgEst_ext30fb_mlb_inclMlbBins.hName_base = "h_yields_SR_dev_ext30fb_mlb_v1";
   bkgEst_ext30fb_mlb_inclMlbBins.forceOneTF = false;
   bkgEst_ext30fb_mlb_inclMlbBins.useFractionInCR = false;
@@ -698,14 +706,14 @@ int bkgEstimate_diLepton(){
   v_bkgEst.push_back( bkgEst_ext30fb_mlb_inclMlbBins );
   */
 
-
+  /*
   //
   // Dev, ext30fb,  mlb with tight bTagging
   //
   bkgEstUtil bkgEst_ext30fb_mlb_v2;
  
   // met extrapolation
-  bkgEst_ext30fb_mlb_v2.outName_base = "bkgEst_lostLepton__mlb_v2_bins";
+  bkgEst_ext30fb_mlb_v2.outName_base = "bkgEst_1lepFromW__mlb_v2_bins";
   bkgEst_ext30fb_mlb_v2.hName_base = "h_yields_SR_dev_ext30fb_mlb_v2";
   bkgEst_ext30fb_mlb_v2.forceOneTF = false;
   bkgEst_ext30fb_mlb_v2.useFractionInCR = false;
@@ -732,17 +740,17 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>600$");
   
   // Region B
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(29);  // Yes Extrapolation, if so bin=29
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(5);  // No Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<450$");
 
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(6);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(29);  // Yes Extrapolation, if so bin=29
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(6);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(6);  // Yes Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$450<MET<600$");
 
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(7);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(29);  // Yes Extrapolation, if so bin=29
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(7);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(7);  // Yes Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>600$");
@@ -799,23 +807,23 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<350$");
 
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(18);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(32); // Yes Extrapolation, if so, bin=32
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(18);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(18); // Yes Extrapolation, if so, bin=32
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$350<MET<550$");
 
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(19);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(32); // Yes Extrapolation, if so, bin=32
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(19);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(19); // Yes Extrapolation, if so, bin=32
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>550$");
 
   // Region F
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(20);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(33); // Yes Extrapolation, if so, bin=33 
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(20);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(20); // Yes Extrapolation, if so, bin=33 
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("F"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<450$");
 
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(21);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(33); // Yes Extrapolation, if so, bin=33 
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(21);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(21); // Yes Extrapolation, if so, bin=33 
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("F"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>450$");
@@ -842,19 +850,19 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>600$");
 
   // Region H
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(26);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(35);  // Yes Extrapolation, if so, bin=35
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(26);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(26);  // Yes Extrapolation, if so, bin=35
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<450$");
  
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(27);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(35); // Yes Extrapolation, if, bin=35
+  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(27);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(27); // Yes Extrapolation, if, bin=35
   bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>450$");
  
   
   v_bkgEst.push_back( bkgEst_ext30fb_mlb_v2 );
-
+  */
 
   //
   // Dev, ext30fb,  mlb with tight bTagging
@@ -862,7 +870,7 @@ int bkgEstimate_diLepton(){
   bkgEstUtil bkgEst_ext30fb_mlb_v2_useCRfrac;
  
   // met extrapolation
-  bkgEst_ext30fb_mlb_v2_useCRfrac.outName_base = "bkgEst_lostLepton__mlb_v2_bins_useCRfraction";
+  bkgEst_ext30fb_mlb_v2_useCRfrac.outName_base = "bkgEst_1lepFromW__mlb_v2_bins_useCRfraction";
   bkgEst_ext30fb_mlb_v2_useCRfrac.hName_base = "h_yields_SR_dev_ext30fb_mlb_v2";
   bkgEst_ext30fb_mlb_v2_useCRfrac.forceOneTF = false;
   bkgEst_ext30fb_mlb_v2_useCRfrac.useFractionInCR = true;
@@ -889,17 +897,17 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>600$");
   
   // Region B
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(29);  // Yes Extrapolation, if so bin=29
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(5);  // No Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<450$");
 
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(6);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(29);  // Yes Extrapolation, if so bin=29
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(6);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(6);  // Yes Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$450<MET<600$");
 
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(7);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(29);  // Yes Extrapolation, if so bin=29
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(7);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(7);  // Yes Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>600$");
@@ -956,23 +964,23 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<350$");
 
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(18);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(32); // Yes Extrapolation, if so, bin=32
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(18);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(18); // Yes Extrapolation, if so, bin=32
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$350<MET<550$");
 
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(19);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(32); // Yes Extrapolattion, if so, bin=32
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(19);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(19); // Yes Extrapolattion, if so, bin=32
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>550$");
 
   // Region F
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(20);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(33); // Yes Extrapolation, if so, bin=33 
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(20);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(20); // Yes Extrapolation, if so, bin=33 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("F"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<450$");
 
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(21);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(33); // Yes Extrapolation, if so, bin=33 
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(21);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(21); // Yes Extrapolation, if so, bin=33 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("F"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>450$");
@@ -999,12 +1007,12 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>600$");
 
   // Region H
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(26);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(35);  // Yes Extrapolation, if so, bin=35
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(26);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(26);  // Yes Extrapolation, if so, bin=35
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<450$");
  
-  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(27);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(35); // Yes Extrapolation, if, bin=35
+  bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(27);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(27); // Yes Extrapolation, if, bin=35
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>450$");
@@ -1020,7 +1028,7 @@ int bkgEstimate_diLepton(){
   bkgEstUtil bkgEst_ext30fb_mlb_v2_inclMlbBins;
  
   // mlb extrapolation
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.outName_base = "bkgEst_lostLepton__mlb_v2_inclMlb_bins";
+  bkgEst_ext30fb_mlb_v2_inclMlbBins.outName_base = "bkgEst_1lepFromW__mlb_v2_inclMlb_bins";
   bkgEst_ext30fb_mlb_v2_inclMlbBins.hName_base = "h_yields_SR_dev_ext30fb_mlb_v2";
   bkgEst_ext30fb_mlb_v2_inclMlbBins.forceOneTF = true;
   bkgEst_ext30fb_mlb_v2_inclMlbBins.useFractionInCR = false;
@@ -1177,7 +1185,7 @@ int bkgEstimate_diLepton(){
   //
   bkgEstUtil bkgEst_ext30fb_bJetPt;
  
-  bkgEst_ext30fb_bJetPt.outName_base = "bkgEst_lostLepton__bJetPt_v1_bins";
+  bkgEst_ext30fb_bJetPt.outName_base = "bkgEst_1lepFromW__bJetPt_v1_bins";
   bkgEst_ext30fb_bJetPt.hName_base = "h_yields_SR_dev_ext30fb_bJetPt_v1";
   bkgEst_ext30fb_bJetPt.forceOneTF = false;
   bkgEst_ext30fb_bJetPt.useFractionInCR = false;
@@ -1346,7 +1354,7 @@ int bkgEstimate_diLepton(){
   bkgEstUtil bkgEst_ext30fb_bJetPt_inclBJetPtBins;
  
   // bJetPt Extrapolation
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.outName_base = "bkgEst_lostLepton__bJetPt_v1_inclBJetPt_bins";
+  bkgEst_ext30fb_bJetPt_inclBJetPtBins.outName_base = "bkgEst_1lepFromW__bJetPt_v1_inclBJetPt_bins";
   bkgEst_ext30fb_bJetPt_inclBJetPtBins.hName_base = "h_yields_SR_dev_ext30fb_bJetPt_v1";
   bkgEst_ext30fb_bJetPt_inclBJetPtBins.forceOneTF = true;
   bkgEst_ext30fb_bJetPt_inclBJetPtBins.useFractionInCR = false;
@@ -1514,10 +1522,10 @@ int bkgEstimate_diLepton(){
   //
   bkgEstUtil bkgEst_corridor;
 
-  bkgEst_corridor.outName_base = "bkgEst_lostLepton__corridor_bins";
+  bkgEst_corridor.outName_base = "bkgEst_1lepFromW__corridor_bins";
   bkgEst_corridor.hName_base = "h_yields_SR_corridor";
   bkgEst_corridor.forceOneTF = false;
-  bkgEst_corridor.useFractionInCR = false;
+  bkgEst_corridor.useFractionInCR = true;
 
   bkgEst_corridor.SR_bins.push_back(1);  bkgEst_corridor.CR_bins.push_back(1);  
   bkgEst_corridor.regionName.push_back("top~corridor"); 
@@ -1824,10 +1832,10 @@ int bkgEstimate_diLepton(){
       fprintf(f_uncFile_fullCalc, "} \\hline \n");
 
       fprintf(f_uncFile_fullCalc, "Systematic & $Observed_{CR},~(\\%%)$ & $MC_{Incl}^{CR},~(\\%%)$");
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & $MC_{2\\ell}^{CR},~(\\%%)$ & $MC_{CR}^{2\\ell~frac},~(\\%%)$");
-      if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & $MC_{2\\ell}^{SR~bin},~(\\%%)$ & $TF_{lepton},~(\\%%)$");
-      else                             fprintf(f_uncFile_fullCalc, " & $MC_{2\\ell}^{SR},~(\\%%)$ & $TF_{lepton},~(\\%%)$");
-      if(!oneTF) fprintf(f_uncFile_fullCalc, " & $MC_{2\\ell}^{SR~bin},~(\\%%)$ & $TF_{SR~Bin},~(\\%%)$ & $TF_{Total},~(\\%%)$");
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{CR},~(\\%%)$ & $MC_{CR}^{1\\ell~frac},~(\\%%)$");
+      if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR~bin},~(\\%%)$ & $TF_{lepton},~(\\%%)$");
+      else                             fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR},~(\\%%)$ & $TF_{lepton},~(\\%%)$");
+      if(!oneTF) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR~bin},~(\\%%)$ & $TF_{SR~Bin},~(\\%%)$ & $TF_{Total},~(\\%%)$");
       fprintf(f_uncFile_fullCalc, " & $SR~Estimate$");
       fprintf(f_uncFile_fullCalc, " \\"); fprintf(f_uncFile_fullCalc, "\\ \\hline \\hline \n");
 
@@ -1847,7 +1855,7 @@ int bkgEstimate_diLepton(){
       hName += "__";
       hName += regionName_SR;
       hName += "__genClassy_";
-      hName += genClassy_ge2lep.label;
+      hName += genClassy_1lepFromW.label;
       hName += "__systematic_";
       hName += nominal_sys.label;
       
@@ -1870,7 +1878,7 @@ int bkgEstimate_diLepton(){
       hName += "__";
       hName += regionName_SR;
       hName += "__genClassy_";
-      hName += genClassy_ge2lep.label;
+      hName += genClassy_1lepFromW.label;
       hName += "__systematic_";
       hName += nominal_sys.label;
       
@@ -1893,7 +1901,7 @@ int bkgEstimate_diLepton(){
       hName += "__";
       hName += regionName_CR;
       hName += "__genClassy_";
-      hName += genClassy_ge2lep.label;
+      hName += genClassy_1lepFromW.label;
       hName += "__systematic_";
       hName += nominal_sys.label;
       
@@ -2392,7 +2400,7 @@ int bkgEstimate_diLepton(){
 	hName += "__";
 	hName += regionName_SR;
 	hName += "__genClassy_";
-	hName += genClassy_ge2lep.label;
+	hName += genClassy_1lepFromW.label;
 	hName += "__systematic_";
 	hName += systematicList[iSys].label;
 	
@@ -2415,7 +2423,7 @@ int bkgEstimate_diLepton(){
 	hName += "__";
 	hName += regionName_SR;
 	hName += "__genClassy_";
-	hName += genClassy_ge2lep.label;
+	hName += genClassy_1lepFromW.label;
 	hName += "__systematic_";
 	hName += systematicList[iSys].label;
       
@@ -2438,7 +2446,7 @@ int bkgEstimate_diLepton(){
 	hName += "__";
 	hName += regionName_CR;
 	hName += "__genClassy_";
-	hName += genClassy_ge2lep.label;
+	hName += genClassy_1lepFromW.label;
 	hName += "__systematic_";
 	hName += systematicList[iSys].label;
 	
@@ -2652,7 +2660,7 @@ int bkgEstimate_diLepton(){
 	hName += "__";
 	hName += regionName_SR;
 	hName += "__genClassy_";
-	hName += genClassy_ge2lep.label;
+	hName += genClassy_1lepFromW.label;
 	hName += "__systematic_";
 	hName += systematicList[iSys+1].label;
       
@@ -2675,7 +2683,7 @@ int bkgEstimate_diLepton(){
 	hName += "__";
 	hName += regionName_SR;
 	hName += "__genClassy_";
-	hName += genClassy_ge2lep.label;
+	hName += genClassy_1lepFromW.label;
 	hName += "__systematic_";
 	hName += systematicList[iSys+1].label;
 	
@@ -2698,7 +2706,7 @@ int bkgEstimate_diLepton(){
 	hName += "__";
 	hName += regionName_CR;
 	hName += "__genClassy_";
-	hName += genClassy_ge2lep.label;
+	hName += genClassy_1lepFromW.label;
 	hName += "__systematic_";
 	hName += systematicList[iSys+1].label;
       
