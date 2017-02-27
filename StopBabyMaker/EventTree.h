@@ -122,6 +122,15 @@ public:
     float pfmet_phi_rl_jup;
     float pfmet_rl_jdown;
     float pfmet_phi_rl_jdown;
+    float pfmet_egclean;
+    float pfmet_egclean_phi;
+    float pfmet_muegclean;
+    float pfmet_muegclean_phi;
+    float pfmet_muegcleanfix;
+    float pfmet_muegcleanfix_phi;
+    float pfmet_uncorrcalomet;
+    float pfmet_uncorrcalomet_phi;
+   
     float calomet;
     float calomet_phi;
 

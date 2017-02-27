@@ -477,20 +477,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     f_mu_SF_veto_ip  = new TFile("lepsf/analysis2016_36p46fb/TnP_NUM_MediumIP2D_DENOM_LooseID_VAR_map_pt_eta.root", "read"); // double unc for this
     
     // Fastsim/Fullsim el files
-    f_el_FS_ID  = new TFile("lepsf/analysis2016_12p9fb/sf_el_mediumCB.root", "read");
-    f_el_FS_Iso = new TFile("lepsf/analysis2016_12p9fb/sf_el_mini01.root", "read");
+    f_el_FS_ID  = new TFile("lepsf/analysis2016_36p46fb/sf_el_mediumCB.root", "read");
+    f_el_FS_Iso = new TFile("lepsf/analysis2016_36p46fb/sf_el_mini01.root", "read");
     
-    f_el_veto_FS_ID  = new TFile("lepsf/analysis2016_12p9fb/sf_el_vetoCB.root", "read");
-    f_el_veto_FS_Iso = new TFile("lepsf/analysis2016_12p9fb/sf_el_mini02.root", "read"); 
+    f_el_veto_FS_ID  = new TFile("lepsf/analysis2016_36p46fb/sf_el_vetoCB.root", "read");
+    f_el_veto_FS_Iso = new TFile("lepsf/analysis2016_36p46fb/sf_el_mini02.root", "read"); 
     
     // Fastsim/Fullsim mu files
-    f_mu_FS_ID  = new TFile("lepsf/analysis2016_12p9fb/sf_mu_medium.root", "read"); // double unc for this
-    f_mu_FS_Iso = new TFile("lepsf/analysis2016_12p9fb/sf_mu_mediumID_mini02.root", "read"); // double unc for this
-    f_mu_FS_Ip  = new TFile("lepsf/analysis2016_12p9fb/sf_mu_tightIP2D.root", "read"); // double unc for this
+    f_mu_FS_ID  = new TFile("lepsf/analysis2016_36p46fb/sf_mu_mediumID.root", "read"); // double unc for this
+    f_mu_FS_Iso = new TFile("lepsf/analysis2016_36p46fb/sf_mu_mediumID_mini02.root", "read"); // double unc for this
+    f_mu_FS_Ip  = new TFile("lepsf/analysis2016_36p46fb/sf_mu_mediumID_tightIP2D.root", "read"); // double unc for this
     
-    f_mu_veto_FS_ID  = new TFile("lepsf/analysis2016_12p9fb/sf_mu_loose.root", "read");
-    f_mu_veto_FS_Iso = new TFile("lepsf/analysis2016_12p9fb/sf_mu_looseID_mini02.root", "read");
-    f_mu_veto_FS_Ip  = new TFile("lepsf/analysis2016_12p9fb/sf_mu_looseIP2D.root", "read"); // double unc for this
+    f_mu_veto_FS_ID  = new TFile("lepsf/analysis2016_36p46fb/sf_mu_looseID.root", "read");
+    f_mu_veto_FS_Iso = new TFile("lepsf/analysis2016_36p46fb/sf_mu_looseID_mini02.root", "read");
+    f_mu_veto_FS_Ip  = new TFile("lepsf/analysis2016_36p46fb/sf_mu_mediumID_looseIP2D.root", "read"); // double unc for this
 
     // Veto lepton reco efficiency files
     f_vetoLep_eff = new TFile("lepsf/analysis2016_36p46fb/lepeff__moriond17__ttbar_powheg_pythia8_25ns.root", "read");
@@ -1341,6 +1341,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(evt_isRealData() && thisFile.Contains("03Feb2017")){
 	  StopEvt.pfmet = evt_muegclean_pfmet();
 	  StopEvt.pfmet_phi = evt_muegclean_pfmetPhi();
+
+	  //StopEvt.pfmet_egclean = evt_egclean_pfmet();
+	  //StopEvt.pfmet_egclean_phi = evt_egclean_pfmetPhi();
+	  //StopEvt.pfmet_muegclean = evt_muegclean_pfmet();
+	  //StopEvt.pfmet_muegclean_phi = evt_muegclean_pfmetPhi();
+	  //StopEvt.pfmet_muegcleanfix = evt_muegcleanfix_pfmet();
+	  //StopEvt.pfmet_muegcleanfix_phi = evt_muegcleanfix_pfmetPhi();
+	  //StopEvt.pfmet_uncorrcalomet = evt_uncorr_calomet();
+	  //StopEvt.pfmet_uncorrcalomet_phi = evt_uncorr_calometPhi();
 	}
         StopEvt.pfmet_jup = newmet_jup.first;
         StopEvt.pfmet_phi_jup = newmet_jup.second;
@@ -2754,7 +2763,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       }
       
 
-      if(!(StopEvt.pfmet >= skim_met) && !(StopEvt.pfmet_rl >= skim_met) && !(StopEvt.pfmet_rl_jup >= skim_met) && !(StopEvt.pfmet_rl_jdown >= skim_met) && !(StopEvt.pfmet_jup >= skim_met) && !(StopEvt.pfmet_jdown >= skim_met)) continue;
+      if(!(StopEvt.pfmet >= skim_met) && !(StopEvt.pfmet_rl >= skim_met) && !(StopEvt.pfmet_rl_jup >= skim_met) && !(StopEvt.pfmet_rl_jdown >= skim_met) && !(StopEvt.pfmet_jup >= skim_met) && !(StopEvt.pfmet_jdown >= skim_met) ) continue;
+      //if(!(StopEvt.pfmet >= skim_met) && !(StopEvt.pfmet_rl >= skim_met) && !(StopEvt.pfmet_rl_jup >= skim_met) && !(StopEvt.pfmet_rl_jdown >= skim_met) && !(StopEvt.pfmet_jup >= skim_met) && !(StopEvt.pfmet_jdown >= skim_met) && !(StopEvt.pfmet_egclean >= skim_met) && !(StopEvt.pfmet_muegclean >= skim_met) && !(StopEvt.pfmet_muegcleanfix >= skim_met) && !(StopEvt.pfmet_uncorrcalomet >= skim_met) ) continue;
       nEvents_pass_skim_met++;
       ///////////////////////////////////////////////////////// 
       
