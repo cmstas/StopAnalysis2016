@@ -128,8 +128,10 @@ public:
     float pfmet_muegclean_phi;
     float pfmet_muegcleanfix;
     float pfmet_muegcleanfix_phi;
-    float pfmet_uncorrcalomet;
-    float pfmet_uncorrcalomet_phi;
+    float pfmet_uncorr;
+    float pfmet_uncorr_phi;
+    float pfmet_original;
+    float pfmet_original_phi;
    
     float calomet;
     float calomet_phi;

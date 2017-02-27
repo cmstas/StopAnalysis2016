@@ -1341,15 +1341,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	if(evt_isRealData() && thisFile.Contains("03Feb2017")){
 	  StopEvt.pfmet = evt_muegclean_pfmet();
 	  StopEvt.pfmet_phi = evt_muegclean_pfmetPhi();
-
-	  //StopEvt.pfmet_egclean = evt_egclean_pfmet();
-	  //StopEvt.pfmet_egclean_phi = evt_egclean_pfmetPhi();
-	  //StopEvt.pfmet_muegclean = evt_muegclean_pfmet();
-	  //StopEvt.pfmet_muegclean_phi = evt_muegclean_pfmetPhi();
-	  //StopEvt.pfmet_muegcleanfix = evt_muegcleanfix_pfmet();
-	  //StopEvt.pfmet_muegcleanfix_phi = evt_muegcleanfix_pfmetPhi();
-	  //StopEvt.pfmet_uncorrcalomet = evt_uncorr_calomet();
-	  //StopEvt.pfmet_uncorrcalomet_phi = evt_uncorr_calometPhi();
+	  StopEvt.pfmet_original = newmet.first;
+	  StopEvt.pfmet_original_phi = newmet.second;
 	}
         StopEvt.pfmet_jup = newmet_jup.first;
         StopEvt.pfmet_phi_jup = newmet_jup.second;
@@ -1360,7 +1353,24 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       else{
 	StopEvt.pfmet = evt_pfmet();
 	StopEvt.pfmet_phi = evt_pfmetPhi();
+	if(evt_isRealData() && thisFile.Contains("03Feb2017")){
+	  StopEvt.pfmet = evt_muegclean_pfmet();
+	  StopEvt.pfmet_phi = evt_muegclean_pfmetPhi();
+	  StopEvt.pfmet_original = evt_pfmetPhi();
+	  StopEvt.pfmet_original_phi = evt_pfmetPhi();
+	}
       }
+      if(evt_isRealData() && thisFile.Contains("03Feb2017")){
+	StopEvt.pfmet_egclean = evt_egclean_pfmet();
+	StopEvt.pfmet_egclean_phi = evt_egclean_pfmetPhi();
+	StopEvt.pfmet_muegclean = evt_muegclean_pfmet();
+	StopEvt.pfmet_muegclean_phi = evt_muegclean_pfmetPhi();
+	StopEvt.pfmet_muegcleanfix = evt_muegcleanfix_pfmet();
+	StopEvt.pfmet_muegcleanfix_phi = evt_muegcleanfix_pfmetPhi();
+	StopEvt.pfmet_uncorr = evt_uncorr_pfmet();
+	StopEvt.pfmet_uncorr_phi = evt_uncorr_pfmetPhi();
+      }
+
       StopEvt.filt_pfovercalomet = !(StopEvt.calomet>0&&StopEvt.pfmet/StopEvt.calomet>5);
 
       //

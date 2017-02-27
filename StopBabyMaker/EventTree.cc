@@ -99,9 +99,11 @@ void EventTree::FillCommon (const std::string &root_file_name)
       filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
       filt_hbhenoise = filt_hbheNoise(); // hbheNoiseFilter_25ns();
       filt_hbheisonoise = filt_hbheNoiseIso();//hbheIsoNoiseFilter();
-      filt_badmuons = filt_badMuons();
-      filt_duplicatemuons = filt_duplicateMuons();
-      filt_nobadmuons = filt_noBadMuons();
+      if(is_data){//works only for reminiAOD
+	filt_badmuons = filt_badMuons();
+	filt_duplicatemuons = filt_duplicateMuons();
+	filt_nobadmuons = filt_noBadMuons();
+      }
    }
     
     if (!is_data)
@@ -240,8 +242,10 @@ void EventTree::Reset ()
     pfmet_muegclean_phi       = -9999.;
     pfmet_muegcleanfix        = -9999.;
     pfmet_muegcleanfix_phi    = -9999.;
-    pfmet_uncorrcalomet       = -9999.;
-    pfmet_uncorrcalomet_phi   = -9999.;
+    pfmet_uncorr              = -9999.;
+    pfmet_uncorr_phi          = -9999.;
+    pfmet_original            = -9999.;
+    pfmet_original_phi        = -9999.;
     calomet              = -9999.;
     calomet_phi          = -9999.;
     scale1fb             = -9999.;
@@ -596,8 +600,10 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("pfmet_muegclean_phi", &pfmet_muegclean_phi);
     tree->Branch("pfmet_muegcleanfix", &pfmet_muegcleanfix);
     tree->Branch("pfmet_muegcleanfix_phi", &pfmet_muegcleanfix_phi);
-    tree->Branch("pfmet_uncorrcalomet", &pfmet_uncorrcalomet);    
-    tree->Branch("pfmet_uncorrcalomet_phi", &pfmet_uncorrcalomet_phi);
+    tree->Branch("pfmet_uncorr", &pfmet_uncorr);    
+    tree->Branch("pfmet_uncorr_phi", &pfmet_uncorr_phi);
+    tree->Branch("pfmet_original", &pfmet_original);    
+    tree->Branch("pfmet_original_phi", &pfmet_original_phi);
     tree->Branch("scale1fb", &scale1fb);
     tree->Branch("xsec", &xsec);
     tree->Branch("xsec_uncert", &xsec_uncert);
