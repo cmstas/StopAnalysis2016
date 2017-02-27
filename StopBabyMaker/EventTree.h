@@ -152,6 +152,9 @@ public:
     bool  filt_jetWithBadMuon_jup;
     bool  filt_jetWithBadMuon_jdown;
     bool  filt_pfovercalomet;
+    bool  filt_badmuons;
+    bool  filt_duplicatemuons;
+    bool  filt_nobadmuons;
     
     float dR_lep_leadb;
     float dR_lep2_leadb;    

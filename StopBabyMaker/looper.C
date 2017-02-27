@@ -1329,13 +1329,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
           else cout << "This should not happen" << endl;
         }
         else if(isbadrawMET) newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3,NULL,0,isbadrawMET);
+        //else newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3);
         else newmet = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3);
 
         newmet_jup = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty_sys,true,isbadrawMET);
         newmet_jdown = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1FastJetL2L3, jetcorr_uncertainty_sys,false,isbadrawMET);
 
+
 	StopEvt.pfmet = newmet.first;
 	StopEvt.pfmet_phi = newmet.second;
+	if(evt_isRealData() && thisFile.Contains("03Feb2017")){
+	  StopEvt.pfmet = evt_muegclean_pfmet();
+	  StopEvt.pfmet_phi = evt_muegclean_pfmetPhi();
+	}
         StopEvt.pfmet_jup = newmet_jup.first;
         StopEvt.pfmet_phi_jup = newmet_jup.second;
         StopEvt.pfmet_jdown = newmet_jdown.first;

@@ -1,3 +1,264 @@
+#######################################################
+## ReminiAOD - MET data ##
+#######################################################
+
+SAMPLE
+Name data_met_Run2016B_MINIAOD_03Feb2017_ver2-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_MET_MINIAOD_03Feb2017_ver2-v2/merged/V08-00-18/
+
+SAMPLE
+Name data_met_Run2016C_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_MET_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_met_Run2016D_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MET_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_met_Run2016E_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_MET_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_met_Run2016F_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_MET_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_met_Run2016G_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_MET_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_met_Run2016H_MINIAOD_03Feb2017_ver2-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_MET_MINIAOD_03Feb2017_ver2-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_met_Run2016H_MINIAOD_03Feb2017_ver3-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_MET_MINIAOD_03Feb2017_ver3-v1/merged/V08-00-18/
+
+
+#######################################################
+## ReminiAOD - single muon data ##
+#######################################################
+
+SAMPLE
+Name data_single_muon_Run2016B_MINIAOD_03Feb2017_ver2-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_SingleMuon_MINIAOD_03Feb2017_ver2-v2/merged/V08-00-18/
+
+SAMPLE
+Name data_single_muon_Run2016C_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_SingleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_muon_Run2016D_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_SingleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_muon_Run2016E_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_SingleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_muon_Run2016F_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_SingleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_muon_Run2016G_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_SingleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_muon_Run2016H_MINIAOD_03Feb2017_ver2-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_SingleMuon_MINIAOD_03Feb2017_ver2-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_muon_Run2016H_MINIAOD_03Feb2017_ver3-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_SingleMuon_MINIAOD_03Feb2017_ver3-v1/merged/V08-00-18/
+
+
+#######################################################
+## ReminiAOD - Single Electron data ##
+#######################################################
+
+SAMPLE
+Name data_single_electron_Run2016B_MINIAOD_03Feb2017_ver2-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_SingleElectron_MINIAOD_03Feb2017_ver2-v2/merged/V08-00-18/
+
+SAMPLE
+Name data_single_electron_Run2016C_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_SingleElectron_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_electron_Run2016D_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_SingleElectron_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_electron_Run2016E_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_SingleElectron_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_electron_Run2016F_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_SingleElectron_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_electron_Run2016G_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_SingleElectron_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_electron_Run2016H_MINIAOD_03Feb2017_ver2-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_SingleElectron_MINIAOD_03Feb2017_ver2-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_electron_Run2016H_MINIAOD_03Feb2017_ver3-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_SingleElectron_MINIAOD_03Feb2017_ver3-v1/merged/V08-00-18/
+
+
+#######################################################
+## ReminiAOD - MuonEG data ##
+#######################################################
+
+SAMPLE
+Name data_muon_eg_Run2016B_MINIAOD_03Feb2017_ver2-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_MuonEG_MINIAOD_03Feb2017_ver2-v2/merged/V08-00-18/
+
+SAMPLE
+Name data_muon_eg_Run2016C_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_MuonEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_muon_eg_Run2016D_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_MuonEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_muon_eg_Run2016E_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_MuonEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_muon_eg_Run2016F_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_MuonEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_muon_eg_Run2016G_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_MuonEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_muon_eg_Run2016H_MINIAOD_03Feb2017_ver2-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_MuonEG_MINIAOD_03Feb2017_ver2-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_muon_eg_Run2016H_MINIAOD_03Feb2017_ver3-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_MuonEG_MINIAOD_03Feb2017_ver3-v1/merged/V08-00-18/
+
+
+#######################################################
+## ReminiAOD - Double Muon data ##
+#######################################################
+
+SAMPLE
+Name data_double_mu_Run2016B_MINIAOD_03Feb2017_ver2-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_DoubleMuon_MINIAOD_03Feb2017_ver2-v2/merged/V08-00-18/
+
+SAMPLE
+Name data_double_mu_Run2016C_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_DoubleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_mu_Run2016D_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_mu_Run2016E_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_DoubleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_mu_Run2016F_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_DoubleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_mu_Run2016G_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleMuon_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_mu_Run2016H_MINIAOD_03Feb2017_ver2-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleMuon_MINIAOD_03Feb2017_ver2-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_mu_Run2016H_MINIAOD_03Feb2017_ver3-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleMuon_MINIAOD_03Feb2017_ver3-v1/merged/V08-00-18/
+
+
+#######################################################
+## ReminiAOD - Double Electron data ##
+#######################################################
+
+SAMPLE
+Name data_double_eg_Run2016B_MINIAOD_03Feb2017_ver2-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_DoubleEG_MINIAOD_03Feb2017_ver2-v2/merged/V08-00-18/
+
+SAMPLE
+Name data_double_eg_Run2016C_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_DoubleEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_eg_Run2016D_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_eg_Run2016E_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_DoubleEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_eg_Run2016F_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_DoubleEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_eg_Run2016G_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleEG_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_eg_Run2016H_MINIAOD_03Feb2017_ver2-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleEG_MINIAOD_03Feb2017_ver2-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_double_eg_Run2016H_MINIAOD_03Feb2017_ver3-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleEG_MINIAOD_03Feb2017_ver3-v1/merged/V08-00-18/
+
+
+#######################################################
+## ReminiAOD - Single Photon data ##
+#######################################################
+
+SAMPLE
+Name data_single_photon_Run2016B_MINIAOD_03Feb2017_ver2-v2
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_SinglePhoton_MINIAOD_03Feb2017_ver2-v2/merged/V08-00-18/
+
+SAMPLE
+Name data_single_photon_Run2016C_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_SinglePhoton_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_photon_Run2016D_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_SinglePhoton_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_photon_Run2016E_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_SinglePhoton_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_photon_Run2016F_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_SinglePhoton_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_photon_Run2016G_MINIAOD_03Feb2017-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_SinglePhoton_MINIAOD_03Feb2017-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_photon_Run2016H_MINIAOD_03Feb2017_ver2-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_SinglePhoton_MINIAOD_03Feb2017_ver2-v1/merged/V08-00-18/
+
+SAMPLE
+Name data_single_photon_Run2016H_MINIAOD_03Feb2017_ver3-v1
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_SinglePhoton_MINIAOD_03Feb2017_ver3-v1/merged/V08-00-18/
+
+
+
+
 ######################################################
 ## 2016B Collection of 25ns PROMPTRECO Data Samples ##
 ######################################################

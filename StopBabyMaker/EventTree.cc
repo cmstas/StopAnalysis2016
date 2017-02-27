@@ -99,7 +99,10 @@ void EventTree::FillCommon (const std::string &root_file_name)
       filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
       filt_hbhenoise = filt_hbheNoise(); // hbheNoiseFilter_25ns();
       filt_hbheisonoise = filt_hbheNoiseIso();//hbheIsoNoiseFilter();
-    }
+      filt_badmuons = filt_badMuons();
+      filt_duplicatemuons = filt_duplicateMuons();
+      filt_nobadmuons = filt_noBadMuons();
+   }
     
     if (!is_data)
     {
@@ -218,6 +221,7 @@ void EventTree::Reset ()
     firstVtx_posZ     = -9999.;
     firstVtx_posp4    = LorentzVector(0,0, 0,0);
 */
+
     pfmet                = -9999.;
     pfmet_phi            = -9999.;
     pfmet_jup            = -9999.;
@@ -502,6 +506,9 @@ void EventTree::Reset ()
     filt_jetWithBadMuon_jup    = false;
     filt_jetWithBadMuon_jdown  = false;
     filt_pfovercalomet         = false;
+    filt_badmuons              = false;
+    filt_duplicatemuons        = false;
+    filt_nobadmuons            = false;
     
     nPhotons             = -9999;
     ph_selectedidx       = -9999;
@@ -778,6 +785,9 @@ void EventTree::SetMETFilterBranches (TTree* tree)
     tree->Branch("filt_jetWithBadMuon_jup", &filt_jetWithBadMuon_jup);
     tree->Branch("filt_jetWithBadMuon_jdown", &filt_jetWithBadMuon_jdown);
     tree->Branch("filt_pfovercalomet", &filt_pfovercalomet);
+    tree->Branch("filt_badmuons", &filt_badmuons);
+    tree->Branch("filt_duplicatemuons", &filt_duplicatemuons);
+    tree->Branch("filt_nobadmuons", &filt_nobadmuons);
 
 }
 
