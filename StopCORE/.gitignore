@@ -1,0 +1,3 @@
+# Ignore compiled code
+*.o
+*.so
