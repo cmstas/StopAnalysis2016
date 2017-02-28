@@ -6,7 +6,7 @@
 #
 ANALYSIS_NAME=Stop_1l
 
-BABY_VERSION=v20
+BABY_VERSION=v24
 
 TARBALL_NAME=forCondor_stopBabyMaker_80x
 
