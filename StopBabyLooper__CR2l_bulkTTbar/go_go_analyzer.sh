@@ -16,7 +16,7 @@ if [ ! -d Output/Log ]; then mkdir -p Output/Log; fi
 # Create Histograms of all samples
 echo "Creating Histograms..."
 echo ""
-root -l -b -q head.C stopBabyLooper__CR2l_bulkTTbar.C++ >& Output/Log/stopBabyLooper__CR2l_bulkTTbar.log 
+#root -l -b -q head.C stopBabyLooper__CR2l_bulkTTbar.C++ >& Output/Log/stopBabyLooper__CR2l_bulkTTbar.log 
 
 # If, necessary, scale samples (should be done in looper)
 #echo "Scaling Samples..."
@@ -26,37 +26,37 @@ root -l -b -q head.C stopBabyLooper__CR2l_bulkTTbar.C++ >& Output/Log/stopBabyLo
 # Merge Samples, to print cutflow before zeroing negative yields
 echo "Merging Samples to print yields, before zeroing negative yields.."
 echo ""
-root -l -b -q head.C mergeStopBabies.C++'("Output/Histos/", "Output/Histos/",false)' >& Output/Log/mergeStopBabies_beforeZeroingAMCNLO.log
+#root -l -b -q head.C mergeStopBabies.C++'("Output/Histos/", "Output/Histos/",false)' >& Output/Log/mergeStopBabies_beforeZeroingAMCNLO.log
 
 # Print yields of all inputs
 echo "Printing yields of all inputs before zeroing amcnlo samples..."
 echo ""
-root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/yields_allInputs_beforeZeroing",false)' >& Output/Log/tableMaker_allInputs_beforeZeroingAMCNLO.log 
+#root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/yields_allInputs_beforeZeroing",false)' >& Output/Log/tableMaker_allInputs_beforeZeroingAMCNLO.log 
 
 # For aMC@NLO samples, zero yields if final weight is negative
 echo "Zeroing negative Yields..."
 echo ""
-root -l -b -q head.C zeroOutNegativeYields.C++'("Output/Histos/")' >& Output/Log/zeroOutNegativeYields.log
+#root -l -b -q head.C zeroOutNegativeYields.C++'("Output/Histos/")' >& Output/Log/zeroOutNegativeYields.log
 
 # Merge Samples
 echo "Merging Samples..."
 echo ""
-root -l -b -q head.C mergeStopBabies.C++'("Output/Histos/", "Output/Histos/",true)' >& Output/Log/mergeStopBabies.log
+#root -l -b -q head.C mergeStopBabies.C++'("Output/Histos/", "Output/Histos/",true)' >& Output/Log/mergeStopBabies.log
 
 # Print yields of all inputs
 echo "Printing yields of all inputs..."
 echo ""
-root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/yields_allInputs")' >& Output/Log/tableMaker_allInputs.log 
+#root -l -b -q head.C tableMaker_allInputs.C++'("Output/Histos/","Output/Tables/yields_allInputs")' >& Output/Log/tableMaker_allInputs.log 
 
 # Print yields of summed inputs
 echo "Printing yields of summmed inputs..."
 echo ""
-root -l -b -q head.C tableMaker_summedInputs.C++'("Output/Histos/","Output/Tables/yields_summedInputs")' >& Output/Log/tableMaker_summedInputs.log 
+#root -l -b -q head.C tableMaker_summedInputs.C++'("Output/Histos/","Output/Tables/yields_summedInputs")' >& Output/Log/tableMaker_summedInputs.log 
 
 # Calculate Uncertainties 
 echo "Calculating Uncertainties..."
 echo ""
-root -l -b -q head.C calcErrors.C++ >& Output/Log/calcErrors.log
+#root -l -b -q head.C calcErrors.C++ >& Output/Log/calcErrors.log
 
 # Make plots 
 echo "Making Plots..."

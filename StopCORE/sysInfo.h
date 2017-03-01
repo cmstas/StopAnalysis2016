@@ -2,10 +2,11 @@
 #define sysInfo_H
 
 // SNT CORE
-#include "../../CORE/MCSelections.h"
+//#include "../../CORE/MCSelections.h"
+#include "MCSelections.h"
 
 // stopCORE
-//#include "eventWeight_bTagSF.h"
+#include "eventWeight_bTagSF.h"
 #include "eventWeight_lepSF.h"
 #include "sampleInfo.h"
 #include "stop_1l_babyAnalyzer.h"
@@ -143,7 +144,7 @@ namespace sysInfo{
     
     // bTag machinery
     bool useBTagSFs_fromUtils;
-    //eventWeight_bTagSF *bTagSFUtil;
+    eventWeight_bTagSF *bTagSFUtil;
 
     // Lepton SF machinery
     bool useLepSFs_fromUtils;
@@ -305,11 +306,11 @@ namespace sysInfo{
 
     void getCR2lTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
 
-    void getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn );
+    void getBTagWeight( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn );
     
     void getBTagWeight_tightWP( double &wgt_btagsf_tight, double &wgt_btagsf_hf_tight_up, double &wgt_btagsf_hf_tight_dn, double &wgt_btagsf_lf_tight_up, double &wgt_btagsf_lf_tight_dn, double &wgt_btagsf_tight_fs_up, double &wgt_btagsf_tight_fs_dn );
   
-    void getBTagWeight_fromUtils( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ); 
+    void getBTagWeight_fromUtils( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_tight_fs_up, double &wgt_btagsf_tight_fs_dn ); 
   
     void getLepSFWeight( double &weight_lepSF, double &weight_lepSF_Up, double &weight_lepSF_Dn, double &weight_lepFSSF, double &weight_lepFSSF_Up, double &weight_lepFSSF_Dn, double &weight_vetoLepSF, double &weight_vetoLepSF_Up, double &weight_vetoLepSF_Dn );
 

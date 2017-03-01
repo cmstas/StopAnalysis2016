@@ -431,7 +431,7 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
   // Initialize bTag SF machinery
   if( !sample_info->isData && useBTagSFs_fromUtils ){
-    //bTagSFUtil = new eventWeight_bTagSF( sample_info->isFastsim );
+    bTagSFUtil = new eventWeight_bTagSF( sample_info->isFastsim );
   }
 
   
@@ -463,7 +463,7 @@ sysInfo::evtWgtInfo::~evtWgtInfo(){
   sample_info->~sampleUtil();
   
   if( !sample_info->isData && useBTagSFs_fromUtils){
-    //delete bTagSFUtil;
+    delete bTagSFUtil;
   }
   
   if( !sample_info->isData && useLepSFs_fromUtils){
@@ -635,10 +635,10 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   getCR2lTriggerWeight( sf_cr2lTrigger, sf_cr2lTrigger_up, sf_cr2lTrigger_dn );
   
   // btag
-  getBTagWeight( sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn, sf_bTag_FS_up, sf_bTag_FS_dn ); 
+  getBTagWeight( 1, sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn, sf_bTag_FS_up, sf_bTag_FS_dn ); 
 
   // btag, tightWP
-  getBTagWeight_tightWP( sf_bTag_tight, sf_bTagEffHF_tight_up, sf_bTagEffHF_tight_dn, sf_bTagEffLF_tight_up, sf_bTagEffLF_tight_dn, sf_bTag_tight_FS_up, sf_bTag_tight_FS_dn ); 
+  getBTagWeight( 2, sf_bTag_tight, sf_bTagEffHF_tight_up, sf_bTagEffHF_tight_dn, sf_bTagEffLF_tight_up, sf_bTagEffLF_tight_dn, sf_bTag_tight_FS_up, sf_bTag_tight_FS_dn ); 
   
   // lepSFs
   getLepSFWeight( sf_lep, sf_lep_up, sf_lep_dn, sf_lepFS, sf_lepFS_up, sf_lepFS_dn, sf_vetoLep, sf_vetoLep_up, sf_vetoLep_dn );
@@ -1219,8 +1219,9 @@ void sysInfo::evtWgtInfo::getCR2lTriggerWeight( double &wgt_trigger, double &wgt
 
 //////////////////////////////////////////////////////////////////////
 
-void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
+void sysInfo::evtWgtInfo::getBTagWeight( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
 
+  // Working Point, WP = {0, 1, 2} = {loose, medium, tight}
   wgt_btagsf       = 1.0;
   wgt_btagsf_hf_up = 1.0;
   wgt_btagsf_hf_dn = 1.0;
@@ -1229,53 +1230,162 @@ void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_
   wgt_btagsf_fs_up = 1.0;
   wgt_btagsf_fs_dn = 1.0;
 
+  
   if( !apply_bTag_sf ) return;
 
+  if( WP<0 || WP>2 ) return;
+
+  // IF deriving SFs on the Looper level
   if( useBTagSFs_fromUtils ){
-    //getBTagWeight_fromUtils( wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn ); 
+    getBTagWeight_fromUtils( WP, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn ); 
   }
+
+  // Else if taking SFs from babies
   else{
-    wgt_btagsf       = babyAnalyzer.weight_btagsf();
-    wgt_btagsf_hf_up = babyAnalyzer.weight_btagsf_heavy_UP();
-    wgt_btagsf_hf_dn = babyAnalyzer.weight_btagsf_heavy_DN();
-    wgt_btagsf_lf_up = babyAnalyzer.weight_btagsf_light_UP();
-    wgt_btagsf_lf_dn = babyAnalyzer.weight_btagsf_light_DN();
-    
-    if( sample_info->isFastsim ){
-      wgt_btagsf_fs_up = babyAnalyzer.weight_btagsf_fastsim_UP();
-      wgt_btagsf_fs_dn = babyAnalyzer.weight_btagsf_fastsim_DN();
-    }
-  }
+
+    // Loose WP
+    if( WP==0 ){
+      wgt_btagsf       = babyAnalyzer.weight_loosebtagsf();
+      wgt_btagsf_hf_up = babyAnalyzer.weight_loosebtagsf_heavy_UP();
+      wgt_btagsf_hf_dn = babyAnalyzer.weight_loosebtagsf_heavy_DN();
+      wgt_btagsf_lf_up = babyAnalyzer.weight_loosebtagsf_light_UP();
+      wgt_btagsf_lf_dn = babyAnalyzer.weight_loosebtagsf_light_DN();
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up = babyAnalyzer.weight_loosebtagsf_fastsim_UP();
+	wgt_btagsf_fs_dn = babyAnalyzer.weight_loosebtagsf_fastsim_DN();
+      }
+    } // end if Loose WP
+
+    // Medium WP
+    if( WP==1 ){
+      wgt_btagsf       = babyAnalyzer.weight_btagsf();
+      wgt_btagsf_hf_up = babyAnalyzer.weight_btagsf_heavy_UP();
+      wgt_btagsf_hf_dn = babyAnalyzer.weight_btagsf_heavy_DN();
+      wgt_btagsf_lf_up = babyAnalyzer.weight_btagsf_light_UP();
+      wgt_btagsf_lf_dn = babyAnalyzer.weight_btagsf_light_DN();
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up = babyAnalyzer.weight_btagsf_fastsim_UP();
+	wgt_btagsf_fs_dn = babyAnalyzer.weight_btagsf_fastsim_DN();
+      }
+    } // end if Medium WP
+
+    // Tight WP
+    if( WP==2 ){
+      wgt_btagsf       = babyAnalyzer.weight_tightbtagsf();
+      wgt_btagsf_hf_up = babyAnalyzer.weight_tightbtagsf_heavy_UP();
+      wgt_btagsf_hf_dn = babyAnalyzer.weight_tightbtagsf_heavy_DN();
+      wgt_btagsf_lf_up = babyAnalyzer.weight_tightbtagsf_light_UP();
+      wgt_btagsf_lf_dn = babyAnalyzer.weight_tightbtagsf_light_DN();
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up = babyAnalyzer.weight_tightbtagsf_fastsim_UP();
+	wgt_btagsf_fs_dn = babyAnalyzer.weight_tightbtagsf_fastsim_DN();
+      }
+    } // end if Tight WP
+
+  } // end if taking btag SFs from babies
+     
   
   // Normalization
   getNEvents( nEvents );
-  
+
+  // Signal Sample Normalization
   if( sample_info->isSignal ){
     getSusyMasses(mStop,mLSP);
-  
-    wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,14)) );
-    wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,15)) );
-    wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,17)) );
-    wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,16)) );
-    wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,18)) );
-    
-    if( sample_info->isFastsim ){
-      wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,22)) );
-      wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,23)) );
-    }
-  }
-  else{
-    wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(14) );
-    wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(15) );
-    wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(17) );
-    wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(16) );
-    wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(18) );
 
-    if( sample_info->isFastsim ){
-      wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(23) );
-      wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(24) );
-    }
-  }
+    // Loose WP Signal Normalization
+    if( WP==0 ){
+      wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,44)) );
+      wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,45)) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,47)) );
+      wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,46)) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,48)) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,49)) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,50)) );
+      }
+    } // end if Loose WP
+
+
+    // Medium WP Signal Normalization
+    if( WP==1 ){
+      wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,14)) );
+      wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,15)) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,17)) );
+      wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,16)) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,18)) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,22)) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,23)) );
+      }
+    } // end if Medium WP
+
+    // Tight WP Signal Normalization
+    if( WP==2 ){
+      wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,37)) );
+      wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,38)) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,40)) );
+      wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,39)) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,41)) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,42)) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,43)) );
+      }
+    } // end if Tight WP
+
+  } // end if normalizing signal
+
+  // Background Sample Normalization
+  else{
+
+    // Loose WP Bkg Normalization
+    if( WP==0 ){
+      wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(44) );
+      wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(45) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(47) );
+      wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(46) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(48) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(49) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(50) );
+      }
+    } // end if Loose WP
+
+    // Medium WP Bkg Normalization
+    if( WP==1 ){
+      wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(14) );
+      wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(15) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(17) );
+      wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(16) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(18) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(23) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(24) );
+      }
+    } // end if Medium WP
+
+    // Tight WP Bkg Normalization
+    if( WP==2 ){
+      wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(37) );
+      wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(38) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(40) );
+      wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(39) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(41) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(42) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(43) );
+      }
+    } // end if Tight WP
+
+  } // end if normalizing bkg
   
 }
 
@@ -1294,7 +1404,7 @@ void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, doubl
   if( !apply_bTag_sf ) return;
 
   if( useBTagSFs_fromUtils ){
-    //getBTagWeight_fromUtils( wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn ); 
+    getBTagWeight_fromUtils( 2, wgt_btagsf_tight, wgt_btagsf_hf_tight_up, wgt_btagsf_hf_tight_dn, wgt_btagsf_lf_tight_up, wgt_btagsf_lf_tight_dn, wgt_btagsf_tight_fs_up, wgt_btagsf_tight_fs_dn ); 
   }
   else{
     wgt_btagsf_tight       = babyAnalyzer.weight_tightbtagsf();
@@ -1343,19 +1453,22 @@ void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, doubl
 
 //////////////////////////////////////////////////////////////////////
 
-void sysInfo::evtWgtInfo::getBTagWeight_fromUtils( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ){
+void sysInfo::evtWgtInfo::getBTagWeight_fromUtils( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
 
-  vector< double > jet_pt, jet_eta;
-  vector< int > jet_flavour;
-  vector< bool > jet_passCSV;
+  vector< double > jet_pt;
+  vector< double > jet_eta;
+  vector< double > jet_CSV;
+  vector< int >    jet_flavour;
+  
 
   for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
     jet_pt.push_back( (double)babyAnalyzer.ak4pfjets_p4().at(iJet).Pt() );
     jet_eta.push_back( (double)babyAnalyzer.ak4pfjets_p4().at(iJet).Eta() );
+    jet_CSV.push_back( (bool)babyAnalyzer.ak4pfjets_CSV().at(iJet) );
     jet_flavour.push_back( (int)abs(babyAnalyzer.ak4pfjets_hadron_flavor().at(iJet)) );
-    jet_passCSV.push_back( (bool)babyAnalyzer.ak4pfjets_passMEDbtag().at(iJet) );
   }
-  //bTagSFUtil->getBTagWeight( jet_pt, jet_eta, jet_flavour, jet_passCSV, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn );
+  
+  //bTagSFUtil->getBTagWeight( WP, jet_pt, jet_eta, jet_CSV, jet_flavour, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn );
 
   return;
 

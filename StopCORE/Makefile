@@ -35,16 +35,22 @@ STOPVARLIB     = ../StopBabyMaker/stop_variables/StopVariables.so
 
 
 
-stopCORE.so: sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o
-	$(LD) $(LDFLAGS) $(SOFLAGS) -o stopCORE.so sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) -Wl,-rpath,./
+stopCORE.so: sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o BTagCalibrationStandalone.o BTagCalibrationStandalone.so
+	$(LD) $(LDFLAGS) $(SOFLAGS) -o stopCORE.so sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o BTagCalibrationStandalone.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) BTagCalibrationStandalone.so -Wl,-rpath,./
 
 
 sysInfo.o: sysInfo.h sysInfo.cc stop_1l_babyAnalyzer.h stop_1l_babyAnalyzer.cc eventWeight_lepSF.h eventWeight_lepSF.cc eventWeight_bTagSF.h eventWeight_bTagSF.cc
 	$(CXX) $(CXXFLAGS) -c sysInfo.cc
 
 
-eventWeight_bTagSF.o: eventWeight_bTagSF.cc eventWeight_bTagSF.h
-	$(CXX) $(CXXFLAGS) -c eventWeight_bTagSF.cc
+eventWeight_bTagSF.o: eventWeight_bTagSF.cc eventWeight_bTagSF.h BTagCalibrationStandalone.cc BTagCalibrationStandalone.h
+	$(CXX) $(CXXFLAGS) -c eventWeight_bTagSF.cc 
+
+BTagCalibrationStandalone.so: BTagCalibrationStandalone.o
+	$(LD) $(LDFLAGS) $(SOFLAGS) -o BTagCalibrationStandalone.so BTagCalibrationStandalone.o $(GLIBS) -lGenVector -lEG $(CORELIB) -Wl,-rpath,./
+
+BTagCalibrationStandalone.o: BTagCalibrationStandalone.cc BTagCalibrationStandalone.h
+	$(CXX) $(CXXFLAGS) -c BTagCalibrationStandalone.cc 
 
 
 eventWeight_lepSF.o: eventWeight_lepSF.cc eventWeight_lepSF.h

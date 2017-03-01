@@ -214,9 +214,9 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
   double noRebin_xBinsSF[1]{1.0};   // SFs to keep bins Events/width
 
 
-  const int nRebins_lep1lep2bbMet_ge1bTags = 8;
-  double xRebins_lep1lep2bbMet_ge1bTags[nRebins_lep1lep2bbMet_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0 };
-  double xRebinsSF_lep1lep2bbMet_ge1bTags[nRebins_lep1lep2bbMet_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0) };
+  const int nRebins_lep1lep2bbMet_ge1bTags = 9;
+  double xRebins_lep1lep2bbMet_ge1bTags[nRebins_lep1lep2bbMet_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
+  double xRebinsSF_lep1lep2bbMet_ge1bTags[nRebins_lep1lep2bbMet_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,  0.25,   0.25, (1.0/6.0), (1.0/8.0) };
 
 
   // met ge1bTags, Rebinned, ISR
@@ -249,6 +249,36 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
   var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);
 
 
+  // met ge1bTags, Rebinned, ALL
+  var_list_label.push_back( "h_met__ge1bTags" );
+  var_list_title.push_back( "met, >=1 bTags" );
+  var_list_xaxis.push_back( "met" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("_rebinned__errorBand_sys_ALL");
+  var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);
+
+
   // diLepton pT ge1bTags, Rebinned, ISR
   var_list_label.push_back( "h_diLepPt__ge1bTags" );
   var_list_title.push_back( "diLep pT, >=1 bTags" );
@@ -274,6 +304,36 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
   
   var_doRebin.push_back(true);
   var_rebin_labels.push_back("_rebinned__errorBand_sys_ISR");
+  var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);
+
+
+  // diLepton pT ge1bTags, Rebinned, ISR
+  var_list_label.push_back( "h_diLepPt__ge1bTags" );
+  var_list_title.push_back( "diLep pT, >=1 bTags" );
+  var_list_xaxis.push_back( "diLep pT [GeV]" );
+  
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_JESDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_ISRDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_metResDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_lepSFDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_pdfDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasUp) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_alphasDown) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Up) );
+  sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_q2Down) );
+  sysList.push_back( sysListPerPlot );
+  sysListPerPlot.clear();
+  
+  var_doRebin.push_back(true);
+  var_rebin_labels.push_back("_rebinned__errorBand_sys_ALL");
   var_rebin_nBins.push_back(nRebins_lep1lep2bbMet_ge1bTags);
   var_rebin_xBins.push_back(xRebins_lep1lep2bbMet_ge1bTags);
   var_rebin_xBinsSF.push_back(xRebinsSF_lep1lep2bbMet_ge1bTags);

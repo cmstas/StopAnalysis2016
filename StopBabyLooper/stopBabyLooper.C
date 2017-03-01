@@ -50,7 +50,7 @@ bool applyjson = true;
 bool add2ndLepToMet_ = true;
 bool inclTaus_CR2l_  = false;
 
-bool useBTagSFs_fromUtils_ = false;
+bool useBTagSFs_fromUtils_ = true;
 bool useLepSFs_fromUtils_  = false;
         
 bool apply_cr2lTrigger_sf_  = true; // only !=1 if pfmet!=pfmet_rl ie no weight for ==1lepton events in SR and CR0b
@@ -1972,6 +1972,35 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    else{
 	      wgt *= metResSF;
 	      wgt_corridor *= metResSF_corr;
+	    }
+	    
+	    
+	    double metResV2 = 1.0;
+	    if( sample.id == sampleInfo::k_ttbar_powheg_pythia8 ||
+		sample.id == sampleInfo::k_ttbar_powheg_pythia8_ext4 ||
+		sample.id == sampleInfo::k_ttbar_madgraph_pythia8 ||
+		sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ||
+		sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 ||
+		sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 ||
+		sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 ||
+		sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8 ||
+		sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 ||
+		sample.id == sampleInfo::k_t_tW_5f_powheg_pythia8 ||
+		sample.id == sampleInfo::k_t_tbarW_5f_powheg_pythia8 ||
+		sample.id == sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays ||
+		sample.id == sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays ||
+		sample.id == sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 ||
+		sample.id == sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 ){
+	      
+	      if( regionList[iReg]=="CR2l" ){
+		if( pfmet_rl()>450.0 && pfmet_rl()<600.0 ) metResV2 = 0.60;
+		if( pfmet_rl()>600.0 ) metResV2 = 0.54;
+	      }
+	      else{
+		if( pfmet()>450.0 && pfmet()<600.0 ) metResV2 = 0.60;
+		if( pfmet()>600.0 ) metResV2 = 0.54;
+	      }
+	      wgt *= metResV2;
 	    }
 	    
 	    /*
