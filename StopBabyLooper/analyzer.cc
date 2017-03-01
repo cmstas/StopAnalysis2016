@@ -4,7 +4,7 @@
 // Constructor
 analyzer::analyzer()
 {
-	add2ndLep = true;
+	add2ndLep = false;
 	includeTaus = false;
 	jesType = analyzer::kNominal;
 }

@@ -6,8 +6,6 @@
 #include <vector>
 #include <iostream>
 
-// ROOT
-#include "TString.h"
 
 // Stop Analysis
 #include "../StopCORE/stop_1l_babyAnalyzer.h"
