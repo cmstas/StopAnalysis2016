@@ -1,5 +1,14 @@
 #include "selectionInfo.h"
 
+// These variables can only be used within selectionInfo.cc, but they can be set from outside using the functions below
+static int localJesType = 0;
+static bool localAddLep2 = false;
+static bool localIncludeTaus = false;
+
+void selectionInfo::SetJesType( int type ) { localJesType = type; }
+void selectionInfo::SetAdd2ndLep( bool addlep2 ) { localAddLep2 = addlep2; }
+void selectionInfo::SetIncludeTaus( bool usetaus ) { localIncludeTaus = usetaus; }
+
 //////////////////////////////////////////////////////////////////////
 
 bool selectionInfo::pass_metFilter(){
@@ -107,6 +116,8 @@ bool selectionInfo::pass_tauVeto(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_diLep(){ return selectionInfo::pass_diLep( localIncludeTaus ); }
+
 bool selectionInfo::pass_diLep(bool inclTau){
   bool result = false;
   if( inclTau ){
@@ -177,6 +188,7 @@ bool selectionInfo::pass_ge20_diLepMass(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ge2_jets(){ return selectionInfo::pass_ge2_jets( localJesType ); }
 bool selectionInfo::pass_ge2_jets(int jesType){
   bool result = false;
   if( jesType==1){
@@ -193,6 +205,7 @@ bool selectionInfo::pass_ge2_jets(int jesType){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ge1_bJets(){ return selectionInfo::pass_ge1_bJets( localJesType ); }
 bool selectionInfo::pass_ge1_bJets(int jesType){
   bool result = false;
   if( jesType==1){
@@ -209,6 +222,7 @@ bool selectionInfo::pass_ge1_bJets(int jesType){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ee0_bJets(){ return selectionInfo::pass_ee0_bJets( localJesType ); }
 bool selectionInfo::pass_ee0_bJets(int jesType){
   bool result = false;
   if( jesType==1){
@@ -225,6 +239,7 @@ bool selectionInfo::pass_ee0_bJets(int jesType){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ee0_bJets_tightBTagHighMlb(){ return selectionInfo::pass_ee0_bJets_tightBTagHighMlb( localJesType ); }
 bool selectionInfo::pass_ee0_bJets_tightBTagHighMlb(int jesType){
   bool result = false;
   int nTightTags = babyAnalyzer.ntightbtags();
@@ -241,6 +256,7 @@ bool selectionInfo::pass_ee0_bJets_tightBTagHighMlb(int jesType){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ge50_met(){ return selectionInfo::pass_ge50_met( localJesType, localAddLep2 ); }
 bool selectionInfo::pass_ge50_met(int jesType, bool add2ndLepToMet){
   bool result = false;
   double metCut = 50.0;
@@ -271,6 +287,7 @@ bool selectionInfo::pass_ge50_met(int jesType, bool add2ndLepToMet){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ge150_met(){ return selectionInfo::pass_ge150_met( localJesType, localAddLep2 ); }
 bool selectionInfo::pass_ge150_met(int jesType, bool add2ndLepToMet){
   bool result = false;
   double metCut = 150.0;
@@ -301,6 +318,7 @@ bool selectionInfo::pass_ge150_met(int jesType, bool add2ndLepToMet){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ge150_mt(){ return selectionInfo::pass_ge150_mt( localJesType, localAddLep2 ); }
 bool selectionInfo::pass_ge150_mt(int jesType, bool add2ndLepToMet){
   bool result = false;
   double mtCut = 150.0;
@@ -331,6 +349,7 @@ bool selectionInfo::pass_ge150_mt(int jesType, bool add2ndLepToMet){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ge0p5_minDPhi(){ return selectionInfo::pass_ge0p5_minDPhi( localJesType, localAddLep2 ); }
 bool selectionInfo::pass_ge0p5_minDPhi(int jesType, bool add2ndLepToMet){
   bool result = false;
   double minDPhiCut = 0.5;
@@ -409,7 +428,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_SR(){
 
 //////////////////////////////////////////////////////////////////////
 
-
+bool selectionInfo::pass_SR(){ return selectionInfo::pass_SR( localJesType ); }
 bool selectionInfo::pass_SR(int jesType){
 
   bool result = false;
@@ -522,6 +541,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR0b(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_CR0b(){ return selectionInfo::pass_CR0b( localJesType ); }
 bool selectionInfo::pass_CR0b(int jesType){
 
   bool result = false;
@@ -635,6 +655,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR0b_tightBTagHigh
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_CR0b_tightBTagHighMlb(){ return selectionInfo::pass_CR0b_tightBTagHighMlb( localJesType ); }
 bool selectionInfo::pass_CR0b_tightBTagHighMlb(int jesType){
 
   bool result = false;
@@ -744,6 +765,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_CR2l(){ return selectionInfo::pass_CR2l( localJesType, localIncludeTaus, localAddLep2 ); }
 bool selectionInfo::pass_CR2l(int jesType, bool inclTau, bool add2ndLepToMet){
 
   bool result = false;
@@ -845,6 +867,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l_bulkTTbar(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_CR2l_bulkTTbar(){ return selectionInfo::pass_CR2l_bulkTTbar( localJesType, localAddLep2 ); }
 bool selectionInfo::pass_CR2l_bulkTTbar(int jesType, bool add2ndLepToMet){
 
   bool result = false;
@@ -946,7 +969,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_SR_loose(){
 
 //////////////////////////////////////////////////////////////////////
 
-
+bool selectionInfo::pass_SR_loose(){ return selectionInfo::pass_SR_loose( localJesType ); }
 bool selectionInfo::pass_SR_loose(int jesType){
 
   bool result = false;
