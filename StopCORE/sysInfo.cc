@@ -158,6 +158,22 @@ sysInfo::Util::Util( sysInfo::ID systematic ){
     hasOwnBabies = false;
     break;
 
+  case( k_metTTbarUp ):
+    id          = systematic;
+    label       = "metTTbarUp";
+    title       = "MET ttbar SF, Up";
+    tex         = "MET~$t\\bar{t}$~SF,~Up";
+    hasOwnBabies = false;
+    break;
+
+  case( k_metTTbarDown ):
+    id          = systematic;
+    label       = "metTTbarDn";
+    title       = "MET ttbar SF, Down";
+    tex         = "MET~$t\\bar{t}$~SF,~Down";
+    hasOwnBabies = false;
+    break;
+
   case( k_ttbarSysPtUp ):
     id          = systematic;
     label       = "ttbarSysPtUp";
@@ -390,6 +406,7 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   apply_lepFS_sf        = false;
   apply_topPt_sf        = false;
   apply_metRes_sf       = false;
+  apply_metTTbar_sf     = false;
   apply_ttbarSysPt_sf   = false;
   apply_ISR_sf          = false;
   apply_pu_sf           = false;
@@ -562,6 +579,10 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_metRes_up = 1.0;
   sf_metRes_dn = 1.0;
   
+  sf_metTTbar = 1.0;
+  sf_metTTbar_up = 1.0;
+  sf_metTTbar_dn = 1.0;
+  
   sf_ttbarSysPt = 1.0;
   sf_ttbarSysPt_up = 1.0;
   sf_ttbarSysPt_dn = 1.0;
@@ -651,6 +672,9 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 
   // MET resolution scale factors - moved to looper level
   //getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
+
+  // MET ttbar scale factors 
+  getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
   
   // ttbar system pT scale factor 
   getTTbarSysPtSF( sf_ttbarSysPt, sf_ttbarSysPt_up, sf_ttbarSysPt_dn );
@@ -732,6 +756,10 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   //double wgt_metRes = sf_metRes;
   //evt_wgt *= wgt_metRes;
     
+  // Apply met ttbar sf
+  double wgt_metTTbar = sf_metTTbar;
+  evt_wgt *= wgt_metTTbar;
+
   // Apply ttbar system pT SF (will be 1 if not ttbar/tW 2l) 
   double wgt_ttbarSysPt = sf_ttbarSysPt;
   evt_wgt *= wgt_ttbarSysPt;
@@ -855,6 +883,16 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     // MetRes SF Dn
     else if( iSys==k_metResDown ){
       //sys_wgt *= sf_metRes_dn/wgt_metRes;
+    }
+
+    // MetTTbar SF Up
+    else if( iSys==k_metTTbarUp ){
+      sys_wgt *= sf_metTTbar_up/wgt_metTTbar;
+    }
+
+    // MetTTbar SF Dn
+    else if( iSys==k_metTTbarDown ){
+      sys_wgt *= sf_metTTbar_dn/wgt_metTTbar;
     }
 
     // TTbar/tW System pT Up
@@ -1468,7 +1506,7 @@ void sysInfo::evtWgtInfo::getBTagWeight_fromUtils( int WP, double &wgt_btagsf, d
     jet_flavour.push_back( (int)abs(babyAnalyzer.ak4pfjets_hadron_flavor().at(iJet)) );
   }
   
-  //bTagSFUtil->getBTagWeight( WP, jet_pt, jet_eta, jet_CSV, jet_flavour, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn );
+  bTagSFUtil->getBTagWeight( WP, jet_pt, jet_eta, jet_CSV, jet_flavour, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn );
 
   return;
 
@@ -1585,130 +1623,66 @@ void sysInfo::evtWgtInfo::getLepSFWeight_fromUtils( double &weight_lepSF, double
   std::vector< double > recoLep_pt, recoLep_eta, genLostLep_pt, genLostLep_eta;
   std::vector< int > recoLep_pdgid, genLostLep_pdgid;
   std::vector< bool > recoLep_isSel;
+
+  double matched_dr = 0.1;
   
-  if( babyAnalyzer.nvetoleps()==1 ){
+  if( babyAnalyzer.nvetoleps()>=1 ){
     recoLep_pt.push_back( babyAnalyzer.lep1_p4().Pt() );
     recoLep_eta.push_back( babyAnalyzer.lep1_p4().Eta() );
     recoLep_pdgid.push_back( babyAnalyzer.lep1_pdgid() );
-    if( (abs(babyAnalyzer.lep1_pdgid())==13 && 
-	 babyAnalyzer.lep1_passTightID() ) ||
-	(abs(babyAnalyzer.lep1_pdgid())==11 && 
-	 babyAnalyzer.lep1_passMediumID() )   ){
+    if( ( (abs(babyAnalyzer.lep1_pdgid())==13 && 
+	   babyAnalyzer.lep1_passMediumID()      ) ||
+	  (abs(babyAnalyzer.lep1_pdgid())==11 && 
+	   babyAnalyzer.lep1_passMediumID()      )    ) &&
+	( babyAnalyzer.lep1_p4().Pt()>20.0            ) &&
+        ( fabs(babyAnalyzer.lep1_p4().Eta())<2.4      )    ){
       recoLep_isSel.push_back( true );
     }
     else{
       recoLep_isSel.push_back( false );
     }
-  }
   
-  if( babyAnalyzer.nvetoleps()>=2 ){
-    recoLep_pt.push_back( babyAnalyzer.lep1_p4().Pt() );
-    recoLep_eta.push_back( babyAnalyzer.lep1_p4().Eta() );
-    recoLep_pdgid.push_back( babyAnalyzer.lep1_pdgid() );
-    if( (abs(babyAnalyzer.lep1_pdgid())==13 && 
-	 babyAnalyzer.lep1_passTightID())  ||
-	(abs(babyAnalyzer.lep1_pdgid())==11 && 
-	 babyAnalyzer.lep1_passMediumID())    ){
-      recoLep_isSel.push_back( true );
-    }
-    else{
-      recoLep_isSel.push_back( false );
-    }
-    
-    recoLep_pt.push_back( babyAnalyzer.lep2_p4().Pt() );
-    recoLep_eta.push_back( babyAnalyzer.lep2_p4().Eta() );
-    recoLep_pdgid.push_back( babyAnalyzer.lep2_pdgid() );
-    if( (abs(babyAnalyzer.lep2_pdgid())==13 && 
-	 babyAnalyzer.lep2_passTightID())  ||
-	(abs(babyAnalyzer.lep2_pdgid())==11 && 
-	 babyAnalyzer.lep2_passMediumID())    ){
-      recoLep_isSel.push_back( true );
-    }
-    else{
-      recoLep_isSel.push_back( false );
-    }
+  
+    if(babyAnalyzer.nvetoleps()>=2){
+      recoLep_pt.push_back( babyAnalyzer.lep2_p4().Pt() );
+      recoLep_eta.push_back( babyAnalyzer.lep2_p4().Eta() );
+      recoLep_pdgid.push_back( babyAnalyzer.lep2_pdgid() );
+      if( ( (abs(babyAnalyzer.lep2_pdgid())==13 && 
+	   babyAnalyzer.lep2_passMediumID()      ) ||
+	  (abs(babyAnalyzer.lep2_pdgid())==11 && 
+	   babyAnalyzer.lep2_passMediumID()      )    ) &&
+	( babyAnalyzer.lep2_p4().Pt()>20.0            ) &&
+        ( fabs(babyAnalyzer.lep2_p4().Eta())<2.4      )    ){
+	recoLep_isSel.push_back( true );
+      }
+      else{
+	recoLep_isSel.push_back( false );
+      }
 
-  }
- 
+    } // end if >=2 vetoLeptons
+  
+  } // end if >=1 vetoLeptons
 
 
+  // Find Gen Lost lepton
   if( babyAnalyzer.is2lep() && babyAnalyzer.nvetoleps()==1 ){
 
     // Find gen lepton matched to reco lepton
-    int matched_idx = -1;
-    double min_dr   = 99.9;
     for(int iGen=0; iGen<(int)babyAnalyzer.genleps_p4().size(); iGen++){
+
+      if( abs(babyAnalyzer.genleps_id().at(iGen))!=11 && abs(babyAnalyzer.genleps_id().at(iGen))!=13 ) continue;
+      if( !babyAnalyzer.genleps_fromHardProcessFinalState().at(iGen) ) continue;
       if( !babyAnalyzer.genleps_isLastCopy().at(iGen) ) continue;
-      
-      // Preferentially match to same flavour lepton before tau
-      if( (abs(babyAnalyzer.genleps_id().at(iGen))==11 && 
-	   abs(babyAnalyzer.lep1_pdgid())==11                      ) ||
-	  (abs(babyAnalyzer.genleps_id().at(iGen))==13 &&
-	   abs(babyAnalyzer.lep1_pdgid())==13                      )    ){
-
-	double min_dr_temp = ROOT::Math::VectorUtil::DeltaR( babyAnalyzer.genleps_p4().at(iGen), babyAnalyzer.lep1_p4() );
-	if( min_dr_temp < min_dr ){
-	  min_dr = min_dr_temp;
-	  if( min_dr < dr_matched ){
-	    matched_idx = iGen;
-	  }
-	}
-	
-      } // end if dr matched to same flavour lepton
-    
-
-    } // end loop over gen leptons
-
-    
-    if( matched_idx < 0 ){
-      for(int iGen=0; iGen<(int)babyAnalyzer.genleps_p4().size(); iGen++){
-	if( !babyAnalyzer.genleps_isLastCopy().at(iGen) ) continue;
-	if( abs(babyAnalyzer.genleps_id().at(iGen))==15 ){
-	 
-	  double min_dr_temp = ROOT::Math::VectorUtil::DeltaR( babyAnalyzer.genleps_p4().at(iGen), babyAnalyzer.lep1_p4() );
-	  if( min_dr_temp < min_dr ){
-	    min_dr = min_dr_temp;
-	    if( min_dr < dr_matched ){
-	      matched_idx = iGen;
-	    }
-	  }
+      if( ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.genleps_p4().at(iGen), babyAnalyzer.lep1_p4())<matched_dr ) continue;
+      if( babyAnalyzer.genleps_p4().at(iGen).Pt()<5 || fabs(babyAnalyzer.genleps_p4().at(iGen).Eta())>2.4 ) continue;
 	  
-	} // end if gen/reco matched to tau
-      } // end loop over gen leptons
-    } // end if reco lepton not matched
-
-    if( matched_idx >= 0 ){
-      // Find gen lost lepton
-      double genLostPt  = -99.9;
-      double genLostEta = -99.9;
-      int genLostPdgid  = -99;
-      bool foundLostLep = false;
-      for(int iGen=0; iGen<(int)babyAnalyzer.genleps_p4().size(); iGen++){
-	if( iGen == matched_idx ) continue;
-	if( !babyAnalyzer.genleps_isLastCopy().at(iGen) ) continue;
-	if( !babyAnalyzer.genleps_fromHardProcessFinalState().at(iGen) ) continue;
-	if( abs(babyAnalyzer.genleps_id().at(iGen))!=11 && 
-	    abs(babyAnalyzer.genleps_id().at(iGen))!=13    ) continue;
-	
-	genLostPt    = babyAnalyzer.genleps_p4().at(iGen).Pt();
-	genLostEta   = babyAnalyzer.genleps_p4().at(iGen).Eta();
-	genLostPdgid = babyAnalyzer.genleps_id().at(iGen);
-	foundLostLep = true;
-	
-      } // end loop over gen leptons
+      genLostLep_pt.push_back( babyAnalyzer.genleps_p4().at(iGen).Pt() );
+      genLostLep_eta.push_back( babyAnalyzer.genleps_p4().at(iGen).Eta() );
+      genLostLep_pdgid.push_back( babyAnalyzer.genleps_id().at(iGen) );
     
-      if( foundLostLep ){
-	genLostLep_pt.push_back( genLostPt );
-	genLostLep_eta.push_back( genLostEta );
-	genLostLep_pdgid.push_back( genLostPdgid );
-      }
+    } // end loop over genleps
 
-    } // end if selected lepton is matched
-
-  } // end if is gen 2lep event with ==1 reco lepton 
-
-  lepSFUtil->getLepWeight( recoLep_pt, recoLep_eta, recoLep_pdgid, recoLep_isSel, genLostLep_pt, genLostLep_eta, genLostLep_pdgid, weight_lepSF, weight_lepSF_Up, weight_lepSF_Dn, weight_lepFSSF, weight_lepFSSF_Up, weight_lepFSSF_Dn, weight_vetoLepSF, weight_vetoLepSF_Up, weight_vetoLepSF_Dn );
-
+  } // end if lostLep event
 
   return;
 
@@ -2305,6 +2279,76 @@ void sysInfo::evtWgtInfo::getMetResWeight_corridor( double &weight_metRes, doubl
 
 //////////////////////////////////////////////////////////////////////
 
+void sysInfo::evtWgtInfo::getMetTTbarWeight( double &weight_metTTbar, double &weight_metTTbar_up, double &weight_metTTbar_dn ){
+
+  weight_metTTbar    = 1.0;
+  weight_metTTbar_up = 1.0;
+  weight_metTTbar_dn = 1.0;
+
+  if(!apply_metTTbar_sf) return;
+
+  double sf_val = 1.0;
+  double sf_err = 0.0;
+  
+  if( sample_info->isData ) return;
+  if( sample_info->isSignal ) return;
+
+  // ttbar, tW
+  if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext4 &&
+      sample_info->id != sampleInfo::k_ttbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 
+      ) return;
+  
+
+  // 2lep events only
+  if( !babyAnalyzer.is2lep() ) return;
+
+
+  // Met bin
+  double met = babyAnalyzer.pfmet();
+  if(add2ndLepToMet) met = babyAnalyzer.pfmet_rl();
+  
+  // in case of evaluating for JES variation events, then use nominal pfmet, and if nominal<250, use lowest met bin
+  if( met<250.0 ) met = 250.0;
+  
+
+  //
+  // Find SF
+  //
+  if( met>450.0 && met<600.0 ){
+    sf_val = 0.60;
+    sf_err = 0.10;
+  }
+
+  if( met>600.0 ){
+    sf_val = 0.54;
+    sf_err = 0.15;
+  }
+
+  // 50% uncertainty on difference between no sf and applying it
+  sf_err = fabs(0.5*(1.0-sf_val));
+
+  weight_metTTbar    = sf_val;
+  weight_metTTbar_up = (sf_val + sf_err);
+  weight_metTTbar_dn = (sf_val - sf_err);
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &weight_ttbarSysPt_up, double &weight_ttbarSysPt_dn ){
 
   weight_ttbarSysPt    = 1.0;
@@ -2869,9 +2913,6 @@ void sysInfo::evtWgtInfo::getPileupWeight( double &weight_pu, double &weight_pu_
   //weight_pu    = h_pu_wgt->GetBinContent(h_pu_wgt->FindBin(babyAnalyzer.pu_ntrue()));
   //weight_pu_up = h_pu_wgt_up->GetBinContent(h_pu_wgt_up->FindBin(babyAnalyzer.pu_ntrue()));
   //weight_pu_dn = h_pu_wgt_dn->GetBinContent(h_pu_wgt_dn->FindBin(babyAnalyzer.pu_ntrue()));
-  //weight_pu    = h_pu_wgt->GetBinContent(std::min(h_pu_wgt->GetNbinsX(),h_pu_wgt->FindBin(babyAnalyzer.pu_ntrue())+1));
-  //weight_pu_up = h_pu_wgt_up->GetBinContent(std::min(h_pu_wgt_up->GetNbinsX(),h_pu_wgt_up->FindBin(babyAnalyzer.pu_ntrue())+1));
-  //weight_pu_dn = h_pu_wgt_dn->GetBinContent(std::min(h_pu_wgt_dn->GetNbinsX(),h_pu_wgt_dn->FindBin(babyAnalyzer.pu_ntrue())+1));
   weight_pu    = babyAnalyzer.weight_PU();
   weight_pu_up = babyAnalyzer.weight_PUup();
   weight_pu_dn = babyAnalyzer.weight_PUdown();

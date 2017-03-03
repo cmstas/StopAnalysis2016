@@ -1,22 +1,4 @@
-#include "TROOT.h"
-#include "Riostream.h"
-#include "TFile.h"
-#include "TCollection.h"
-#include "TKey.h"
-#include "TClass.h"
-#include "TH1.h"
-#include "TH2.h"
-#include "TH3.h"
-
-#include <algorithm>
-#include <string>
-#include <vector>
-
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/sysInfo.h"
-
+#include "stopBabyLooper.h"
 
 void scaleSamples(std::string f_input_dir, std::string f_output_dir){
 

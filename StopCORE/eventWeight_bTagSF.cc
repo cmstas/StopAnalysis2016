@@ -9,7 +9,9 @@ eventWeight_bTagSF::eventWeight_bTagSF( bool isFastsim ){
   BTAG_LSE = 0.5426;
   BTAG_MED = 0.8484;
   BTAG_TGT = 0.9535;
-  
+
+  std::cout << "    Loading btag SFs..." << std::endl << std::endl;
+   
   // 25s version of SFs
   calib         = new BTagCalibration("csvv2", "../StopCORE/inputs/btagsf/CSVv2_Moriond17_B_H.csv"); // Moriond17 SFs
   calib_fastsim = new BTagCalibration("CSV", "../StopCORE/inputs/btagsf/fastsim_csvv2_ttbar_26_1_2017.csv"); // Moriond17 SFs
@@ -57,7 +59,7 @@ eventWeight_bTagSF::eventWeight_bTagSF( bool isFastsim ){
   TH2D* h_loose_btag_eff_udsg_temp = NULL;
 
   if(sampleIsFastsim){
-    feff =  new TFile("../StopCORE/btagsf/BTagEff_76X_T2ttT2bWT2tb.root");
+    feff =  new TFile("../StopCORE/inputs/btagsf/BTagEff_76X_T2ttT2bWT2tb.root");
 
     h_btag_eff_b_temp = (TH2D*) feff->Get("MediumBEfficiency");
     h_btag_eff_c_temp = (TH2D*) feff->Get("MediumCEfficiency");
@@ -71,7 +73,7 @@ eventWeight_bTagSF::eventWeight_bTagSF( bool isFastsim ){
     h_loose_btag_eff_c_temp = (TH2D*) feff->Get("LooseCEfficiency");
     h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("LooseLEfficiency");
   } else {
-    feff =  new TFile("../StopCORE/btagsf/BTagEff_Moriond17_TTandW.root");
+    feff =  new TFile("../StopCORE/inputs/btagsf/BTagEff_Moriond17_TTandW.root");
 
     h_btag_eff_b_temp = (TH2D*) feff->Get("MediumBEfficiency");
     h_btag_eff_c_temp = (TH2D*) feff->Get("MediumCEfficiency");
@@ -97,9 +99,7 @@ eventWeight_bTagSF::eventWeight_bTagSF( bool isFastsim ){
   h_loose_btag_eff_b = (TH2D*) h_loose_btag_eff_b_temp->Clone("h_loose_btag_eff_b");
   h_loose_btag_eff_c = (TH2D*) h_loose_btag_eff_c_temp->Clone("h_loose_btag_eff_c");
   h_loose_btag_eff_udsg = (TH2D*) h_loose_btag_eff_udsg_temp->Clone("h_loose_btag_eff_udsg");
-  
-  std::cout << "loaded btag SFs" << std::endl;
-  
+   
 
 }
 
@@ -178,12 +178,12 @@ void eventWeight_bTagSF::getBTagWeight( int WP, std::vector< double > jet_pt, st
   double btagprob_mc   = 1.0;
   double btagprob_data = 1.0;
 
-  double btagprob_err_heavy_UP = 0.0;
-  double btagprob_err_heavy_DN = 0.0;
-  double btagprob_err_light_UP = 0.0;
-  double btagprob_err_light_DN = 0.0;
-  double btagprob_err_FS_UP    = 0.0;
-  double btagprob_err_FS_DN    = 0.0;
+  double btagprob_err_heavy_UP = 1.0;
+  double btagprob_err_heavy_DN = 1.0;
+  double btagprob_err_light_UP = 1.0;
+  double btagprob_err_light_DN = 1.0;
+  double btagprob_err_FS_UP    = 1.0;
+  double btagprob_err_FS_DN    = 1.0;
 
   double weight_cent  = 1.0;
   double weight_UP    = 1.0;

@@ -1584,8 +1584,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	    }
 	  }
 	  
-	  int binX = h_el_SF_tracking->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_SF_tracking, float(fabs(lep1.p4.Eta())) ),xmin_h_el_SF_tracking) );
-	  int binY = h_el_SF_tracking->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_SF_tracking,(float)lep1.p4.Pt()), ymin_h_el_SF_tracking ) );
+	  int binX = h_el_SF_tracking->GetXaxis()->FindBin( std::max( std::min(xmax_h_el_SF_tracking, float(fabs(lep2.p4.Eta())) ),xmin_h_el_SF_tracking) );
+	  int binY = h_el_SF_tracking->GetYaxis()->FindBin( std::max( std::min(ymax_h_el_SF_tracking,(float)lep2.p4.Pt()), ymin_h_el_SF_tracking ) );
 	  lepSF *= h_el_SF_tracking->GetBinContent( binX, binY );
 	  lepSF_Up *= ( h_el_SF_tracking->GetBinContent(binX,binY) + h_el_SF_tracking->GetBinError(binX,binY) );
 	  lepSF_Dn *= ( h_el_SF_tracking->GetBinContent(binX,binY) - h_el_SF_tracking->GetBinError(binX,binY) );
@@ -1624,13 +1624,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	      lepSF_FS_Dn *= lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
 	    }
 	  }
-	} // end if 2nd lep is mu
-	
-	int binX = h_mu_SF_tracking->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_SF_tracking,(float)lep1.p4.Eta()), xmin_h_mu_SF_tracking ) );
-	lepSF *= h_mu_SF_tracking->GetBinContent( binX );
-	lepSF_Up *= ( h_mu_SF_tracking->GetBinContent(binX) + h_mu_SF_tracking->GetBinError(binX) );
-	lepSF_Dn *= ( h_mu_SF_tracking->GetBinContent(binX) - h_mu_SF_tracking->GetBinError(binX) );
 
+	  int binX = h_mu_SF_tracking->GetXaxis()->FindBin( std::max( std::min(xmax_h_mu_SF_tracking,(float)lep2.p4.Eta()), xmin_h_mu_SF_tracking ) );
+	  lepSF *= h_mu_SF_tracking->GetBinContent( binX );
+	  lepSF_Up *= ( h_mu_SF_tracking->GetBinContent(binX) + h_mu_SF_tracking->GetBinError(binX) );
+	  lepSF_Dn *= ( h_mu_SF_tracking->GetBinContent(binX) - h_mu_SF_tracking->GetBinError(binX) );
+
+	} // end if 2nd lep is mu
+		
       } // end if 2nd lepton reco lepton exists
 
       

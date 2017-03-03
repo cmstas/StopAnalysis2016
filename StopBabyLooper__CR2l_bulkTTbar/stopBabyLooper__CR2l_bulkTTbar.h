@@ -1,5 +1,5 @@
-#ifndef STOPBABYLOOPER_H
-#define STOPBABYLOOPER_H
+#ifndef STOPBABYLOOPER__CR2l_BULKTTBAR_H
+#define STOPBABYLOOPER__CR2l_BULKTTBAR_H
 
 
 //////////////
@@ -33,6 +33,8 @@
 #include "TCanvas.h"
 #include "TColor.h"
 #include "TPie.h"
+#include "TGaxis.h"
+#include "TStyle.h"
 
 // sntCORE
 #include "Tools/dorky/dorky.h"
@@ -120,7 +122,7 @@ public:
 ///////////////
 
 // Looper 
-int stopBabyLooper ();
+int stopBabyLooper__CR2l_bulkTTbar();
 int looper( sampleInfo::ID sample, int nEvents=-1, bool readFast=true );
 void fillHistos( TH1D *histo, vector<int> passCats, double wgt );
 void fillHistosScan( TH3D *histo, vector<int> passCats, int mStop, int mLSP, double wgt );
@@ -148,21 +150,13 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
 // Plot making
 void plotMaker( bool plotByGenDecay=true );
 
-// Pie chart making
-int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_base="Output/Plots/pieChart_yields", bool useZeroedAMCNLO=true );
+// diLepton trigger efficiency plotting
+int diLepTriggerEfficiency_analyzer();
 
-// Background Estimates, lost lepton
-int bkgEstimate_diLepton();
-void printLatexHeader( FILE *file );
+// ttbar system pT scalce factor analyzer
+int ttbarSystemPt_analyzer();
 
-// Background Estimates, one lep from W
-int bkgEstimate_1lepFromW();
-
-// Background Estimates, one lep from Top
-int bkgEstimate_1lepFromTop();
-
-// Background Estimates, ZtoNuNu
-int bkgEstimate_ZtoNuNu();
-
+// ttbar system pT plotter
+void ttbarSystemPt_plotMaker( bool plotByGenDecay=true );
 
 #endif

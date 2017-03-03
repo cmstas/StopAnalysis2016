@@ -1,56 +1,5 @@
-// ROOT
-#include "TFile.h"
-#include "TH1.h"
-#include "TString.h"
+#include "stopBabyLooper.h"
 
-// std
-#include <string>
-#include <vector>
-
-// stopCORE
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/sysInfo.h"
-
-
-//
-// Utility Class
-//
-class bkgEstUtil{
-
-public:
-  TString outName_base;
-  TString hName_base;
-
-  vector<int> SR_bins;
-  vector<int> CR_bins;
-  
-  vector<TString> regionName;
-  vector<TString> regionName_short;
-  vector<TString> binName;
-
-  bkgEstUtil(){};
-  ~bkgEstUtil(){};
-};
-
-
-//
-// Helper Function
-//
-void printLatexHeader( FILE *file ){
-  fprintf(file, "\\documentclass{article}\n");
-  fprintf(file, "\\usepackage[landscape]{geometry}\n");
-  fprintf(file, "\\usepackage{chngpage}\n");
-  fprintf(file, "\\usepackage{graphicx} \n");
-  fprintf(file, "\n");
-  fprintf(file, "\\begin{document}\n");
-  fprintf(file, "\\tiny \n");  
-}
-
-//
-// Main
-//
 int bkgEstimate_1lepFromTop(){
 
 
@@ -64,7 +13,7 @@ int bkgEstimate_1lepFromTop(){
   //
   bool doRescale     = false; // also triggers using psuedo-data, ie sum of allBkg
   double rescale     = 1.0; // use lumi from stopCORE
-  //double rescale     = 40.0/29.53; // rescale to new lumi
+  //double rescale     = 40.0/35.867; // rescale to new lumi
 
      
   //

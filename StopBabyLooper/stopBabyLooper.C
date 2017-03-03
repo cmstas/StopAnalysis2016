@@ -1,41 +1,4 @@
-// Usage:
-// > root -l -b -q head.C stopBabyLooper.C++
-
-// C++
-#include <iostream>
-#include <string>
-#include <vector>
-#include <math.h>
-
-// ROOT
-#include "TBenchmark.h"
-#include "TChain.h"
-#include "TDirectory.h"
-#include "TFile.h"
-#include "TROOT.h"
-#include "TTreeCache.h"
-#include "TString.h"
-#include "TH1.h"
-#include "TH2.h"
-#include "TH3.h"
-
-// sntCORE
-#include "../../CORE/Tools/dorky/dorky.cc"
-#include "../../CORE/Tools/goodrun.h"
-
-// stopCORE
-#include "../StopCORE/stop_1l_babyAnalyzer.cc"
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/selectionInfo.h"
-#include "../StopCORE/sysInfo.h"
-
-
-using namespace std;
-using namespace tas;
-using namespace stop_1l;
-
+#include "stopBabyLooper.h"
 
 //////////////////////////////
 //                          //
@@ -51,7 +14,7 @@ bool add2ndLepToMet_ = true;
 bool inclTaus_CR2l_  = false;
 
 bool useBTagSFs_fromUtils_ = true;
-bool useLepSFs_fromUtils_  = false;
+bool useLepSFs_fromUtils_  = true;
         
 bool apply_cr2lTrigger_sf_  = true; // only !=1 if pfmet!=pfmet_rl ie no weight for ==1lepton events in SR and CR0b
 bool apply_bTag_sf_         = true; // event weight, product of all jet wgts
@@ -61,19 +24,11 @@ bool apply_tau_sf_          = true;
 bool apply_lepFS_sf_        = false;
 bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = true;
+bool apply_metTTbar_sf_     = true;
 bool apply_ttbarSysPt_sf_   = false;  // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
 bool apply_ISR_sf_          = true; // only !=1.0 for signal
 bool apply_pu_sf_           = true;
 bool apply_sample_sf_       = true; // only !=1.0 for some WJetsHT samps
-
-  
-
-//
-// Function Declarations
-//
-int looper( sampleInfo::ID sample, int nEvents=-1, bool readFast=true );
-void fillHistos( TH1D *histo, vector<int> passCats, double wgt );
-void fillHistosScan( TH3D *histo, vector<int> passCats, int mStop, int mLSP, double wgt );
 
 
 //
@@ -253,6 +208,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   wgtInfo->apply_lepFS_sf        = apply_lepFS_sf_;
   wgtInfo->apply_topPt_sf        = apply_topPt_sf_;
   wgtInfo->apply_metRes_sf       = apply_metRes_sf_;
+  wgtInfo->apply_metTTbar_sf     = apply_metTTbar_sf_;
   wgtInfo->apply_ttbarSysPt_sf   = apply_ttbarSysPt_sf_;
   wgtInfo->apply_ISR_sf          = apply_ISR_sf_;
   wgtInfo->apply_pu_sf           = apply_pu_sf_;
@@ -1889,28 +1845,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       int nTightTags_nominal = babyAnalyzer.ntightbtags();
       int nTightTags_jesup   = babyAnalyzer.jup_ntightbtags();
       int nTightTags_jesdown = babyAnalyzer.jdown_ntightbtags();
-      /*
-      double tight_wp = 0.935;
       
-      int nTightTags_nominal = 0;
-      vector<float> jet_csvv2 = ak4pfjets_CSV();
-      for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
-	if( jet_csvv2[iJet] >= tight_wp ) nTightTags_nominal++;
-      }
-      
-      int nTightTags_jesup = 0;
-      jet_csvv2 = jup_ak4pfjets_CSV();
-      for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
-	if( jet_csvv2[iJet] >= tight_wp ) nTightTags_jesup++;
-      }
-      
-      int nTightTags_jesdown = 0;
-      jet_csvv2 = jdown_ak4pfjets_CSV();
-      for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
-	if( jet_csvv2[iJet] >= tight_wp ) nTightTags_jesdown++;
-      }
-      */
-
       
       /////////////////////
       //                 //
@@ -1975,6 +1910,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    }
 	    
 	    
+	    /*
 	    double metResV2 = 1.0;
 	    if( sample.id == sampleInfo::k_ttbar_powheg_pythia8 ||
 		sample.id == sampleInfo::k_ttbar_powheg_pythia8_ext4 ||
@@ -2002,7 +1938,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      }
 	      wgt *= metResV2;
 	    }
-	    
+	    */
+
 	    /*
 	    // ICHEP Signal Regions
 	    if( sample.isSignalScan ){

@@ -2,7 +2,6 @@
 #define sysInfo_H
 
 // SNT CORE
-//#include "../../CORE/MCSelections.h"
 #include "MCSelections.h"
 
 // stopCORE
@@ -53,6 +52,8 @@ namespace sysInfo{
            k_topPtSFDown,
            k_metResUp,
            k_metResDown,
+	   k_metTTbarUp,
+	   k_metTTbarDown,
            k_ttbarSysPtUp,
            k_ttbarSysPtDown,
            k_nuPtSF_Up,
@@ -140,7 +141,6 @@ namespace sysInfo{
     TFile *f_cr2lTrigger_sf;
     TEfficiency *h_cr2lTrigger_sf_el;
     TEfficiency *h_cr2lTrigger_sf_mu;
-    //TH2D *h_cr2lTrigger_sf;
     
     // bTag machinery
     bool useBTagSFs_fromUtils;
@@ -239,6 +239,11 @@ namespace sysInfo{
     double sf_metRes_up;
     double sf_metRes_dn;
   
+    bool   apply_metTTbar_sf;
+    double sf_metTTbar;
+    double sf_metTTbar_up;
+    double sf_metTTbar_dn;
+  
     bool   apply_ttbarSysPt_sf;
     double sf_ttbarSysPt;
     double sf_ttbarSysPt_up;
@@ -323,6 +328,8 @@ namespace sysInfo{
     void getMetResWeight( double &weight_metRes, double &weight_metRes_up, double &weight_metRes_dn );
     
     void getMetResWeight_corridor( double &weight_metRes, double &weight_metRes_up, double &weight_metRes_dn );
+
+    void getMetTTbarWeight( double &weight_metTTbar, double &weight_metTTbar_up, double &weight_metTTbar_dn );
 
     void getTTbarSysPtSF( double &weight_ttbarSysPt, double &weight_ttbarSysPt_up, double &weight_ttbarSysPt_dn );
 

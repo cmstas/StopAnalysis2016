@@ -1,27 +1,8 @@
-// ROOT
-#include "TFile.h"
-#include "TH1.h"
-#include "TString.h"
-#include "TColor.h"
-#include "TGaxis.h"
-
-// std
-#include <algorithm>
-#include <string>
-#include <vector>
-
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/sysInfo.h"
-
 // dataMCplotMaker
-#include "../../Software/dataMCplotMaker/dataMCplotMaker.cc"
+#include "dataMCplotMaker/dataMCplotMaker.h"
+#include "stopBabyLooper__CR2l_bulkTTbar.h"
 
-//
-// Main
-//
-void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
+void ttbarSystemPt_plotMaker( bool plotByGenDecay ){
 
   TH1::SetDefaultSumw2();
   TH2::SetDefaultSumw2();
@@ -208,10 +189,10 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
   std::vector<double*> var_rebin_xBinsSF;
   std::vector<TString> var_rebin_labels;
 
-  bool noRebin = false;
-  int noRebin_nBins = 1;
-  double noRebin_xBins[2]{0.0,0.0}; // entries = nBins+1
-  double noRebin_xBinsSF[1]{1.0};   // SFs to keep bins Events/width
+  //bool noRebin = false;
+  //int noRebin_nBins = 1;
+  //double noRebin_xBins[2]{0.0,0.0}; // entries = nBins+1
+  //double noRebin_xBinsSF[1]{1.0};   // SFs to keep bins Events/width
 
 
   const int nRebins_lep1lep2bbMet_ge1bTags = 9;
@@ -665,9 +646,9 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
   for(int iVar=0; iVar<(int)var_list_label.size(); iVar++){
     for(int iReg=0; iReg<(int)regionList.size(); iReg++){
     
-      bool isYieldPlot = false;
-      std::size_t foundYield = var_list_label[iVar].find("yields");
-      if( foundYield!=std::string::npos ) isYieldPlot=true;
+      //bool isYieldPlot = false;
+      //std::size_t foundYield = var_list_label[iVar].find("yields");
+      //if( foundYield!=std::string::npos ) isYieldPlot=true;
       
       std::string cat_title_for_subtitle = "";
       
@@ -969,6 +950,8 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay=true ){
 
 	    // If scaling bkg to data, apply same sf to signal
 	    if(scaleToData) h_clone->Scale(norm_bkgSF);
+
+	    h_clone->Scale(sig_SF);
 
 	    sig_histos.push_back(h_clone);
 	    

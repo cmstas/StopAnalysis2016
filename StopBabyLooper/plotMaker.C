@@ -1,26 +1,10 @@
-// ROOT
-#include "TFile.h"
-#include "TH1.h"
-#include "TString.h"
-#include "TColor.h"
+#include "stopBabyLooper.h"
 
-// std
-#include <algorithm>
-#include <string>
-#include <vector>
+// sntSoftware
+#include "dataMCplotMaker/dataMCplotMaker.h"
 
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/sysInfo.h"
 
-// dataMCplotMaker
-#include "../../Software/dataMCplotMaker/dataMCplotMaker.cc"
-
-//
-// Main
-//
-void plotMaker( bool plotByGenDecay=true ){
+void plotMaker( bool plotByGenDecay ){
 
   TH1::SetDefaultSumw2();
   TH2::SetDefaultSumw2();
@@ -3607,6 +3591,9 @@ void plotMaker( bool plotByGenDecay=true ){
 	    else{
 	      h_clone = (TH1F*)h_temp->Clone(hName_clone);
 	    }
+
+	    h_clone->Scale(sig_SF);
+
 	    sig_histos.push_back(h_clone);
 	    
 	    TString sig_title_temp = "";

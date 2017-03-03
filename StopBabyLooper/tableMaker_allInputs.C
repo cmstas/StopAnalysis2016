@@ -1,28 +1,6 @@
-#include "Riostream.h"
-#include "TFile.h"
-#include "TH1.h"
-#include "TH3.h"
-#include "TString.h"
+#include "stopBabyLooper.h"
 
-#include <algorithm>
-#include <string>
-#include <vector>
-
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/sysInfo.h"
-
-
-
-struct yieldHelper{
-  std::string histName;
-  std::string tex;
-  int binNumber;
-};
-
-
-int tableMaker_allInputs( std::string f_input_dir="Output/Histos/", std::string f_out_name_base="Output/Tables/yields_allInputs", bool useZeroedAMCNLO=true ){
+void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base, bool useZeroedAMCNLO ){
 
   // Make a tex document where each page will have a table
   //   This table will be for a given systematic. 
@@ -39,12 +17,14 @@ int tableMaker_allInputs( std::string f_input_dir="Output/Histos/", std::string 
   // Get List from Looper
   //sampleList = sampleInfo::getSampleList_SR(); // only gives unmerged samples
   
+  // Data
   //sampleList.push_back( sampleInfo::k_single_lepton_met );
   sampleList.push_back( sampleInfo::k_allBkg );
   sampleList.push_back( sampleInfo::k_ttbar );
   //sampleList.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext4 );
   sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
   sampleList.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
+  sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8);
   sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1);
   sampleList.push_back( sampleInfo::k_singleT );
   sampleList.push_back( sampleInfo::k_singleT_tW );
@@ -93,9 +73,9 @@ int tableMaker_allInputs( std::string f_input_dir="Output/Histos/", std::string 
   sampleList.push_back( sampleInfo::k_ZZTo2Q2Nu_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_TTV );
   sampleList.push_back( sampleInfo::k_TTW );
+  sampleList.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM );
   //sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
   //sampleList.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
-  sampleList.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM );
   sampleList.push_back( sampleInfo::k_TTZ );
   sampleList.push_back( sampleInfo::k_ttZJets_13TeV_madgraphMLM );
   //sampleList.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
@@ -950,5 +930,5 @@ int tableMaker_allInputs( std::string f_input_dir="Output/Histos/", std::string 
 
     
 
-  return 0;
+  return;
 }
