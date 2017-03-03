@@ -12,8 +12,8 @@ bool applyjson              = true;
 
 bool add2ndLepToMet_        = false;
 
-bool useBTagSFs_fromUtils_  = false;
-bool useLepSFs_fromUtils_   = false;
+bool useBTagSFs_fromUtils_  = true;
+bool useLepSFs_fromUtils_   = true;
         
 bool apply_diLepTrigger_sf_ = true;  // for ee/emu/mumu triggers only
 bool apply_bTag_sf_         = true;  // event weight, product of all jet wgts

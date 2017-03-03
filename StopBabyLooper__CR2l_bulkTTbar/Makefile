@@ -20,7 +20,7 @@ NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
-STOPPATH       = /home/users/jgwood/Stop_1Lepton/stopCORE_dev/CMSSW_8_0_5_patch1/src/StopAnalysis/
+STOPPATH       = /home/users/jgwood/Stop_1Lepton/analysis2016__fullYear/CMSSW_8_0_5_patch1/src/StopAnalysis/
 SOFTWAREPATH   = $(STOPPATH)/../Software
 COREPATH       = $(STOPPATH)/../CORE
 TOOLSPATH      = $(COREPATH)/Tools
