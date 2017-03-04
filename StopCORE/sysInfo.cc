@@ -1684,6 +1684,9 @@ void sysInfo::evtWgtInfo::getLepSFWeight_fromUtils( double &weight_lepSF, double
 
   } // end if lostLep event
 
+  lepSFUtil->getLepWeight( recoLep_pt, recoLep_eta, recoLep_pdgid, recoLep_isSel, genLostLep_pt, genLostLep_eta, genLostLep_pdgid, weight_lepSF, weight_lepSF_Up, weight_lepSF_Dn, weight_lepFSSF, weight_lepFSSF_Up, weight_lepFSSF_Dn, weight_vetoLepSF, weight_vetoLepSF_Up, weight_vetoLepSF_Dn );
+  
+
   return;
 
 }

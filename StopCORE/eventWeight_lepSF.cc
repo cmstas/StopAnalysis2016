@@ -396,7 +396,7 @@ void eventWeight_lepSF::getLepWeight( std::vector< double > recoLep_pt, std::vec
 	  int bin_FS  = h_el_FS->FindBin( std::max( std::min(xmax_h_el_FS, (float)recoLep_pt[iLep]), xmin_h_el_FS ), std::max( std::min(ymax_h_el_FS, float(fabs(recoLep_eta[iLep])) ), ymin_h_el_FS ) );
 	  weight_lepSF_FS    *= h_el_FS->GetBinContent(bin_FS);
 	  weight_lepSF_FS_Up *= (weight_lepSF_FS + h_el_FS->GetBinError(bin_FS));
-	  weight_lepSF_FS_Dn *= (weight_lepSF_FS + h_el_FS->GetBinError(bin_FS));
+	  weight_lepSF_FS_Dn *= (weight_lepSF_FS - h_el_FS->GetBinError(bin_FS));
 	}
       } // end if is selected lepton
       else{
@@ -410,7 +410,7 @@ void eventWeight_lepSF::getLepWeight( std::vector< double > recoLep_pt, std::vec
 	  int bin_FS  = h_el_veto_FS->FindBin( std::max( std::min(xmax_h_el_veto_FS, (float)recoLep_pt[iLep]), xmin_h_el_veto_FS ), std::max( std::min(ymax_h_el_veto_FS,float(fabs(recoLep_eta[iLep])) ),ymin_h_el_veto_FS ) );
 	  weight_lepSF_FS    *= h_el_veto_FS->GetBinContent(bin_FS);
 	  weight_lepSF_FS_Up *= (weight_lepSF_FS + h_el_veto_FS->GetBinError(bin_FS));
-	  weight_lepSF_FS_Dn *= (weight_lepSF_FS + h_el_veto_FS->GetBinError(bin_FS));
+	  weight_lepSF_FS_Dn *= (weight_lepSF_FS - h_el_veto_FS->GetBinError(bin_FS));
 	}
       }
 	  
@@ -436,7 +436,7 @@ void eventWeight_lepSF::getLepWeight( std::vector< double > recoLep_pt, std::vec
 	  int bin_FS  = h_mu_FS->FindBin( std::max( std::min(xmax_h_mu_FS, (float)recoLep_pt[iLep]), xmin_h_mu_FS ), std::max( std::min(ymax_h_mu_FS, float(fabs(recoLep_eta[iLep]) )), ymin_h_mu_FS ) );
 	  weight_lepSF_FS    *= h_mu_FS->GetBinContent(bin_FS);
 	  weight_lepSF_FS_Up *= weight_lepSF_FS + h_mu_FS->GetBinError(bin_FS);
-	  weight_lepSF_FS_Dn *= weight_lepSF_FS + h_mu_FS->GetBinError(bin_FS);
+	  weight_lepSF_FS_Dn *= weight_lepSF_FS - h_mu_FS->GetBinError(bin_FS);
 	}
       } // end if selected lepton
 	  
@@ -451,7 +451,7 @@ void eventWeight_lepSF::getLepWeight( std::vector< double > recoLep_pt, std::vec
 	  int bin_FS  = h_mu_veto_FS->FindBin( std::max( std::min(xmax_h_mu_veto_FS, (float)recoLep_pt[iLep]), xmin_h_mu_veto_FS ), std::max( std::min(ymax_h_mu_veto_FS, float(fabs(recoLep_eta[iLep]))), ymin_h_mu_veto_FS ) );
 	  weight_lepSF_FS    *= h_mu_veto_FS->GetBinContent(bin_FS);
 	  weight_lepSF_FS_Up *= weight_lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
-	  weight_lepSF_FS_Dn *= weight_lepSF_FS + h_mu_veto_FS->GetBinError(bin_FS);
+	  weight_lepSF_FS_Dn *= weight_lepSF_FS - h_mu_veto_FS->GetBinError(bin_FS);
 	}
       }
     	
@@ -519,14 +519,14 @@ void eventWeight_lepSF::getLepWeight( std::vector< double > recoLep_pt, std::vec
       double vetoLepSF_temp_Dn = (vetoLepSF_temp - h_mu_SF_veto->GetBinError(binX, binY));
       
       if( (1-vetoEff)>0.0 ){
-	weight_vetoLepSF    = ( 1-(vetoEff*vetoLepSF_temp) )/( 1-vetoEff );
-	weight_vetoLepSF_Up = ( 1-(vetoEff*vetoLepSF_temp_Up) )/( 1-vetoEff );
-	weight_vetoLepSF_Dn = ( 1-(vetoEff*vetoLepSF_temp_Dn) )/( 1-vetoEff );	    
+	weight_vetoLepSF    *= ( 1-(vetoEff*vetoLepSF_temp) )/( 1-vetoEff );
+	weight_vetoLepSF_Up *= ( 1-(vetoEff*vetoLepSF_temp_Up) )/( 1-vetoEff );
+	weight_vetoLepSF_Dn *= ( 1-(vetoEff*vetoLepSF_temp_Dn) )/( 1-vetoEff );	    
       }
       else{
-	weight_vetoLepSF    = 1.0;
-	weight_vetoLepSF_Up = 1.0;
-	weight_vetoLepSF_Dn = 1.0;
+	weight_vetoLepSF    *= 1.0;
+	weight_vetoLepSF_Up *= 1.0;
+	weight_vetoLepSF_Dn *= 1.0;
       }
 
     } // end if genLostLepton is muon

@@ -21,9 +21,9 @@ make
 ./runBabyLooper__CR2l_bulkTTbar
 
 # If necessary, calculate pileup weights
-echo "Calculating Pileup Weights..."
-echo ""
-root -l -b -q getPileupWeights.C++ >& Output/Log/getPielupWeights.log 
+#echo "Calculating Pileup Weights..."
+#echo ""
+#root -l -b -q getPileupWeights.C++ >& Output/Log/getPielupWeights.log 
 
 # Create pdfs of latex files
 echo "Converting Tex to PDF..."

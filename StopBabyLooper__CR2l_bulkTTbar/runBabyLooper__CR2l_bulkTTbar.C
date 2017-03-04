@@ -1,7 +1,7 @@
 #include "stopBabyLooper__CR2l_bulkTTbar.h"
 
 int main () {
-
+  
   // Run Looper
   stopBabyLooper__CR2l_bulkTTbar();
 
@@ -11,11 +11,11 @@ int main () {
 
 
   // Merge Babies, before zero-ing aMC@NLO samples, to create tables
-  mergeStopBabies("Output/Histos/", "Output/Histos/",false);
+  //mergeStopBabies("Output/Histos/", "Output/Histos/",false);
   
 
   // Make table of yields for merged and component samples, before zeroing
-  tableMaker_allInputs("Output/Histos/","Output/Tables/yields_allInputs_beforeZeroing",false);
+  //tableMaker_allInputs("Output/Histos/","Output/Tables/yields_allInputs_beforeZeroing",false);
 
 
   // Zero Negative Yields from aMC@NLO Samples
@@ -27,7 +27,7 @@ int main () {
 
 
   // Make table of yields for merged and component samples, after zeroing
-  tableMaker_allInputs("Output/Histos/","Output/Tables/yields_allInputs");
+  //tableMaker_allInputs("Output/Histos/","Output/Tables/yields_allInputs");
 
 
   // Make table of yields for final merged samples
@@ -35,11 +35,11 @@ int main () {
 
 
   // Make table of systematic uncertainties for final samples
-  calcErrors();
+  //calcErrors();
 
   
   // Make plots by gen decay mode
-  plotMaker();
+  //plotMaker();
 
   
   // Make plots by production mode
@@ -52,10 +52,10 @@ int main () {
     
   // Get ttbar system pT scale factors
   ttbarSystemPt_analyzer();
-
+  
 
   // Get ttbar system pT plots (with systematic uncertainties on MC)
-  ttbarSystemPt_plotMaker();
+  //ttbarSystemPt_plotMaker();
   ttbarSystemPt_plotMaker( false );
 
    

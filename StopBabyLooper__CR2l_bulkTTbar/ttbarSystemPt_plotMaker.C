@@ -25,8 +25,9 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay ){
   //double lumi    = 12.9; // 2016 ICHEp
   //double lumi    = 29.53; // 2016 intermediate status update
   //double lumi    = 36.46; // 2016 preapproval lumi
-  double lumi    = 36.841; // 2016 final lumi
-  
+  //double lumi    = 36.841; // 2016 final lumi
+  double lumi    = 35.867; // 2016 final lumi
+
   double sig_SF  = 1.0;
 
   
@@ -997,6 +998,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay ){
       options += regionList[iReg];
       options += "__logScale";
       if( var_doRebin[iVar] ) options += Form("__%s", var_rebin_labels[iVar].Data());
+      if(scaleToData) options += "__scaledToData";
       options += outExt;
       options += "  ";
       
@@ -1042,6 +1044,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay ){
       options += regionList[iReg];
       options += "__linScale";
       if( var_doRebin[iVar] ) options += Form("__%s", var_rebin_labels[iVar].Data());
+      if(scaleToData) options += "__scaledToData";
       options += outExt;
       options += "  ";
       
