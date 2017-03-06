@@ -157,6 +157,6 @@ int diLepTriggerEfficiency_analyzer();
 int ttbarSystemPt_analyzer();
 
 // ttbar system pT plotter
-void ttbarSystemPt_plotMaker( bool plotByGenDecay=true );
+void ttbarSystemPt_plotMaker( bool plotByGenDecay=true, bool scaleToData=true );
 
 #endif

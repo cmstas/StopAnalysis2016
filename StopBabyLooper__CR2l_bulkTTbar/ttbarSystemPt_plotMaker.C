@@ -2,7 +2,7 @@
 #include "dataMCplotMaker/dataMCplotMaker.h"
 #include "stopBabyLooper__CR2l_bulkTTbar.h"
 
-void ttbarSystemPt_plotMaker( bool plotByGenDecay ){
+void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
 
   TH1::SetDefaultSumw2();
   TH2::SetDefaultSumw2();
@@ -14,7 +14,6 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay ){
   // Intialize User Inputs
   //
   bool plotData  = true;
-  bool scaleToData = true;
   bool plotEntriesPerBinWidth = false;
   
   TString inDir  = "Output/Histos/";

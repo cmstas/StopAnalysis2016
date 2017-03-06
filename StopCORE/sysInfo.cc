@@ -1324,7 +1324,7 @@ void sysInfo::evtWgtInfo::getBTagWeight( int WP, double &wgt_btagsf, double &wgt
     } // end if Tight WP
 
   } // end if taking btag SFs from babies
-     
+  
   
   // Normalization
   getNEvents( nEvents );
@@ -1502,7 +1502,7 @@ void sysInfo::evtWgtInfo::getBTagWeight_fromUtils( int WP, double &wgt_btagsf, d
   for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
     jet_pt.push_back( (double)babyAnalyzer.ak4pfjets_p4().at(iJet).Pt() );
     jet_eta.push_back( (double)babyAnalyzer.ak4pfjets_p4().at(iJet).Eta() );
-    jet_CSV.push_back( (bool)babyAnalyzer.ak4pfjets_CSV().at(iJet) );
+    jet_CSV.push_back( (double)babyAnalyzer.ak4pfjets_CSV().at(iJet) );
     jet_flavour.push_back( (int)abs(babyAnalyzer.ak4pfjets_hadron_flavor().at(iJet)) );
   }
   

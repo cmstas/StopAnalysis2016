@@ -56,7 +56,8 @@ int main () {
  
   // Get ttbar system pT plots (with systematic uncertainties on MC)
   //ttbarSystemPt_plotMaker();
-  ttbarSystemPt_plotMaker( false );
+  ttbarSystemPt_plotMaker( false, true ); // one set scaled to data
+  ttbarSystemPt_plotMaker( false, false ); // one set no scaling 
 
    
 
