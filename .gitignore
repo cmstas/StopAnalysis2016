@@ -1,0 +1,8 @@
+*.o
+*.so
+*.d
+*.pcm
+*.cxx
+*.in
+*.out
+Output

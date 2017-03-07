@@ -1,30 +1,6 @@
-#include "Riostream.h"
-#include "TFile.h"
-#include "TH1.h"
-#include "TH3.h"
-#include "TString.h"
-#include "TCanvas.h"
-#include "TPie.h"
-#include "TColor.h"
+#include "stopBabyLooper.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <vector>
-
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/sysInfo.h"
-
-
-struct yieldHelper{
-  TString histName;
-  TString tex;
-  int binNumber;
-};
-
-
-int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_base="Output/Plots/pieChart_yields", bool useZeroedAMCNLO=true ){
+int pieCharts( std::string f_input_dir, std::string f_out_name_base, bool useZeroedAMCNLO ){
 
   // Make a tex document where each page will have a table
   //   This table will be for a given systematic. 
@@ -38,7 +14,7 @@ int pieCharts( std::string f_input_dir="Output/Histos/", std::string f_out_name_
   //
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 10.0/3.99; // rescale to new lumi
+  //double rescale = 10.0/35.867; // rescale to new lumi
 
   
   //

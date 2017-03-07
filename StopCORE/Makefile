@@ -35,7 +35,7 @@ STOPVARLIB     = ../StopBabyMaker/stop_variables/StopVariables.so
 
 
 
-stopCORE.so: sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o
+stopCORE.so: sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o 
 	$(LD) $(LDFLAGS) $(SOFLAGS) -o stopCORE.so sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) -Wl,-rpath,./
 
 
@@ -43,8 +43,8 @@ sysInfo.o: sysInfo.h sysInfo.cc stop_1l_babyAnalyzer.h stop_1l_babyAnalyzer.cc e
 	$(CXX) $(CXXFLAGS) -c sysInfo.cc
 
 
-eventWeight_bTagSF.o: eventWeight_bTagSF.cc eventWeight_bTagSF.h
-	$(CXX) $(CXXFLAGS) -c eventWeight_bTagSF.cc
+eventWeight_bTagSF.o: eventWeight_bTagSF.cc eventWeight_bTagSF.h 
+	$(CXX) $(CXXFLAGS) -c eventWeight_bTagSF.cc 
 
 
 eventWeight_lepSF.o: eventWeight_lepSF.cc eventWeight_lepSF.h
@@ -72,4 +72,4 @@ stop_1l_babyAnalyzer.o: stop_1l_babyAnalyzer.cc stop_1l_babyAnalyzer.h
 .PHONY: clean
 clean:  
 	rm -v -f \
-	*.o *.d *.so; echo "Done"
+	*.o *.d *.so *.pcm *~; echo "Done"

@@ -158,6 +158,22 @@ sysInfo::Util::Util( sysInfo::ID systematic ){
     hasOwnBabies = false;
     break;
 
+  case( k_metTTbarUp ):
+    id          = systematic;
+    label       = "metTTbarUp";
+    title       = "MET ttbar SF, Up";
+    tex         = "MET~$t\\bar{t}$~SF,~Up";
+    hasOwnBabies = false;
+    break;
+
+  case( k_metTTbarDown ):
+    id          = systematic;
+    label       = "metTTbarDn";
+    title       = "MET ttbar SF, Down";
+    tex         = "MET~$t\\bar{t}$~SF,~Down";
+    hasOwnBabies = false;
+    break;
+
   case( k_ttbarSysPtUp ):
     id          = systematic;
     label       = "ttbarSysPtUp";
@@ -390,6 +406,7 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   apply_lepFS_sf        = false;
   apply_topPt_sf        = false;
   apply_metRes_sf       = false;
+  apply_metTTbar_sf     = false;
   apply_ttbarSysPt_sf   = false;
   apply_ISR_sf          = false;
   apply_pu_sf           = false;
@@ -431,7 +448,7 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
   // Initialize bTag SF machinery
   if( !sample_info->isData && useBTagSFs_fromUtils ){
-    //bTagSFUtil = new eventWeight_bTagSF( sample_info->isFastsim );
+    bTagSFUtil = new eventWeight_bTagSF( sample_info->isFastsim );
   }
 
   
@@ -463,7 +480,7 @@ sysInfo::evtWgtInfo::~evtWgtInfo(){
   sample_info->~sampleUtil();
   
   if( !sample_info->isData && useBTagSFs_fromUtils){
-    //delete bTagSFUtil;
+    delete bTagSFUtil;
   }
   
   if( !sample_info->isData && useLepSFs_fromUtils){
@@ -562,6 +579,10 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_metRes_up = 1.0;
   sf_metRes_dn = 1.0;
   
+  sf_metTTbar = 1.0;
+  sf_metTTbar_up = 1.0;
+  sf_metTTbar_dn = 1.0;
+  
   sf_ttbarSysPt = 1.0;
   sf_ttbarSysPt_up = 1.0;
   sf_ttbarSysPt_dn = 1.0;
@@ -635,10 +656,10 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   getCR2lTriggerWeight( sf_cr2lTrigger, sf_cr2lTrigger_up, sf_cr2lTrigger_dn );
   
   // btag
-  getBTagWeight( sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn, sf_bTag_FS_up, sf_bTag_FS_dn ); 
+  getBTagWeight( 1, sf_bTag, sf_bTagEffHF_up, sf_bTagEffHF_dn, sf_bTagEffLF_up, sf_bTagEffLF_dn, sf_bTag_FS_up, sf_bTag_FS_dn ); 
 
   // btag, tightWP
-  getBTagWeight_tightWP( sf_bTag_tight, sf_bTagEffHF_tight_up, sf_bTagEffHF_tight_dn, sf_bTagEffLF_tight_up, sf_bTagEffLF_tight_dn, sf_bTag_tight_FS_up, sf_bTag_tight_FS_dn ); 
+  getBTagWeight( 2, sf_bTag_tight, sf_bTagEffHF_tight_up, sf_bTagEffHF_tight_dn, sf_bTagEffLF_tight_up, sf_bTagEffLF_tight_dn, sf_bTag_tight_FS_up, sf_bTag_tight_FS_dn ); 
   
   // lepSFs
   getLepSFWeight( sf_lep, sf_lep_up, sf_lep_dn, sf_lepFS, sf_lepFS_up, sf_lepFS_dn, sf_vetoLep, sf_vetoLep_up, sf_vetoLep_dn );
@@ -649,8 +670,11 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   // top pT Reweighting
   getTopPtWeight( sf_topPt, sf_topPt_up, sf_topPt_dn );
 
-  // MET resolution scale factors - moved to looper level
+  // MET resolution scale factors 
   //getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
+  
+  // MET ttbar scale factors 
+  //getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
   
   // ttbar system pT scale factor 
   getTTbarSysPtSF( sf_ttbarSysPt, sf_ttbarSysPt_up, sf_ttbarSysPt_dn );
@@ -659,7 +683,6 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   getLumi( sf_lumi, sf_lumi_up, sf_lumi_dn );
 
   // ISR Correction
-  //if( sample_info->isSignal ) getISRWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
   getISRnJetsWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
 
   // Pileup Reweighting
@@ -732,6 +755,10 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   //double wgt_metRes = sf_metRes;
   //evt_wgt *= wgt_metRes;
     
+  // Apply met ttbar sf
+  //double wgt_metTTbar = sf_metTTbar;
+  //evt_wgt *= wgt_metTTbar;
+
   // Apply ttbar system pT SF (will be 1 if not ttbar/tW 2l) 
   double wgt_ttbarSysPt = sf_ttbarSysPt;
   evt_wgt *= wgt_ttbarSysPt;
@@ -855,6 +882,16 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     // MetRes SF Dn
     else if( iSys==k_metResDown ){
       //sys_wgt *= sf_metRes_dn/wgt_metRes;
+    }
+
+    // MetTTbar SF Up
+    else if( iSys==k_metTTbarUp ){
+      //sys_wgt *= sf_metTTbar_up/wgt_metTTbar;
+    }
+
+    // MetTTbar SF Dn
+    else if( iSys==k_metTTbarDown ){
+      //sys_wgt *= sf_metTTbar_dn/wgt_metTTbar;
     }
 
     // TTbar/tW System pT Up
@@ -1219,8 +1256,9 @@ void sysInfo::evtWgtInfo::getCR2lTriggerWeight( double &wgt_trigger, double &wgt
 
 //////////////////////////////////////////////////////////////////////
 
-void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
+void sysInfo::evtWgtInfo::getBTagWeight( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
 
+  // Working Point, WP = {0, 1, 2} = {loose, medium, tight}
   wgt_btagsf       = 1.0;
   wgt_btagsf_hf_up = 1.0;
   wgt_btagsf_hf_dn = 1.0;
@@ -1229,53 +1267,162 @@ void sysInfo::evtWgtInfo::getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_
   wgt_btagsf_fs_up = 1.0;
   wgt_btagsf_fs_dn = 1.0;
 
+  
   if( !apply_bTag_sf ) return;
 
+  if( WP<0 || WP>2 ) return;
+
+  // IF deriving SFs on the Looper level
   if( useBTagSFs_fromUtils ){
-    //getBTagWeight_fromUtils( wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn ); 
+    getBTagWeight_fromUtils( WP, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn ); 
   }
+
+  // Else if taking SFs from babies
   else{
-    wgt_btagsf       = babyAnalyzer.weight_btagsf();
-    wgt_btagsf_hf_up = babyAnalyzer.weight_btagsf_heavy_UP();
-    wgt_btagsf_hf_dn = babyAnalyzer.weight_btagsf_heavy_DN();
-    wgt_btagsf_lf_up = babyAnalyzer.weight_btagsf_light_UP();
-    wgt_btagsf_lf_dn = babyAnalyzer.weight_btagsf_light_DN();
-    
-    if( sample_info->isFastsim ){
-      wgt_btagsf_fs_up = babyAnalyzer.weight_btagsf_fastsim_UP();
-      wgt_btagsf_fs_dn = babyAnalyzer.weight_btagsf_fastsim_DN();
-    }
-  }
+
+    // Loose WP
+    if( WP==0 ){
+      wgt_btagsf       = babyAnalyzer.weight_loosebtagsf();
+      wgt_btagsf_hf_up = babyAnalyzer.weight_loosebtagsf_heavy_UP();
+      wgt_btagsf_hf_dn = babyAnalyzer.weight_loosebtagsf_heavy_DN();
+      wgt_btagsf_lf_up = babyAnalyzer.weight_loosebtagsf_light_UP();
+      wgt_btagsf_lf_dn = babyAnalyzer.weight_loosebtagsf_light_DN();
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up = babyAnalyzer.weight_loosebtagsf_fastsim_UP();
+	wgt_btagsf_fs_dn = babyAnalyzer.weight_loosebtagsf_fastsim_DN();
+      }
+    } // end if Loose WP
+
+    // Medium WP
+    if( WP==1 ){
+      wgt_btagsf       = babyAnalyzer.weight_btagsf();
+      wgt_btagsf_hf_up = babyAnalyzer.weight_btagsf_heavy_UP();
+      wgt_btagsf_hf_dn = babyAnalyzer.weight_btagsf_heavy_DN();
+      wgt_btagsf_lf_up = babyAnalyzer.weight_btagsf_light_UP();
+      wgt_btagsf_lf_dn = babyAnalyzer.weight_btagsf_light_DN();
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up = babyAnalyzer.weight_btagsf_fastsim_UP();
+	wgt_btagsf_fs_dn = babyAnalyzer.weight_btagsf_fastsim_DN();
+      }
+    } // end if Medium WP
+
+    // Tight WP
+    if( WP==2 ){
+      wgt_btagsf       = babyAnalyzer.weight_tightbtagsf();
+      wgt_btagsf_hf_up = babyAnalyzer.weight_tightbtagsf_heavy_UP();
+      wgt_btagsf_hf_dn = babyAnalyzer.weight_tightbtagsf_heavy_DN();
+      wgt_btagsf_lf_up = babyAnalyzer.weight_tightbtagsf_light_UP();
+      wgt_btagsf_lf_dn = babyAnalyzer.weight_tightbtagsf_light_DN();
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up = babyAnalyzer.weight_tightbtagsf_fastsim_UP();
+	wgt_btagsf_fs_dn = babyAnalyzer.weight_tightbtagsf_fastsim_DN();
+      }
+    } // end if Tight WP
+
+  } // end if taking btag SFs from babies
+  
   
   // Normalization
   getNEvents( nEvents );
-  
+
+  // Signal Sample Normalization
   if( sample_info->isSignal ){
     getSusyMasses(mStop,mLSP);
-  
-    wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,14)) );
-    wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,15)) );
-    wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,17)) );
-    wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,16)) );
-    wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,18)) );
-    
-    if( sample_info->isFastsim ){
-      wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,22)) );
-      wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,23)) );
-    }
-  }
-  else{
-    wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(14) );
-    wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(15) );
-    wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(17) );
-    wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(16) );
-    wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(18) );
 
-    if( sample_info->isFastsim ){
-      wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(23) );
-      wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(24) );
-    }
-  }
+    // Loose WP Signal Normalization
+    if( WP==0 ){
+      wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,44)) );
+      wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,45)) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,47)) );
+      wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,46)) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,48)) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,49)) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,50)) );
+      }
+    } // end if Loose WP
+
+
+    // Medium WP Signal Normalization
+    if( WP==1 ){
+      wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,14)) );
+      wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,15)) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,17)) );
+      wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,16)) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,18)) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,22)) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,23)) );
+      }
+    } // end if Medium WP
+
+    // Tight WP Signal Normalization
+    if( WP==2 ){
+      wgt_btagsf       *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,37)) );
+      wgt_btagsf_hf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,38)) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,40)) );
+      wgt_btagsf_lf_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,39)) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,41)) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,42)) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_sig_counter->GetBinContent(h_sig_counter->FindBin(mStop,mLSP,43)) );
+      }
+    } // end if Tight WP
+
+  } // end if normalizing signal
+
+  // Background Sample Normalization
+  else{
+
+    // Loose WP Bkg Normalization
+    if( WP==0 ){
+      wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(44) );
+      wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(45) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(47) );
+      wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(46) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(48) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(49) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(50) );
+      }
+    } // end if Loose WP
+
+    // Medium WP Bkg Normalization
+    if( WP==1 ){
+      wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(14) );
+      wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(15) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(17) );
+      wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(16) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(18) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(23) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(24) );
+      }
+    } // end if Medium WP
+
+    // Tight WP Bkg Normalization
+    if( WP==2 ){
+      wgt_btagsf       *= ( nEvents / h_bkg_counter->GetBinContent(37) );
+      wgt_btagsf_hf_up *= ( nEvents / h_bkg_counter->GetBinContent(38) );
+      wgt_btagsf_hf_dn *= ( nEvents / h_bkg_counter->GetBinContent(40) );
+      wgt_btagsf_lf_up *= ( nEvents / h_bkg_counter->GetBinContent(39) );
+      wgt_btagsf_lf_dn *= ( nEvents / h_bkg_counter->GetBinContent(41) );
+      
+      if( sample_info->isFastsim ){
+	wgt_btagsf_fs_up *= ( nEvents / h_bkg_counter->GetBinContent(42) );
+	wgt_btagsf_fs_dn *= ( nEvents / h_bkg_counter->GetBinContent(43) );
+      }
+    } // end if Tight WP
+
+  } // end if normalizing bkg
   
 }
 
@@ -1294,7 +1441,7 @@ void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, doubl
   if( !apply_bTag_sf ) return;
 
   if( useBTagSFs_fromUtils ){
-    //getBTagWeight_fromUtils( wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn ); 
+    getBTagWeight_fromUtils( 2, wgt_btagsf_tight, wgt_btagsf_hf_tight_up, wgt_btagsf_hf_tight_dn, wgt_btagsf_lf_tight_up, wgt_btagsf_lf_tight_dn, wgt_btagsf_tight_fs_up, wgt_btagsf_tight_fs_dn ); 
   }
   else{
     wgt_btagsf_tight       = babyAnalyzer.weight_tightbtagsf();
@@ -1343,19 +1490,22 @@ void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, doubl
 
 //////////////////////////////////////////////////////////////////////
 
-void sysInfo::evtWgtInfo::getBTagWeight_fromUtils( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ){
+void sysInfo::evtWgtInfo::getBTagWeight_fromUtils( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
 
-  vector< double > jet_pt, jet_eta;
-  vector< int > jet_flavour;
-  vector< bool > jet_passCSV;
+  vector< double > jet_pt;
+  vector< double > jet_eta;
+  vector< double > jet_CSV;
+  vector< int >    jet_flavour;
+  
 
   for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
     jet_pt.push_back( (double)babyAnalyzer.ak4pfjets_p4().at(iJet).Pt() );
     jet_eta.push_back( (double)babyAnalyzer.ak4pfjets_p4().at(iJet).Eta() );
+    jet_CSV.push_back( (double)babyAnalyzer.ak4pfjets_CSV().at(iJet) );
     jet_flavour.push_back( (int)abs(babyAnalyzer.ak4pfjets_hadron_flavor().at(iJet)) );
-    jet_passCSV.push_back( (bool)babyAnalyzer.ak4pfjets_passMEDbtag().at(iJet) );
   }
-  //bTagSFUtil->getBTagWeight( jet_pt, jet_eta, jet_flavour, jet_passCSV, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn );
+  
+  bTagSFUtil->getBTagWeight( WP, jet_pt, jet_eta, jet_CSV, jet_flavour, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn );
 
   return;
 
@@ -1472,130 +1622,69 @@ void sysInfo::evtWgtInfo::getLepSFWeight_fromUtils( double &weight_lepSF, double
   std::vector< double > recoLep_pt, recoLep_eta, genLostLep_pt, genLostLep_eta;
   std::vector< int > recoLep_pdgid, genLostLep_pdgid;
   std::vector< bool > recoLep_isSel;
+
+  double matched_dr = 0.1;
   
-  if( babyAnalyzer.nvetoleps()==1 ){
+  if( babyAnalyzer.nvetoleps()>=1 ){
     recoLep_pt.push_back( babyAnalyzer.lep1_p4().Pt() );
     recoLep_eta.push_back( babyAnalyzer.lep1_p4().Eta() );
     recoLep_pdgid.push_back( babyAnalyzer.lep1_pdgid() );
-    if( (abs(babyAnalyzer.lep1_pdgid())==13 && 
-	 babyAnalyzer.lep1_passTightID() ) ||
-	(abs(babyAnalyzer.lep1_pdgid())==11 && 
-	 babyAnalyzer.lep1_passMediumID() )   ){
+    if( ( (abs(babyAnalyzer.lep1_pdgid())==13 && 
+	   babyAnalyzer.lep1_passMediumID()      ) ||
+	  (abs(babyAnalyzer.lep1_pdgid())==11 && 
+	   babyAnalyzer.lep1_passMediumID()      )    ) &&
+	( babyAnalyzer.lep1_p4().Pt()>20.0            ) &&
+        ( fabs(babyAnalyzer.lep1_p4().Eta())<2.4      )    ){
       recoLep_isSel.push_back( true );
     }
     else{
       recoLep_isSel.push_back( false );
     }
-  }
   
-  if( babyAnalyzer.nvetoleps()>=2 ){
-    recoLep_pt.push_back( babyAnalyzer.lep1_p4().Pt() );
-    recoLep_eta.push_back( babyAnalyzer.lep1_p4().Eta() );
-    recoLep_pdgid.push_back( babyAnalyzer.lep1_pdgid() );
-    if( (abs(babyAnalyzer.lep1_pdgid())==13 && 
-	 babyAnalyzer.lep1_passTightID())  ||
-	(abs(babyAnalyzer.lep1_pdgid())==11 && 
-	 babyAnalyzer.lep1_passMediumID())    ){
-      recoLep_isSel.push_back( true );
-    }
-    else{
-      recoLep_isSel.push_back( false );
-    }
-    
-    recoLep_pt.push_back( babyAnalyzer.lep2_p4().Pt() );
-    recoLep_eta.push_back( babyAnalyzer.lep2_p4().Eta() );
-    recoLep_pdgid.push_back( babyAnalyzer.lep2_pdgid() );
-    if( (abs(babyAnalyzer.lep2_pdgid())==13 && 
-	 babyAnalyzer.lep2_passTightID())  ||
-	(abs(babyAnalyzer.lep2_pdgid())==11 && 
-	 babyAnalyzer.lep2_passMediumID())    ){
-      recoLep_isSel.push_back( true );
-    }
-    else{
-      recoLep_isSel.push_back( false );
-    }
+  
+    if(babyAnalyzer.nvetoleps()>=2){
+      recoLep_pt.push_back( babyAnalyzer.lep2_p4().Pt() );
+      recoLep_eta.push_back( babyAnalyzer.lep2_p4().Eta() );
+      recoLep_pdgid.push_back( babyAnalyzer.lep2_pdgid() );
+      if( ( (abs(babyAnalyzer.lep2_pdgid())==13 && 
+	   babyAnalyzer.lep2_passMediumID()      ) ||
+	  (abs(babyAnalyzer.lep2_pdgid())==11 && 
+	   babyAnalyzer.lep2_passMediumID()      )    ) &&
+	( babyAnalyzer.lep2_p4().Pt()>20.0            ) &&
+        ( fabs(babyAnalyzer.lep2_p4().Eta())<2.4      )    ){
+	recoLep_isSel.push_back( true );
+      }
+      else{
+	recoLep_isSel.push_back( false );
+      }
 
-  }
- 
+    } // end if >=2 vetoLeptons
+  
+  } // end if >=1 vetoLeptons
 
 
+  // Find Gen Lost lepton
   if( babyAnalyzer.is2lep() && babyAnalyzer.nvetoleps()==1 ){
 
     // Find gen lepton matched to reco lepton
-    int matched_idx = -1;
-    double min_dr   = 99.9;
     for(int iGen=0; iGen<(int)babyAnalyzer.genleps_p4().size(); iGen++){
+
+      if( abs(babyAnalyzer.genleps_id().at(iGen))!=11 && abs(babyAnalyzer.genleps_id().at(iGen))!=13 ) continue;
+      if( !babyAnalyzer.genleps_fromHardProcessFinalState().at(iGen) ) continue;
       if( !babyAnalyzer.genleps_isLastCopy().at(iGen) ) continue;
-      
-      // Preferentially match to same flavour lepton before tau
-      if( (abs(babyAnalyzer.genleps_id().at(iGen))==11 && 
-	   abs(babyAnalyzer.lep1_pdgid())==11                      ) ||
-	  (abs(babyAnalyzer.genleps_id().at(iGen))==13 &&
-	   abs(babyAnalyzer.lep1_pdgid())==13                      )    ){
-
-	double min_dr_temp = ROOT::Math::VectorUtil::DeltaR( babyAnalyzer.genleps_p4().at(iGen), babyAnalyzer.lep1_p4() );
-	if( min_dr_temp < min_dr ){
-	  min_dr = min_dr_temp;
-	  if( min_dr < dr_matched ){
-	    matched_idx = iGen;
-	  }
-	}
-	
-      } // end if dr matched to same flavour lepton
-    
-
-    } // end loop over gen leptons
-
-    
-    if( matched_idx < 0 ){
-      for(int iGen=0; iGen<(int)babyAnalyzer.genleps_p4().size(); iGen++){
-	if( !babyAnalyzer.genleps_isLastCopy().at(iGen) ) continue;
-	if( abs(babyAnalyzer.genleps_id().at(iGen))==15 ){
-	 
-	  double min_dr_temp = ROOT::Math::VectorUtil::DeltaR( babyAnalyzer.genleps_p4().at(iGen), babyAnalyzer.lep1_p4() );
-	  if( min_dr_temp < min_dr ){
-	    min_dr = min_dr_temp;
-	    if( min_dr < dr_matched ){
-	      matched_idx = iGen;
-	    }
-	  }
+      if( ROOT::Math::VectorUtil::DeltaR(babyAnalyzer.genleps_p4().at(iGen), babyAnalyzer.lep1_p4())<matched_dr ) continue;
+      if( babyAnalyzer.genleps_p4().at(iGen).Pt()<5 || fabs(babyAnalyzer.genleps_p4().at(iGen).Eta())>2.4 ) continue;
 	  
-	} // end if gen/reco matched to tau
-      } // end loop over gen leptons
-    } // end if reco lepton not matched
-
-    if( matched_idx >= 0 ){
-      // Find gen lost lepton
-      double genLostPt  = -99.9;
-      double genLostEta = -99.9;
-      int genLostPdgid  = -99;
-      bool foundLostLep = false;
-      for(int iGen=0; iGen<(int)babyAnalyzer.genleps_p4().size(); iGen++){
-	if( iGen == matched_idx ) continue;
-	if( !babyAnalyzer.genleps_isLastCopy().at(iGen) ) continue;
-	if( !babyAnalyzer.genleps_fromHardProcessFinalState().at(iGen) ) continue;
-	if( abs(babyAnalyzer.genleps_id().at(iGen))!=11 && 
-	    abs(babyAnalyzer.genleps_id().at(iGen))!=13    ) continue;
-	
-	genLostPt    = babyAnalyzer.genleps_p4().at(iGen).Pt();
-	genLostEta   = babyAnalyzer.genleps_p4().at(iGen).Eta();
-	genLostPdgid = babyAnalyzer.genleps_id().at(iGen);
-	foundLostLep = true;
-	
-      } // end loop over gen leptons
+      genLostLep_pt.push_back( babyAnalyzer.genleps_p4().at(iGen).Pt() );
+      genLostLep_eta.push_back( babyAnalyzer.genleps_p4().at(iGen).Eta() );
+      genLostLep_pdgid.push_back( babyAnalyzer.genleps_id().at(iGen) );
     
-      if( foundLostLep ){
-	genLostLep_pt.push_back( genLostPt );
-	genLostLep_eta.push_back( genLostEta );
-	genLostLep_pdgid.push_back( genLostPdgid );
-      }
+    } // end loop over genleps
 
-    } // end if selected lepton is matched
-
-  } // end if is gen 2lep event with ==1 reco lepton 
+  } // end if lostLep event
 
   lepSFUtil->getLepWeight( recoLep_pt, recoLep_eta, recoLep_pdgid, recoLep_isSel, genLostLep_pt, genLostLep_eta, genLostLep_pdgid, weight_lepSF, weight_lepSF_Up, weight_lepSF_Dn, weight_lepFSSF, weight_lepFSSF_Up, weight_lepFSSF_Dn, weight_vetoLepSF, weight_vetoLepSF_Up, weight_vetoLepSF_Dn );
-
+  
 
   return;
 
@@ -2192,6 +2281,121 @@ void sysInfo::evtWgtInfo::getMetResWeight_corridor( double &weight_metRes, doubl
 
 //////////////////////////////////////////////////////////////////////
 
+void sysInfo::evtWgtInfo::getMetTTbarWeight( double &weight_metTTbar, double &weight_metTTbar_up, double &weight_metTTbar_dn ){
+
+  weight_metTTbar    = 1.0;
+  weight_metTTbar_up = 1.0;
+  weight_metTTbar_dn = 1.0;
+
+  if(!apply_metTTbar_sf) return;
+
+  double sf_val = 1.0;
+  double sf_err = 0.0;
+  
+  if( sample_info->isData ) return;
+  if( sample_info->isSignal ) return;
+
+  // ttbar, tW
+  if( sample_info->id != sampleInfo::k_ttbar_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_powheg_pythia8_ext4 &&
+      sample_info->id != sampleInfo::k_ttbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8 &&
+      sample_info->id != sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8 &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays &&
+      sample_info->id != sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 &&
+      sample_info->id != sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 
+      ) return;
+  
+
+  // 2lep events only
+  if( !babyAnalyzer.is2lep() ) return;
+  
+
+  int nGoodJets = babyAnalyzer.ngoodjets();
+  
+  double modTopness = babyAnalyzer.topnessMod();
+  if( add2ndLepToMet) modTopness = babyAnalyzer.topnessMod_rl();
+  
+  double mlb = babyAnalyzer.Mlb_closestb();
+  
+  int nTightTags = babyAnalyzer.ntightbtags();
+  
+  double met = babyAnalyzer.pfmet();
+  if(add2ndLepToMet) met = babyAnalyzer.pfmet_rl();
+  
+  
+
+  //
+  // Find SF
+  //
+
+  // Region B
+  if( nGoodJets<4 && modTopness>=10.0 && mlb>=175.0 && nTightTags>=1 ){
+    if( met>450.0 && met<600.0 ){
+      sf_val = 1.02;
+      sf_err = 0.25;
+    }
+    if( met>600.0 ){
+      sf_val = 0.91;
+      sf_err = 0.38;
+    }
+  }
+
+  // Region E
+  if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 && mlb<175.0 ){
+    if( met>350.0 && met<550.0 ){
+      sf_val = 1.04;
+      sf_err = 0.10;
+    }
+    if( met>550.0 ){
+      sf_val = 0.59;
+      sf_err = 0.18;
+    }
+  }
+
+  // Region F
+  if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 && mlb>=175.0 && nTightTags>=1 ){
+    if( met>250.0 && met<450.0 ){
+      sf_val = 1.03;
+      sf_err = 0.05;
+    }
+    if( met>450.0 ){
+      sf_val = 0.58;
+      sf_err = 0.10;
+    }
+  }
+
+  // Region H
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb>=175.0 && nTightTags>=1){
+    if( met>250.0 && met<450.0 ){
+      sf_val = 1.03;
+      sf_err = 0.05;
+    }
+    if( met>450.0 ){
+      sf_val = 0.58;
+      sf_err = 0.10;
+    }
+  }
+  
+  // 50% uncertainty on difference between no sf and applying it
+  //sf_err = fabs(0.5*(1.0-sf_val));
+
+  weight_metTTbar    = sf_val;
+  weight_metTTbar_up = (sf_val + sf_err);
+  weight_metTTbar_dn = (sf_val - sf_err);
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &weight_ttbarSysPt_up, double &weight_ttbarSysPt_dn ){
 
   weight_ttbarSysPt    = 1.0;
@@ -2756,9 +2960,6 @@ void sysInfo::evtWgtInfo::getPileupWeight( double &weight_pu, double &weight_pu_
   //weight_pu    = h_pu_wgt->GetBinContent(h_pu_wgt->FindBin(babyAnalyzer.pu_ntrue()));
   //weight_pu_up = h_pu_wgt_up->GetBinContent(h_pu_wgt_up->FindBin(babyAnalyzer.pu_ntrue()));
   //weight_pu_dn = h_pu_wgt_dn->GetBinContent(h_pu_wgt_dn->FindBin(babyAnalyzer.pu_ntrue()));
-  //weight_pu    = h_pu_wgt->GetBinContent(std::min(h_pu_wgt->GetNbinsX(),h_pu_wgt->FindBin(babyAnalyzer.pu_ntrue())+1));
-  //weight_pu_up = h_pu_wgt_up->GetBinContent(std::min(h_pu_wgt_up->GetNbinsX(),h_pu_wgt_up->FindBin(babyAnalyzer.pu_ntrue())+1));
-  //weight_pu_dn = h_pu_wgt_dn->GetBinContent(std::min(h_pu_wgt_dn->GetNbinsX(),h_pu_wgt_dn->FindBin(babyAnalyzer.pu_ntrue())+1));
   weight_pu    = babyAnalyzer.weight_PU();
   weight_pu_up = babyAnalyzer.weight_PUup();
   weight_pu_dn = babyAnalyzer.weight_PUdown();

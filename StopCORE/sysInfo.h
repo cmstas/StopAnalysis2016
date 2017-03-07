@@ -2,10 +2,10 @@
 #define sysInfo_H
 
 // SNT CORE
-#include "../../CORE/MCSelections.h"
+#include "MCSelections.h"
 
 // stopCORE
-//#include "eventWeight_bTagSF.h"
+#include "eventWeight_bTagSF.h"
 #include "eventWeight_lepSF.h"
 #include "sampleInfo.h"
 #include "stop_1l_babyAnalyzer.h"
@@ -52,6 +52,8 @@ namespace sysInfo{
            k_topPtSFDown,
            k_metResUp,
            k_metResDown,
+	   k_metTTbarUp,
+	   k_metTTbarDown,
            k_ttbarSysPtUp,
            k_ttbarSysPtDown,
            k_nuPtSF_Up,
@@ -139,11 +141,10 @@ namespace sysInfo{
     TFile *f_cr2lTrigger_sf;
     TEfficiency *h_cr2lTrigger_sf_el;
     TEfficiency *h_cr2lTrigger_sf_mu;
-    //TH2D *h_cr2lTrigger_sf;
     
     // bTag machinery
     bool useBTagSFs_fromUtils;
-    //eventWeight_bTagSF *bTagSFUtil;
+    eventWeight_bTagSF *bTagSFUtil;
 
     // Lepton SF machinery
     bool useLepSFs_fromUtils;
@@ -238,6 +239,11 @@ namespace sysInfo{
     double sf_metRes_up;
     double sf_metRes_dn;
   
+    bool   apply_metTTbar_sf;
+    double sf_metTTbar;
+    double sf_metTTbar_up;
+    double sf_metTTbar_dn;
+  
     bool   apply_ttbarSysPt_sf;
     double sf_ttbarSysPt;
     double sf_ttbarSysPt_up;
@@ -305,11 +311,11 @@ namespace sysInfo{
 
     void getCR2lTriggerWeight( double &wgt_trigger, double &wgt_trigger_up, double &wgt_trigger_dn );
 
-    void getBTagWeight( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn );
+    void getBTagWeight( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn );
     
     void getBTagWeight_tightWP( double &wgt_btagsf_tight, double &wgt_btagsf_hf_tight_up, double &wgt_btagsf_hf_tight_dn, double &wgt_btagsf_lf_tight_up, double &wgt_btagsf_lf_tight_dn, double &wgt_btagsf_tight_fs_up, double &wgt_btagsf_tight_fs_dn );
   
-    void getBTagWeight_fromUtils( double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn ); 
+    void getBTagWeight_fromUtils( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_tight_fs_up, double &wgt_btagsf_tight_fs_dn ); 
   
     void getLepSFWeight( double &weight_lepSF, double &weight_lepSF_Up, double &weight_lepSF_Dn, double &weight_lepFSSF, double &weight_lepFSSF_Up, double &weight_lepFSSF_Dn, double &weight_vetoLepSF, double &weight_vetoLepSF_Up, double &weight_vetoLepSF_Dn );
 
@@ -322,6 +328,8 @@ namespace sysInfo{
     void getMetResWeight( double &weight_metRes, double &weight_metRes_up, double &weight_metRes_dn );
     
     void getMetResWeight_corridor( double &weight_metRes, double &weight_metRes_up, double &weight_metRes_dn );
+
+    void getMetTTbarWeight( double &weight_metTTbar, double &weight_metTTbar_up, double &weight_metTTbar_dn );
 
     void getTTbarSysPtSF( double &weight_ttbarSysPt, double &weight_ttbarSysPt_up, double &weight_ttbarSysPt_dn );
 

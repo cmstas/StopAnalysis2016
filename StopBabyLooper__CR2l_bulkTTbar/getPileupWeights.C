@@ -5,7 +5,7 @@ void getPileupWeights(){
 
   TH1D *temp = NULL;
 
-  TFile *f_out = new TFile("pileup_wgts.root", "recreate");
+  TFile *f_out = new TFile("Output/Histos/pileup_wgts.root", "recreate");
   
 
   // Open MC file

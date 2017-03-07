@@ -1,27 +1,6 @@
-#include "Riostream.h"
-#include "TFile.h"
-#include "TH1.h"
-#include "TH3.h"
-#include "TString.h"
+#include "stopBabyLooper__CR2l_bulkTTbar.h"
 
-#include <algorithm>
-#include <string>
-#include <vector>
-
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/sysInfo.h"
-
-
-struct yieldHelper{
-  std::string histName;
-  std::string tex;
-  int binNumber;
-};
-
-
-int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::string f_out_name_base="Output/Tables/yields_summedInputs", bool useZeroedAMCNLO=true ){
+void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_base, bool useZeroedAMCNLO ){
 
   // Make a tex document where each page will have a table
   //   This table will be for a given systematic. 
@@ -37,7 +16,7 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
-  //double rescale = 100.0/36.814; // rescale to new lumi
+  //double rescale = 100.0/35.867; // rescale to new lumi
 
   
   //
@@ -814,5 +793,5 @@ int tableMaker_summedInputs( std::string f_input_dir="Output/Histos/", std::stri
 
  
 
-  return 0;
+  return;
 }

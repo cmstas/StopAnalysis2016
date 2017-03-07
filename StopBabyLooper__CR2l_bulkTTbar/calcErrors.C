@@ -1,37 +1,5 @@
-// ROOT
-#include "Riostream.h"
-#include "TFile.h"
-#include "TH1.h"
-#include "TString.h"
+#include "stopBabyLooper__CR2l_bulkTTbar.h"
 
-// C
-#include <algorithm>
-#include <string>
-#include <vector>
-
-// stopCORE
-#include "../StopCORE/sampleInfo.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/categoryInfo.h"
-#include "../StopCORE/sysInfo.h"
-
-
-struct yieldHelper{
-  std::string histName;
-  std::string tex;
-  int binNumber;
-};
-
-
-//
-// Function Declarations
-//
-void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > sampleList );
-
-
-//
-// Main
-//
 void calcErrors(){
 
 
@@ -422,7 +390,7 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
 	      if(!h_up) cout << "BAD HISTO: " << hNameUp << endl;
 	  
 	      double yield_up   = h_up->GetBinContent( catList[iCat].binNumber );
-	      double error_up   = h_up->GetBinError( catList[iCat].binNumber );
+	      //double error_up   = h_up->GetBinError( catList[iCat].binNumber );
 	      double percent_up = (100*(yield_up-yield_nom))/yield_nom;
  
 	  
@@ -439,7 +407,7 @@ void calcThis(std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > samp
 	      if(!h_down) cout << "BAD HISTO: " << hNameDown << endl;
 	  
 	      double yield_dn   = h_down->GetBinContent( catList[iCat].binNumber );
-	      double error_dn   = h_down->GetBinError( catList[iCat].binNumber );
+	      //double error_dn   = h_down->GetBinError( catList[iCat].binNumber );
 	      double percent_dn = (100*(yield_dn-yield_nom))/yield_nom;
 	  
 	  
