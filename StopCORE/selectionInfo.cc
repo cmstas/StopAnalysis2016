@@ -1,7 +1,7 @@
 #include "selectionInfo.h"
 
 // These variables can only be used within selectionInfo.cc, but they can be set from outside using the functions below
-static int localJesType = 0;
+static int  localJesType = 0;
 static bool localAddLep2 = false;
 static bool localIncludeTaus = false;
 
@@ -180,67 +180,73 @@ bool selectionInfo::pass_ZWindow_diLepMass(){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ge20_diLepMass(){
+bool selectionInfo::pass_ge20_diLepMass(){ return selectionInfo::pass_geX_diLepMass(20.0); }
+
+bool selectionInfo::pass_geX_diLepMass(double cut_diLepMass){
   bool result = false;
-  if( (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()>=20.0 ) result = true;
+  if( (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()>=cut_diLepMass ) result = true;
   return result;
 }
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ge2_jets(){ return selectionInfo::pass_ge2_jets( localJesType ); }
-bool selectionInfo::pass_ge2_jets(int jesType){
-  bool result = false;
-  if( jesType==1){
-    if( babyAnalyzer.jup_ngoodjets()>=2 ) result = true;
-  }
-  else if( jesType==-1){
-    if( babyAnalyzer.jdown_ngoodjets()>=2 ) result = true;
-  }
-  else{
-    if( babyAnalyzer.ngoodjets()>=2 ) result = true;
-  }
-  return result;
-}
+bool selectionInfo::pass_ge2_jets(){ return selectionInfo::pass_geX_Jets( 2, localJesType ); }
 
-//////////////////////////////////////////////////////////////////////
-
-bool selectionInfo::pass_ge1_bJets(){ return selectionInfo::pass_ge1_bJets( localJesType ); }
-bool selectionInfo::pass_ge1_bJets(int jesType){
+bool selectionInfo::pass_geX_jets(int cut_nJets, int jesType){
   bool result = false;
   if( jesType==1){
-    if( babyAnalyzer.jup_ngoodbtags()>=1 ) result = true;
+    if( babyAnalyzer.jup_ngoodjets()>=cut_nJets ) result = true;
   }
   else if( jesType==-1){
-    if( babyAnalyzer.jdown_ngoodbtags()>=1 ) result = true;
+    if( babyAnalyzer.jdown_ngoodjets()>=cut_nJets ) result = true;
   }
   else{
-    if( babyAnalyzer.ngoodbtags()>=1 ) result = true;
+    if( babyAnalyzer.ngoodjets()>=cut_nJets ) result = true;
   }
   return result;
 }
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ee0_bJets(){ return selectionInfo::pass_ee0_bJets( localJesType ); }
-bool selectionInfo::pass_ee0_bJets(int jesType){
+bool selectionInfo::pass_ge1_bJets(){ return selectionInfo::pass_geX_bJets( 1, localJesType ); }
+
+bool selectionInfo::pass_geX_bJets(int cut_nBJets, int jesType){
   bool result = false;
   if( jesType==1){
-    if( babyAnalyzer.jup_ngoodbtags()==0 ) result = true;
+    if( babyAnalyzer.jup_ngoodbtags()>=cut_nBJets ) result = true;
   }
   else if( jesType==-1){
-    if( babyAnalyzer.jdown_ngoodbtags()==0 ) result = true;
+    if( babyAnalyzer.jdown_ngoodbtags()>=cut_nBJets ) result = true;
   }
   else{
-    if( babyAnalyzer.ngoodbtags()==0 ) result = true;
+    if( babyAnalyzer.ngoodbtags()>=cut_nBJets ) result = true;
   }
   return result;
 }
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ee0_bJets_tightBTagHighMlb(){ return selectionInfo::pass_ee0_bJets_tightBTagHighMlb( localJesType ); }
-bool selectionInfo::pass_ee0_bJets_tightBTagHighMlb(int jesType){
+bool selectionInfo::pass_ee0_bJets(){ return selectionInfo::pass_eeX_bJets( 0, localJesType ); }
+
+bool selectionInfo::pass_eeX_bJets(int cut_nBJets, int jesType){
+  bool result = false;
+  if( jesType==1){
+    if( babyAnalyzer.jup_ngoodbtags()==cut_nBJets ) result = true;
+  }
+  else if( jesType==-1){
+    if( babyAnalyzer.jdown_ngoodbtags()==cut_nBJets ) result = true;
+  }
+  else{
+    if( babyAnalyzer.ngoodbtags()==cut_nBJets ) result = true;
+  }
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ee0_bJets_tightBTagHighMlb(){ return selectionInfo::pass_eeX_bJets_tightBTagHighMlb( 0, localJesType ); }
+
+bool selectionInfo::pass_eeX_bJets_tightBTagHighMlb(int cut_nBJets, int jesType){
   bool result = false;
   int nTightTags = babyAnalyzer.ntightbtags();
   if(jesType==1)  nTightTags = babyAnalyzer.jup_ntightbtags();
@@ -250,36 +256,38 @@ bool selectionInfo::pass_ee0_bJets_tightBTagHighMlb(int jesType){
   if(jesType==-1) nMedTags = babyAnalyzer.jdown_ngoodbtags();
   double mlb = babyAnalyzer.Mlb_closestb();
   if( (nMedTags==0) || 
-      (nMedTags>=1 && nTightTags==0 && mlb>175.0) ) result = true;
+      (nMedTags>=1 && nTightTags==cut_nBJets && mlb>175.0) ) result = true;
   return result;
 }
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ge50_met(){ return selectionInfo::pass_ge50_met( localJesType, localAddLep2 ); }
-bool selectionInfo::pass_ge50_met(int jesType, bool add2ndLepToMet){
+bool selectionInfo::pass_ge50_met(){ return selectionInfo::pass_geX_met( 50.0, localJesType, localAddLep2 ); }
+
+bool selectionInfo::pass_ge150_met(){ return selectionInfo::pass_geX_met( 150.0, localJesType, localAddLep2 ); }
+
+bool selectionInfo::pass_geX_met(doubel cut_met, int jesType, bool add2ndLepToMet){
   bool result = false;
-  double metCut = 50.0;
   if( add2ndLepToMet ){
     if( jesType==1){
-      if( babyAnalyzer.pfmet_rl_jup()>=metCut ) result = true;
+      if( babyAnalyzer.pfmet_rl_jup()>=cut_met ) result = true;
     }
     else if( jesType==-1){
-      if( babyAnalyzer.pfmet_rl_jdown()>=metCut ) result = true;
+      if( babyAnalyzer.pfmet_rl_jdown()>=cut_met ) result = true;
     }
     else{
-      if( babyAnalyzer.pfmet_rl()>=metCut ) result = true;
+      if( babyAnalyzer.pfmet_rl()>=cut_met ) result = true;
     }
   } // end if add2ndLepToMet
   else{
     if( jesType==1){
-      if( babyAnalyzer.pfmet_jup()>=metCut ) result = true;
+      if( babyAnalyzer.pfmet_jup()>=cut_met ) result = true;
     }
     else if( jesType==-1){
-      if( babyAnalyzer.pfmet_jdown()>=metCut ) result = true;
+      if( babyAnalyzer.pfmet_jdown()>=cut_met ) result = true;
     }
     else{
-      if( babyAnalyzer.pfmet()>=metCut ) result = true;
+      if( babyAnalyzer.pfmet()>=cut_met ) result = true;
     }
   } // end if !add2ndLepToMet
   return result;
@@ -287,61 +295,30 @@ bool selectionInfo::pass_ge50_met(int jesType, bool add2ndLepToMet){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ge150_met(){ return selectionInfo::pass_ge150_met( localJesType, localAddLep2 ); }
-bool selectionInfo::pass_ge150_met(int jesType, bool add2ndLepToMet){
-  bool result = false;
-  double metCut = 150.0;
-  if( add2ndLepToMet ){
-    if( jesType==1){
-      if( babyAnalyzer.pfmet_rl_jup()>=metCut ) result = true;
-    }
-    else if( jesType==-1){
-      if( babyAnalyzer.pfmet_rl_jdown()>=metCut ) result = true;
-    }
-    else{
-      if( babyAnalyzer.pfmet_rl()>=metCut ) result = true;
-    }
-  } // end if add2ndLepToMet
-  else{
-    if( jesType==1){
-      if( babyAnalyzer.pfmet_jup()>=metCut ) result = true;
-    }
-    else if( jesType==-1){
-      if( babyAnalyzer.pfmet_jdown()>=metCut ) result = true;
-    }
-    else{
-      if( babyAnalyzer.pfmet()>=metCut ) result = true;
-    }
-  } // end if !add2ndLepToMet
-  return result;
-}
+bool selectionInfo::pass_ge150_mt(){ return selectionInfo::pass_geX_mt( 150.0, localJesType, localAddLep2 ); }
 
-//////////////////////////////////////////////////////////////////////
-
-bool selectionInfo::pass_ge150_mt(){ return selectionInfo::pass_ge150_mt( localJesType, localAddLep2 ); }
-bool selectionInfo::pass_ge150_mt(int jesType, bool add2ndLepToMet){
+bool selectionInfo::pass_geX_mt(double cut_mt, int jesType, bool add2ndLepToMet){
   bool result = false;
-  double mtCut = 150.0;
   if( add2ndLepToMet ){
     if( jesType==1 ){
-      if( babyAnalyzer.mt_met_lep_rl_jup()>=mtCut ) result = true;
+      if( babyAnalyzer.mt_met_lep_rl_jup()>=cut_mt ) result = true;
     }
     else if( jesType==-1 ){
-      if( babyAnalyzer.mt_met_lep_rl_jdown()>=mtCut ) result = true;
+      if( babyAnalyzer.mt_met_lep_rl_jdown()>=cut_mt ) result = true;
     }
     else{
-      if( babyAnalyzer.mt_met_lep_rl()>=mtCut ) result = true;
+      if( babyAnalyzer.mt_met_lep_rl()>=cut_mt ) result = true;
     }
   }
   else{
     if( jesType==1 ){
-      if( babyAnalyzer.mt_met_lep_jup()>=mtCut ) result = true;
+      if( babyAnalyzer.mt_met_lep_jup()>=cut_mt ) result = true;
     }
     else if( jesType==-1 ){
-      if( babyAnalyzer.mt_met_lep_jdown()>=mtCut ) result = true;
+      if( babyAnalyzer.mt_met_lep_jdown()>=cut_mt ) result = true;
     }
     else{
-      if( babyAnalyzer.mt_met_lep()>=mtCut ) result = true;
+      if( babyAnalyzer.mt_met_lep()>=cut_mt ) result = true;
     }
   }
   return result;
@@ -349,30 +326,32 @@ bool selectionInfo::pass_ge150_mt(int jesType, bool add2ndLepToMet){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ge0p5_minDPhi(){ return selectionInfo::pass_ge0p5_minDPhi( localJesType, localAddLep2 ); }
-bool selectionInfo::pass_ge0p5_minDPhi(int jesType, bool add2ndLepToMet){
+bool selectionInfo::pass_ge0p5_minDPhi(){ return selectionInfo::pass_geX_minDPhi( 0.5, localJesType, localAddLep2 ); }
+
+bool selectionInfo::pass_ge0p8_minDPhi(){ return selectionInfo::pass_geX_minDPhi( 0.8, localJesType, localAddLep2 ); }
+
+bool selectionInfo::pass_geX_minDPhi(double cut_minDPhi, int jesType, bool add2ndLepToMet){
   bool result = false;
-  double minDPhiCut = 0.5;
   if( add2ndLepToMet ){
     if( jesType==1 ){
-      if( babyAnalyzer.mindphi_met_j1_j2_rl_jup()>=minDPhiCut ) result = true;
+      if( babyAnalyzer.mindphi_met_j1_j2_rl_jup()>=cut_minDPhi ) result = true;
     }
     else if( jesType==-1){
-      if( babyAnalyzer.mindphi_met_j1_j2_rl_jdown()>=minDPhiCut ) result = true;
+      if( babyAnalyzer.mindphi_met_j1_j2_rl_jdown()>=cut_minDPhi ) result = true;
     }
     else{
-      if( babyAnalyzer.mindphi_met_j1_j2_rl()>=minDPhiCut ) result = true;
+      if( babyAnalyzer.mindphi_met_j1_j2_rl()>=cut_minDPhi ) result = true;
     }
   }
   else{
     if( jesType==1 ){
-      if( babyAnalyzer.mindphi_met_j1_j2_jup()>=minDPhiCut ) result = true;
+      if( babyAnalyzer.mindphi_met_j1_j2_jup()>=cut_minDPhi ) result = true;
     }
     else if( jesType==-1){
-      if( babyAnalyzer.mindphi_met_j1_j2_jdown()>=minDPhiCut ) result = true;
+      if( babyAnalyzer.mindphi_met_j1_j2_jdown()>=cut_minDPhi ) result = true;
     }
     else{
-      if( babyAnalyzer.mindphi_met_j1_j2()>=minDPhiCut ) result = true;
+      if( babyAnalyzer.mindphi_met_j1_j2()>=cut_minDPhi ) result = true;
     }
   }
   return result;
@@ -431,13 +410,14 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_SR(){
 bool selectionInfo::pass_SR(){ return selectionInfo::pass_SR( localJesType ); }
 bool selectionInfo::pass_SR(int jesType){
 
-  bool result = false;
+  bool result = true;
+  
+  SetJesType( jetType );
 
-  std::vector<bool> result_chain = get_selectionResults_SR(jesType);
+  selectionInfo::v_cut selection_cuts = get_selection_SR();
 
-  for(int i=0; i<(int)result_chain.size(); i++){
-    if(result_chain[i]) result=true;
-    else{
+  for(int i=0; i<(int)selection_cuts.size(); i++){
+    if(!selection_cuts.second()){ 
       result=false;
       break;
     }
@@ -448,45 +428,70 @@ bool selectionInfo::pass_SR(int jesType){
 
 //////////////////////////////////////////////////////////////////////
 
-std::vector<bool> selectionInfo::get_selectionResults_SR(int jesType){
+selectionInfo::v_cut selectionInfo::get_selection_SR(){
 
-  std::vector<bool> result;
-
+  selectionInfo::v_cut result;
+  selectionInfo::cut   temp_cut;
+  
   // 1) Data Filter
-  result.push_back( pass_metFilter() );
+  temp_cut.first  = "dataFilter"; 
+  temp_cut.second = pass_metFilter;
+  result.push_back( temp_cut );
 
   // 2) Trigger
-  result.push_back( pass_trigger_SR() );
+  temp_cut.first  = "trigger"; 
+  temp_cut.second = pass_trigger_SR;
+  result.push_back( temp_cut );
   
   // 3) Good Vertex
-  result.push_back( pass_goodVtx() );
+  temp_cut.first  = "goodVertex"; 
+  temp_cut.second = pass_goodVtx;
+  result.push_back( temp_cut );
 
   // 4) ==1 selected lepton
-  result.push_back( pass_ee1_sel_lep() );
+  temp_cut.first  = "ee1SelLepton"; 
+  temp_cut.second = pass_ee1_sel_lep;
+  result.push_back( temp_cut );
 
   // 5) ==0 veto leptons
-  result.push_back( pass_ee0_veto_lep() );
+  temp_cut.first  = "ee0VetoLepton"; 
+  temp_cut.second = pass_ee0_veto_lep;
+  result.push_back( temp_cut );
     
   // 6) Track Veto
-  result.push_back( pass_trackVeto() );
+  temp_cut.first  = "isoTrackVeto"; 
+  temp_cut.second = pass_trackVeto;
+  result.push_back( temp_cut );
   
   // 7) Tau Veto
-  result.push_back( pass_tauVeto() );
+  temp_cut.first  = "tauVeto"; 
+  temp_cut.second = pass_tauVeto;
+  result.push_back( temp_cut );
   
   // 8) nGoodJets>=2
-  result.push_back( pass_ge2_jets(jesType) );
+  temp_cut.first  = "ge2Jets"; 
+  temp_cut.second = pass_ge2_jets;
+  result.push_back( temp_cut );
   
   // 9) nTagJets>=1
-  result.push_back( pass_ge1_bJets(jesType) );
+  temp_cut.first  = "ge1BJets"; 
+  temp_cut.second = pass_ge1_bJets;
+  result.push_back( temp_cut );
   
   // 10) met>150.0
-  result.push_back( pass_ge150_met(jesType) );
+  temp_cut.first  = "ge1BJets"; 
+  temp_cut.second = pass_ge1_bJets;
+  result.push_back( temp_cut );
   
   // 11) mt>150.0
-  result.push_back( pass_ge150_mt(jesType) );
+  temp_cut.first  = "ge150MT"; 
+  temp_cut.second = pass_ge150_mt;
+  result.push_back( temp_cut );
   
-  // 12) minDPhi(met,j1/j2)>0.5
-  result.push_back( pass_ge0p5_minDPhi(jesType) );
+  // 12) minDPhi(met,j1/j2)>0.8
+  temp_cut.first  = "ge0p8minDPhi"; 
+  temp_cut.second = pass_ge0p8_minDPhi;
+  result.push_back( temp_cut );
   
   return result;
 }
