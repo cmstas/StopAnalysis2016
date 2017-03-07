@@ -24,7 +24,7 @@ bool apply_tau_sf_          = true;
 bool apply_lepFS_sf_        = false;
 bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = true;
-bool apply_metTTbar_sf_     = true;
+bool apply_metTTbar_sf_     = false;
 bool apply_ttbarSysPt_sf_   = false;  // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
 bool apply_ISR_sf_          = true; // only !=1.0 for signal
 bool apply_pu_sf_           = true;
@@ -1856,12 +1856,22 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       int mStop = mass_stop();
       int mLSP  = mass_lsp();
 
-      double metResSF = 1.0; double metResSF_up = 1.0; double metResSF_dn = 1.0;
-      double metResSF_corr = 1.0; double metResSF_corr_up = 1.0; double metResSF_corr_dn = 1.0;
-      
+      double metResSF    = 1.0; 
+      double metResSF_up = 1.0; 
+      double metResSF_dn = 1.0;
+      double metResSF_corr    = 1.0; 
+      double metResSF_corr_up = 1.0; 
+      double metResSF_corr_dn = 1.0;
       if(!analyzeFast_ && !sample.isData && apply_metRes_sf_){
 	wgtInfo->getMetResWeight( metResSF, metResSF_up, metResSF_dn );
 	wgtInfo->getMetResWeight_corridor( metResSF_corr, metResSF_corr_up, metResSF_corr_dn );
+      }
+      
+      double metTTbarSF    = 1.0; 
+      double metTTbarSF_up = 1.0; 
+      double metTTbarSF_dn = 1.0;
+      if(!analyzeFast_ && !sample.isData && apply_metTTbar_sf_){
+	wgtInfo->getMetTTbarWeight( metTTbarSF, metTTbarSF_up, metTTbarSF_dn );
       }
       
       
@@ -1889,57 +1899,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	    
 	    // Event Weight for this Systematic
 	    double wgt = wgtInfo->sys_wgts[systematicList[iSys].id];
-	    double wgt_corridor = wgt;
-
-	    // metResSFs setup to ==1 if not ttbar/tW->2l
-	    if( systematicList[iSys].id==sysInfo::k_metResUp ){
-	      wgt *= metResSF_up;
-	      wgt_corridor *= metResSF_corr_up;
-	      //wgt *= (1.0+(metResSF-1.0));
-	      //wgt_corridor *= (1.0+(metResSF_corr-1.0));
-	    }
-	    else if( systematicList[iSys].id==sysInfo::k_metResDown ){
-	      wgt *= metResSF_dn;
-	      wgt_corridor *= metResSF_corr_dn;
-	      //wgt *= (1.0-(metResSF-1.0));
-	      //wgt_corridor *= (1.0-(metResSF_corr-1.0));
-	    }
-	    else{
-	      wgt *= metResSF;
-	      wgt_corridor *= metResSF_corr;
-	    }
 	    
-	    
-	    /*
-	    double metResV2 = 1.0;
-	    if( sample.id == sampleInfo::k_ttbar_powheg_pythia8 ||
-		sample.id == sampleInfo::k_ttbar_powheg_pythia8_ext4 ||
-		sample.id == sampleInfo::k_ttbar_madgraph_pythia8 ||
-		sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ||
-		sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 ||
-		sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 ||
-		sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 ||
-		sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8 ||
-		sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 ||
-		sample.id == sampleInfo::k_t_tW_5f_powheg_pythia8 ||
-		sample.id == sampleInfo::k_t_tbarW_5f_powheg_pythia8 ||
-		sample.id == sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays ||
-		sample.id == sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays ||
-		sample.id == sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays_ext1 ||
-		sample.id == sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays_ext1 ){
-	      
-	      if( regionList[iReg]=="CR2l" ){
-		if( pfmet_rl()>450.0 && pfmet_rl()<600.0 ) metResV2 = 0.60;
-		if( pfmet_rl()>600.0 ) metResV2 = 0.54;
-	      }
-	      else{
-		if( pfmet()>450.0 && pfmet()<600.0 ) metResV2 = 0.60;
-		if( pfmet()>600.0 ) metResV2 = 0.54;
-	      }
-	      wgt *= metResV2;
-	    }
-	    */
-
+	    	    
 	    /*
 	    // ICHEP Signal Regions
 	    if( sample.isSignalScan ){
@@ -1998,6 +1959,18 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		else                                                       { wgt_mlb *= (wgtInfo->sf_bTag_tight/wgtInfo->sf_bTag); }
 	      }
 
+	      // metResSFs setup to ==1 if not ttbar/tW->2l
+	      if( systematicList[iSys].id==sysInfo::k_metResUp )       { wgt_mlb *= metResSF_up; }
+	      else if( systematicList[iSys].id==sysInfo::k_metResDown ){ wgt_mlb *= metResSF_dn; }
+	      else                                                     { wgt_mlb *= metResSF; }
+
+	      // metTTbarSFs
+	      if( regionList[iReg]=="SR" ){
+		if( systematicList[iSys].id==sysInfo::k_metTTbarUp )       { wgt_mlb *= metTTbarSF_up; }
+		else if( systematicList[iSys].id==sysInfo::k_metTTbarDown ){ wgt_mlb *= metTTbarSF_dn; }
+		else                                                       { wgt_mlb *= metTTbarSF; }
+	      }
+
 	      if( sample.isSignalScan ){
 		if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2_jup,   mStop, mLSP, wgt_mlb );
 		else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, mStop, mLSP, wgt_mlb );
@@ -2023,9 +1996,17 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      else fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1, wgt );
 	    }
 	    */
-
+	    
 	    // Corridor Signal Regions
+	    double wgt_corridor = wgt;
+	      
+	    // metResSFs setup to ==1 if not ttbar/tW->2l
+	    if( systematicList[iSys].id==sysInfo::k_metResUp )        wgt_corridor *= metResSF_corr_up;
+	    else if( systematicList[iSys].id==sysInfo::k_metResDown ) wgt_corridor *= metResSF_corr_dn;
+	    else                                                      wgt_corridor *= metResSF_corr;
+	    		
 	    if( sample.isSignalScan ){
+
 	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jup,   mStop, mLSP, wgt_corridor );
 	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jdown, mStop, mLSP, wgt_corridor );
 	      else fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor, mStop, mLSP, wgt_corridor );
@@ -2055,7 +2036,9 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      if( (regionList[iReg]=="SR" || regionList[iReg]=="CR2l") && (Mlb_closestb()>=175.0 && nTightTags>=1) ){
 		wgt_histos *= (wgtInfo->sf_bTag_tight/wgtInfo->sf_bTag); 
 	      }
-	    
+
+	      if( regionList[iReg]=="SR" ) wgt_histos *= metTTbarSF;
+
 
 	      for(int iMassPt=0; iMassPt<nMassPts; iMassPt++){
 

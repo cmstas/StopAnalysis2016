@@ -670,11 +670,11 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   // top pT Reweighting
   getTopPtWeight( sf_topPt, sf_topPt_up, sf_topPt_dn );
 
-  // MET resolution scale factors - moved to looper level
+  // MET resolution scale factors 
   //getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
-
+  
   // MET ttbar scale factors 
-  getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
+  //getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
   
   // ttbar system pT scale factor 
   getTTbarSysPtSF( sf_ttbarSysPt, sf_ttbarSysPt_up, sf_ttbarSysPt_dn );
@@ -683,7 +683,6 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   getLumi( sf_lumi, sf_lumi_up, sf_lumi_dn );
 
   // ISR Correction
-  //if( sample_info->isSignal ) getISRWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
   getISRnJetsWeight( sf_ISR, sf_ISR_up, sf_ISR_dn );
 
   // Pileup Reweighting
@@ -757,8 +756,8 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   //evt_wgt *= wgt_metRes;
     
   // Apply met ttbar sf
-  double wgt_metTTbar = sf_metTTbar;
-  evt_wgt *= wgt_metTTbar;
+  //double wgt_metTTbar = sf_metTTbar;
+  //evt_wgt *= wgt_metTTbar;
 
   // Apply ttbar system pT SF (will be 1 if not ttbar/tW 2l) 
   double wgt_ttbarSysPt = sf_ttbarSysPt;
@@ -887,12 +886,12 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 
     // MetTTbar SF Up
     else if( iSys==k_metTTbarUp ){
-      sys_wgt *= sf_metTTbar_up/wgt_metTTbar;
+      //sys_wgt *= sf_metTTbar_up/wgt_metTTbar;
     }
 
     // MetTTbar SF Dn
     else if( iSys==k_metTTbarDown ){
-      sys_wgt *= sf_metTTbar_dn/wgt_metTTbar;
+      //sys_wgt *= sf_metTTbar_dn/wgt_metTTbar;
     }
 
     // TTbar/tW System pT Up
@@ -2317,31 +2316,76 @@ void sysInfo::evtWgtInfo::getMetTTbarWeight( double &weight_metTTbar, double &we
 
   // 2lep events only
   if( !babyAnalyzer.is2lep() ) return;
+  
 
-
-  // Met bin
+  int nGoodJets = babyAnalyzer.ngoodjets();
+  
+  double modTopness = babyAnalyzer.topnessMod();
+  if( add2ndLepToMet) modTopness = babyAnalyzer.topnessMod_rl();
+  
+  double mlb = babyAnalyzer.Mlb_closestb();
+  
+  int nTightTags = babyAnalyzer.ntightbtags();
+  
   double met = babyAnalyzer.pfmet();
   if(add2ndLepToMet) met = babyAnalyzer.pfmet_rl();
   
-  // in case of evaluating for JES variation events, then use nominal pfmet, and if nominal<250, use lowest met bin
-  if( met<250.0 ) met = 250.0;
   
 
   //
   // Find SF
   //
-  if( met>450.0 && met<600.0 ){
-    sf_val = 0.60;
-    sf_err = 0.10;
+
+  // Region B
+  if( nGoodJets<4 && modTopness>=10.0 && mlb>=175.0 && nTightTags>=1 ){
+    if( met>450.0 && met<600.0 ){
+      sf_val = 1.02;
+      sf_err = 0.25;
+    }
+    if( met>600.0 ){
+      sf_val = 0.91;
+      sf_err = 0.38;
+    }
   }
 
-  if( met>600.0 ){
-    sf_val = 0.54;
-    sf_err = 0.15;
+  // Region E
+  if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 && mlb<175.0 ){
+    if( met>350.0 && met<550.0 ){
+      sf_val = 1.04;
+      sf_err = 0.10;
+    }
+    if( met>550.0 ){
+      sf_val = 0.59;
+      sf_err = 0.18;
+    }
   }
 
+  // Region F
+  if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 && mlb>=175.0 && nTightTags>=1 ){
+    if( met>250.0 && met<450.0 ){
+      sf_val = 1.03;
+      sf_err = 0.05;
+    }
+    if( met>450.0 ){
+      sf_val = 0.58;
+      sf_err = 0.10;
+    }
+  }
+
+  // Region H
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb>=175.0 && nTightTags>=1){
+    if( met>250.0 && met<450.0 ){
+      sf_val = 1.03;
+      sf_err = 0.05;
+    }
+    if( met>450.0 ){
+      sf_val = 0.58;
+      sf_err = 0.10;
+    }
+  }
+  
   // 50% uncertainty on difference between no sf and applying it
-  sf_err = fabs(0.5*(1.0-sf_val));
+  //sf_err = fabs(0.5*(1.0-sf_val));
 
   weight_metTTbar    = sf_val;
   weight_metTTbar_up = (sf_val + sf_err);
