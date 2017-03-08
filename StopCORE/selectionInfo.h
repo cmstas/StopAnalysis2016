@@ -22,8 +22,8 @@ namespace selectionInfo{
   //
   // Namespace functions
   //
-  typedef std::pair< std::string, bool() > cut;
-  typedef std::vector< std::pair< std::string, bool() > > v_cut;
+  typedef std::pair< std::string, bool(*)() > cut;
+  typedef std::vector< std::pair< std::string, bool(*)() > > v_cut;
   
 
   // Notes:
@@ -50,7 +50,6 @@ namespace selectionInfo{
   bool pass_tauVeto();
 
   // DiLepton Selection
-  bool pass_diLep(bool inclTau=false);
   bool pass_diLep();
 
   // DiLepton Selection, CR2l_bulkTTbar
@@ -91,41 +90,41 @@ namespace selectionInfo{
 
   // Utility Functions to help with selection
   TH1D* get_cutflowHistoTemplate( v_cut );
-  //vector<TH1D*> get_cutflowHistoTemplate_nMinus1_SR();
   
   // Full Selections for search regions
   
   bool pass_SR_loose(int jesType=0);
-  bool pass_SR_loose();
   std::vector<bool> get_selectionResults_SR_loose(int jesType=0);
   TH1D* get_cutflowHistoTemplate_SR_loose();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_SR_loose();
   
   bool pass_SR(int jesType=0);
-  //v_cut get_selection_SR(int jesType=0);
-  //bool pass_SR();
-  v_cut get_selection_SR();
+	std::vector<cut> get_selection_SR();
+	TH1D* get_cutflowHistoTemplate_SR();
+	vector<TH1D*> get_cutflowHistoTemplate_nMinus1_SR();
   
   bool pass_CR0b(int jesType=0);
-  bool pass_CR0b();
+	std::vector<cut> get_selection_CR0b();
   std::vector<bool> get_selectionResults_CR0b(int jesType=0);
   TH1D* get_cutflowHistoTemplate_CR0b();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR0b();
 
   bool pass_CR0b_tightBTagHighMlb(int jesType=0);
-  bool pass_CR0b_tightBTagHighMlb();
+	std::vector<cut> get_selection_CR0b_tightBTagHighMlb();
   std::vector<bool> get_selectionResults_CR0b_tightBTagHighMlb(int jesType=0);
   TH1D* get_cutflowHistoTemplate_CR0b_tightBTagHighMlb();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR0b_tightBTagHighMlb();
 
   bool pass_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
-  bool pass_CR2l();
+  bool pass_CR2l(int jesType=0);
+	std::vector<cut> get_selection_CR2l();
   std::vector<bool> get_selectionResults_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
   TH1D* get_cutflowHistoTemplate_CR2l();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR2l();
   
   bool pass_CR2l_bulkTTbar(int jesType=0, bool add2ndLepToMet=false );
-  bool pass_CR2l_bulkTTbar();
+  bool pass_CR2l_bulkTTbar(int jesType=0);
+	std::vector<cut> get_selection_CR2l_bulkTTbar();
   std::vector<bool> get_selectionResults_CR2l_bulkTTbar(int jesType=0, bool add2ndLepToMet=false );
   TH1D* get_cutflowHistoTemplate_CR2l_bulkTTbar();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR2l_bulkTTbar();

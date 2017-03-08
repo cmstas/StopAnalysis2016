@@ -116,11 +116,9 @@ bool selectionInfo::pass_tauVeto(){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_diLep(){ return selectionInfo::pass_diLep( localIncludeTaus ); }
-
-bool selectionInfo::pass_diLep(bool inclTau){
+bool selectionInfo::pass_diLep(){
   bool result = false;
-  if( inclTau ){
+  if( localIncludeTaus ){
     if( (babyAnalyzer.ngoodleps()>=2)        ||
 	(babyAnalyzer.ngoodleps()==1 && 
 	 babyAnalyzer.nvetoleps()>=2 && 
@@ -190,7 +188,7 @@ bool selectionInfo::pass_geX_diLepMass(double cut_diLepMass){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ge2_jets(){ return selectionInfo::pass_geX_Jets( 2, localJesType ); }
+bool selectionInfo::pass_ge2_jets(){ return selectionInfo::pass_geX_jets( 2, localJesType ); }
 
 bool selectionInfo::pass_geX_jets(int cut_nJets, int jesType){
   bool result = false;
@@ -266,7 +264,7 @@ bool selectionInfo::pass_ge50_met(){ return selectionInfo::pass_geX_met( 50.0, l
 
 bool selectionInfo::pass_ge150_met(){ return selectionInfo::pass_geX_met( 150.0, localJesType, localAddLep2 ); }
 
-bool selectionInfo::pass_geX_met(doubel cut_met, int jesType, bool add2ndLepToMet){
+bool selectionInfo::pass_geX_met(double cut_met, int jesType, bool add2ndLepToMet){
   bool result = false;
   if( add2ndLepToMet ){
     if( jesType==1){
@@ -407,17 +405,16 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_SR(){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_SR(){ return selectionInfo::pass_SR( localJesType ); }
 bool selectionInfo::pass_SR(int jesType){
 
   bool result = true;
   
-  SetJesType( jetType );
+  SetJesType( jesType );
 
   selectionInfo::v_cut selection_cuts = get_selection_SR();
 
-  for(int i=0; i<(int)selection_cuts.size(); i++){
-    if(!selection_cuts.second()){ 
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
       result=false;
       break;
     }
@@ -428,71 +425,23 @@ bool selectionInfo::pass_SR(int jesType){
 
 //////////////////////////////////////////////////////////////////////
 
-selectionInfo::v_cut selectionInfo::get_selection_SR(){
+std::vector<selectionInfo::cut> selectionInfo::get_selection_SR(){
 
-  selectionInfo::v_cut result;
-  selectionInfo::cut   temp_cut;
-  
-  // 1) Data Filter
-  temp_cut.first  = "dataFilter"; 
-  temp_cut.second = pass_metFilter;
-  result.push_back( temp_cut );
+	std::vector<cut> result;
 
-  // 2) Trigger
-  temp_cut.first  = "trigger"; 
-  temp_cut.second = pass_trigger_SR;
-  result.push_back( temp_cut );
-  
-  // 3) Good Vertex
-  temp_cut.first  = "goodVertex"; 
-  temp_cut.second = pass_goodVtx;
-  result.push_back( temp_cut );
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_SR) ));   // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "ee1SelLepton",  (*pass_ee1_sel_lep) ));  // 4) ==1 selected lepton
+	result.push_back( cut( "ee0VetoLepton", (*pass_ee0_veto_lep) )); // 5) ==0 veto leptons
+	result.push_back( cut( "isoTrackVeto",  (*pass_trackVeto) ));    // 6) Track Veto
+	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
+	result.push_back( cut( "ge2Jets",       (*pass_ge2_jets) ));     // 8) nGoodJets>=2
+	result.push_back( cut( "ge1BJets",      (*pass_ge1_bJets) ));    // 9) nTagJets>=1
+	result.push_back( cut( "ge150met",      (*pass_ge150_met) ));    // 10) met>150.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
+	result.push_back( cut( "ge0p8minDPhi",  (*pass_ge0p8_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.8
 
-  // 4) ==1 selected lepton
-  temp_cut.first  = "ee1SelLepton"; 
-  temp_cut.second = pass_ee1_sel_lep;
-  result.push_back( temp_cut );
-
-  // 5) ==0 veto leptons
-  temp_cut.first  = "ee0VetoLepton"; 
-  temp_cut.second = pass_ee0_veto_lep;
-  result.push_back( temp_cut );
-    
-  // 6) Track Veto
-  temp_cut.first  = "isoTrackVeto"; 
-  temp_cut.second = pass_trackVeto;
-  result.push_back( temp_cut );
-  
-  // 7) Tau Veto
-  temp_cut.first  = "tauVeto"; 
-  temp_cut.second = pass_tauVeto;
-  result.push_back( temp_cut );
-  
-  // 8) nGoodJets>=2
-  temp_cut.first  = "ge2Jets"; 
-  temp_cut.second = pass_ge2_jets;
-  result.push_back( temp_cut );
-  
-  // 9) nTagJets>=1
-  temp_cut.first  = "ge1BJets"; 
-  temp_cut.second = pass_ge1_bJets;
-  result.push_back( temp_cut );
-  
-  // 10) met>150.0
-  temp_cut.first  = "ge1BJets"; 
-  temp_cut.second = pass_ge1_bJets;
-  result.push_back( temp_cut );
-  
-  // 11) mt>150.0
-  temp_cut.first  = "ge150MT"; 
-  temp_cut.second = pass_ge150_mt;
-  result.push_back( temp_cut );
-  
-  // 12) minDPhi(met,j1/j2)>0.8
-  temp_cut.first  = "ge0p8minDPhi"; 
-  temp_cut.second = pass_ge0p8_minDPhi;
-  result.push_back( temp_cut );
-  
   return result;
 }
 
@@ -546,7 +495,6 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR0b(){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_CR0b(){ return selectionInfo::pass_CR0b( localJesType ); }
 bool selectionInfo::pass_CR0b(int jesType){
 
   bool result = false;
@@ -560,6 +508,28 @@ bool selectionInfo::pass_CR0b(int jesType){
       break;
     }
   }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR0b(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_SR) ));   // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "ee1SelLepton",  (*pass_ee1_sel_lep) ));  // 4) ==1 selected lepton
+	result.push_back( cut( "ee0VetoLepton", (*pass_ee0_veto_lep) )); // 5) ==0 veto leptons
+	result.push_back( cut( "isoTrackVeto",  (*pass_trackVeto) ));    // 6) Track Veto
+	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
+	result.push_back( cut( "ge2Jets",       (*pass_ge2_jets) ));     // 8) nGoodJets>=2
+	result.push_back( cut( "ee0BJets",      (*pass_ee0_bJets) ));    // 9) nMediumBtags==0
+	result.push_back( cut( "ge150met",      (*pass_ge150_met) ));    // 10) met>150.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
+	result.push_back( cut( "ge0p8minDPhi",  (*pass_ge0p8_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.8
 
   return result;
 }
@@ -592,19 +562,19 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b(int jesType){
   result.push_back( pass_tauVeto() );
   
   // 8) nGoodJets>=2
-  result.push_back( pass_ge2_jets(jesType) );
+  result.push_back( pass_ge2_jets() );
     
   // 9) nTagJets==0
-  result.push_back( pass_ee0_bJets(jesType) );
+  result.push_back( pass_ee0_bJets() );
   
   // 10) met>150.0
-  result.push_back( pass_ge150_met(jesType) );
+  result.push_back( pass_ge150_met() );
   
   // 11) mt>150.0
-  result.push_back( pass_ge150_mt(jesType) );
+  result.push_back( pass_ge150_mt() );
 
   // 12) minDPhi(met,j1/j2)>0.5
-  result.push_back( pass_ge0p5_minDPhi(jesType) );
+  result.push_back( pass_ge0p5_minDPhi() );
   
   return result;
 }
@@ -660,7 +630,6 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR0b_tightBTagHigh
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_CR0b_tightBTagHighMlb(){ return selectionInfo::pass_CR0b_tightBTagHighMlb( localJesType ); }
 bool selectionInfo::pass_CR0b_tightBTagHighMlb(int jesType){
 
   bool result = false;
@@ -674,6 +643,28 @@ bool selectionInfo::pass_CR0b_tightBTagHighMlb(int jesType){
       break;
     }
   }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR0b_tightBTagHighMlb(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_SR) ));   // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "ee1SelLepton",  (*pass_ee1_sel_lep) ));  // 4) ==1 selected lepton
+	result.push_back( cut( "ee0VetoLepton", (*pass_ee0_veto_lep) )); // 5) ==0 veto leptons
+	result.push_back( cut( "isoTrackVeto",  (*pass_trackVeto) ));    // 6) Track Veto
+	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
+	result.push_back( cut( "ge2Jets",       (*pass_ge2_jets) ));     // 8) nGoodJets>=2
+	result.push_back( cut( "ee0BJets",      (*pass_ee0_bJets_tightBTagHighMlb) ));    // 9) nTightTags==0
+	result.push_back( cut( "ge150met",      (*pass_ge150_met) ));    // 10) met>150.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
+	result.push_back( cut( "ge0p8minDPhi",  (*pass_ge0p8_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.8
 
   return result;
 }
@@ -706,19 +697,19 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(int 
   result.push_back( pass_tauVeto() );
   
   // 8) nGoodJets>=2
-  result.push_back( pass_ge2_jets(jesType) );
+  result.push_back( pass_ge2_jets() );
   
   // 9) nTagJets==0, include tight tagging requirement for high mlb bins
-  result.push_back( pass_ee0_bJets_tightBTagHighMlb(jesType) );
+  result.push_back( pass_ee0_bJets_tightBTagHighMlb() );
   
   // 10) met>150.0
-  result.push_back( pass_ge150_met(jesType) );
+  result.push_back( pass_ge150_met() );
   
   // 11) mt>150.0
-  result.push_back( pass_ge150_mt(jesType) );
+  result.push_back( pass_ge150_mt() );
   
   // 12) minDPhi(met,j1/j2)>0.5
-  result.push_back( pass_ge0p5_minDPhi(jesType) );
+  result.push_back( pass_ge0p5_minDPhi() );
   
   return result;
 }
@@ -770,7 +761,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l(){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_CR2l(){ return selectionInfo::pass_CR2l( localJesType, localIncludeTaus, localAddLep2 ); }
+bool selectionInfo::pass_CR2l(int jesType){ return selectionInfo::pass_CR2l( jesType, localIncludeTaus, localAddLep2 ); }
 bool selectionInfo::pass_CR2l(int jesType, bool inclTau, bool add2ndLepToMet){
 
   bool result = false;
@@ -790,6 +781,24 @@ bool selectionInfo::pass_CR2l(int jesType, bool inclTau, bool add2ndLepToMet){
 
 //////////////////////////////////////////////////////////////////////
 
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR2l(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_CR2l) )); // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "passDilep",     (*pass_diLep) ));        // 4) Dilepton selection
+	result.push_back( cut( "ge2Jets",       (*pass_ge2_jets) ));     // 5) nGoodJets>=2
+	result.push_back( cut( "ge1BJets",      (*pass_ge1_bJets) ));    // 6) nTagJets>=1
+	result.push_back( cut( "ge150met",      (*pass_ge150_met) ));    // 7) met>150.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 8) mt>150.0
+	result.push_back( cut( "ge0p8minDPhi",  (*pass_ge0p8_minDPhi) ));// 9) minDPhi(met,j1/j2)>0.8
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
 
 std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inclTau, bool add2ndLepToMet){
 
@@ -805,22 +814,22 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
   result.push_back( pass_goodVtx() );
   
   // 4) diLepton
-  result.push_back( pass_diLep(inclTau) );
+  result.push_back( pass_diLep() );
     
   // 5) nGoodJets>=2
-  result.push_back( pass_ge2_jets(jesType) );
+  result.push_back( pass_ge2_jets() );
     
   // 6) nTagJets>=1
-  result.push_back( pass_ge1_bJets(jesType) );
+  result.push_back( pass_ge1_bJets() );
   
   // 7) met>150.0
-  result.push_back( pass_ge150_met(jesType,add2ndLepToMet) );
+  result.push_back( pass_ge150_met() );
   
   // 8) mt>150.0
-  result.push_back( pass_ge150_mt(jesType,add2ndLepToMet) );
+  result.push_back( pass_ge150_mt() );
   
   // 9) minDPhi(met,j1/j2)>0.5
-  result.push_back( pass_ge0p5_minDPhi(jesType,add2ndLepToMet) );
+  result.push_back( pass_ge0p5_minDPhi() );
   
   return result;
 }
@@ -872,7 +881,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l_bulkTTbar(){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_CR2l_bulkTTbar(){ return selectionInfo::pass_CR2l_bulkTTbar( localJesType, localAddLep2 ); }
+bool selectionInfo::pass_CR2l_bulkTTbar(int jesType){ return selectionInfo::pass_CR2l_bulkTTbar( jesType, localAddLep2 ); }
 bool selectionInfo::pass_CR2l_bulkTTbar(int jesType, bool add2ndLepToMet){
 
   bool result = false;
@@ -886,6 +895,25 @@ bool selectionInfo::pass_CR2l_bulkTTbar(int jesType, bool add2ndLepToMet){
       break;
     }
   }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR2l_bulkTTbar(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_CR2l_bulkTTbar) )); // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "passDilep",     (*pass_diLep_bulkTTbar) ));  // 4) Dilepton selection
+	result.push_back( cut( "passOSleps",    (*pass_oppSign_leps) )); // 5) Opposite sign leptons
+	result.push_back( cut( "zWindow",       (*pass_ZWindow_diLepMass) )); // 6) Mll Z-window
+	result.push_back( cut( "dilepMass",     (*pass_ge20_diLepMass) )); // 7) Dilepton mass > 20
+	result.push_back( cut( "ge2Jets",       (*pass_ge2_jets) ));     // 8) nGoodJets>=2
+	result.push_back( cut( "ge50met",       (*pass_ge50_met) ));     // 9) met>50.0
 
   return result;
 }
@@ -919,11 +947,11 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
   result.push_back( pass_ge20_diLepMass() );
   
   // 9) nGoodJets>=2
-  result.push_back( pass_ge2_jets(jesType) );
+  result.push_back( pass_ge2_jets() );
   
   // 10) met>50.0
-  result.push_back( pass_ge50_met(jesType,add2ndLepToMet) );
-      
+  result.push_back( pass_ge50_met() );
+
 
   return result;
 }
@@ -974,7 +1002,6 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_SR_loose(){
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_SR_loose(){ return selectionInfo::pass_SR_loose( localJesType ); }
 bool selectionInfo::pass_SR_loose(int jesType){
 
   bool result = false;
@@ -1008,19 +1035,19 @@ std::vector<bool> selectionInfo::get_selectionResults_SR_loose(int jesType){
   result.push_back( pass_goodVtx() );
   
   // 4) nGoodJets>=2
-  result.push_back( pass_ge2_jets(jesType) );
+  result.push_back( pass_ge2_jets() );
     
   // 5) nTagJets>=1
-  result.push_back( pass_ge1_bJets(jesType) );
+  result.push_back( pass_ge1_bJets() );
   
   // 6) met>150.0
-  result.push_back( pass_ge150_met(jesType) );
+  result.push_back( pass_ge150_met() );
   
   // 7) mt>150.0
-  result.push_back( pass_ge150_mt(jesType) );
+  result.push_back( pass_ge150_mt() );
   
   // 8) minDPhi(met,j1/j2)>0.5
-  result.push_back( pass_ge0p5_minDPhi(jesType) );
+  result.push_back( pass_ge0p5_minDPhi() );
   
   return result;
 }
