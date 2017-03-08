@@ -172,7 +172,7 @@ bool selectionInfo::pass_ZWindow_diLepMass(){
   // Only for ee/mumu pairs
   if( (abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid()))==24 ) result = true;
   else if( (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()>(91.1876+15.0) || 
-	   (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()<(91.1876-15.0)    ) result = true; 
+	   (babyAnalyzer.lep1_p4()+babyAnalyzer.lep2_p4()).M()<(91.1876-15.0)    ) result = true;
   return result;
 }
 
@@ -189,6 +189,7 @@ bool selectionInfo::pass_geX_diLepMass(double cut_diLepMass){
 //////////////////////////////////////////////////////////////////////
 
 bool selectionInfo::pass_ge2_jets(){ return selectionInfo::pass_geX_jets( 2, localJesType ); }
+bool selectionInfo::pass_ge5_jets(){ return selectionInfo::pass_geX_jets( 5, localJesType ); }
 
 bool selectionInfo::pass_geX_jets(int cut_nJets, int jesType){
   bool result = false;
@@ -260,9 +261,9 @@ bool selectionInfo::pass_eeX_bJets_tightBTagHighMlb(int cut_nBJets, int jesType)
 
 //////////////////////////////////////////////////////////////////////
 
-bool selectionInfo::pass_ge50_met(){ return selectionInfo::pass_geX_met( 50.0, localJesType, localAddLep2 ); }
-
+bool selectionInfo::pass_ge50_met(){  return selectionInfo::pass_geX_met(  50.0, localJesType, localAddLep2 ); }
 bool selectionInfo::pass_ge150_met(){ return selectionInfo::pass_geX_met( 150.0, localJesType, localAddLep2 ); }
+bool selectionInfo::pass_ge250_met(){ return selectionInfo::pass_geX_met( 250.0, localJesType, localAddLep2 ); }
 
 bool selectionInfo::pass_geX_met(double cut_met, int jesType, bool add2ndLepToMet){
   bool result = false;
@@ -359,7 +360,7 @@ bool selectionInfo::pass_geX_minDPhi(double cut_minDPhi, int jesType, bool add2n
 
 TH1D* selectionInfo::get_cutflowHistoTemplate_SR(){
 
-  TH1D* result = new TH1D("h_cutflow_SR", "Cutflow, Signal Region", 12, 0.0, 12.0); 
+  TH1D* result = new TH1D("h_cutflow_SR", "Cutflow, Signal Region", 12, 0.0, 12.0);
   result->GetXaxis()->SetBinLabel(1, "data_filter" );
   result->GetXaxis()->SetBinLabel(2, "trigger_singleLep_OR_MET" );
   result->GetXaxis()->SetBinLabel(3, "good_vertex" );
@@ -393,7 +394,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_SR(){
     title += ", nMinus1, ";
     title += h_temp->GetXaxis()->GetBinLabel(i);
     
-    int nBins  = h_temp->GetNbinsX(); 
+    int nBins  = h_temp->GetNbinsX();
     double min = h_temp->GetXaxis()->GetBinLowEdge(1);
     double max = h_temp->GetXaxis()->GetBinUpEdge(h_temp->GetNbinsX());
     TH1D *h_nMinus1 = new TH1D(name.c_str(), title.c_str(), nBins, min, max);
@@ -447,9 +448,52 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_SR(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_SR_corridor(int jesType) {
+
+  bool result = true;
+  
+  SetJesType( jesType );
+
+  selectionInfo::v_cut selection_cuts = get_selection_SR_corridor();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
+      result=false;
+      break;
+    }
+  }
+
+  return result;
+
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_SR_corridor(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_SR) ));   // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "ee1SelLepton",  (*pass_ee1_sel_lep) ));  // 4) ==1 selected lepton
+	result.push_back( cut( "ee0VetoLepton", (*pass_ee0_veto_lep) )); // 5) ==0 veto leptons
+	result.push_back( cut( "isoTrackVeto",  (*pass_trackVeto) ));    // 6) Track Veto
+	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
+	result.push_back( cut( "ge5Jets",       (*pass_ge5_jets) ));     // 8) nGoodJets>=5
+	result.push_back( cut( "ge1BJets",      (*pass_ge1_bJets) ));    // 9) nTagJets>=1
+	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 10) met>250.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
+	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.5
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TH1D* selectionInfo::get_cutflowHistoTemplate_CR0b(){
 
-  TH1D *result = new TH1D("h_cutflow_CR0b", "Cutflow, Control Region, 0b", 12, 0.0, 12.0); 
+  TH1D *result = new TH1D("h_cutflow_CR0b", "Cutflow, Control Region, 0b", 12, 0.0, 12.0);
   result->GetXaxis()->SetBinLabel(1, "data_filter" );
   result->GetXaxis()->SetBinLabel(2, "trigger_singleLep_OR_MET" );
   result->GetXaxis()->SetBinLabel(3, "good_vertex" );
@@ -483,7 +527,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR0b(){
     title += ", nMinus1, ";
     title += h_temp->GetXaxis()->GetBinLabel(i);
     
-    int nBins  = h_temp->GetNbinsX(); 
+    int nBins  = h_temp->GetNbinsX();
     double min = h_temp->GetXaxis()->GetBinLowEdge(1);
     double max = h_temp->GetXaxis()->GetBinUpEdge(h_temp->GetNbinsX());
     TH1D *h_nMinus1 = new TH1D(name.c_str(), title.c_str(), nBins, min, max);
@@ -497,13 +541,14 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR0b(){
 
 bool selectionInfo::pass_CR0b(int jesType){
 
-  bool result = false;
+  bool result = true;
 
-  std::vector<bool> result_chain = get_selectionResults_CR0b(jesType);
+	SetJesType( jesType );
 
-  for(int i=0; i<(int)result_chain.size(); i++){
-    if(result_chain[i]) result=true;
-    else{
+  selectionInfo::v_cut selection_cuts = get_selection_CR0b();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){
       result=false;
       break;
     }
@@ -584,7 +629,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b(int jesType){
 
 TH1D* selectionInfo::get_cutflowHistoTemplate_CR0b_tightBTagHighMlb(){
 
-  TH1D *result = new TH1D("h_cutflow_CR0b_tightBTagHighMlb", "Cutflow, Control Region, 0b, with tight b-tagging for high mlb", 12, 0.0, 12.0); 
+  TH1D *result = new TH1D("h_cutflow_CR0b_tightBTagHighMlb", "Cutflow, Control Region, 0b, with tight b-tagging for high mlb", 12, 0.0, 12.0);
   result->GetXaxis()->SetBinLabel(1, "data_filter" );
   result->GetXaxis()->SetBinLabel(2, "trigger_singleLep_OR_MET" );
   result->GetXaxis()->SetBinLabel(3, "good_vertex" );
@@ -618,7 +663,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR0b_tightBTagHigh
     title += ", nMinus1, ";
     title += h_temp->GetXaxis()->GetBinLabel(i);
     
-    int nBins  = h_temp->GetNbinsX(); 
+    int nBins  = h_temp->GetNbinsX();
     double min = h_temp->GetXaxis()->GetBinLowEdge(1);
     double max = h_temp->GetXaxis()->GetBinUpEdge(h_temp->GetNbinsX());
     TH1D *h_nMinus1 = new TH1D(name.c_str(), title.c_str(), nBins, min, max);
@@ -632,13 +677,14 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR0b_tightBTagHigh
 
 bool selectionInfo::pass_CR0b_tightBTagHighMlb(int jesType){
 
-  bool result = false;
+  bool result = true;
 
-  std::vector<bool> result_chain = get_selectionResults_CR0b_tightBTagHighMlb(jesType);
+  SetJesType( jesType );
 
-  for(int i=0; i<(int)result_chain.size(); i++){
-    if(result_chain[i]) result=true;
-    else{
+  selectionInfo::v_cut selection_cuts = get_selection_CR0b_tightBTagHighMlb();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
       result=false;
       break;
     }
@@ -716,9 +762,51 @@ std::vector<bool> selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(int 
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_CR0b_corridor(int jesType){
+
+  bool result = true;
+
+  SetJesType( jesType );
+
+  selectionInfo::v_cut selection_cuts = get_selection_CR0b_corridor();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
+      result=false;
+      break;
+    }
+  }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR0b_corridor(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_SR) ));   // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "ee1SelLepton",  (*pass_ee1_sel_lep) ));  // 4) ==1 selected lepton
+	result.push_back( cut( "ee0VetoLepton", (*pass_ee0_veto_lep) )); // 5) ==0 veto leptons
+	result.push_back( cut( "isoTrackVeto",  (*pass_trackVeto) ));    // 6) Track Veto
+	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
+	result.push_back( cut( "ge5Jets",       (*pass_ge5_jets) ));     // 8) nGoodJets>=5
+	result.push_back( cut( "ee0BJets",      (*pass_ee0_bJets) ));    // 9) nMediumBtags==0
+	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 10) met>250.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
+	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.5
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TH1D* selectionInfo::get_cutflowHistoTemplate_CR2l(){
 
-  TH1D *result = new TH1D("h_cutflow_CR2l", "Cutflow, Control Region, 2l", 9, 0.0, 9.0); 
+  TH1D *result = new TH1D("h_cutflow_CR2l", "Cutflow, Control Region, 2l", 9, 0.0, 9.0);
   result->GetXaxis()->SetBinLabel(1, "data_filter" );
   result->GetXaxis()->SetBinLabel(2, "trigger_singleLep_OR_MET" );
   result->GetXaxis()->SetBinLabel(3, "good_vertex" );
@@ -749,7 +837,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l(){
     title += ", nMinus1, ";
     title += h_temp->GetXaxis()->GetBinLabel(i);
     
-    int nBins  = h_temp->GetNbinsX(); 
+    int nBins  = h_temp->GetNbinsX();
     double min = h_temp->GetXaxis()->GetBinLowEdge(1);
     double max = h_temp->GetXaxis()->GetBinUpEdge(h_temp->GetNbinsX());
     TH1D *h_nMinus1 = new TH1D(name.c_str(), title.c_str(), nBins, min, max);
@@ -764,13 +852,16 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l(){
 bool selectionInfo::pass_CR2l(int jesType){ return selectionInfo::pass_CR2l( jesType, localIncludeTaus, localAddLep2 ); }
 bool selectionInfo::pass_CR2l(int jesType, bool inclTau, bool add2ndLepToMet){
 
-  bool result = false;
+  bool result = true;
 
-  std::vector<bool> result_chain = get_selectionResults_CR2l(jesType, inclTau, add2ndLepToMet);
+  SetJesType( jesType );
+	SetIncludeTaus( inclTau );
+	SetAdd2ndLep( add2ndLepToMet );
 
-  for(int i=0; i<(int)result_chain.size(); i++){
-    if(result_chain[i]) result=true;
-    else{
+  selectionInfo::v_cut selection_cuts = get_selection_CR2l();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
       result=false;
       break;
     }
@@ -836,9 +927,51 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l(int jesType, bool inc
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_CR2l_corridor(int jesType){ return selectionInfo::pass_CR2l( jesType, localIncludeTaus, localAddLep2 ); }
+bool selectionInfo::pass_CR2l_corridor(int jesType, bool inclTau, bool add2ndLepToMet){
+
+  bool result = true;
+
+  SetJesType( jesType );
+	SetIncludeTaus( inclTau );
+	SetAdd2ndLep( add2ndLepToMet );
+
+  selectionInfo::v_cut selection_cuts = get_selection_CR2l_corridor();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
+      result=false;
+      break;
+    }
+  }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR2l_corridor(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_CR2l) )); // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "passDilep",     (*pass_diLep) ));        // 4) Dilepton selection
+	result.push_back( cut( "ge5Jets",       (*pass_ge5_jets) ));     // 5) nGoodJets>=5
+	result.push_back( cut( "ge1BJets",      (*pass_ge1_bJets) ));    // 6) nTagJets>=1
+	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 7) met>250.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 8) mt>150.0
+	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 9) minDPhi(met,j1/j2)>0.5
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TH1D* selectionInfo::get_cutflowHistoTemplate_CR2l_bulkTTbar(){
 
-  TH1D *result = new TH1D("h_cutflow_CR2l_bulkTTbar", "Cutflow, Control Region, 2l bulk ttbar", 9, 0.0, 9.0); 
+  TH1D *result = new TH1D("h_cutflow_CR2l_bulkTTbar", "Cutflow, Control Region, 2l bulk ttbar", 9, 0.0, 9.0);
   result->GetXaxis()->SetBinLabel(1, "data_filter" );
   result->GetXaxis()->SetBinLabel(2, "trigger_diLepton" );
   result->GetXaxis()->SetBinLabel(3, "good_vertex" );
@@ -869,7 +1002,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l_bulkTTbar(){
     title += ", nMinus1, ";
     title += h_temp->GetXaxis()->GetBinLabel(i);
     
-    int nBins  = h_temp->GetNbinsX(); 
+    int nBins  = h_temp->GetNbinsX();
     double min = h_temp->GetXaxis()->GetBinLowEdge(1);
     double max = h_temp->GetXaxis()->GetBinUpEdge(h_temp->GetNbinsX());
     TH1D *h_nMinus1 = new TH1D(name.c_str(), title.c_str(), nBins, min, max);
@@ -884,13 +1017,15 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_CR2l_bulkTTbar(){
 bool selectionInfo::pass_CR2l_bulkTTbar(int jesType){ return selectionInfo::pass_CR2l_bulkTTbar( jesType, localAddLep2 ); }
 bool selectionInfo::pass_CR2l_bulkTTbar(int jesType, bool add2ndLepToMet){
 
-  bool result = false;
+  bool result = true;
 
-  std::vector<bool> result_chain = get_selectionResults_CR2l_bulkTTbar(jesType, add2ndLepToMet);
+  SetJesType( jesType );
+	SetAdd2ndLep( add2ndLepToMet );
 
-  for(int i=0; i<(int)result_chain.size(); i++){
-    if(result_chain[i]) result=true;
-    else{
+  selectionInfo::v_cut selection_cuts = get_selection_CR2l_bulkTTbar();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
       result=false;
       break;
     }
@@ -960,7 +1095,7 @@ std::vector<bool> selectionInfo::get_selectionResults_CR2l_bulkTTbar(int jesType
 
 TH1D* selectionInfo::get_cutflowHistoTemplate_SR_loose(){
 
-  TH1D* result = new TH1D("h_cutflow_SR_loose", "Cutflow, Loose Signal Region", 8, 0.0, 8.0); 
+  TH1D* result = new TH1D("h_cutflow_SR_loose", "Cutflow, Loose Signal Region", 8, 0.0, 8.0);
   result->GetXaxis()->SetBinLabel(1, "data_filter" );
   result->GetXaxis()->SetBinLabel(2, "trigger_singleLep_OR_MET" );
   result->GetXaxis()->SetBinLabel(3, "good_vertex" );
@@ -990,7 +1125,7 @@ vector<TH1D*> selectionInfo::get_cutflowHistoTemplate_nMinus1_SR_loose(){
     title += ", nMinus1, ";
     title += h_temp->GetXaxis()->GetBinLabel(i);
     
-    int nBins  = h_temp->GetNbinsX(); 
+    int nBins  = h_temp->GetNbinsX();
     double min = h_temp->GetXaxis()->GetBinLowEdge(1);
     double max = h_temp->GetXaxis()->GetBinUpEdge(h_temp->GetNbinsX());
     TH1D *h_nMinus1 = new TH1D(name.c_str(), title.c_str(), nBins, min, max);

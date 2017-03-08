@@ -62,7 +62,8 @@ namespace selectionInfo{
   // Jet Selection
   bool pass_geX_jets(int cut_nJets=2, int jesType=0);
   bool pass_ge2_jets();
-  
+	bool pass_ge5_jets();
+
   // bTagging Selection, SR
   bool pass_geX_bJets(int cut_nBJets=1, int jesType=0);
   bool pass_ge1_bJets();
@@ -77,6 +78,7 @@ namespace selectionInfo{
   bool pass_geX_met(double cut_met=150.0, int jesType=0, bool add2ndLepToMet=false);
   bool pass_ge50_met();
   bool pass_ge150_met();
+	bool pass_ge250_met();
   
   // MT Selection
   bool pass_geX_mt(double cut_mt=150.0, int jesType=0, bool add2ndLepToMet=false);
@@ -86,6 +88,12 @@ namespace selectionInfo{
   bool pass_geX_minDPhi(double cut_minDPhi=0.8, int jesType=0, bool add2ndLepToMet=false);
   bool pass_ge0p5_minDPhi();
   bool pass_ge0p8_minDPhi();
+
+	// Corridor selections
+	// Leading jet pt
+	// Leading jet b-tag
+	// Leading lepton pT
+	// DPhi(lep, MET)
 
 
   // Utility Functions to help with selection
@@ -102,6 +110,9 @@ namespace selectionInfo{
 	std::vector<cut> get_selection_SR();
 	TH1D* get_cutflowHistoTemplate_SR();
 	vector<TH1D*> get_cutflowHistoTemplate_nMinus1_SR();
+
+	bool pass_SR_corridor(int jesType=0);
+	std::vector<cut> get_selection_SR_corridor();
   
   bool pass_CR0b(int jesType=0);
 	std::vector<cut> get_selection_CR0b();
@@ -115,12 +126,19 @@ namespace selectionInfo{
   TH1D* get_cutflowHistoTemplate_CR0b_tightBTagHighMlb();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR0b_tightBTagHighMlb();
 
+	bool pass_CR0b_corridor(int jesType=0);
+	std::vector<cut> get_selection_CR0b_corridor();
+
   bool pass_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
   bool pass_CR2l(int jesType=0);
 	std::vector<cut> get_selection_CR2l();
   std::vector<bool> get_selectionResults_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
   TH1D* get_cutflowHistoTemplate_CR2l();
   vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR2l();
+
+	bool pass_CR2l_corridor(int jesType=0);
+  bool pass_CR2l_corridor(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
+	std::vector<cut> get_selection_CR2l_corridor();
   
   bool pass_CR2l_bulkTTbar(int jesType=0, bool add2ndLepToMet=false );
   bool pass_CR2l_bulkTTbar(int jesType=0);
