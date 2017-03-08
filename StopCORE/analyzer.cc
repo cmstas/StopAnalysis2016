@@ -18,8 +18,8 @@ void analyzer::AddSelection( std::string label, bool (*new_selection)() ) {
 	selections.push_back( std::make_pair( label, new_selection ) );
 }
 
-void analyzer::AddSelections( std::vector<std::pair<std::string,bool()> > new_selections ) {
-	for( std::pair<std::string,bool> thisSelection : new_selections ) selections.push_back( thisSelection );
+void analyzer::AddSelections( std::vector<std::pair<std::string,bool(*)()> > new_selections ) {
+	for( std::pair<std::string,bool(*)()> thisSelection : new_selections ) selections.push_back( thisSelection );
 };
 
 void analyzer::AddCategories( std::vector<something> new_categories ) {
@@ -31,7 +31,7 @@ void analyzer::AddSystematics( std::vector<sysInfo::ID> new_systematics ) {
 };
 
 std::vector<genClassyInfo::ID> analyzer::GetGenClassifications() { return classifications; }
-std::vector<std::pair<std::string,bool()> > analyzer::GetSelections() { return selections; }
+std::vector<std::pair<std::string,bool(*)()> > analyzer::GetSelections() { return selections; }
 std::vector<something> analyzer::GetCategories() { return categories; }
 std::vector<sysInfo::ID> analyzer::GetSystematics() { return systematics; }
 bool analyzer::GetAdd2ndLep() { return add2ndLep; }
@@ -42,7 +42,7 @@ bool analyzer::PassSelections() {
 	selectionInfo::SetAdd2ndLep( add2ndLep );
 	selectionInfo::SetJesType( jesType );
 	selectionInfo::SetIncludeTaus( includeTaus );
-	for( std::pair<std::string,bool()> selection : selections ) {
+	for( std::pair<std::string,bool(*)()> selection : selections ) {
 		if( selection.second == false ) return false;
 	}
 	return true;
