@@ -127,11 +127,12 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
     
     // input directory
     TString input = sample.baby_i_o.first;
-    input.ReplaceAll("/skim/","/output/");
-
+    
     // input file
     input += sample.inputBabies[iFile];
-      
+    
+    input.ReplaceAll("/skim/","/output/");
+    
     chain->Add( input );
     cout << "      " << input << endl; 
   }

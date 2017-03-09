@@ -1094,8 +1094,10 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // DiElectron Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==22 ){
-    sf_val = 0.869221; // 36.46fb, updated JECs
-    sf_err = 0.00452205;
+    sf_val = 0.868705; // 35.876fb, reMiniAOD
+    sf_err = 0.00457008;
+    //sf_val = 0.869221; // 36.46fb, updated JECs
+    //sf_err = 0.00452205;
     //sf_val = 0.869669; // 36.46fb
     //sf_err = 0.00456458;
     //sf_val = 0.884591; // 29.53fb
@@ -1106,8 +1108,10 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // MuE Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==24 ){
-    sf_val = 0.86275; // 36.46fb, updated JECs
-    sf_err = 0.00207544;
+    sf_val = 0.862895; // 35.876fb, reMiniAOD
+    sf_err = 0.00204966;
+    //sf_val = 0.86275; // 36.46fb, updated JECs
+    //sf_err = 0.00207544;
     //sf_val = 0.86165; // 36.46fb
     //sf_err = 0.00255978;
     //sf_val = 0.908511; // 29.53fb
@@ -1118,8 +1122,10 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
 
   // DiMuon Trigger
   if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==26 ){
-    sf_val = 0.813382; // 36.46fb, updated JECs
-    sf_err = 0.00295138;
+    sf_val = 0.804283; // 35.876fb, reMiniAOD
+    sf_err = 0.00266679;
+    //sf_val = 0.813382; // 36.46fb, updated JECs
+    //sf_err = 0.00295138;
     //sf_val = 0.819581; // 36.46fb
     //sf_err = 0.00406059;
     //sf_val = 0.858291; // 29.53fb

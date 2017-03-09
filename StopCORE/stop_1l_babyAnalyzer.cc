@@ -18,6 +18,16 @@ namespace stop_1l {
 	const float &pfmet_phi_rl_jup() { return babyAnalyzer.pfmet_phi_rl_jup(); }
 	const float &pfmet_rl_jdown() { return babyAnalyzer.pfmet_rl_jdown(); }
 	const float &pfmet_phi_rl_jdown() { return babyAnalyzer.pfmet_phi_rl_jdown(); }
+	const float &pfmet_egclean() { return babyAnalyzer.pfmet_egclean(); }
+	const float &pfmet_egclean_phi() { return babyAnalyzer.pfmet_egclean_phi(); }
+	const float &pfmet_muegclean() { return babyAnalyzer.pfmet_muegclean(); }
+	const float &pfmet_muegclean_phi() { return babyAnalyzer.pfmet_muegclean_phi(); }
+	const float &pfmet_muegcleanfix() { return babyAnalyzer.pfmet_muegcleanfix(); }
+	const float &pfmet_muegcleanfix_phi() { return babyAnalyzer.pfmet_muegcleanfix_phi(); }
+	const float &pfmet_uncorr() { return babyAnalyzer.pfmet_uncorr(); }
+	const float &pfmet_uncorr_phi() { return babyAnalyzer.pfmet_uncorr_phi(); }
+	const float &pfmet_original() { return babyAnalyzer.pfmet_original(); }
+	const float &pfmet_original_phi() { return babyAnalyzer.pfmet_original_phi(); }
 	const float &scale1fb() { return babyAnalyzer.scale1fb(); }
 	const float &xsec() { return babyAnalyzer.xsec(); }
 	const float &xsec_uncert() { return babyAnalyzer.xsec_uncert(); }
@@ -142,6 +152,7 @@ namespace stop_1l {
 	const int &HLT_SingleEl() { return babyAnalyzer.HLT_SingleEl(); }
 	const int &HLT_SingleMu() { return babyAnalyzer.HLT_SingleMu(); }
 	const int &HLT_MET() { return babyAnalyzer.HLT_MET(); }
+	const int &HLT_MET_MHT() { return babyAnalyzer.HLT_MET_MHT(); }
 	const int &HLT_MET100_MHT100() { return babyAnalyzer.HLT_MET100_MHT100(); }
 	const int &HLT_MET110_MHT110() { return babyAnalyzer.HLT_MET110_MHT110(); }
 	const int &HLT_MET120_MHT120() { return babyAnalyzer.HLT_MET120_MHT120(); }
@@ -406,4 +417,7 @@ namespace stop_1l {
 	const bool &filt_jetWithBadMuon_jup() { return babyAnalyzer.filt_jetWithBadMuon_jup(); }
 	const bool &filt_jetWithBadMuon_jdown() { return babyAnalyzer.filt_jetWithBadMuon_jdown(); }
 	const bool &filt_pfovercalomet() { return babyAnalyzer.filt_pfovercalomet(); }
+	const bool &filt_badmuons() { return babyAnalyzer.filt_badmuons(); }
+	const bool &filt_duplicatemuons() { return babyAnalyzer.filt_duplicatemuons(); }
+	const bool &filt_nobadmuons() { return babyAnalyzer.filt_nobadmuons(); }
 }
