@@ -5,7 +5,7 @@ int main () {
   // Run Looper
   stopBabyLooper__CR2l_bulkTTbar();
 
-
+  
   // Scale Output Samples (should be done in sysInfo::getSampleWeight)
   //scaleSamples("Output/Histos/", "Output/Histos/");
 
@@ -45,11 +45,11 @@ int main () {
   // Make plots by production mode
   plotMaker(false);
 
-
+  
   // Get diLepton trigger efficiencies
   diLepTriggerEfficiency_analyzer();
 
-    
+  
   // Get ttbar system pT scale factors
   ttbarSystemPt_analyzer();
 
@@ -58,7 +58,7 @@ int main () {
   //ttbarSystemPt_plotMaker();
   ttbarSystemPt_plotMaker( false, true ); // one set scaled to data
   ttbarSystemPt_plotMaker( false, false ); // one set no scaling 
-
+  
    
 
   // Done!

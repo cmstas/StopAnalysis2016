@@ -24,7 +24,7 @@ bool apply_tau_sf_          = true;
 bool apply_lepFS_sf_        = false;
 bool apply_topPt_sf_        = false; // true=sf, false=uncertainty
 bool apply_metRes_sf_       = true;
-bool apply_metTTbar_sf_     = false;
+bool apply_metTTbar_sf_     = true;
 bool apply_ttbarSysPt_sf_   = false;  // true=sf, false=uncertainty, only !=1.0 for madgraph tt2l, tW2l
 bool apply_ISR_sf_          = true; // only !=1.0 for signal
 bool apply_pu_sf_           = true;
@@ -598,7 +598,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_gen_lep2_id_ee3j[nHistosVars];
   TH1D *h_gen_lep2_id_lt4j[nHistosVars];
   TH1D *h_gen_lep2_id_ge4j[nHistosVars];
-
   
   for(int iReg=0; iReg<nRegions; iReg++){
     for(int iGen=0; iGen<nGenClassy; iGen++){
@@ -1405,7 +1404,11 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   } // end loop over regions for histogram arrays
 
  
-
+  //FILE* f_evtList;
+  //TString f_evtList_name = "evtList_CR2l_";
+  //f_evtList_name += sample.label;
+  //f_evtList_name += ".txt";
+  //f_evtList = fopen(f_evtList_name.Data(), "w");
 
   //////////////////////
   //                  //
@@ -1981,6 +1984,16 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, wgt_mlb );
 		else fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2, wgt_mlb );
 	      }
+
+	      //if(regionList[iReg]=="CR2l" && systematicList[iSys].id==sysInfo::k_nominal){
+	      //  bool evt_inCR2l=false;
+	      //  for(int iCat=0; iCat<(int)passCats_dev_ext30fb_mlb_v2.size(); iCat++){ if( passCats_dev_ext30fb_mlb_v2[iCat]<=27) evt_inCR2l=true; break;}
+	      //  if(evt_inCR2l){
+	      //    if( sample.isSignalScan && mStop==800.0 && mLSP==100.0 ) fprintf( f_evtList, "%d %d %d \n", run(), ls(), evt() );
+	      //    if( sample.isData ) fprintf( f_evtList, "%d %d %d \n", run(), ls(), evt() );
+	      //  }
+	      //}
+	    
 	    }
 
 	    /*
@@ -2331,7 +2344,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
   cout << "====================================================" << endl;
     
-
+  //fclose(f_evtList);
 
   //
   // Return!

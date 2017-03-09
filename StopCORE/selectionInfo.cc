@@ -11,7 +11,10 @@ bool selectionInfo::pass_metFilter(){
 	babyAnalyzer.filt_badChargedCandidateFilter() && 
 	babyAnalyzer.filt_jetWithBadMuon() &&
 	babyAnalyzer.filt_pfovercalomet() &&
-	babyAnalyzer.filt_badMuonFilter()     ) result = true;
+	babyAnalyzer.filt_badMuonFilter() &&
+	!babyAnalyzer.filt_duplicatemuons() &&
+	!babyAnalyzer.filt_badmuons() &&
+	babyAnalyzer.filt_nobadmuons()          ) result = true;
   }
   return result;
 }

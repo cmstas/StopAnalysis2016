@@ -50,8 +50,6 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isSignal     = true;
     isSignalScan = true;
     isFastsim    = true;
-    //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v17/skim/";
-    //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v14/skim/";
     //baby_i_o.first  = "/nfs-7/userdata/stopRun2/analysis2016__SUS-16-028__12p9fb/stopBabies__v8.0.x_v8__20160729/Nominal/";
     inputBabies.push_back("Signal_T2tt*.root");
     massPt.first = 800; massPt.second = 100;
@@ -72,9 +70,20 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v17/skim/"; // 36.46fb updated
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/"; // 36.46fb
     //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb
-    inputBabies.push_back("data_met*.root");
-    inputBabies.push_back("data_single_electron*.root");
-    inputBabies.push_back("data_single_muon*.root");
+    //inputBabies.push_back("data_met*.root");
+    //inputBabies.push_back("data_single_electron*.root");
+    //inputBabies.push_back("data_single_muon*.root");
+    baby_i_o.first = "";
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016B-03Feb2017_ver2-v2/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016C-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016D-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016E-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016F-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016G-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver2-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver3-v1/skim/*.root");
+    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_electron_*.root");
+    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_muon_*.root");
     break;
 
   case( k_met ):
@@ -86,7 +95,16 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/skim/"; // 36p46fb fixed muE trig 
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v12/skim/"; // 36p46fb 
     //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb
-    inputBabies.push_back("data_met*.root");
+    //inputBabies.push_back("data_met*.root");
+    baby_i_o.first  = "";
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016B-03Feb2017_ver2-v2/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016C-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016D-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016E-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016F-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016G-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver2-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver3-v1/skim/*.root");
     break;
 
   case( k_single_lepton ):
@@ -95,9 +113,11 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     tex    = "Data,~single~$e/\\mu$";
     isData = true;
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v17/skim/"; // 36.46fb updated
-    inputBabies.push_back("data_single_electron*.root");
-    inputBabies.push_back("data_single_muon*.root");
-    //baby_i_o.first  = "";
+    //inputBabies.push_back("data_single_electron*.root");
+    //inputBabies.push_back("data_single_muon*.root");
+    baby_i_o.first  = "";
+    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_electron_*.root");
+    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_muon_*.root");
     break;
 
   case( k_single_el ):
@@ -106,8 +126,9 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     tex    = "Data,~single~$e$";
     isData = true;
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v17/skim/"; // 36.46fb updated
-    inputBabies.push_back("data_single_electron*.root");
-    //baby_i_o.first  = "";
+    //inputBabies.push_back("data_single_electron*.root");
+    baby_i_o.first  = "";
+    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_electron_*.root");
     break;
 
   case( k_single_mu ):
@@ -116,8 +137,9 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     tex    = "Data,~single~$\\mu$";
     isData = true;
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v17/skim/"; // 36.46fb updated
-    inputBabies.push_back("data_single_muon*.root");
-    //baby_i_o.first  = "";
+    //inputBabies.push_back("data_single_muon*.root");
+    baby_i_o.first  = "";
+    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_muon_*.root");
     break;
 
   case( k_diLepton ):
@@ -128,9 +150,18 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v17/skim/"; // 36.46fb updated
     //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v13/skim/"; // 36p46fb fixed muE trig 
     //baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v12/skim/"; // 29.53fb 
-    inputBabies.push_back("data_muon_eg*.root");
-    inputBabies.push_back("data_double_eg*.root");
-    inputBabies.push_back("data_double_mu*.root");
+    //inputBabies.push_back("data_muon_eg*.root");
+    //inputBabies.push_back("data_double_eg*.root");
+    //inputBabies.push_back("data_double_mu*.root");
+    baby_i_o.first  = "";
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016B-03Feb2017_ver2-v2/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016C-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016D-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016E-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016F-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016G-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016H-03Feb2017_ver2-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016H-03Feb2017_ver3-v1/skim/*.root");
     break;
     
   case( k_muon_eg ):
@@ -139,8 +170,16 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     tex    = "Data,$~e\\mu$";
     isData = true;
     //baby_i_o.first = "/nfs-7/userdata/isuarez/tupler_babies/merged/Stop_1l/v17/skim/"; // 36.46fb updated
-    inputBabies.push_back("data_muon_eg*.root");
-    //baby_i_o.first  = "";
+    //inputBabies.push_back("data_muon_eg*.root");
+    baby_i_o.first  = "";
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016B-03Feb2017_ver2-v2/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016C-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016D-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016E-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016F-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016G-03Feb2017-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016H-03Feb2017_ver2-v1/skim/*.root");
+    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24_trulyunmerged/MuonEG_Run2016H-03Feb2017_ver3-v1/skim/*.root");
     break;
   
   case( k_double_eg ):
