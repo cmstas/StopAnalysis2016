@@ -97,34 +97,27 @@ namespace selectionInfo{
 
 
   // Utility Functions to help with selection
-  TH1D* get_cutflowHistoTemplate( v_cut );
+  TH1D* get_cutflowHistoTemplate( v_cut cutList );
+	TH1D* get_cutflowHistoTemplate( v_cut cutList, std::string name, std::string title );
+	std::vector<TH1D*> get_cutflowHistoTemplate_nMinus1( TH1D* original );
+	std::vector<bool> get_selectionResults( v_cut cutList );
   
   // Full Selections for search regions
   
   bool pass_SR_loose(int jesType=0);
-  std::vector<bool> get_selectionResults_SR_loose(int jesType=0);
-  TH1D* get_cutflowHistoTemplate_SR_loose();
-  vector<TH1D*> get_cutflowHistoTemplate_nMinus1_SR_loose();
+	std::vector<cut> get_selection_SR_loose();
   
   bool pass_SR(int jesType=0);
 	std::vector<cut> get_selection_SR();
-	TH1D* get_cutflowHistoTemplate_SR();
-	vector<TH1D*> get_cutflowHistoTemplate_nMinus1_SR();
 
 	bool pass_SR_corridor(int jesType=0);
 	std::vector<cut> get_selection_SR_corridor();
   
   bool pass_CR0b(int jesType=0);
 	std::vector<cut> get_selection_CR0b();
-  std::vector<bool> get_selectionResults_CR0b(int jesType=0);
-  TH1D* get_cutflowHistoTemplate_CR0b();
-  vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR0b();
 
   bool pass_CR0b_tightBTagHighMlb(int jesType=0);
 	std::vector<cut> get_selection_CR0b_tightBTagHighMlb();
-  std::vector<bool> get_selectionResults_CR0b_tightBTagHighMlb(int jesType=0);
-  TH1D* get_cutflowHistoTemplate_CR0b_tightBTagHighMlb();
-  vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR0b_tightBTagHighMlb();
 
 	bool pass_CR0b_corridor(int jesType=0);
 	std::vector<cut> get_selection_CR0b_corridor();
@@ -132,25 +125,14 @@ namespace selectionInfo{
   bool pass_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
   bool pass_CR2l(int jesType=0);
 	std::vector<cut> get_selection_CR2l();
-  std::vector<bool> get_selectionResults_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
-  TH1D* get_cutflowHistoTemplate_CR2l();
-  vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR2l();
 
-	bool pass_CR2l_corridor(int jesType=0);
   bool pass_CR2l_corridor(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
+	bool pass_CR2l_corridor(int jesType=0);
 	std::vector<cut> get_selection_CR2l_corridor();
   
   bool pass_CR2l_bulkTTbar(int jesType=0, bool add2ndLepToMet=false );
   bool pass_CR2l_bulkTTbar(int jesType=0);
 	std::vector<cut> get_selection_CR2l_bulkTTbar();
-  std::vector<bool> get_selectionResults_CR2l_bulkTTbar(int jesType=0, bool add2ndLepToMet=false );
-  TH1D* get_cutflowHistoTemplate_CR2l_bulkTTbar();
-  vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CR2l_bulkTTbar();
-
-  //bool pass_CRGammaJets(int jesType=0);
-  //std::vector<bool> get_selectionResults_CRGammaJets(int jesType=0);
-  //TH1D* get_cutflowHistoTemplate_CRGammaJets();
-  //vector<TH1D*> get_cutflowHistoTemplate_nMinus1_CRGammaJets();
   
 }; // end namespace def
 
