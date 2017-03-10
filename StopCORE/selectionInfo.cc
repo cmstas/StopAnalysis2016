@@ -361,6 +361,49 @@ bool selectionInfo::pass_geX_minDPhi(double cut_minDPhi, int jesType, bool add2n
 
 //////////////////////////////////////////////////////////////////////
 
+// bool selectionInfo::pass_ge250_j1pt() { return pass_geX_j1pt( 250., localJesType ); }
+
+// bool selectionInfo::pass_geX_j1pt( double cut_pt, int jesType ) {
+// 	if(      jesType==1  ) return babyAnalyzer.jup_ak4pfjets_p4().at(0).pt() >= cut_pt;
+// 	else if( jesType==-1 ) return babyAnalyzer.jdown_ak4pfjets_p4().at(0).pt() >= cut_pt;
+// 	return babyAnalyzer.ak4pfjets_p4().at(0).pt() >= cut_pt;
+// }
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_j1NotBtag() { return !pass_j1MedBtag( localJesType ); }
+
+bool selectionInfo::pass_j1MedBtag( int jesType ) {
+	if(      jesType==1 )  return babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
+	else if( jesType==-1 ) return babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
+	return babyAnalyzer.ak4pfjets_passMEDbtag().at(0);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_lt150_lep1pt() { return !pass_geX_lep1pt( 150. ); }
+
+bool selectionInfo::pass_geX_lep1pt( double cut_pt ) { return babyAnalyzer.lep1_p4().pt() >= cut_pt; }
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_lt2_dPhiLepMet() { return !pass_geX_dPhiLepMet( 2.0, localJesType, localAddLep2 ); }
+
+bool selectionInfo::pass_geX_dPhiLepMet( double cut_phi, int jesType, bool add2ndLepToMet ) {
+	if( add2ndLepToMet ) {
+		if(      jesType==1  ) return babyAnalyzer.lep1_dphiMET_rl_jup() >= cut_phi;
+		else if( jesType==-1 ) return babyAnalyzer.lep1_dphiMET_rl_jdown() >= cut_phi;
+		return babyAnalyzer.lep1_dphiMET_rl() >= cut_phi;
+	}
+	else {
+		if(      jesType==1  ) return babyAnalyzer.lep1_dphiMET_jup() >= cut_phi;
+		else if( jesType==-1 ) return babyAnalyzer.lep1_dphiMET_jdown() >= cut_phi;
+	}
+	return babyAnalyzer.lep1_dphiMET() >= cut_phi;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TH1D* selectionInfo::get_cutflowHistoTemplate( std::vector<selectionInfo::cut> cutList, std::string name, std::string title ) {
 
 	TH1D* result = get_cutflowHistoTemplate( cutList );
@@ -499,6 +542,9 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_SR_corridor(){
 	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 10) met>250.0
 	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
 	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.5
+	result.push_back( cut( "j1noBtag",      (*pass_j1NotBtag) ));    // 13) Leading jet is not b-tagged
+	result.push_back( cut( "lt150LepPt",    (*pass_lt150_lep1pt) )); // 14) Leading lepton pT < 150
+	result.push_back( cut( "lt2dPhiLepMet", (*pass_lt2_dPhiLepMet)));// 15) dPhi(lep1,MET) < 2.0
 
   return result;
 }
@@ -625,6 +671,9 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_CR0b_corridor(){
 	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 10) met>250.0
 	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
 	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.5
+	// (In CR0b, it can be safely assumed that the leading jet is not b-tagged)
+	result.push_back( cut( "lt150LepPt",    (*pass_lt150_lep1pt) )); // 13) Leading lepton pT < 150
+	result.push_back( cut( "lt2dPhiLepMet", (*pass_lt2_dPhiLepMet)));// 14) dPhi(lep1,MET) < 2.0
 
   return result;
 }
@@ -709,6 +758,9 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_CR2l_corridor(){
 	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 7) met>250.0
 	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 8) mt>150.0
 	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 9) minDPhi(met,j1/j2)>0.5
+	result.push_back( cut( "j1noBtag",      (*pass_j1NotBtag) ));    // 10) Leading jet is not b-tagged
+	result.push_back( cut( "lt150LepPt",    (*pass_lt150_lep1pt) )); // 11) Leading lepton pT < 150
+	result.push_back( cut( "lt2dPhiLepMet", (*pass_lt2_dPhiLepMet)));// 12) dPhi(lep1,MET) < 2.0
 
   return result;
 }

@@ -90,10 +90,22 @@ namespace selectionInfo{
   bool pass_ge0p8_minDPhi();
 
 	// Corridor selections
+
 	// Leading jet pt
+	// bool pass_ge250_j1pt();
+	// bool pass_geX_j1pt( double cut_pt=250., int jesType=0 );
+
 	// Leading jet b-tag
+	bool pass_j1NotBtag();
+	bool pass_j1MedBtag( int jesType=0 );
+
 	// Leading lepton pT
+	bool pass_lt150_lep1pt();
+	bool pass_geX_lep1pt( double cut_pt=20. );
+
 	// DPhi(lep, MET)
+	bool pass_lt2_dPhiLepMet();
+	bool pass_geX_dPhiLepMet( double cut_phi=0., int jesType=0, bool add2ndLepToMet=false );
 
 
   // Utility Functions to help with selection
