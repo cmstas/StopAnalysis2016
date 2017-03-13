@@ -1,5 +1,13 @@
 #include "categoryInfo.h"
 
+// These variables can only be used within categoryInfo.cc, but they can be set from outside using the functions below                                                             
+static int  localJesType = 0;
+static bool localAddLep2 = false;
+
+void selectionInfo::SetJesType( int type ) { localJesType = type; }
+void selectionInfo::SetAdd2ndLep( bool addlep2 ) { localAddLep2 = addlep2; }
+
+
 //////////////////////////////////////////////////////////////////////
 
 TH1D* categoryInfo::getYieldHistoTemplate_SR_ICHEP(){
