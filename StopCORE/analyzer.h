@@ -10,10 +10,12 @@
 // Stop Analysis
 #include "../StopCORE/stop_1l_babyAnalyzer.h"
 #include "../StopCORE/genClassyInfo.h"
+#include "../StopCORE/sysInfo.h"
 
 
 enum kJES{ kNominal=0, kUp=1, kDown=-1 };
 
+const int nYieldBins_ = genClassyInfo::k_nGenClassy*sysInfo::k_nSys;
 
 class analyzer {
 
@@ -52,10 +54,12 @@ private:
 	bool includeTaus;
 	kJES jesType;
 	
-	TH1D *h_yield;
-	TH3D *h_yield_sigScan;
+	TH1D *h_yield_template;
+	TH3D *h_yield_template_sigScan;
 	
-
+	TH1D *h_yield[nYieldBins_];
+	TH3D *h_yield_sig[nYieldBins_];
+	
 };
 
 
