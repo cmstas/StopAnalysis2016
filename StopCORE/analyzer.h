@@ -23,11 +23,11 @@ public:
 	analyzer();
 	// ~analyzer();
 
-	void AddGenClassifications( std::vector<genClassyInfo::ID> new_classies );
+	void AddGenClassifications( std::vector<genClassyInfo::Util> new_classies );
 	void AddSelection( std::string label, bool (*new_selection)() );
 	void AddSelections( std::vector<std::pair<std::string,bool(*)()> > new_selections );
-	void AddCategories( std::vector<int> new_categories );
-	void AddSystematics( std::vector<sysInfo::ID> new_systematics );
+	void AddCategories( std::vector<int> (*new_categories)(int jesType, double add2ndLepToMet) );
+	void AddSystematics( std::vector<sysInfo::Util> new_systematics );
 
 	std::vector<genClassyInfo::ID> GetGenClassifications();
 	std::vector<std::pair<std::string,bool(*)()> > GetSelections();
@@ -45,10 +45,10 @@ public:
 	void SetJesType( kJES jestype );
 
 private:
-	std::vector<genClassyInfo::ID> classifications;
+	std::vector<genClassyInfo::Util> classifications;
 	std::vector< std::pair<std::string,bool(*)()> > selections;
-	std::vector<int> categories;
-	std::vector<sysInfo::ID> systematics;
+	std::vector<int>(*)(int jesType, double add2ndLepToMet) categories;
+	std::vector<sysInfo::Util> systematics;
 
 	bool add2ndLep;
 	bool includeTaus;

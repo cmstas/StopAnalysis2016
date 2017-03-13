@@ -152,46 +152,12 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   cout << "    Output Written to: " << endl;
   cout << "      " << f_output_name << endl;
   cout << endl;
-  
-  
-  //
-  // Selection Bools
-  //
-  std::vector<TString> regionList;
-  regionList.push_back("SR");
-  regionList.push_back("CR0b");
-  regionList.push_back("CR0b_tightBTagHighMlb");
-  regionList.push_back("CR2l");
-  const int nRegions = (int)regionList.size();
 
-  bool pass_evtSel[nRegions];
-  bool pass_evtSel_jup[nRegions];
-  bool pass_evtSel_jdown[nRegions];
-  TH1D *h_cutflow[nRegions];
 
-  for(int iReg=0; iReg<nRegions; iReg++){
-    pass_evtSel[iReg]       = false;
-    pass_evtSel_jup[iReg]   = false;
-    pass_evtSel_jdown[iReg] = false;
-
-    if(regionList[iReg]=="SR")   h_cutflow[iReg] = selectionInfo::get_cutflowHistoTemplate_SR();
-    if(regionList[iReg]=="CR0b") h_cutflow[iReg] = selectionInfo::get_cutflowHistoTemplate_CR0b();
-    if(regionList[iReg]=="CR0b_tightBTagHighMlb") h_cutflow[iReg] = selectionInfo::get_cutflowHistoTemplate_CR0b_tightBTagHighMlb();
-    if(regionList[iReg]=="CR2l"){
-      h_cutflow[iReg] = selectionInfo::get_cutflowHistoTemplate_CR2l();
-      h_cutflow[iReg]->GetXaxis()->SetBinLabel(4, ">=2 leptons (e/mu only)" );
-      if(inclTaus_CR2l_) h_cutflow[iReg]->GetXaxis()->SetBinLabel(4, ">=2 leptons (incl tau)" );
-    }
-    h_cutflow[iReg]->SetDirectory(f_output);
-  }
-
-  
   //
   // JSON File Tools
   //
-  const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"; // 36.46fb final 2016 run
-  //const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-282037_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"; // 29.53fb golden json
-  //const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"; // ICHEP 12.9fb SUS-16-028
+  const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"; // 35.876fb final 2016 run
   if( sample.isData ) set_goodrun_file_json(json_file);
   
 
@@ -213,7 +179,25 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   wgtInfo->apply_ISR_sf          = apply_ISR_sf_;
   wgtInfo->apply_pu_sf           = apply_pu_sf_;
   wgtInfo->apply_sample_sf       = apply_sample_sf_;
-  
+
+
+  //
+  // Declare genClassification list
+  //
+  cout << "    Loading genClassyList: ";
+  std::vector< genClassyInfo::Util > genClassyList;
+  if( sample.isData ){
+    genClassyList.push_back(genClassyInfo::Util(genClassyInfo::k_incl));
+  }
+  else{
+    for(int iGenClassy=0; iGenClassy<genClassyInfo::k_nGenClassy; iGenClassy++){
+      genClassyList.push_back( genClassyInfo::Util(genClassyInfo::ID(iGenClassy)) );
+    }
+  }
+  const int nGenClassy=(int)genClassyList.size();
+  bool passGenClassy[nGenClassy];
+  cout << nGenClassy << " genClassifications" << endl << endl;
+
   
   //
   // Declare Systematics
@@ -232,23 +216,58 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   cout << nSystematics << " systematics" << endl << endl;
 
   
-  //
-  // Declare genClassification list
-  //
-  cout << "    Loading genClassyList: ";
-  std::vector< genClassyInfo::Util > genClassyList;
-  if( sample.isData ){
-    genClassyList.push_back(genClassyInfo::Util(genClassyInfo::k_incl));
-  }
-  else{
-    for(int iGenClassy=0; iGenClassy<genClassyInfo::k_nGenClassy; iGenClassy++){
-      genClassyList.push_back( genClassyInfo::Util(genClassyInfo::ID(iGenClassy)) );
-    }
-  }
-  const int nGenClassy=(int)genClassyList.size();
-  bool passGenClassy[nGenClassy];
-  cout << nGenClassy << " genClassifications" << endl << endl;
 
+  //
+  //  Yield Histos
+  //
+  std::vector< analyzer > analyzerList;
+  
+  analyzer bulk_SR;
+  bulk_SR.AddGenClassifications( genClassyList );
+  bulk_SR.AddSelections( selectionInfo::get_selection_SR );
+  bulk_SR.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2 );
+  bulk_SR.AddSystematics( systematicList );
+  analyzerList.push_back( bulk_SR );
+
+  analyzer bulk_CR0b;
+  bulk_CR0b.AddGenClassifications( genClassyList );
+  bulk_CR0b.AddSelections( selectionInfo::get_selection_CR0b );
+  bulk_CR0b.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2 );
+  bulk_CR0b.AddSystematics( systematicList );
+  analyzerList.push_back( bulk_CR0b );
+
+  analyzer bulk_CR2l;
+  bulk_CR2l.AddGenClassifications( genClassyList );
+  bulk_CR2l.AddSelections( selectionInfo::get_selection_CR2l );
+  bulk_CR2l.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2 );
+  bulk_CR2l.AddSystematics( systematicList );
+  analyzerList.push_back( bulk_CR2l );
+
+
+  analyzer corr_SR;
+  corr_SR.AddGenClassifications( genClassyList );
+  corr_SR.AddSelections( selectionInfo::get_selection_SR_corr );
+  corr_SR.AddCategories( categoryInfo::passCategory_corridor );
+  corr_SR.AddSystematics( systematicList );
+  analyzerList.push_back( corr_SR );
+
+  analyzer corr_CR0b;
+  corr_CR0b.AddGenClassifications( genClassyList );
+  corr_CR0b.AddSelections( selectionInfo::get_selection_CR0b_corr );
+  corr_CR0b.AddCategories( categoryInfo::passCategory_corridor );
+  corr_CR0b.AddSystematics( systematicList );
+  analyzerList.push_back( corr_CR0b );
+
+
+  analyzer corr_CR2l;
+  corr_CR2l.AddGenClassifications( genClassyList );
+  corr_CR2l.AddSelections( selectionInfo::get_selection_CR2l_corr );
+  corr_CR2l.AddCategories( categoryInfo::passCategory_corridor );
+  corr_CR2l.AddSystematics( systematicList );
+  analyzerList.push_back( corr_CR2l );
+ 
+      
+  
 
   
   ////////////////////////
@@ -277,165 +296,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH3::SetDefaultSumw2();
 
   
-  //
-  // Yields Histograms
-  //
-  const int nHistosYields = nRegions*nGenClassy*nSystematics;
   
-
-  // ICHEP SR bins, 12.9fb
-  TH1D *h_yields_ICHEP_template = categoryInfo::getYieldHistoTemplate_SR_ICHEP();
-  TH1D *h_yields_ICHEP[nHistosYields];
-  TH3D *h_yields_ICHEP_sigScan[nHistosYields];
-  vector<int> passCats_ICHEP; 
-  vector<int> passCats_ICHEP_jup;
-  vector<int> passCats_ICHEP_jdown;
-  
-  
-  // ICHEP SR bins, extended to 30fb
-  TH1D *h_yields_ICHEP_ext30fb_template = categoryInfo::getYieldHistoTemplate_SR_ICHEP_ext30fb();
-  TH1D *h_yields_ICHEP_ext30fb[nHistosYields];
-  TH3D *h_yields_ICHEP_ext30fb_sigScan[nHistosYields];
-  vector<int> passCats_ICHEP_ext30fb; 
-  vector<int> passCats_ICHEP_ext30fb_jup;
-  vector<int> passCats_ICHEP_ext30fb_jdown;
-
-  
-  // ICHEP SR bins, extended to 30fb, mlb bins
-  TH1D *h_yields_dev_ext30fb_mlb_v1_template = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v1();
-  TH1D *h_yields_dev_ext30fb_mlb_v1[nHistosYields];
-  TH3D *h_yields_dev_ext30fb_mlb_v1_sigScan[nHistosYields];
-  vector<int> passCats_dev_ext30fb_mlb_v1; 
-  vector<int> passCats_dev_ext30fb_mlb_v1_jup;
-  vector<int> passCats_dev_ext30fb_mlb_v1_jdown;
-  
-  // ICHEP SR bins, extended to 30fb, mlb bins with tight bTagging
-  TH1D *h_yields_dev_ext30fb_mlb_v2_template = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2();
-  TH1D *h_yields_dev_ext30fb_mlb_v2[nHistosYields];
-  TH3D *h_yields_dev_ext30fb_mlb_v2_sigScan[nHistosYields];
-  vector<int> passCats_dev_ext30fb_mlb_v2; 
-  vector<int> passCats_dev_ext30fb_mlb_v2_jup;
-  vector<int> passCats_dev_ext30fb_mlb_v2_jdown;
-
-
-  // ICHEP SR bins, extended to 30fb, bJetPt bins
-  TH1D *h_yields_dev_ext30fb_bJetPt_v1_template = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_bJetPt_v1();
-  TH1D *h_yields_dev_ext30fb_bJetPt_v1[nHistosYields];
-  TH3D *h_yields_dev_ext30fb_bJetPt_v1_sigScan[nHistosYields];
-  vector<int> passCats_dev_ext30fb_bJetPt_v1; 
-  vector<int> passCats_dev_ext30fb_bJetPt_v1_jup;
-  vector<int> passCats_dev_ext30fb_bJetPt_v1_jdown;
-
-  
-  // Top Corridor SR bins, Dan
-  TH1D *h_yields_corridor_template = categoryInfo::getYieldHistoTemplate_SR_corridor();
-  TH1D *h_yields_corridor[nHistosYields];
-  TH3D *h_yields_corridor_sigScan[nHistosYields];
-  vector<int> passCats_corridor; 
-  vector<int> passCats_corridor_jup;
-  vector<int> passCats_corridor_jdown;
-
-
-  // Loop over regions, genClassifications and systematics
-  for(int iReg=0; iReg<nRegions; iReg++){
-    for(int iGen=0; iGen<nGenClassy; iGen++){
-      for(int iSys=0; iSys<nSystematics; iSys++){
-	
-	// Histo Index
-	int iHisto = iReg*nGenClassy*nSystematics + iGen*nSystematics + iSys;
-
-	// Gen and Systematic String
-	TString reg_gen_sys_name = "__";
-	reg_gen_sys_name += regionList[iReg];
-	reg_gen_sys_name += "__genClassy_";
-	reg_gen_sys_name += genClassyList[iGen].label;
-	reg_gen_sys_name += "__systematic_";
-	reg_gen_sys_name += systematicList[iSys].label;
-	
-
-	// ICHEP Signal Regions, 12.9fb
-	TString h_name_ICHEP = h_yields_ICHEP_template->GetName();
-	h_name_ICHEP += reg_gen_sys_name;
-	if( sample.isSignalScan ){
-	  h_yields_ICHEP_sigScan[iHisto] = new TH3D(h_name_ICHEP, h_yields_ICHEP_template->GetTitle(), sample.nBins_stop, sample.min_stop, sample.max_stop, sample.nBins_lsp, sample.min_lsp, sample.max_lsp, h_yields_ICHEP_template->GetNbinsX(), h_yields_ICHEP_template->GetXaxis()->GetBinLowEdge(0), h_yields_ICHEP_template->GetXaxis()->GetBinUpEdge(h_yields_ICHEP_template->GetNbinsX()) );
-	  h_yields_ICHEP_sigScan[iHisto]->SetDirectory(f_output);
-	}
-	else{
-	  h_yields_ICHEP[iHisto] = (TH1D*)h_yields_ICHEP_template->Clone(h_name_ICHEP);
-	  h_yields_ICHEP[iHisto]->SetDirectory(f_output);
-	}
-
-
-	// ICHEP Signal Regions, extended to 30fb
-	TString h_name_ICHEP_ext30fb = h_yields_ICHEP_ext30fb_template->GetName();
-	h_name_ICHEP_ext30fb += reg_gen_sys_name;
-	if( sample.isSignalScan ){
-	  h_yields_ICHEP_ext30fb_sigScan[iHisto] = new TH3D(h_name_ICHEP_ext30fb, h_yields_ICHEP_ext30fb_template->GetTitle(), sample.nBins_stop, sample.min_stop, sample.max_stop, sample.nBins_lsp, sample.min_lsp, sample.max_lsp, h_yields_ICHEP_ext30fb_template->GetNbinsX(), h_yields_ICHEP_ext30fb_template->GetXaxis()->GetBinLowEdge(0), h_yields_ICHEP_ext30fb_template->GetXaxis()->GetBinUpEdge(h_yields_ICHEP_ext30fb_template->GetNbinsX()) );
-	  h_yields_ICHEP_ext30fb_sigScan[iHisto]->SetDirectory(f_output);
-	}
-	else{
-	  h_yields_ICHEP_ext30fb[iHisto] = (TH1D*)h_yields_ICHEP_ext30fb_template->Clone(h_name_ICHEP_ext30fb);
-	  h_yields_ICHEP_ext30fb[iHisto]->SetDirectory(f_output);
-	}
-
-	
-	// Dev Signal Regions, extended to 30fb, mlb bins
-	TString h_name_dev_ext30fb_mlb_v1 = h_yields_dev_ext30fb_mlb_v1_template->GetName();
-	h_name_dev_ext30fb_mlb_v1 += reg_gen_sys_name;
-	if( sample.isSignalScan ){
-	  h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto] = new TH3D(h_name_dev_ext30fb_mlb_v1, h_yields_dev_ext30fb_mlb_v1_template->GetTitle(), sample.nBins_stop, sample.min_stop, sample.max_stop, sample.nBins_lsp, sample.min_lsp, sample.max_lsp, h_yields_dev_ext30fb_mlb_v1_template->GetNbinsX(), h_yields_dev_ext30fb_mlb_v1_template->GetXaxis()->GetBinLowEdge(0), h_yields_dev_ext30fb_mlb_v1_template->GetXaxis()->GetBinUpEdge(h_yields_dev_ext30fb_mlb_v1_template->GetNbinsX()) );
-	  h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto]->SetDirectory(f_output);
-	}
-	else{
-	  h_yields_dev_ext30fb_mlb_v1[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v1_template->Clone(h_name_dev_ext30fb_mlb_v1);
-	  h_yields_dev_ext30fb_mlb_v1[iHisto]->SetDirectory(f_output);
-	}
-
-
-	// Dev Signal Regions, extended to 30fb, mlb bins with tight bTag
-	TString h_name_dev_ext30fb_mlb_v2 = h_yields_dev_ext30fb_mlb_v2_template->GetName();
-	h_name_dev_ext30fb_mlb_v2 += reg_gen_sys_name;
-	if( sample.isSignalScan ){
-	  h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto] = new TH3D(h_name_dev_ext30fb_mlb_v2, h_yields_dev_ext30fb_mlb_v2_template->GetTitle(), sample.nBins_stop, sample.min_stop, sample.max_stop, sample.nBins_lsp, sample.min_lsp, sample.max_lsp, h_yields_dev_ext30fb_mlb_v2_template->GetNbinsX(), h_yields_dev_ext30fb_mlb_v2_template->GetXaxis()->GetBinLowEdge(0), h_yields_dev_ext30fb_mlb_v2_template->GetXaxis()->GetBinUpEdge(h_yields_dev_ext30fb_mlb_v2_template->GetNbinsX()) );
-	  h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto]->SetDirectory(f_output);
-	}
-	else{
-	  h_yields_dev_ext30fb_mlb_v2[iHisto] = (TH1D*)h_yields_dev_ext30fb_mlb_v2_template->Clone(h_name_dev_ext30fb_mlb_v2);
-	  h_yields_dev_ext30fb_mlb_v2[iHisto]->SetDirectory(f_output);
-	}
-
-	
-	// Dev Signal Regions, extended to 30fb, bJetPt bins
-	TString h_name_dev_ext30fb_bJetPt_v1 = h_yields_dev_ext30fb_bJetPt_v1_template->GetName();
-	h_name_dev_ext30fb_bJetPt_v1 += reg_gen_sys_name;
-	if( sample.isSignalScan ){
-	  h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto] = new TH3D(h_name_dev_ext30fb_bJetPt_v1, h_yields_dev_ext30fb_bJetPt_v1_template->GetTitle(), sample.nBins_stop, sample.min_stop, sample.max_stop, sample.nBins_lsp, sample.min_lsp, sample.max_lsp, h_yields_dev_ext30fb_bJetPt_v1_template->GetNbinsX(), h_yields_dev_ext30fb_bJetPt_v1_template->GetXaxis()->GetBinLowEdge(0), h_yields_dev_ext30fb_bJetPt_v1_template->GetXaxis()->GetBinUpEdge(h_yields_dev_ext30fb_bJetPt_v1_template->GetNbinsX()) );
-	  h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto]->SetDirectory(f_output);
-	}
-	else{
-	  h_yields_dev_ext30fb_bJetPt_v1[iHisto] = (TH1D*)h_yields_dev_ext30fb_bJetPt_v1_template->Clone(h_name_dev_ext30fb_bJetPt_v1);
-	  h_yields_dev_ext30fb_bJetPt_v1[iHisto]->SetDirectory(f_output);
-	}
-
-	
-	// Top Corridor Region
-	TString h_name_corridor = h_yields_corridor_template->GetName();
-	h_name_corridor += reg_gen_sys_name;
-	if( sample.isSignalScan ){
-	  h_yields_corridor_sigScan[iHisto] = new TH3D(h_name_corridor, h_yields_corridor_template->GetTitle(), sample.nBins_stop, sample.min_stop, sample.max_stop, sample.nBins_lsp, sample.min_lsp, sample.max_lsp, h_yields_corridor_template->GetNbinsX(), h_yields_corridor_template->GetXaxis()->GetBinLowEdge(0), h_yields_corridor_template->GetXaxis()->GetBinUpEdge(h_yields_corridor_template->GetNbinsX()) );
-	  h_yields_corridor_sigScan[iHisto]->SetDirectory(f_output);
-	}
-	else{
-	  h_yields_corridor[iHisto] = (TH1D*)h_yields_corridor_template->Clone(h_name_corridor);
-	  h_yields_corridor[iHisto]->SetDirectory(f_output);
-	}
-	
-	
-      } // end loop over systematics
-    } // end loop over gen classifications
-  } // end loop over regions
-
-
   
   //////////////////////////
   //                      //
@@ -456,87 +317,45 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   
   // lep1 pT
   TH1D *h_lep1Pt_incl[nHistosVars];
-  TH1D *h_lep1Pt_ee2j[nHistosVars];
-  TH1D *h_lep1Pt_ee3j[nHistosVars];
-  TH1D *h_lep1Pt_ge4j[nHistosVars];
-
+  
   // lep2 pT
   TH1D *h_lep2Pt_incl[nHistosVars];
-  TH1D *h_lep2Pt_ee2j[nHistosVars];
-  TH1D *h_lep2Pt_ee3j[nHistosVars];
-  TH1D *h_lep2Pt_ge4j[nHistosVars];
-
+  
   // jet pT
   TH1D *h_jetPt_incl[nHistosVars];
-  TH1D *h_jetPt_ee2j[nHistosVars];
-  TH1D *h_jetPt_ee3j[nHistosVars];
-  TH1D *h_jetPt_ge4j[nHistosVars];
-
+  
   // jet1 pT
   TH1D *h_jet1Pt_incl[nHistosVars];
-  TH1D *h_jet1Pt_ee2j[nHistosVars];
-  TH1D *h_jet1Pt_ee3j[nHistosVars];
-  TH1D *h_jet1Pt_ge4j[nHistosVars];
-
+  
   // jet2 pT
   TH1D *h_jet2Pt_incl[nHistosVars];
-  TH1D *h_jet2Pt_ee2j[nHistosVars];
-  TH1D *h_jet2Pt_ee3j[nHistosVars];
-  TH1D *h_jet2Pt_ge4j[nHistosVars];
-
+  
   // csv jet1 pT
   TH1D *h_csvJet1Pt_incl[nHistosVars];
-  TH1D *h_csvJet1Pt_ee2j[nHistosVars];
-  TH1D *h_csvJet1Pt_ee3j[nHistosVars];
-  TH1D *h_csvJet1Pt_ge4j[nHistosVars];
-
+  
   // csv jet2 pT
   TH1D *h_csvJet2Pt_incl[nHistosVars];
-  TH1D *h_csvJet2Pt_ee2j[nHistosVars];
-  TH1D *h_csvJet2Pt_ee3j[nHistosVars];
-  TH1D *h_csvJet2Pt_ge4j[nHistosVars];
-
+  
   // met
   TH1D *h_met_incl[nHistosVars];
-  TH1D *h_met_ee2j[nHistosVars];
-  TH1D *h_met_ee3j[nHistosVars];
   TH1D *h_met_lt4j[nHistosVars];
   TH1D *h_met_ge4j[nHistosVars];
 
-  // lep1lep2bbPt
-  TH1D *h_lep1lep2bbPt_incl[nHistosVars];
-  TH1D *h_lep1lep2bbPt_ee2j[nHistosVars];
-  TH1D *h_lep1lep2bbPt_ee3j[nHistosVars];
-  TH1D *h_lep1lep2bbPt_ge4j[nHistosVars];
-
   // lep1lep2bbMetPt
   TH1D *h_lep1lep2bbMetPt_incl[nHistosVars];
-  TH1D *h_lep1lep2bbMetPt_ee2j[nHistosVars];
-  TH1D *h_lep1lep2bbMetPt_ee3j[nHistosVars];
+  TH1D *h_lep1lep2bbMetPt_lt4j[nHistosVars];
   TH1D *h_lep1lep2bbMetPt_ge4j[nHistosVars];
 
   // mt
   TH1D *h_mt_incl[nHistosVars];
-  TH1D *h_mt_ee2j[nHistosVars];
-  TH1D *h_mt_ee3j[nHistosVars];
-  TH1D *h_mt_ge4j[nHistosVars];
-
+  
   // modTopness
   TH1D *h_modTopness_incl[nHistosVars];
-  TH1D *h_modTopness_ee2j[nHistosVars];
-  TH1D *h_modTopness_ee3j[nHistosVars];
+  TH1D *h_modTopness_lt4j[nHistosVars];
   TH1D *h_modTopness_ge4j[nHistosVars];
-
-  // mt2w
-  TH1D *h_mt2w_incl[nHistosVars];
-  TH1D *h_mt2w_ee2j[nHistosVars];
-  TH1D *h_mt2w_ee3j[nHistosVars];
-  TH1D *h_mt2w_ge4j[nHistosVars];
 
   // mlb
   TH1D *h_mlb_incl[nHistosVars];
-  TH1D *h_mlb_ee2j[nHistosVars];
-  TH1D *h_mlb_ee3j[nHistosVars];
   TH1D *h_mlb_lt4j[nHistosVars];
   TH1D *h_mlb_ge4j[nHistosVars];
 
@@ -547,8 +366,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   
   // mlb, met sideband CR
   TH1D *h_mlb_150to250met_incl[nHistosVars];
-  TH1D *h_mlb_150to250met_ee2j[nHistosVars];
-  TH1D *h_mlb_150to250met_ee3j[nHistosVars];
   TH1D *h_mlb_150to250met_lt4j[nHistosVars];
   TH1D *h_mlb_150to250met_ge4j[nHistosVars];
 
@@ -561,41 +378,16 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   
   // ml2b
   TH1D *h_mlb_lep2_150to250met_incl[nHistosVars];
-  TH1D *h_mlb_lep2_150to250met_ee2j[nHistosVars];
-  TH1D *h_mlb_lep2_150to250met_ee3j[nHistosVars];
   TH1D *h_mlb_lep2_150to250met_lt4j[nHistosVars];
   TH1D *h_mlb_lep2_150to250met_ge4j[nHistosVars];
 
-  // bJetPt
-  TH1D *h_bJetPt_incl[nHistosVars];
-  TH1D *h_bJetPt_ee2j[nHistosVars];
-  TH1D *h_bJetPt_ee3j[nHistosVars];
-  TH1D *h_bJetPt_lt4j[nHistosVars];
-  TH1D *h_bJetPt_ge4j[nHistosVars];
-
-  // bJetPt
-  TH1D *h_bJetPt_lt0modTopness[nHistosVars];
-  TH1D *h_bJetPt_ge0modTopness[nHistosVars];
-  TH1D *h_bJetPt_ge10modTopness[nHistosVars];
-  
-  // bJetPt, met sideband CR
-  TH1D *h_bJetPt_150to250met_incl[nHistosVars];
-  TH1D *h_bJetPt_150to250met_ee2j[nHistosVars];
-  TH1D *h_bJetPt_150to250met_ee3j[nHistosVars];
-  TH1D *h_bJetPt_150to250met_lt4j[nHistosVars];
-  TH1D *h_bJetPt_150to250met_ge4j[nHistosVars];
-
   // Gen ttbar system pT
   TH1D *h_gen_ttbarPt_incl[nHistosVars];
-  TH1D *h_gen_ttbarPt_ee2j[nHistosVars];
-  TH1D *h_gen_ttbarPt_ee3j[nHistosVars];
   TH1D *h_gen_ttbarPt_lt4j[nHistosVars];
   TH1D *h_gen_ttbarPt_ge4j[nHistosVars];
 
   // Gen 2nd lepton ID
   TH1D *h_gen_lep2_id_incl[nHistosVars];
-  TH1D *h_gen_lep2_id_ee2j[nHistosVars];
-  TH1D *h_gen_lep2_id_ee3j[nHistosVars];
   TH1D *h_gen_lep2_id_lt4j[nHistosVars];
   TH1D *h_gen_lep2_id_ge4j[nHistosVars];
   
@@ -656,24 +448,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_lep1Pt_incl[iHisto] = new TH1D( hName, "Lepton p_{T};p_{T} [GeV]", 20.0, 0.0, 200.0 );
 	h_lep1Pt_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_lep1Pt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_lep1Pt_ee2j[iHisto] = new TH1D( hName, "Lepton p_{T};p_{T} [GeV]", 20.0, 0.0, 200.0 );
-	h_lep1Pt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_lep1Pt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_lep1Pt_ee3j[iHisto] = new TH1D( hName, "Lepton p_{T};p_{T} [GeV]", 20.0, 0.0, 200.0 );
-	h_lep1Pt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_lep1Pt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_lep1Pt_ge4j[iHisto] = new TH1D( hName, "Lepton p_{T};p_{T} [GeV]", 20.0, 0.0, 200.0 );
-	h_lep1Pt_ge4j[iHisto]->SetDirectory(f_output);
-
+	
 
 	//
 	// lep2Pt
@@ -685,26 +460,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_lep2Pt_incl[iHisto] = new TH1D( hName, "Trailing Lepton p_{T};p_{T} [GeV]", 20.0, 0.0, 200.0 );
 	h_lep2Pt_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_lep2Pt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_lep2Pt_ee2j[iHisto] = new TH1D( hName, "Trailing Lepton p_{T};p_{T} [GeV]", 20.0, 0.0, 200.0 );
-	h_lep2Pt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_lep2Pt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_lep2Pt_ee3j[iHisto] = new TH1D( hName, "Trailing Lepton p_{T};p_{T} [GeV]", 20.0, 0.0, 200.0 );
-	h_lep2Pt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_lep2Pt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_lep2Pt_ge4j[iHisto] = new TH1D( hName, "Trailing Lepton p_{T};p_{T} [GeV]", 20.0, 0.0, 200.0 );
-	h_lep2Pt_ge4j[iHisto]->SetDirectory(f_output);
-
-      
-	//
+		//
 	// jetPt
 	//
 
@@ -713,26 +469,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	hName += reg_gen_sys_name;
 	h_jetPt_incl[iHisto] = new TH1D( hName, "Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
 	h_jetPt_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_jetPt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_jetPt_ee2j[iHisto] = new TH1D( hName, "Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jetPt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_jetPt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_jetPt_ee3j[iHisto] = new TH1D( hName, "Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jetPt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_jetPt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_jetPt_ge4j[iHisto] = new TH1D( hName, "Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jetPt_ge4j[iHisto]->SetDirectory(f_output);
-
-
+	
 	//
 	// jet1Pt
 	//
@@ -742,25 +479,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	hName += reg_gen_sys_name;
 	h_jet1Pt_incl[iHisto] = new TH1D( hName, "Leading Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
 	h_jet1Pt_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_jet1Pt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_jet1Pt_ee2j[iHisto] = new TH1D( hName, "Leading Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jet1Pt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_jet1Pt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_jet1Pt_ee3j[iHisto] = new TH1D( hName, "Leading Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jet1Pt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_jet1Pt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_jet1Pt_ge4j[iHisto] = new TH1D( hName, "Leading Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jet1Pt_ge4j[iHisto]->SetDirectory(f_output);
-
+	
+	
 
 	//
 	// jet2Pt
@@ -772,25 +492,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_jet2Pt_incl[iHisto] = new TH1D( hName, "2nd Leading Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
 	h_jet2Pt_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_jet2Pt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_jet2Pt_ee2j[iHisto] = new TH1D( hName, "2nd Leading Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jet2Pt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_jet2Pt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_jet2Pt_ee3j[iHisto] = new TH1D( hName, "2nd Leading Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jet2Pt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_jet2Pt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_jet2Pt_ge4j[iHisto] = new TH1D( hName, "2nd Leading Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_jet2Pt_ge4j[iHisto]->SetDirectory(f_output);
-
-
+	
 	//
 	// csvJet1Pt
 	//
@@ -801,24 +503,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_csvJet1Pt_incl[iHisto] = new TH1D( hName, "Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
 	h_csvJet1Pt_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_csvJet1Pt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_csvJet1Pt_ee2j[iHisto] = new TH1D( hName, "Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_csvJet1Pt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_csvJet1Pt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_csvJet1Pt_ee3j[iHisto] = new TH1D( hName, "Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_csvJet1Pt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_csvJet1Pt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_csvJet1Pt_ge4j[iHisto] = new TH1D( hName, "Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_csvJet1Pt_ge4j[iHisto]->SetDirectory(f_output);
-
+	
 
 	//
 	// csvJet2Pt
@@ -830,24 +515,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_csvJet2Pt_incl[iHisto] = new TH1D( hName, "2nd Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
 	h_csvJet2Pt_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_csvJet2Pt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_csvJet2Pt_ee2j[iHisto] = new TH1D( hName, "2nd Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_csvJet2Pt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_csvJet2Pt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_csvJet2Pt_ee3j[iHisto] = new TH1D( hName, "2nd Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_csvJet2Pt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_csvJet2Pt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_csvJet2Pt_ge4j[iHisto] = new TH1D( hName, "2nd Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_csvJet2Pt_ge4j[iHisto]->SetDirectory(f_output);
-
+	
 
 	//
 	// met
@@ -858,18 +526,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	hName += reg_gen_sys_name;
 	h_met_incl[iHisto] = new TH1D( hName, "MET;MET [GeV]", 32, 0.0, 800.0 );
 	h_met_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_met__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_met_ee2j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 32, 0.0, 800.0 );
-	h_met_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_met__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_met_ee3j[iHisto] = new TH1D( hName, "MET;MET [GeV]", 32, 0.0, 800.0 );
-	h_met_ee3j[iHisto]->SetDirectory(f_output);
       
 	// <4j Selection
 	hName = "h_met__lt4jSelection";
@@ -884,34 +540,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_met_ge4j[iHisto]->SetDirectory(f_output);
 
 
-	//
-	// lep1lep2bbPt
-	//
-
-	// Incl Selection
-	hName = "h_lep1lep2bbPt__inclSelection";
-	hName += reg_gen_sys_name;
-	h_lep1lep2bbPt_incl[iHisto] = new TH1D( hName, "lep1(lep2)bb system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_lep1lep2bbPt_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_lep1lep2bbPt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_lep1lep2bbPt_ee2j[iHisto] = new TH1D( hName, "lep1(lep2)bb system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_lep1lep2bbPt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_lep1lep2bbPt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_lep1lep2bbPt_ee3j[iHisto] = new TH1D( hName, "lep1(lep2)bb system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_lep1lep2bbPt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_lep1lep2bbPt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_lep1lep2bbPt_ge4j[iHisto] = new TH1D( hName, "lep1(lep2)bb system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_lep1lep2bbPt_ge4j[iHisto]->SetDirectory(f_output);
-
+	
 
 	//
 	// lep1lep2bbMetPt
@@ -922,19 +551,13 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	hName += reg_gen_sys_name;
 	h_lep1lep2bbMetPt_incl[iHisto] = new TH1D( hName, "lep1(lep2)bbMet system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
 	h_lep1lep2bbMetPt_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_lep1lep2bbMetPt__ee2jSelection";
+	
+	// <4j Selection
+	hName = "h_lep1lep2bbMetPt__lt4jSelection";
 	hName += reg_gen_sys_name;
-	h_lep1lep2bbMetPt_ee2j[iHisto] = new TH1D( hName, "lep1(lep2)bbMet system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_lep1lep2bbMetPt_ee2j[iHisto]->SetDirectory(f_output);
+	h_lep1lep2bbMetPt_lt4j[iHisto] = new TH1D( hName, "lep1(lep2)bbMet system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
+	h_lep1lep2bbMetPt_lt4j[iHisto]->SetDirectory(f_output);
 
-	// ==3j Selection
-	hName = "h_lep1lep2bbMetPt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_lep1lep2bbMetPt_ee3j[iHisto] = new TH1D( hName, "lep1(lep2)bbMet system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_lep1lep2bbMetPt_ee3j[iHisto]->SetDirectory(f_output);
-      
 	// >=4j Selection
 	hName = "h_lep1lep2bbMetPt__ge4jSelection";
 	hName += reg_gen_sys_name;
@@ -952,24 +575,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_mt_incl[iHisto] = new TH1D( hName, "M_{T};M_{T} [GeV]", 24, 0.0, 600.0 );
 	h_mt_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_mt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_mt_ee2j[iHisto] = new TH1D( hName, "M_{T};M_{T} [GeV]", 24, 0.0, 600.0 );
-	h_mt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_mt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_mt_ee3j[iHisto] = new TH1D( hName, "M_{T};M_{T} [GeV]", 24, 0.0, 600.0 );
-	h_mt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_mt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_mt_ge4j[iHisto] = new TH1D( hName, "M_{T};M_{T} [GeV]", 24, 0.0, 600.0 );
-	h_mt_ge4j[iHisto]->SetDirectory(f_output);
-
+	
 	//
 	// modTopness
 	//
@@ -980,18 +586,12 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_modTopness_incl[iHisto] = new TH1D( hName, "Modified Topness;Modified Topness", 20, -20.0, 20.0 );
 	h_modTopness_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_modTopness__ee2jSelection";
+	// <4j Selection
+	hName = "h_modTopness__lt4jSelection";
 	hName += reg_gen_sys_name;
-	h_modTopness_ee2j[iHisto] = new TH1D( hName, "Modified Topness;Modified Topness", 20, -20.0, 20.0 );
-	h_modTopness_ee2j[iHisto]->SetDirectory(f_output);
+	h_modTopness_lt4j[iHisto] = new TH1D( hName, "Modified Topness;Modified Topness", 20, -20.0, 20.0 );
+	h_modTopness_lt4j[iHisto]->SetDirectory(f_output);
 
-	// ==3j Selection
-	hName = "h_modTopness__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_modTopness_ee3j[iHisto] = new TH1D( hName, "Modified Topness;Modified Topness", 20, -20.0, 20.0 );
-	h_modTopness_ee3j[iHisto]->SetDirectory(f_output);
-      
 	// >=4j Selection
 	hName = "h_modTopness__ge4jSelection";
 	hName += reg_gen_sys_name;
@@ -999,36 +599,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_modTopness_ge4j[iHisto]->SetDirectory(f_output);
 
       
-	//
-	// mt2w
-	//
-
-	// Incl Selection
-	hName = "h_mt2w__inclSelection";
-	hName += reg_gen_sys_name;
-	h_mt2w_incl[iHisto] = new TH1D( hName, "M_{T2}^{W};M_{T2}^{W} [GeV]", 24, 0.0, 600.0 );
-	h_mt2w_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_mt2w__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_mt2w_ee2j[iHisto] = new TH1D( hName, "M_{T2}^{W};M_{T2}^{W} [GeV]", 24, 0.0, 600.0 );
-	h_mt2w_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_mt2w__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_mt2w_ee3j[iHisto] = new TH1D( hName, "M_{T2}^{W};M_{T2}^{W} [GeV]", 24, 0.0, 600.0 );
-	h_mt2w_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// >=4j Selection
-	hName = "h_mt2w__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_mt2w_ge4j[iHisto] = new TH1D( hName, "M_{T2}^{W};M_{T2}^{W} [GeV]", 24, 0.0, 600.0 );
-	h_mt2w_ge4j[iHisto]->SetDirectory(f_output);
-
-
-	//
+		//
 	// mlb
 	//
 
@@ -1037,18 +608,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	hName += reg_gen_sys_name;
 	h_mlb_incl[iHisto] = new TH1D( hName, "M_{lb};M_{lb} [GeV]", 24, 0.0, 600.0 );
 	h_mlb_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_mlb__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_mlb_ee2j[iHisto] = new TH1D( hName, "M_{lb};M_{lb} [GeV]", 24, 0.0, 600.0 );
-	h_mlb_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_mlb__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_mlb_ee3j[iHisto] = new TH1D( hName, "M_{lb};M_{lb} [GeV]", 24, 0.0, 600.0 );
-	h_mlb_ee3j[iHisto]->SetDirectory(f_output);
       
 	// <4j Selection
 	hName = "h_mlb__lt4jSelection";
@@ -1097,18 +656,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_mlb_150to250met_incl[iHisto] = new TH1D( hName, "M_{lb};M_{lb} [GeV]", 24, 0.0, 600.0 );
 	h_mlb_150to250met_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_mlb_150to250met__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_mlb_150to250met_ee2j[iHisto] = new TH1D( hName, "M_{lb};M_{lb} [GeV]", 24, 0.0, 600.0 );
-	h_mlb_150to250met_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_mlb_150to250met__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_mlb_150to250met_ee3j[iHisto] = new TH1D( hName, "M_{lb};M_{lb} [GeV]", 24, 0.0, 600.0 );
-	h_mlb_150to250met_ee3j[iHisto]->SetDirectory(f_output);
-      
 	// <4j Selection
 	hName = "h_mlb_150to250met__lt4jSelection";
 	hName += reg_gen_sys_name;
@@ -1131,18 +678,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	hName += reg_gen_sys_name;
 	h_mlb_lep2_incl[iHisto] = new TH1D( hName, "M_{l2b};M_{l2b} [GeV]", 24, 0.0, 600.0 );
 	h_mlb_lep2_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_mlb_lep2__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_mlb_lep2_ee2j[iHisto] = new TH1D( hName, "M_{l2b};M_{l2b} [GeV]", 24, 0.0, 600.0 );
-	h_mlb_lep2_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_mlb_lep2__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_mlb_lep2_ee3j[iHisto] = new TH1D( hName, "M_{l2b};M_{l2b} [GeV]", 24, 0.0, 600.0 );
-	h_mlb_lep2_ee3j[iHisto]->SetDirectory(f_output);
       
 	// <4j Selection
 	hName = "h_mlb_lep2__lt4jSelection";
@@ -1168,18 +703,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_mlb_lep2_150to250met_incl[iHisto] = new TH1D( hName, "M_{l2b};M_{l2b} [GeV]", 24, 0.0, 600.0 );
 	h_mlb_lep2_150to250met_incl[iHisto]->SetDirectory(f_output);
       
-	// ==2j Selection
-	hName = "h_mlb_lep2_150to250met__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_mlb_lep2_150to250met_ee2j[iHisto] = new TH1D( hName, "M_{l2b};M_{l2b} [GeV]", 24, 0.0, 600.0 );
-	h_mlb_lep2_150to250met_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_mlb_lep2_150to250met__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_mlb_lep2_150to250met_ee3j[iHisto] = new TH1D( hName, "M_{l2b};M_{l2b} [GeV]", 24, 0.0, 600.0 );
-	h_mlb_lep2_150to250met_ee3j[iHisto]->SetDirectory(f_output);
-      
 	// <4j Selection
 	hName = "h_mlb_lep2_150to250met__lt4jSelection";
 	hName += reg_gen_sys_name;
@@ -1194,100 +717,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
 
 
-	//
-	// bJetPt
-	//
-
-	// Incl Selection
-	hName = "h_bJetPt__inclSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_incl[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_bJetPt__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_ee2j[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_bJetPt__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_ee3j[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// <4j Selection
-	hName = "h_bJetPt__lt4jSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_lt4j[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_lt4j[iHisto]->SetDirectory(f_output);
-
-	// >=4j Selection
-	hName = "h_bJetPt__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_ge4j[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_ge4j[iHisto]->SetDirectory(f_output);
-
-      
-
-	//
-	// bJetPt, inclusive nJets, modTopness bins
-	//
-
-	// <0 modTopness Selection
-	hName = "h_bJetPt__lt0modTopnessSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_lt0modTopness[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_lt0modTopness[iHisto]->SetDirectory(f_output);
-
-	// >=0 modTopness Selection
-	hName = "h_bJetPt__ge0modTopnessSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_ge0modTopness[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_ge0modTopness[iHisto]->SetDirectory(f_output);
-      
-	// >=10 modTopness Selection
-	hName = "h_bJetPt__ge10modTopnessSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_ge10modTopness[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_ge10modTopness[iHisto]->SetDirectory(f_output);
-
-
-	//
-	// bJetPt, met sideband CR
-	//
-
-	// Incl Selection
-	hName = "h_bJetPt_150to250met__inclSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_150to250met_incl[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_150to250met_incl[iHisto]->SetDirectory(f_output);
-      
-	// ==2j Selection
-	hName = "h_bJetPt_150to250met__ee2jSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_150to250met_ee2j[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_150to250met_ee2j[iHisto]->SetDirectory(f_output);
-
-	// ==3j Selection
-	hName = "h_bJetPt_150to250met__ee3jSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_150to250met_ee3j[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_150to250met_ee3j[iHisto]->SetDirectory(f_output);
-      
-	// <4j Selection
-	hName = "h_bJetPt_150to250met__lt4jSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_150to250met_lt4j[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_150to250met_lt4j[iHisto]->SetDirectory(f_output);
-
-	// >=4j Selection
-	hName = "h_bJetPt_150to250met__ge4jSelection";
-	hName += reg_gen_sys_name;
-	h_bJetPt_150to250met_ge4j[iHisto] = new TH1D( hName, "lead bJet p_{T};lead bJet p_{T} [GeV]", 24, 0.0, 600.0 );
-	h_bJetPt_150to250met_ge4j[iHisto]->SetDirectory(f_output);
-
-
+	
 
 	//
 	// Gen ttbar pT
@@ -1299,18 +729,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	  hName += reg_gen_sys_name;
 	  h_gen_ttbarPt_incl[iHisto] = new TH1D( hName, "Gen t#bar{t} system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
 	  h_gen_ttbarPt_incl[iHisto]->SetDirectory(f_output);
-	
-	  // ==2j Selection
-	  hName = "h_gen_ttbarPt__ee2jSelection";
-	  hName += reg_gen_sys_name;
-	  h_gen_ttbarPt_ee2j[iHisto] = new TH1D( hName, "Gen t#bar{t} system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	  h_gen_ttbarPt_ee2j[iHisto]->SetDirectory(f_output);
-
-	  // ==3j Selection
-	  hName = "h_gen_ttbarPt__ee3jSelection";
-	  hName += reg_gen_sys_name;
-	  h_gen_ttbarPt_ee3j[iHisto] = new TH1D( hName, "Gen t#bar{t} system p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
-	  h_gen_ttbarPt_ee3j[iHisto]->SetDirectory(f_output);
 	
 	  // <4j Selection
 	  hName = "h_gen_ttbarPt__lt4jSelection";
@@ -1343,33 +761,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	  h_gen_lep2_id_incl[iHisto]->GetXaxis()->SetBinLabel(7, "\"other\" tau");
 	  h_gen_lep2_id_incl[iHisto]->SetDirectory(f_output);
 	
-	  // ==2j Selection
-	  hName = "h_gen_lep2_id__ee2jSelection";
-	  hName += reg_gen_sys_name;
-	  h_gen_lep2_id_ee2j[iHisto] = new TH1D( hName, "Gen 2nd Lepton ID;ID", 7, 1.0, 8.0 );
-	  h_gen_lep2_id_ee2j[iHisto]->GetXaxis()->SetBinLabel(1, "ele");
-	  h_gen_lep2_id_ee2j[iHisto]->GetXaxis()->SetBinLabel(2, "mu");
-	  h_gen_lep2_id_ee2j[iHisto]->GetXaxis()->SetBinLabel(3, "lep tau, ele");
-	  h_gen_lep2_id_ee2j[iHisto]->GetXaxis()->SetBinLabel(4, "lep tau, mu");
-	  h_gen_lep2_id_ee2j[iHisto]->GetXaxis()->SetBinLabel(5, "had tau, 1 prong");
-	  h_gen_lep2_id_ee2j[iHisto]->GetXaxis()->SetBinLabel(6, "had tau, 3 prong");
-	  h_gen_lep2_id_ee2j[iHisto]->GetXaxis()->SetBinLabel(7, "\"other\" tau");
-	  h_gen_lep2_id_ee2j[iHisto]->SetDirectory(f_output);
-
-	  // ==3j Selection
-	  hName = "h_gen_lep2_id__ee3jSelection";
-	  hName += reg_gen_sys_name;
-	  h_gen_lep2_id_ee3j[iHisto] = new TH1D( hName, "Gen 2nd Lepton ID;ID", 7, 1.0, 8.0 );
-	  h_gen_lep2_id_ee3j[iHisto]->GetXaxis()->SetBinLabel(1, "ele");
-	  h_gen_lep2_id_ee3j[iHisto]->GetXaxis()->SetBinLabel(2, "mu");
-	  h_gen_lep2_id_ee3j[iHisto]->GetXaxis()->SetBinLabel(3, "lep tau, ele");
-	  h_gen_lep2_id_ee3j[iHisto]->GetXaxis()->SetBinLabel(4, "lep tau, mu");
-	  h_gen_lep2_id_ee3j[iHisto]->GetXaxis()->SetBinLabel(5, "had tau, 1 prong");
-	  h_gen_lep2_id_ee3j[iHisto]->GetXaxis()->SetBinLabel(6, "had tau, 3 prong");
-	  h_gen_lep2_id_ee3j[iHisto]->GetXaxis()->SetBinLabel(7, "\"other\" tau");
-	  h_gen_lep2_id_ee3j[iHisto]->SetDirectory(f_output);
-	
-	  // <4j Selection
+	  	  // <4j Selection
 	  hName = "h_gen_lep2_id__lt4jSelection";
 	  hName += reg_gen_sys_name;
 	  h_gen_lep2_id_lt4j[iHisto] = new TH1D( hName, "Gen 2nd Lepton ID;ID", 7, 1.0, 8.0 );
