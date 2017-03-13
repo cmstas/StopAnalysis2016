@@ -8,9 +8,11 @@
 
 
 // Stop Analysis
-#include "../StopCORE/stop_1l_babyAnalyzer.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/sysInfo.h"
+#include "stop_1l_babyAnalyzer.h"
+#include "genClassyInfo.h"
+#include "sysInfo.h"
+#include "selectionInfo.h"
+#include "categoryInfo.h"
 
 
 enum kJES{ kNominal=0, kUp=1, kDown=-1 };
@@ -23,13 +25,13 @@ public:
 	analyzer();
 	// ~analyzer();
 
-	void AddGenClassifications( std::vector<genClassyInfo::ID> new_classies );
+	void AddGenClassifications( std::vector<genClassyInfo::Util> new_classies );
 	void AddSelection( std::string label, bool (*new_selection)() );
 	void AddSelections( std::vector<std::pair<std::string,bool(*)()> > new_selections );
 	void AddCategories( std::vector<int> new_categories );
 	void AddSystematics( std::vector<sysInfo::ID> new_systematics );
 
-	std::vector<genClassyInfo::ID> GetGenClassifications();
+	std::vector<genClassyInfo::Util> GetGenClassifications();
 	std::vector<std::pair<std::string,bool(*)()> > GetSelections();
 	std::vector<int> GetCategories();
 	TH1D* GetYieldTemplate();
@@ -45,7 +47,7 @@ public:
 	void SetJesType( kJES jestype );
 
 private:
-	std::vector<genClassyInfo::ID> classifications;
+	std::vector<genClassyInfo::Util> classifications;
 	std::vector< std::pair<std::string,bool(*)()> > selections;
 	std::vector<int> categories;
 	std::vector<sysInfo::ID> systematics;
