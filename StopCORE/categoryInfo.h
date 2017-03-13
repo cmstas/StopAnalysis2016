@@ -22,6 +22,10 @@ namespace categoryInfo{
   //
   // NAMESPACE FUNCTIONS
   //
+  void SetJesType( int type );
+  void SetAdd2ndLep( bool addlep2 );
+
+
   TH1D* getYieldHistoTemplate_SR_ICHEP();
   vector<int> passCategory_SR_ICHEP( int jesType=0, bool add2ndLepToMet=false );
 
