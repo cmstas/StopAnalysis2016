@@ -10,8 +10,8 @@ analyzer::analyzer()
 }
 
 
-void analyzer::AddGenClassifications( std::vector<genClassyInfo::ID> new_classies ) {
-	for( genClassyInfo::ID thisID : new_classies ) classifications.push_back( thisID );
+void analyzer::AddGenClassifications( std::vector<genClassyInfo::Util> new_classies ) {
+	for( genClassyInfo::Util thisClassy : new_classies ) classifications.push_back( thisClassy );
 };
 
 void analyzer::AddSelection( std::string label, bool (*new_selection)() ) {
@@ -30,7 +30,7 @@ void analyzer::AddSystematics( std::vector<sysInfo::ID> new_systematics ) {
 	for( sysInfo::ID thisSyst : new_systematics ) systematics.push_back( thisSyst );
 };
 
-std::vector<genClassyInfo::ID> analyzer::GetGenClassifications() { return classifications; }
+std::vector<genClassyInfo::Util> analyzer::GetGenClassifications() { return classifications; }
 std::vector<std::pair<std::string,bool(*)()> > analyzer::GetSelections() { return selections; }
 std::vector<something> analyzer::GetCategories() { return categories; }
 std::vector<sysInfo::ID> analyzer::GetSystematics() { return systematics; }

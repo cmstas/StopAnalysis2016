@@ -8,9 +8,11 @@
 
 
 // Stop Analysis
-#include "../StopCORE/stop_1l_babyAnalyzer.h"
-#include "../StopCORE/genClassyInfo.h"
-#include "../StopCORE/sysInfo.h"
+#include "stop_1l_babyAnalyzer.h"
+#include "genClassyInfo.h"
+#include "sysInfo.h"
+#include "selectionInfo.h"
+#include "categoryInfo.h"
 
 
 enum kJES{ kNominal=0, kUp=1, kDown=-1 };
@@ -29,7 +31,7 @@ public:
 	void AddCategories( std::vector<int> (*new_categories)(int jesType, double add2ndLepToMet) );
 	void AddSystematics( std::vector<sysInfo::Util> new_systematics );
 
-	std::vector<genClassyInfo::ID> GetGenClassifications();
+	std::vector<genClassyInfo::Util> GetGenClassifications();
 	std::vector<std::pair<std::string,bool(*)()> > GetSelections();
 	std::vector<int> GetCategories();
 	TH1D* GetYieldTemplate();
