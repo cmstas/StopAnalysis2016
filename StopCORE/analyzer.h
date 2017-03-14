@@ -15,9 +15,7 @@
 #include "categoryInfo.h"
 
 
-enum kJES{ kNominal=0, kUp=1, kDown=-1 };
-
-const int nYieldBins_ = genClassyInfo::k_nGenClassy*sysInfo::k_nSys;
+const int nYieldBins_ = genClassyInfo::k_nGenClassy * sysInfo::k_nSys;
 
 class analyzer {
 
@@ -28,33 +26,35 @@ public:
 	void AddGenClassifications( std::vector<genClassyInfo::Util> new_classies );
 	void AddSelection( std::string label, bool (*new_selection)() );
 	void AddSelections( std::vector<std::pair<std::string,bool(*)()> > new_selections );
-	void AddCategories( std::vector<int> (*new_categories)(int jesType, double add2ndLepToMet) );
+	void AddCategories( std::vector<int> (*new_categories)(int,double) );
 	void AddSystematics( std::vector<sysInfo::Util> new_systematics );
 
 	std::vector<genClassyInfo::Util> GetGenClassifications();
 	std::vector<std::pair<std::string,bool(*)()> > GetSelections();
-	std::vector<int> GetCategories();
+	std::vector<int> GetCategoriesPassed();
 	TH1D* GetYieldTemplate();
-	std::vector<sysInfo::ID> GetSystematics();
+	std::vector<sysInfo::Util> GetSystematics();
 	bool GetAdd2ndLep();
 	bool GetIncludeTaus();
-	kJES GetJesType();
+	int GetJesType();
+	TH1D* GetYieldHistogram( int idx );
+	TH3D* GetYieldHistogramSig( int idx );
 
 	bool PassSelections();
 
 	void SetAdd2ndLep( bool use_lep2 );
 	void SetIncludeTaus( bool use_taus );
-	void SetJesType( kJES jestype );
+	void SetJesType( int jestype );
 
 private:
 	std::vector<genClassyInfo::Util> classifications;
 	std::vector< std::pair<std::string,bool(*)()> > selections;
-	std::vector<int>(*)(int jesType, double add2ndLepToMet) categories;
+	std::vector<int>(*categories_function)(int,double);
 	std::vector<sysInfo::Util> systematics;
 
 	bool add2ndLep;
 	bool includeTaus;
-	kJES jesType;
+	int  jesType;
 	
 	TH1D *h_yield_template;
 	TH3D *h_yield_template_sigScan;

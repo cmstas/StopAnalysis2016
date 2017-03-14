@@ -12,7 +12,7 @@ analyzer::analyzer()
 
 void analyzer::AddGenClassifications( std::vector<genClassyInfo::Util> new_classies ) {
 	for( genClassyInfo::Util thisClassy : new_classies ) classifications.push_back( thisClassy );
-};
+}
 
 void analyzer::AddSelection( std::string label, bool (*new_selection)() ) {
 	selections.push_back( std::make_pair( label, new_selection ) );
@@ -20,23 +20,31 @@ void analyzer::AddSelection( std::string label, bool (*new_selection)() ) {
 
 void analyzer::AddSelections( std::vector<std::pair<std::string,bool(*)()> > new_selections ) {
 	for( std::pair<std::string,bool(*)()> thisSelection : new_selections ) selections.push_back( thisSelection );
-};
+}
 
-void analyzer::AddCategories( std::vector<something> new_categories ) {
-	for( something thisThing : new_categories ) categories.push_back( thisThing );
-};
+void analyzer::AddCategories( std::vector<int> (*new_categories)(int,bool) ) { categories_function = new_categories; }
 
-void analyzer::AddSystematics( std::vector<sysInfo::ID> new_systematics ) {
-	for( sysInfo::ID thisSyst : new_systematics ) systematics.push_back( thisSyst );
-};
+void analyzer::AddSystematics( std::vector<sysInfo::Util> new_systematics ) {
+	for( sysInfo::Util thisSyst : new_systematics ) systematics.push_back( thisSyst );
+}
 
 std::vector<genClassyInfo::Util> analyzer::GetGenClassifications() { return classifications; }
 std::vector<std::pair<std::string,bool(*)()> > analyzer::GetSelections() { return selections; }
-std::vector<something> analyzer::GetCategories() { return categories; }
-std::vector<sysInfo::ID> analyzer::GetSystematics() { return systematics; }
+
+std::vector<int> analyzer::GetCategoriesPassed() {
+	categoryInfo::SetJesType( jesType );
+	categoryInfo::SetAdd2ndLep( add2ndLep );
+	return categories_function;
+}
+
+std::vector<sysInfo::Util> analyzer::GetSystematics() { return systematics; }
+
 bool analyzer::GetAdd2ndLep() { return add2ndLep; }
 bool analyzer::GetIncludeTaus() { return includeTaus; }
-kJES analyzer::GetJesType() { return jesType; }
+int analyzer::GetJesType() { return jesType; }
+
+TH1D* analyzer::GetYieldHistogram( int idx ) { return h_yield[idx]; }
+TH3D* analyzer::GetYieldHistogramSig( int idx ) { return h_yield_sig[idx]; }
 
 bool analyzer::PassSelections() {
 	selectionInfo::SetAdd2ndLep( add2ndLep );
@@ -50,4 +58,4 @@ bool analyzer::PassSelections() {
 
 void analyzer::SetAdd2ndLep( bool use_lep2 ) { add2ndLep = use_lep2; }
 void analyzer::SetIncludeTaus( bool use_taus ) {includeTaus = use_taus; }
-void analyzer::SetJesType( kJES jestype ) { jesType = jestype; }
+void analyzer::SetJesType( int jestype ) { jesType = jestype; }
