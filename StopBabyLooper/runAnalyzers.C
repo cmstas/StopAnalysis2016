@@ -14,7 +14,7 @@
 #include "../StopCORE/sysInfo.h"
 
 
-void processEvent( std::vector<analyzer*> analyzerList ) {
+void runAnalyzers( std::vector<analyzer*> analyzerList ) {
 
 
 	// Loop over all analyzers
