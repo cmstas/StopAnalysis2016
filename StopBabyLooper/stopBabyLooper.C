@@ -13,8 +13,8 @@ bool applyjson = true;
 bool add2ndLepToMet_ = true;
 bool inclTaus_CR2l_  = false;
 
-bool useBTagSFs_fromUtils_ = true;
-bool useLepSFs_fromUtils_  = true;
+bool useBTagSFs_fromFiles_ = true;
+bool useLepSFs_fromFiles_  = true;
         
 bool apply_cr2lTrigger_sf_  = true; // only !=1 if pfmet!=pfmet_rl ie no weight for ==1lepton events in SR and CR0b
 bool apply_bTag_sf_         = true; // event weight, product of all jet wgts
@@ -165,7 +165,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // Event Weight Utilities
   //
   cout << "    Loading eventWeight Utilities..." << endl << endl;
-  sysInfo::evtWgtInfo *wgtInfo = new sysInfo::evtWgtInfo( sample.id, useBTagSFs_fromUtils_, useLepSFs_fromUtils_, add2ndLepToMet_ );  
+  wgtInfo.setUp( sample.id, useBTagSFs_fromFiles_, useLepSFs_fromFiles_, add2ndLepToMet_ );  
   wgtInfo->apply_cr2lTrigger_sf  = (apply_cr2lTrigger_sf_ && add2ndLepToMet_);
   wgtInfo->apply_bTag_sf         = apply_bTag_sf_;
   wgtInfo->apply_lep_sf          = apply_lep_sf_;
