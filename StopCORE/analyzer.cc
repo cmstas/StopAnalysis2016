@@ -6,6 +6,7 @@ analyzer::analyzer()
 {
 	add2ndLep = false;
 	includeTaus = false;
+	isCorridor = false;
 	jesType = analyzer::kNominal;
 }
 
@@ -39,8 +40,17 @@ std::vector<int> analyzer::GetCategoriesPassed() {
 
 std::vector<sysInfo::Util> analyzer::GetSystematics() { return systematics; }
 
+double analyzer::GetEventWeight( sysInfo::Util whichSystematic ) {
+
+	// This function to be filled in when the appropriate changes have been made to sysInfo
+
+	if( isCorridor ) return 1.0;
+	return 1.0;
+}
+
 bool analyzer::GetAdd2ndLep() { return add2ndLep; }
 bool analyzer::GetIncludeTaus() { return includeTaus; }
+bool analyzer::GetIsCorridor() { return isCorridor; }
 int analyzer::GetJesType() { return jesType; }
 
 TH1D* analyzer::GetYieldHistogram( int idx ) { return h_yield[idx]; }
@@ -58,4 +68,5 @@ bool analyzer::PassSelections() {
 
 void analyzer::SetAdd2ndLep( bool use_lep2 ) { add2ndLep = use_lep2; }
 void analyzer::SetIncludeTaus( bool use_taus ) {includeTaus = use_taus; }
+void analyzer::SetIsCorridor( bool is_corridor ) {isCorridor = is_corridor; }
 void analyzer::SetJesType( int jestype ) { jesType = jestype; }

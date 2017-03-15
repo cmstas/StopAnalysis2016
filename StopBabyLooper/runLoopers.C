@@ -24,6 +24,10 @@ void runLoopers() {
 	CR2L_MlbBinned.SetAdd2ndLep( true );
 	CR2L_corridor.SetAdd2ndLep( true );
 
+	SR_corridor.SetIsCorridor( true );
+	CR2L_corridor.SetIsCorridor( true );
+	CR0b_corridor.SetIsCorridor( true );
+
 	// Give each analyzer the basic/common gen classifications, selections, etc. it'll need
 	for( analyzer iter : {SR_MlbBinned, SR_corridor, CR2L_MlbBinned, CR2L_corridor, CR0b_MlbBinned, CR0b_tightBTagHighMlb, CR0b_corridor} ) {
 

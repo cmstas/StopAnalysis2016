@@ -50,7 +50,7 @@ void processEvent( std::vector<analyzer*> analyzerList ) {
 			}
 
 
-			double weight = thisAnalyzer->GetEventWeight( thisSystematic ); /////////////////// Need to write this function
+			double weight = thisAnalyzer->GetEventWeight( thisSystematic );
 			std::vector<int> categories_passed = thisAnalyzer->GetCategoriesPassed();
 
 			// Loop over all the gen classifications that we passed
@@ -60,14 +60,15 @@ void processEvent( std::vector<analyzer*> analyzerList ) {
 				// Get the index for the histogram corresponding to this genClassy and systematic
 				int histIndex = thisGenClassy.id * sysInfo::k_nSys + thisSystematic.id;
 
+				// Fill yield histograms
 				for( int category : categories_passed ) {
 					thisAnalyzer->GetYieldHistogram( histIndex )->Fill( category, weight );
 				}
 
+				// Do any other histogram filling that needs doing
+
+
 			} // End loop over genClassy's
-
-
-
 
 		} // End loop over systematics
 

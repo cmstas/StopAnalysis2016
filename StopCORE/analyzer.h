@@ -32,18 +32,21 @@ public:
 	std::vector<genClassyInfo::Util> GetGenClassifications();
 	std::vector<std::pair<std::string,bool(*)()> > GetSelections();
 	std::vector<int> GetCategoriesPassed();
-	TH1D* GetYieldTemplate();
 	std::vector<sysInfo::Util> GetSystematics();
+	double GetEventWeight( sysInfo::Util whichSystematic );
 	bool GetAdd2ndLep();
 	bool GetIncludeTaus();
+	bool GetIsCorridor();
 	int GetJesType();
 	TH1D* GetYieldHistogram( int idx );
 	TH3D* GetYieldHistogramSig( int idx );
+	TH1D* GetYieldTemplate();
 
 	bool PassSelections();
 
 	void SetAdd2ndLep( bool use_lep2 );
 	void SetIncludeTaus( bool use_taus );
+	void SetIsCorridor( bool is_corridor );
 	void SetJesType( int jestype );
 
 private:
@@ -54,6 +57,7 @@ private:
 
 	bool add2ndLep;
 	bool includeTaus;
+	bool isCorridor;
 	int  jesType;
 	
 	TH1D *h_yield_template;
