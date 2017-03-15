@@ -4,8 +4,8 @@
 static int  localJesType = 0;
 static bool localAddLep2 = false;
 
-void selectionInfo::SetJesType( int type ) { localJesType = type; }
-void selectionInfo::SetAdd2ndLep( bool addlep2 ) { localAddLep2 = addlep2; }
+void categoryInfo::SetJesType( int type ) { localJesType = type; }
+void categoryInfo::SetAdd2ndLep( bool addlep2 ) { localAddLep2 = addlep2; }
 
 
 //////////////////////////////////////////////////////////////////////

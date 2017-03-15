@@ -24,11 +24,6 @@ typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
 #include <string>
 #include <vector>
 
-// Extern wgtInfo for easy access
-#ifndef __CINT__
-extern evtWgtInfo wgtInfo;
-#endif
-
 
 //
 // Namespace
@@ -361,6 +356,11 @@ namespace sysInfo{
     double getSampleWeight( sampleInfo::ID sample );
 
   }; // end class def
+
+// Extern wgtInfo for easy access
+#ifndef __CINT__
+extern evtWgtInfo wgtInfo;
+#endif
 
 
 }

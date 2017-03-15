@@ -2,7 +2,7 @@
 
 //////////////////////////////////////////////////////////////////////
 
-evtWgtInfo wgtInfo;
+sysInfo::evtWgtInfo wgtInfo;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -426,7 +426,7 @@ sysInfo::evtWgtInfo::evtWgtInfo(){
 
 //////////////////////////////////////////////////////////////////////
 
-sysInfo::evtWgtInfo::setUp( sampleInfo::ID sample, bool useBTagUtils, bool useLepSFUtils, bool use2ndLepToMet ){
+void sysInfo::evtWgtInfo::setUp( sampleInfo::ID sample, bool useBTagUtils, bool useLepSFUtils, bool use2ndLepToMet ){
   
   // Get sample info from enum
   sample_info = new sampleInfo::sampleUtil( sample );
