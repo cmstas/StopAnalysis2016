@@ -42,7 +42,8 @@ std::vector<sysInfo::Util> analyzer::GetSystematics() { return systematics; }
 
 double analyzer::GetEventWeight( sysInfo::ID whichSystematic ) {
 
-	if( isCorridor ) return sysInfo::GetEventWeight_corridor( whichSystematic );
+	if( useMetTTbarWgts ) return sysInfo::GetEventWeight_metTTbar( whichSystematic );
+	else if( isCorridor ) return sysInfo::GetEventWeight_corridor( whichSystematic );
 
 	return sysInfo::GetEventWeight( whichSystematic );
 }
@@ -51,6 +52,7 @@ bool analyzer::GetAdd2ndLep() { return add2ndLep; }
 bool analyzer::GetIncludeTaus() { return includeTaus; }
 bool analyzer::GetIsCorridor() { return isCorridor; }
 int analyzer::GetJesType() { return jesType; }
+bool analyzer::GetUseMetTTbarWeights() { return useMetTtbarWgts; }
 
 TH1D* analyzer::GetYieldHistogram( int idx ) { return h_yield[idx]; }
 TH3D* analyzer::GetYieldHistogramSig( int idx ) { return h_yield_sig[idx]; }
@@ -69,3 +71,5 @@ void analyzer::SetAdd2ndLep( bool use_lep2 ) { add2ndLep = use_lep2; }
 void analyzer::SetIncludeTaus( bool use_taus ) {includeTaus = use_taus; }
 void analyzer::SetIsCorridor( bool is_corridor ) {isCorridor = is_corridor; }
 void analyzer::SetJesType( int jestype ) { jesType = jestype; }
+void analyzer::SetUseMetTTbarWeights( bool use_metttbar ) { useMetTTbarWgts = use_metttbar; }
+

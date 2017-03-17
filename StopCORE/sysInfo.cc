@@ -389,6 +389,8 @@ double sysInfo::GetEventWeight( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgt
 
 double sysInfo::GetEventWeight_corridor( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_corridor[whichSyst]; }
 
+double sysInfo::GetEventWeight_metTTbar( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_metTTbar[whichSyst]; }
+
 //////////////////////////////////////////////////////////////////////
 
 sysInfo::evtWgtInfo::evtWgtInfo(){
@@ -689,7 +691,7 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 	getMetResWeight_corridor( sf_metRes_corridor, sf_metRes_corridor_up, sf_metRes_corridor_dn );
   
   // MET ttbar scale factors 
-  //getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
+  getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
   
   // ttbar system pT scale factor 
   getTTbarSysPtSF( sf_ttbarSysPt, sf_ttbarSysPt_up, sf_ttbarSysPt_dn );
@@ -769,10 +771,6 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   // Apply met resolution sf
   double wgt_metRes = sf_metRes;
   evt_wgt *= wgt_metRes;
-    
-  // Apply met ttbar sf
-  //double wgt_metTTbar = sf_metTTbar;
-  //evt_wgt *= wgt_metTTbar;
 
   // Apply ttbar system pT SF (will be 1 if not ttbar/tW 2l) 
   double wgt_ttbarSysPt = sf_ttbarSysPt;
@@ -899,16 +897,6 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
       sys_wgt *= sf_metRes_dn/wgt_metRes;
     }
 
-    // MetTTbar SF Up
-    else if( iSys==k_metTTbarUp ){
-      //sys_wgt *= sf_metTTbar_up/wgt_metTTbar;
-    }
-
-    // MetTTbar SF Dn
-    else if( iSys==k_metTTbarDown ){
-      //sys_wgt *= sf_metTTbar_dn/wgt_metTTbar;
-    }
-
     // TTbar/tW System pT Up
     else if( iSys==k_ttbarSysPtUp ){
       sys_wgt *= (sf_ttbarSysPt_up/wgt_ttbarSysPt);
@@ -1020,16 +1008,23 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     }
 
 
-		// Deal with alternate weights for corridor regions
+		// Deal with alternate MET resolution weights for corridor regions
 		double wgt_corridor = sys_wgt;
 		if(      iSys==k_metResUp   ) wgt_corridor *= sf_metRes_corridor_up / sf_metRes_up;
 		else if( iSys==k_metResDown ) wgt_corridor *= sf_metRes_corridor_dn / sf_metRes_dn;
 		else wgt_corridor *= sf_metRes_corridor / sf_metRes;
+
+		// Deal with MET ttbar weights for MET extrapolation regions
+		double wgt_metTTbar = sys_wgt;
+		if(      iSys==k_metTTbarUp   ) wgt_metTTbar *= sf_metTTbar;
+		else if( iSys==k_metTTbarDown ) wgt_metTTbar *= sf_metTTbar_up;
+		else wgt_metTTbar *= sf_metTTbar;
     
 
     // Fill Array Element
     sys_wgts[iSys] = sys_wgt;
 		sys_wgts_corridor[iSys] = wgt_corridor;
+		sys_wgts_metTTbar[iSys] = wgt_metTTbar;
 
 
     // Break if only filling nominal

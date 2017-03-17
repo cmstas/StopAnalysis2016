@@ -38,6 +38,7 @@ public:
 	bool GetIncludeTaus();
 	bool GetIsCorridor();
 	int GetJesType();
+	bool GetUseMetTTbarWeights();
 	TH1D* GetYieldHistogram( int idx );
 	TH3D* GetYieldHistogramSig( int idx );
 	TH1D* GetYieldTemplate();
@@ -48,6 +49,7 @@ public:
 	void SetIncludeTaus( bool use_taus );
 	void SetIsCorridor( bool is_corridor );
 	void SetJesType( int jestype );
+	void SetUseMetTTbarWeights( bool use_metttbar );
 
 private:
 	std::vector<genClassyInfo::Util> classifications;
@@ -59,6 +61,7 @@ private:
 	bool includeTaus;
 	bool isCorridor;
 	int  jesType;
+	bool useMetTTbarWgts;
 	
 	TH1D *h_yield_template;
 	TH3D *h_yield_template_sigScan;
