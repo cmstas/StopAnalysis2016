@@ -385,6 +385,12 @@ sysInfo::Util::Util( sysInfo::ID systematic ){
 
 //////////////////////////////////////////////////////////////////////
 
+double sysInfo::GetEventWeight( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts[whichSyst]; }
+
+double sysInfo::GetEventWeight_corridor( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_corridor[whichSyst]; }
+
+//////////////////////////////////////////////////////////////////////
+
 sysInfo::evtWgtInfo::evtWgtInfo(){
   
   // Utilty Var Constants
@@ -583,6 +589,9 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_metRes = 1.0;
   sf_metRes_up = 1.0;
   sf_metRes_dn = 1.0;
+	sf_metRes_corridor = 1.0;
+	sf_metRes_corridor_up = 1.0;
+	sf_metRes_corridor_dn = 1.0;
   
   sf_metTTbar = 1.0;
   sf_metTTbar_up = 1.0;
@@ -676,7 +685,8 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   getTopPtWeight( sf_topPt, sf_topPt_up, sf_topPt_dn );
 
   // MET resolution scale factors 
-  //getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
+  getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
+	getMetResWeight_corridor( sf_metRes_corridor, sf_metRes_corridor_up, sf_metRes_corridor_dn );
   
   // MET ttbar scale factors 
   //getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
@@ -757,8 +767,8 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   evt_wgt *= wgt_topPt;
   
   // Apply met resolution sf
-  //double wgt_metRes = sf_metRes;
-  //evt_wgt *= wgt_metRes;
+  double wgt_metRes = sf_metRes;
+  evt_wgt *= wgt_metRes;
     
   // Apply met ttbar sf
   //double wgt_metTTbar = sf_metTTbar;
@@ -881,12 +891,12 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 
     // MetRes SF Up
     else if( iSys==k_metResUp ){
-      //sys_wgt *= sf_metRes_up/wgt_metRes;
+      sys_wgt *= sf_metRes_up/wgt_metRes;
     }
 
     // MetRes SF Dn
     else if( iSys==k_metResDown ){
-      //sys_wgt *= sf_metRes_dn/wgt_metRes;
+      sys_wgt *= sf_metRes_dn/wgt_metRes;
     }
 
     // MetTTbar SF Up
@@ -1008,10 +1018,18 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     else if( iSys==k_puDown ){
       sys_wgt *= (sf_pu_dn/wgt_pu);
     }
+
+
+		// Deal with alternate weights for corridor regions
+		double wgt_corridor = sys_wgt;
+		if(      iSys==k_metResUp   ) wgt_corridor *= sf_metRes_corridor_up / sf_metRes_up;
+		else if( iSys==k_metResDown ) wgt_corridor *= sf_metRes_corridor_dn / sf_metRes_dn;
+		else wgt_corridor *= sf_metRes_corridor / sf_metRes;
     
 
     // Fill Array Element
     sys_wgts[iSys] = sys_wgt;
+		sys_wgts_corridor[iSys] = wgt_corridor;
 
 
     // Break if only filling nominal

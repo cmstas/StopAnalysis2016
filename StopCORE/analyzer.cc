@@ -40,12 +40,11 @@ std::vector<int> analyzer::GetCategoriesPassed() {
 
 std::vector<sysInfo::Util> analyzer::GetSystematics() { return systematics; }
 
-double analyzer::GetEventWeight( sysInfo::Util whichSystematic ) {
+double analyzer::GetEventWeight( sysInfo::ID whichSystematic ) {
 
-	// This function to be filled in when the appropriate changes have been made to sysInfo
+	if( isCorridor ) return sysInfo::GetEventWeight_corridor( whichSystematic );
 
-	if( isCorridor ) return 1.0;
-	return 1.0;
+	return sysInfo::GetEventWeight( whichSystematic );
 }
 
 bool analyzer::GetAdd2ndLep() { return add2ndLep; }

@@ -50,7 +50,7 @@ void runAnalyzers( std::vector<analyzer*> analyzerList ) {
 			}
 
 
-			double weight = thisAnalyzer->GetEventWeight( thisSystematic );
+			double weight = thisAnalyzer->GetEventWeight( thisSystematic.id );
 			std::vector<int> categories_passed = thisAnalyzer->GetCategoriesPassed();
 
 			// Loop over all the gen classifications that we passed

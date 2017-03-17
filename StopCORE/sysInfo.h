@@ -89,6 +89,12 @@ namespace sysInfo{
   typedef std::pair< sysInfo::ID, double > pair_id_wgt;
   typedef std::vector< std::pair< sysInfo::ID, double > > vect_id_wgt;
 
+	//
+	// Other namespace functions
+	//
+	double GetEventWeight( ID whichSyst );
+	double GetEventWeight_corridor( ID whichSyst );
+
 
   //
   // CLASS
@@ -167,6 +173,7 @@ namespace sysInfo{
     
     // Event weights for each systematic
     double sys_wgts[k_nSys];
+		double sys_wgts_corridor[k_nSys];
 
     // Variables to form baseline event weight
     int mStop;
@@ -238,6 +245,9 @@ namespace sysInfo{
     double sf_metRes;
     double sf_metRes_up;
     double sf_metRes_dn;
+		double sf_metRes_corridor;
+		double sf_metRes_corridor_up;
+		double sf_metRes_corridor_dn;
   
     bool   apply_metTTbar_sf;
     double sf_metTTbar;
@@ -357,13 +367,14 @@ namespace sysInfo{
 
   }; // end class def
 
+
 // Extern wgtInfo for easy access
 #ifndef __CINT__
 extern evtWgtInfo wgtInfo;
 #endif
 
 
-}
+} // End of namespace sysInfo
 
 
 //////////////////////////////////////////////////////////////////////

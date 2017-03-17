@@ -33,7 +33,7 @@ public:
 	std::vector<std::pair<std::string,bool(*)()> > GetSelections();
 	std::vector<int> GetCategoriesPassed();
 	std::vector<sysInfo::Util> GetSystematics();
-	double GetEventWeight( sysInfo::Util whichSystematic );
+	double GetEventWeight( sysInfo::ID whichSystematic );
 	bool GetAdd2ndLep();
 	bool GetIncludeTaus();
 	bool GetIsCorridor();
