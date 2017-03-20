@@ -26,7 +26,7 @@ public:
 	void AddGenClassifications( std::vector<genClassyInfo::Util> new_classies );
 	void AddSelection( std::string label, bool (*new_selection)() );
 	void AddSelections( std::vector<std::pair<std::string,bool(*)()> > new_selections );
-	void AddCategories( std::vector<int> (*new_categories)(int,double) );
+	void AddCategories( std::vector<int> (*new_categories)(int,bool) );
 	void AddSystematics( std::vector<sysInfo::Util> new_systematics );
 
 	std::vector<genClassyInfo::Util> GetGenClassifications();
@@ -54,7 +54,7 @@ public:
 private:
 	std::vector<genClassyInfo::Util> classifications;
 	std::vector< std::pair<std::string,bool(*)()> > selections;
-	std::vector<int>(*categories_function)(int,double);
+	std::vector<int>(*categories_function)(int,bool);
 	std::vector<sysInfo::Util> systematics;
 
 	bool add2ndLep;

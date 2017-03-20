@@ -7,7 +7,7 @@ analyzer::analyzer()
 	add2ndLep = false;
 	includeTaus = false;
 	isCorridor = false;
-	jesType = analyzer::kNominal;
+	jesType = 0;
 }
 
 
@@ -35,7 +35,7 @@ std::vector<std::pair<std::string,bool(*)()> > analyzer::GetSelections() { retur
 std::vector<int> analyzer::GetCategoriesPassed() {
 	categoryInfo::SetJesType( jesType );
 	categoryInfo::SetAdd2ndLep( add2ndLep );
-	return categories_function;
+	return categories_function( jesType, add2ndLep );
 }
 
 std::vector<sysInfo::Util> analyzer::GetSystematics() { return systematics; }
@@ -52,7 +52,7 @@ bool analyzer::GetAdd2ndLep() { return add2ndLep; }
 bool analyzer::GetIncludeTaus() { return includeTaus; }
 bool analyzer::GetIsCorridor() { return isCorridor; }
 int analyzer::GetJesType() { return jesType; }
-bool analyzer::GetUseMetTTbarWeights() { return useMetTtbarWgts; }
+bool analyzer::GetUseMetTTbarWeights() { return useMetTTbarWgts; }
 
 TH1D* analyzer::GetYieldHistogram( int idx ) { return h_yield[idx]; }
 TH3D* analyzer::GetYieldHistogramSig( int idx ) { return h_yield_sig[idx]; }
