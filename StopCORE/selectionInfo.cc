@@ -24,7 +24,14 @@ bool selectionInfo::pass_metFilter(){
 	!babyAnalyzer.filt_duplicatemuons() &&
 	!babyAnalyzer.filt_badmuons() &&
 	babyAnalyzer.filt_nobadmuons()          ) result = true;
-  }
+    /*
+    if( babyAnalyzer.filt_met() && 
+	babyAnalyzer.filt_badChargedCandidateFilter() && 
+	babyAnalyzer.filt_jetWithBadMuon() &&
+	babyAnalyzer.filt_pfovercalomet() &&
+	babyAnalyzer.filt_badMuonFilter()     ) result = true;
+    */
+  } 
   return result;
 }
 

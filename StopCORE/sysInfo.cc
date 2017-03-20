@@ -1111,7 +1111,7 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
   double sf_err = 0.0;
 
   // DiElectron Trigger
-  if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==22 ){
+  if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==22 ){
     sf_val = 0.868705; // 35.876fb, reMiniAOD
     sf_err = 0.00457008;
     //sf_val = 0.869221; // 36.46fb, updated JECs
@@ -1125,7 +1125,7 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
   }
 
   // MuE Trigger
-  if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==24 ){
+  if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==24 ){
     sf_val = 0.862895; // 35.876fb, reMiniAOD
     sf_err = 0.00204966;
     //sf_val = 0.86275; // 36.46fb, updated JECs
@@ -1139,7 +1139,7 @@ void sysInfo::evtWgtInfo::getDiLepTriggerWeight( double &wgt_trigger, double &wg
   }
 
   // DiMuon Trigger
-  if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep1_pdgid())==26 ){
+  if( abs(babyAnalyzer.lep1_pdgid())+abs(babyAnalyzer.lep2_pdgid())==26 ){
     sf_val = 0.804283; // 35.876fb, reMiniAOD
     sf_err = 0.00266679;
     //sf_val = 0.813382; // 36.46fb, updated JECs
@@ -2363,12 +2363,12 @@ void sysInfo::evtWgtInfo::getMetTTbarWeight( double &weight_metTTbar, double &we
   // Region B
   if( nGoodJets<4 && modTopness>=10.0 && mlb>=175.0 && nTightTags>=1 ){
     if( met>450.0 && met<600.0 ){
-      sf_val = 1.02;
-      sf_err = 0.25;
+      sf_val = 1.00;
+      sf_err = 0.24;
     }
     if( met>600.0 ){
-      sf_val = 0.91;
-      sf_err = 0.38;
+      sf_val = 0.99;
+      sf_err = 0.39;
     }
   }
 
@@ -2379,7 +2379,7 @@ void sysInfo::evtWgtInfo::getMetTTbarWeight( double &weight_metTTbar, double &we
       sf_err = 0.10;
     }
     if( met>550.0 ){
-      sf_val = 0.59;
+      sf_val = 0.62;
       sf_err = 0.18;
     }
   }
@@ -2387,11 +2387,11 @@ void sysInfo::evtWgtInfo::getMetTTbarWeight( double &weight_metTTbar, double &we
   // Region F
   if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 && mlb>=175.0 && nTightTags>=1 ){
     if( met>250.0 && met<450.0 ){
-      sf_val = 1.03;
+      sf_val = 1.02;
       sf_err = 0.05;
     }
     if( met>450.0 ){
-      sf_val = 0.58;
+      sf_val = 0.62;
       sf_err = 0.10;
     }
   }
@@ -2399,11 +2399,11 @@ void sysInfo::evtWgtInfo::getMetTTbarWeight( double &weight_metTTbar, double &we
   // Region H
   if( nGoodJets>=4 && modTopness>=10.0 && mlb>=175.0 && nTightTags>=1){
     if( met>250.0 && met<450.0 ){
-      sf_val = 1.03;
+      sf_val = 1.02;
       sf_err = 0.05;
     }
     if( met>450.0 ){
-      sf_val = 0.58;
+      sf_val = 0.62;
       sf_err = 0.10;
     }
   }
