@@ -45,6 +45,7 @@
 #include "../StopCORE/categoryInfo.h"
 #include "../StopCORE/selectionInfo.h"
 #include "../StopCORE/sysInfo.h"
+#include "../StopCORE/analyzer.h"
 
 
 ////////////////

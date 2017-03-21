@@ -20,13 +20,15 @@ const int nYieldBins_ = genClassyInfo::k_nGenClassy * sysInfo::k_nSys;
 class analyzer {
 
 public:
-	analyzer();
+	analyzer( std::string new_label );
 	// ~analyzer();
 
+	void AddGenClassification( genClassyInfo::Util new_classy );
 	void AddGenClassifications( std::vector<genClassyInfo::Util> new_classies );
 	void AddSelection( std::string label, bool (*new_selection)() );
 	void AddSelections( std::vector<std::pair<std::string,bool(*)()> > new_selections );
 	void AddCategories( std::vector<int> (*new_categories)(int,bool) );
+	void AddSystematic( sysInfo::Util new_systematic );
 	void AddSystematics( std::vector<sysInfo::Util> new_systematics );
 
 	std::vector<genClassyInfo::Util> GetGenClassifications();
@@ -38,12 +40,16 @@ public:
 	bool GetIncludeTaus();
 	bool GetIsCorridor();
 	int GetJesType();
+	std::string GetLabel();
 	bool GetUseMetTTbarWeights();
 	TH1D* GetYieldHistogram( int idx );
 	TH3D* GetYieldHistogramSig( int idx );
 	TH1D* GetYieldTemplate();
 
 	bool PassSelections();
+
+	void ResetGenClassifications();
+	void ResetSystematics();
 
 	void SetAdd2ndLep( bool use_lep2 );
 	void SetIncludeTaus( bool use_taus );
@@ -56,6 +62,8 @@ private:
 	std::vector< std::pair<std::string,bool(*)()> > selections;
 	std::vector<int>(*categories_function)(int,bool);
 	std::vector<sysInfo::Util> systematics;
+
+	std::string label;
 
 	bool add2ndLep;
 	bool includeTaus;

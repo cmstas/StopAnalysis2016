@@ -2,7 +2,8 @@
 
 
 // Constructor
-analyzer::analyzer()
+analyzer::analyzer( std::string new_label )
+	: label(new_label)
 {
 	add2ndLep = false;
 	includeTaus = false;
@@ -10,6 +11,8 @@ analyzer::analyzer()
 	jesType = 0;
 }
 
+
+void analyzer::AddGenClassification( genClassyInfo::Util new_classy ) { classifications.push_back( new_classy ); }
 
 void analyzer::AddGenClassifications( std::vector<genClassyInfo::Util> new_classies ) {
 	for( genClassyInfo::Util thisClassy : new_classies ) classifications.push_back( thisClassy );
@@ -24,6 +27,8 @@ void analyzer::AddSelections( std::vector<std::pair<std::string,bool(*)()> > new
 }
 
 void analyzer::AddCategories( std::vector<int> (*new_categories)(int,bool) ) { categories_function = new_categories; }
+
+void analyzer::AddSystematic( sysInfo::Util new_systematic ) { systematics.push_back( new_systematic ); }
 
 void analyzer::AddSystematics( std::vector<sysInfo::Util> new_systematics ) {
 	for( sysInfo::Util thisSyst : new_systematics ) systematics.push_back( thisSyst );
@@ -52,6 +57,7 @@ bool analyzer::GetAdd2ndLep() { return add2ndLep; }
 bool analyzer::GetIncludeTaus() { return includeTaus; }
 bool analyzer::GetIsCorridor() { return isCorridor; }
 int analyzer::GetJesType() { return jesType; }
+std::string analyzer::GetLabel() { return label; }
 bool analyzer::GetUseMetTTbarWeights() { return useMetTTbarWgts; }
 
 TH1D* analyzer::GetYieldHistogram( int idx ) { return h_yield[idx]; }
@@ -66,6 +72,9 @@ bool analyzer::PassSelections() {
 	}
 	return true;
 }
+
+void analyzer::ResetGenClassifications() { classifications.clear(); }
+void analyzer::ResetSystematics() { systematics.clear(); }
 
 void analyzer::SetAdd2ndLep( bool use_lep2 ) { add2ndLep = use_lep2; }
 void analyzer::SetIncludeTaus( bool use_taus ) {includeTaus = use_taus; }
