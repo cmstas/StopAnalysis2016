@@ -56,6 +56,7 @@ public:
 	void SetIsCorridor( bool is_corridor );
 	void SetJesType( int jestype );
 	void SetUseMetTTbarWeights( bool use_metttbar );
+	void SetYieldTemplate( TH1D* yield_template );
 
 private:
 	std::vector<genClassyInfo::Util> classifications;

@@ -370,13 +370,13 @@ namespace sysInfo{
   }; // end class def
 
 
+} // End of namespace sysInfo
+
+
 // Extern wgtInfo for easy access
 #ifndef __CINT__
-extern evtWgtInfo wgtInfo;
+extern sysInfo::evtWgtInfo wgtInfo;
 #endif
-
-
-} // End of namespace sysInfo
 
 
 //////////////////////////////////////////////////////////////////////

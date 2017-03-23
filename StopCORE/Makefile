@@ -36,7 +36,7 @@ STOPVARLIB     = ../StopBabyMaker/stop_variables/StopVariables.so
 
 
 stopCORE.so: sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o analyzer.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o
-	$(LD) $(LDFLAGS) $(SOFLAGS) -o stopCORE.so sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) -Wl,-rpath,./
+	$(LD) $(LDFLAGS) $(SOFLAGS) -o stopCORE.so sysInfo.o eventWeight_bTagSF.o eventWeight_lepSF.o analyzer.o selectionInfo.o categoryInfo.o genClassyInfo.o sampleInfo.o stop_1l_babyAnalyzer.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) -Wl,-rpath,./
 
 
 sysInfo.o: sysInfo.h sysInfo.cc stop_1l_babyAnalyzer.h stop_1l_babyAnalyzer.cc eventWeight_lepSF.h eventWeight_lepSF.cc eventWeight_bTagSF.h eventWeight_bTagSF.cc
