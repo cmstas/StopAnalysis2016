@@ -82,5 +82,6 @@ void analyzer::SetIncludeTaus( bool use_taus ) {includeTaus = use_taus; }
 void analyzer::SetIsCorridor( bool is_corridor ) {isCorridor = is_corridor; }
 void analyzer::SetJesType( int jestype ) { jesType = jestype; }
 void analyzer::SetUseMetTTbarWeights( bool use_metttbar ) { useMetTTbarWgts = use_metttbar; }
+void analyzer::SetYieldHistogram( int idx, TH1D* histo ) { h_yield[idx] = histo; }
 void analyzer::SetYieldTemplate( TH1D* yield_template ) { h_yield_template = yield_template; }
 

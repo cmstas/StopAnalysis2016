@@ -51,14 +51,82 @@ int stopBabyLooper(){
   //sampleList.push_back( sampleInfo::k_single_lepton_met );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
   //sampleList.push_back( sampleInfo::k_ttWJets_13TeV_madgraphMLM ); 
-  //sampleList.push_back( sampleInfo::k_T2tt ); 
-  
+  //sampleList.push_back( sampleInfo::k_T2tt );
+
+	//
+	// Set up all the analyzer objects we'll need
+	//
+	analyzer SR_MlbBinned( "SR_bulk" );
+	analyzer SR_corridor( "SR_corridor" );
+	analyzer CR2L_MlbBinned( "CR2L_bulk" );
+	analyzer CR2L_corridor( "CR2L_corridor" );
+	analyzer CR0b_MlbBinned( "CR0b_bulk" );
+	analyzer CR0b_tightBTagHighMlb( "CR0b_highMlb_bulk" );
+	analyzer CR0b_corridor( "CR0b_corridor" );
+
+	std::vector<analyzer*> analyzer_list = {&SR_MlbBinned, &SR_corridor, &CR2L_MlbBinned, &CR2L_corridor, &CR0b_MlbBinned, &CR0b_tightBTagHighMlb, &CR0b_corridor};
+
+	// Set the attributes for each analyzer
+	CR2L_MlbBinned.SetAdd2ndLep( true );
+	CR2L_corridor.SetAdd2ndLep( true );
+
+	SR_corridor.SetIsCorridor( true );
+	CR2L_corridor.SetIsCorridor( true );
+	CR0b_corridor.SetIsCorridor( true );
+
+	SR_MlbBinned.SetUseMetTTbarWeights( true );
+
+	// Set selections and categories for the analyzers
+	SR_MlbBinned.AddSelections(   selectionInfo::get_selection_SR() );
+	SR_corridor.AddSelections(    selectionInfo::get_selection_SR_corridor() );
+	CR2L_MlbBinned.AddSelections( selectionInfo::get_selection_CR2l() );
+	CR2L_corridor.AddSelections(  selectionInfo::get_selection_CR2l_corridor() );
+	CR0b_MlbBinned.AddSelections( selectionInfo::get_selection_CR0b() );
+	CR0b_tightBTagHighMlb.AddSelections( selectionInfo::get_selection_CR0b_tightBTagHighMlb() );
+	CR0b_corridor.AddSelections(  selectionInfo::get_selection_CR0b_corridor() );
+
+	SR_MlbBinned.AddCategories(   categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
+	SR_corridor.AddCategories(    categoryInfo::passCategory_SR_corridor);
+	CR2L_MlbBinned.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
+	CR2L_corridor.AddCategories(  categoryInfo::passCategory_SR_corridor);
+	CR0b_MlbBinned.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
+	CR0b_tightBTagHighMlb.AddCategories(categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
+	CR0b_corridor.AddCategories(  categoryInfo::passCategory_SR_corridor);
+
+	TH1D* h_template_MlbBinned = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2();
+	TH1D* h_template_corridor  = categoryInfo::getYieldHistoTemplate_SR_corridor();
+
+	SR_MlbBinned.SetYieldTemplate(   h_template_MlbBinned );
+	SR_corridor.SetYieldTemplate(    h_template_corridor );
+	CR2L_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
+	CR2L_corridor.SetYieldTemplate(  h_template_corridor );
+	CR0b_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
+	CR0b_tightBTagHighMlb.SetYieldTemplate(h_template_MlbBinned );
+	CR0b_corridor.SetYieldTemplate(  h_template_corridor );
+
 
   //
   // Loop over samples
   //
   for( int iSample=0; iSample<(int)sampleList.size(); iSample++){
-    looper( sampleList[iSample] );
+
+		sampleInfo::ID currentSample = sampleList.at(iSample);
+
+		// Give each analyzer the gen classifications and systematics appropriate to the current sample
+		for( analyzer* iter : analyzer_list ) {
+			iter->ResetGenClassifications();
+			iter->ResetSystematics();
+			if( sampleInfo::sampleUtil(currentSample).isData ) {
+				iter->AddGenClassification( genClassyInfo::Util(genClassyInfo::k_incl) );
+				iter->AddSystematic( sysInfo::Util(sysInfo::k_nominal) );
+			}
+			else {
+				for( int i=0; i<genClassyInfo::k_nGenClassy; i++ ) iter->AddGenClassification( genClassyInfo::Util(genClassyInfo::ID(i)) );
+				for( int i=0; i<sysInfo::k_nSys; i++ ) iter->AddSystematic( sysInfo::Util(sysInfo::ID(i)) );
+			}
+		} // End loop over analyzers
+
+    looper( sampleList[iSample], analyzer_list );
   }
 
 
@@ -75,7 +143,7 @@ int stopBabyLooper(){
 //
 // Functions
 //
-int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
+int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEvents, bool readFast ) {
 
 
   //
@@ -166,19 +234,19 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   cout << "    Loading eventWeight Utilities..." << endl << endl;
   wgtInfo.setUp( sample.id, useBTagSFs_fromFiles_, useLepSFs_fromFiles_, add2ndLepToMet_ );  
-  wgtInfo->apply_cr2lTrigger_sf  = (apply_cr2lTrigger_sf_ && add2ndLepToMet_);
-  wgtInfo->apply_bTag_sf         = apply_bTag_sf_;
-  wgtInfo->apply_lep_sf          = apply_lep_sf_;
-  wgtInfo->apply_vetoLep_sf      = apply_vetoLep_sf_;
-  wgtInfo->apply_tau_sf          = apply_tau_sf_;
-  wgtInfo->apply_lepFS_sf        = apply_lepFS_sf_;
-  wgtInfo->apply_topPt_sf        = apply_topPt_sf_;
-  wgtInfo->apply_metRes_sf       = apply_metRes_sf_;
-  wgtInfo->apply_metTTbar_sf     = apply_metTTbar_sf_;
-  wgtInfo->apply_ttbarSysPt_sf   = apply_ttbarSysPt_sf_;
-  wgtInfo->apply_ISR_sf          = apply_ISR_sf_;
-  wgtInfo->apply_pu_sf           = apply_pu_sf_;
-  wgtInfo->apply_sample_sf       = apply_sample_sf_;
+  wgtInfo.apply_cr2lTrigger_sf  = (apply_cr2lTrigger_sf_ && add2ndLepToMet_);
+  wgtInfo.apply_bTag_sf         = apply_bTag_sf_;
+  wgtInfo.apply_lep_sf          = apply_lep_sf_;
+  wgtInfo.apply_vetoLep_sf      = apply_vetoLep_sf_;
+  wgtInfo.apply_tau_sf          = apply_tau_sf_;
+  wgtInfo.apply_lepFS_sf        = apply_lepFS_sf_;
+  wgtInfo.apply_topPt_sf        = apply_topPt_sf_;
+  wgtInfo.apply_metRes_sf       = apply_metRes_sf_;
+  wgtInfo.apply_metTTbar_sf     = apply_metTTbar_sf_;
+  wgtInfo.apply_ttbarSysPt_sf   = apply_ttbarSysPt_sf_;
+  wgtInfo.apply_ISR_sf          = apply_ISR_sf_;
+  wgtInfo.apply_pu_sf           = apply_pu_sf_;
+  wgtInfo.apply_sample_sf       = apply_sample_sf_;
 
 
   //
@@ -195,7 +263,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
     }
   }
   const int nGenClassy=(int)genClassyList.size();
-  bool passGenClassy[nGenClassy];
   cout << nGenClassy << " genClassifications" << endl << endl;
 
   
@@ -215,61 +282,12 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   const int nSystematics = (int)systematicList.size();
   cout << nSystematics << " systematics" << endl << endl;
 
-  
 
-  //
-  //  Yield Histos
-  //
-  std::vector< analyzer > analyzerList;
-  
-  analyzer bulk_SR;
-  bulk_SR.AddGenClassifications( genClassyList );
-  bulk_SR.AddSelections( selectionInfo::get_selection_SR );
-  bulk_SR.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2 );
-  bulk_SR.AddSystematics( systematicList );
-  analyzerList.push_back( bulk_SR );
-
-  analyzer bulk_CR0b;
-  bulk_CR0b.AddGenClassifications( genClassyList );
-  bulk_CR0b.AddSelections( selectionInfo::get_selection_CR0b );
-  bulk_CR0b.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2 );
-  bulk_CR0b.AddSystematics( systematicList );
-  analyzerList.push_back( bulk_CR0b );
-
-  analyzer bulk_CR2l;
-  bulk_CR2l.AddGenClassifications( genClassyList );
-  bulk_CR2l.AddSelections( selectionInfo::get_selection_CR2l );
-  bulk_CR2l.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2 );
-  bulk_CR2l.AddSystematics( systematicList );
-  analyzerList.push_back( bulk_CR2l );
+	// Count number of analyzers in the list
+	const int nAnalyzers = analyzers.size();
 
 
-  analyzer corr_SR;
-  corr_SR.AddGenClassifications( genClassyList );
-  corr_SR.AddSelections( selectionInfo::get_selection_SR_corr );
-  corr_SR.AddCategories( categoryInfo::passCategory_corridor );
-  corr_SR.AddSystematics( systematicList );
-  analyzerList.push_back( corr_SR );
 
-  analyzer corr_CR0b;
-  corr_CR0b.AddGenClassifications( genClassyList );
-  corr_CR0b.AddSelections( selectionInfo::get_selection_CR0b_corr );
-  corr_CR0b.AddCategories( categoryInfo::passCategory_corridor );
-  corr_CR0b.AddSystematics( systematicList );
-  analyzerList.push_back( corr_CR0b );
-
-
-  analyzer corr_CR2l;
-  corr_CR2l.AddGenClassifications( genClassyList );
-  corr_CR2l.AddSelections( selectionInfo::get_selection_CR2l_corr );
-  corr_CR2l.AddCategories( categoryInfo::passCategory_corridor );
-  corr_CR2l.AddSystematics( systematicList );
-  analyzerList.push_back( corr_CR2l );
- 
-      
-  
-
-  
   ////////////////////////
   //                    //
   // Declare Histograms //
@@ -290,10 +308,43 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //    And if there is andditional selection involved in this histogram, please refer to it in "you name here"
   //
 
-  cout << "    Loading histograms" << endl << endl;
+  cout << "    Preparing histograms" << endl << endl;
   TH1::SetDefaultSumw2();
   TH2::SetDefaultSumw2();
   TH3::SetDefaultSumw2();
+
+
+	//
+	// Yield histograms
+	//
+	for( analyzer* thisAnalyzer : analyzers ) {
+		for( int iClassy=0; iClassy<nGenClassy; iClassy++ ) {
+			for( int iSys=0; iSys<nSystematics; iSys++ ) {
+
+				int histIndex = iClassy*nSystematics + iSys;
+
+				// Gen and Systematic String
+				TString reg_gen_sys_name = "__";
+				reg_gen_sys_name += thisAnalyzer->GetLabel();
+				reg_gen_sys_name += "__genClassy_";
+				reg_gen_sys_name += genClassyList[iClassy].label;
+				reg_gen_sys_name += "__systematic_";
+				reg_gen_sys_name += systematicList[iSys].label;
+
+				TH1D* h_template = thisAnalyzer->GetYieldTemplate();
+				TH1D* h_tmp = 0;
+
+				TString yieldname = h_template->GetName();
+				yieldname += reg_gen_sys_name;
+				h_tmp = (TH1D*)h_template->Clone( yieldname );
+				h_tmp->SetDirectory(f_output);
+				thisAnalyzer->SetYieldHistogram( histIndex, h_tmp );
+
+				// Need to do signal yield histograms too
+
+			} // End loop over systematics
+		} // End loop over genClassys
+	} // End loop over analyzers
 
   
   
@@ -307,7 +358,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   int nMassPts = 1;
   if( sample.isSignalScan ) nMassPts = (int)sample.massPtList.size();
 
-  const int nHistosVars = nRegions*nGenClassy*nMassPts;
+  const int nHistosVars = nAnalyzers*nGenClassy*nMassPts;
 
   // nJets
   TH1D *h_nJets[nHistosVars];
@@ -391,34 +442,34 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_gen_lep2_id_lt4j[nHistosVars];
   TH1D *h_gen_lep2_id_ge4j[nHistosVars];
   
-  for(int iReg=0; iReg<nRegions; iReg++){
+  for(int iReg=0; iReg<nAnalyzers; iReg++){
     for(int iGen=0; iGen<nGenClassy; iGen++){
       for(int iMassPt=0; iMassPt<nMassPts; iMassPt++){
 
-	// Histo Index
-	int iHisto = iReg*nGenClassy*nMassPts + iGen*nMassPts + iMassPt;
+				// Histo Index
+				int iHisto = iReg*nGenClassy*nMassPts + iGen*nMassPts + iMassPt;
 
-	int mStop = 0;
-	int mLSP  = 0;
-	if(sample.isSignalScan){
-	  mStop = sample.massPtList[iMassPt].first;
-	  mLSP  = sample.massPtList[iMassPt].second;
-	}
+				int mStop = 0;
+				int mLSP  = 0;
+				if(sample.isSignalScan){
+					mStop = sample.massPtList[iMassPt].first;
+					mLSP  = sample.massPtList[iMassPt].second;
+				}
 
-	TString hName = "";
+				TString hName = "";
 	
-	TString reg_gen_sys_name = "__";
-	reg_gen_sys_name += regionList[iReg];
-	reg_gen_sys_name += "__genClassy_";
-	reg_gen_sys_name += genClassyList[iGen].label;
-	reg_gen_sys_name += "__systematic_";
-	reg_gen_sys_name += systematicList[0].label;
-	if( sample.isSignalScan ){
-	  reg_gen_sys_name += "__mStop_";
-	  reg_gen_sys_name += mStop;
-	  reg_gen_sys_name += "__mLSP_";
-	  reg_gen_sys_name += mLSP;
-	}
+				TString reg_gen_sys_name = "__";
+				reg_gen_sys_name += analyzers.at(iReg)->GetLabel();
+				reg_gen_sys_name += "__genClassy_";
+				reg_gen_sys_name += genClassyList[iGen].label;
+				reg_gen_sys_name += "__systematic_";
+				reg_gen_sys_name += systematicList[0].label;
+				if( sample.isSignalScan ){
+					reg_gen_sys_name += "__mStop_";
+					reg_gen_sys_name += mStop;
+					reg_gen_sys_name += "__mLSP_";
+					reg_gen_sys_name += mLSP;
+				}
 
       
 	//
@@ -599,7 +650,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	h_modTopness_ge4j[iHisto]->SetDirectory(f_output);
 
       
-		//
+	//
 	// mlb
 	//
 
@@ -793,7 +844,21 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
       } // end loop over mass pts (1 pt only if not signal scan)
     } // end loop over genClassifications for histogram arrays
-  } // end loop over regions for histogram arrays
+  } // end loop over analyzers/regions for histogram arrays
+
+
+	// Set up cutflow histograms
+	TH1D* h_cutflow[nAnalyzers];
+	for( int iAna=0; iAna<nAnalyzers; iAna++ ) {
+
+		analyzer* thisAnalyzer = analyzers.at(iAna);
+		std::string histName  = "h_cutflow_";
+		std::string histTitle = "Cutflow histogram ";
+		histName  += thisAnalyzer->GetLabel();
+		histTitle += thisAnalyzer->GetLabel();
+
+		h_cutflow[iAna] = selectionInfo::get_cutflowHistoTemplate( thisAnalyzer->GetSelections(), histName, histTitle );
+	}
 
  
   //FILE* f_evtList;
@@ -835,7 +900,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
     babyAnalyzer.Init(tree);
     
     // Get weight histogram from baby
-    wgtInfo->getWeightHistogramFromBaby( file );
+    wgtInfo.getWeightHistogramFromBaby( file );
     
     // Loop over Events in current file
     if( nEventsTotal >= nEventsChain ) continue;
@@ -879,182 +944,143 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
       // Check WNJets genPt
       if( sample.id == sampleInfo::k_W1JetsToLNu_madgraph_pythia8 ||
-	  sample.id == sampleInfo::k_W2JetsToLNu_madgraph_pythia8 ||
-	  sample.id == sampleInfo::k_W3JetsToLNu_madgraph_pythia8 ||
-	  sample.id == sampleInfo::k_W4JetsToLNu_madgraph_pythia8    ){
-	if( nupt()>200.0 ) continue;
+					sample.id == sampleInfo::k_W2JetsToLNu_madgraph_pythia8 ||
+					sample.id == sampleInfo::k_W3JetsToLNu_madgraph_pythia8 ||
+					sample.id == sampleInfo::k_W4JetsToLNu_madgraph_pythia8    ){
+				if( nupt()>200.0 ) continue;
       }
 
-      bool passAnyRegion = false;
-      bool passNominal = false;
-      bool passJesUp = false;
-      bool passJesDown = false;
-      
-      for(int iReg=0; iReg<nRegions; iReg++){
-	
-	// Intialize Bools
-	pass_evtSel[iReg] = false;
-	pass_evtSel_jup[iReg] = false;
-	pass_evtSel_jdown[iReg] = false;
-	vector<bool> cutflow;
-
-	if( regionList[iReg]=="SR"){
-	  pass_evtSel[iReg] = selectionInfo::pass_SR(0);
-	  cutflow = selectionInfo::get_selectionResults_SR(0);
-	  if( !sample.isData && !analyzeFast_ ){
-	    pass_evtSel_jup[iReg]    = selectionInfo::pass_SR(1);
-	    pass_evtSel_jdown[iReg]  = selectionInfo::pass_SR(-1);
-	  }
-	}
-
-	if( regionList[iReg]=="CR0b"){
-	  pass_evtSel[iReg] = selectionInfo::pass_CR0b(0);
-	  cutflow = selectionInfo::get_selectionResults_CR0b(0);
-	  if( !sample.isData && !analyzeFast_ ){
-	    pass_evtSel_jup[iReg]    = selectionInfo::pass_CR0b(1);
-	    pass_evtSel_jdown[iReg]  = selectionInfo::pass_CR0b(-1);
-	  }
-	}
-
-	if( regionList[iReg]=="CR0b_tightBTagHighMlb"){
-	  pass_evtSel[iReg] = selectionInfo::pass_CR0b_tightBTagHighMlb(0);
-	  cutflow = selectionInfo::get_selectionResults_CR0b_tightBTagHighMlb(0);
-	  if( !sample.isData && !analyzeFast_ ){
-	    pass_evtSel_jup[iReg]    = selectionInfo::pass_CR0b_tightBTagHighMlb(1);
-	    pass_evtSel_jdown[iReg]  = selectionInfo::pass_CR0b_tightBTagHighMlb(-1);
-	  }
-	}
-	
-	if( regionList[iReg]=="CR2l"){
-	  pass_evtSel[iReg] = selectionInfo::pass_CR2l(0, inclTaus_CR2l_, add2ndLepToMet_);
-	  cutflow = selectionInfo::get_selectionResults_CR2l(0, inclTaus_CR2l_, add2ndLepToMet_);
-	  if( !sample.isData && !analyzeFast_ ){
-	    pass_evtSel_jup[iReg]    = selectionInfo::pass_CR2l(1, inclTaus_CR2l_, add2ndLepToMet_);
-	    pass_evtSel_jdown[iReg]  = selectionInfo::pass_CR2l(-1, inclTaus_CR2l_, add2ndLepToMet_);
-	  }
-	}
-
-	if( pass_evtSel[iReg] ){ passAnyRegion=true; passNominal=true; }
-	
-	if( pass_evtSel_jup[iReg] ){ passAnyRegion=true; passJesUp=true; }
-
-	if( pass_evtSel_jdown[iReg] ){ passAnyRegion=true; passJesDown=true; }
+			// Calculate all the event weights
+      wgtInfo.getEventWeights();
 
 
-	// Cutflow
-	for(int i=0; i<(int)cutflow.size(); i++){
-	  if(!cutflow[i]) break;
-	  h_cutflow[iReg]->Fill( i, cutflow[i] );
-	}
-	
-      } // end loop over regions
-      
+			/////////////////////////////////////////////////////////////
+			//                                                         //
+			// Loop over all analyzers, genClassy's, systematics, etc. //
+			//                                                         //
+			/////////////////////////////////////////////////////////////
+
+			// Loop over all analyzers
+			for( int iAna=0; iAna<nAnalyzers; iAna++ ) {
+				analyzer* thisAnalyzer = analyzers.at(iAna);
 
 
-      //
-      // Continue if Event Passes No Region of Interest
-      //
-      if( !passAnyRegion ) continue;
+				// Make an array of which genClassy's this event passes
+				bool passedGenClassies[genClassyInfo::k_nGenClassy];
+				for( genClassyInfo::Util thisGenClassy : thisAnalyzer->GetGenClassifications() ) {
+					passedGenClassies[thisGenClassy.id] = thisGenClassy.eval_GenClassy;
 
-      
+					// Manually correct the ZZto2L2Nu sample
+					if( sample.id==sampleInfo::k_ZZTo2L2Nu_powheg_pythia8 ) {
+						if( thisGenClassy.id == genClassyInfo::k_ge2lep ||
+								thisGenClassy.id == genClassyInfo::k_incl ) passedGenClassies[thisGenClassy.id] = true;
+						else passedGenClassies[thisGenClassy.id] = false;
+					}
+				}
 
-      /////////////////////////////
-      //                         //
-      // Calculate Event Weights //
-      //                         //
-      /////////////////////////////
-   
-      wgtInfo->getEventWeights( analyzeFast_ );
+				// Check if this event passes selections with JES set to nominal
+				//  (saves us having to evaluate this for every systematic)
+				thisAnalyzer->SetJesType( 0 );
+				bool pass_JESnominal = thisAnalyzer->PassSelections();
 
-      double wgt_nominal = wgtInfo->sys_wgts[sysInfo::k_nominal];
+				// Fill cutflow histogram
+				std::vector<bool> cutflow_results = selectionInfo::get_selectionResults( thisAnalyzer->GetSelections() );
+				for( uint i=0; i<cutflow_results.size(); i++ ) {
+					if( !cutflow_results.at(i) ) break;
+					h_cutflow[iAna]->Fill( i );
+				}
 
-      
 
-      ///////////////////////////////
-      //                           //
-      // Check Gen Classifications //
-      //                           //
-      ///////////////////////////////
-   
-      for(int i=0; i<nGenClassy; i++){
-	passGenClassy[i] = genClassyList[i].eval_GenClassy();
-      }
+				// Loop over all systematics in the analyzer
+				for( sysInfo::Util thisSystematic : thisAnalyzer->GetSystematics() ) {
 
-      // Fix ZZ->2l2Nu, in baby is Z->NuNu, should be lostLep
-      if( sample.id==sampleInfo::k_ZZTo2L2Nu_powheg_pythia8 ){
-	for(int i=0; i<nGenClassy; i++){
-	  passGenClassy[i] = false;
-	  if( i==genClassyInfo::k_ge2lep ||
-	      i==genClassyInfo::k_incl      ) passGenClassy[i] = true;
-	}
-      }
+					// Check if this event passes selections, and also set the appropriate JES type for future use
+					if( thisSystematic.id == sysInfo::k_JESUp ) {
+						thisAnalyzer->SetJesType( 1 );
+						if( !thisAnalyzer->PassSelections() ) continue;
+					}
+					else if( thisSystematic.id == sysInfo::k_JESDown ) {
+						thisAnalyzer->SetJesType( -1 );
+						if( !thisAnalyzer->PassSelections() ) continue;
+					}
+					else {
+						thisAnalyzer->SetJesType( 0 );
+						if( !pass_JESnominal ) continue;
+					}
+
+					// If we've passed selections, then get the event weight and the categories passed
+					double weight = thisAnalyzer->GetEventWeight( thisSystematic.id );
+					std::vector<int> categories_passed = thisAnalyzer->GetCategoriesPassed();
+
+					// Loop over all the gen classifications that we passed
+					for( genClassyInfo::Util thisGenClassy : thisAnalyzer->GetGenClassifications() ) {
+						if( !passedGenClassies[thisGenClassy.id] ) continue;
+
+						// Get the index for the histogram corresponding to this genClassy and systematic
+						int histIndex = thisGenClassy.id*nSystematics + thisSystematic.id;
+
+						// Fill yield histograms
+						for( int category : categories_passed ) {
+							thisAnalyzer->GetYieldHistogram( histIndex )->Fill( category, weight );
+						}
+
+						// Do any other histogram filling that needs doing
+
+
+					} // End loop over genClassy's
+
+				} // End loop over systematics
+
+			} // End loop over analyzers
+
+
   
 
+			/*
 
-      ////////////////////////////
-      //                        //
-      // Check Yield Cateogries //
-      //                        //
-      ////////////////////////////
-      /*
-      // ICHEP 12.9fb Singal Regions
-      passCats_ICHEP.clear(); 
-      passCats_ICHEP_jup.clear();
-      passCats_ICHEP_jdown.clear();
 
-      // ICHEP extended to 30fb Singal Regions
-      passCats_ICHEP_ext30fb.clear(); 
-      passCats_ICHEP_ext30fb_jup.clear();
-      passCats_ICHEP_ext30fb_jdown.clear();
-     
-      // ICHEP extended to 30fb, with mlb bins Singal Regions
-      passCats_dev_ext30fb_mlb_v1.clear(); 
-      passCats_dev_ext30fb_mlb_v1_jup.clear();
-      passCats_dev_ext30fb_mlb_v1_jdown.clear();
-      */
-      // ICHEP extended to 30fb, with mlb with tight bTag bins Singal Regions
-      passCats_dev_ext30fb_mlb_v2.clear(); 
-      passCats_dev_ext30fb_mlb_v2_jup.clear();
-      passCats_dev_ext30fb_mlb_v2_jdown.clear();
-      /*
-      // ICHEP extended to 30fb, with bJetPt bins Singal Regions
-      passCats_dev_ext30fb_bJetPt_v1.clear(); 
-      passCats_dev_ext30fb_bJetPt_v1_jup.clear();
-      passCats_dev_ext30fb_bJetPt_v1_jdown.clear();
-      */
-      // Top Corridor Singal Regions
-      passCats_corridor.clear(); 
-      passCats_corridor_jup.clear();
-      passCats_corridor_jdown.clear();
+			//
+			// Yields
+			//
+			for(int iGen=0; iGen<nGenClassy; iGen++) {
 
-      
-      if( passNominal ){
-	//passCats_ICHEP = categoryInfo::passCategory_SR_ICHEP(0, add2ndLepToMet_);
-	//passCats_ICHEP_ext30fb = categoryInfo::passCategory_SR_ICHEP_ext30fb(0, add2ndLepToMet_);
-	//passCats_dev_ext30fb_mlb_v1 = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(0, add2ndLepToMet_);
-	passCats_dev_ext30fb_mlb_v2 = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(0, add2ndLepToMet_);
-	//passCats_dev_ext30fb_bJetPt_v1 = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(0, add2ndLepToMet_);
-	passCats_corridor = categoryInfo::passCategory_SR_corridor(0, add2ndLepToMet_);
-      }
-      // No JES for data
-      if( !sample.isData && !analyzeFast_){
-	if( passJesUp ){
-	  //passCats_ICHEP_jup = categoryInfo::passCategory_SR_ICHEP(1, add2ndLepToMet_);
-	  //passCats_ICHEP_ext30fb_jup = categoryInfo::passCategory_SR_ICHEP_ext30fb(1, add2ndLepToMet_);
-	  //passCats_dev_ext30fb_mlb_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(1, add2ndLepToMet_);
-	  passCats_dev_ext30fb_mlb_v2_jup = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(1, add2ndLepToMet_);
-	  //passCats_dev_ext30fb_bJetPt_v1_jup = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(1, add2ndLepToMet_);
-	  passCats_corridor_jup = categoryInfo::passCategory_SR_corridor(1, add2ndLepToMet_);
-	}
-	if( passJesDown ){
-	  //passCats_ICHEP_jdown = categoryInfo::passCategory_SR_ICHEP(-1, add2ndLepToMet_);
-	  //passCats_ICHEP_ext30fb_jdown = categoryInfo::passCategory_SR_ICHEP_ext30fb(-1, add2ndLepToMet_);
-	  //passCats_dev_ext30fb_mlb_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1(-1, add2ndLepToMet_);
-	  passCats_dev_ext30fb_mlb_v2_jdown = categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2(-1, add2ndLepToMet_);
-	  //passCats_dev_ext30fb_bJetPt_v1_jdown = categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1(-1, add2ndLepToMet_);
-	  passCats_corridor_jdown = categoryInfo::passCategory_SR_corridor(-1, add2ndLepToMet_);
-	}
-      } // end if not data or analyzeFast
+				if( !passGenClassy[iGen] ) continue;
+
+				for(int iSys=0; iSys<nSystematics; iSys++){
+	    
+					if( ( (analyzers.at(iReg)=="SR" || analyzers.at(iReg)=="CR2l") &&
+								( (Mlb_closestb()>=175.0 && nTightTags>=1) || (Mlb_closestb()<175.0) ) ) ||
+							( (analyzers.at(iReg)!="SR" && analyzers.at(iReg)!="CR2l") )    ){
+
+
+						////////////// This is important! Apply tight btag SFs to tight-btag regions (categories) /////////////////////
+						if( (analyzers.at(iReg)=="SR" || analyzers.at(iReg)=="CR2l") &&
+								(Mlb_closestb()>=175.0 && nTightTags>=1) ){
+							if( systematicList[iSys].id==sysInfo::k_bTagEffHFUp)       {
+								wgt_mlb *= (wgtInfo.sf_bTagEffHF_tight_up/wgtInfo.sf_bTagEffHF_up);
+							}
+							else if( systematicList[iSys].id==sysInfo::k_bTagEffHFDown) {
+								wgt_mlb *= (wgtInfo.sf_bTagEffHF_tight_dn/wgtInfo.sf_bTagEffHF_dn);
+							}
+							else if( systematicList[iSys].id==sysInfo::k_bTagEffLFUp)  {
+								wgt_mlb *= (wgtInfo.sf_bTagEffLF_tight_up/wgtInfo.sf_bTagEffLF_up);
+							}
+							else if( systematicList[iSys].id==sysInfo::k_bTagEffLFDown){
+								wgt_mlb *= (wgtInfo.sf_bTagEffLF_tight_dn/wgtInfo.sf_bTagEffLF_dn);
+							}
+							else {
+								wgt_mlb *= (wgtInfo.sf_bTag_tight/wgtInfo.sf_bTag);
+							}
+						}
+					}
+
+
+				} // end loop over systematics
+			} // end loop over genClassy's
+
+
+
+
   
       
       
@@ -1072,15 +1098,15 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       int nFoundGenTop=0;
       if( sampleIsTTbar ){
 	
-	for(int iGen=0; iGen<(int)genqs_p4().size(); iGen++){
-	  if( abs(genqs_id().at(iGen))==6 &&
-	      genqs_isLastCopy().at(iGen)    ){
-	    genTTbar_LV += genqs_p4().at(iGen);
-	    nFoundGenTop++;
-	  } // end if last copy of top
-	} // end loop over gen quarks
+				for(int iGen=0; iGen<(int)genqs_p4().size(); iGen++){
+					if( abs(genqs_id().at(iGen))==6 &&
+							genqs_isLastCopy().at(iGen)    ){
+						genTTbar_LV += genqs_p4().at(iGen);
+						nFoundGenTop++;
+					} // end if last copy of top
+				} // end loop over gen quarks
 
-	if( nFoundGenTop == 2 ) ttbarPt = genTTbar_LV.Pt();
+				if( nFoundGenTop == 2 ) ttbarPt = genTTbar_LV.Pt();
 
       } // end if sample is ttbar
 
@@ -1095,82 +1121,48 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       int fill_bin_genLep2ID = -1;
       if( !sample.isData && is2lep() ){
 	
-	// match leading lepton first
-	int genLep_matchedTo_selLep__idx = -1;
-	for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
-	  if( abs(genleps_id().at(iGen)) != abs(lep1_pdgid()) ) continue;
-	  if( !genleps_isLastCopy().at(iGen) ) continue;
-	  if( !genleps_fromHardProcessFinalState().at(iGen) &&
-	      !genleps_fromHardProcessDecayed().at(iGen)       ) continue;
-	  if( ROOT::Math::VectorUtil::DeltaR(genleps_p4().at(iGen), lep1_p4()) < matched_lep_dr ){
-	    genLep_matchedTo_selLep__idx = iGen;
-	    break;
-	  }
-	}
+				// match leading lepton first
+				int genLep_matchedTo_selLep__idx = -1;
+				for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
+					if( abs(genleps_id().at(iGen)) != abs(lep1_pdgid()) ) continue;
+					if( !genleps_isLastCopy().at(iGen) ) continue;
+					if( !genleps_fromHardProcessFinalState().at(iGen) &&
+							!genleps_fromHardProcessDecayed().at(iGen)       ) continue;
+					if( ROOT::Math::VectorUtil::DeltaR(genleps_p4().at(iGen), lep1_p4()) < matched_lep_dr ){
+						genLep_matchedTo_selLep__idx = iGen;
+						break;
+					}
+				}
 
-	// If matched selected lepton, find lost gen lepton
-	if( genLep_matchedTo_selLep__idx>0 ){
+				// If matched selected lepton, find lost gen lepton
+				if( genLep_matchedTo_selLep__idx>0 ){
 
-	  for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
-	    if( iGen == genLep_matchedTo_selLep__idx ) continue;
-	    if( !genleps_isLastCopy().at(iGen) ) continue;
-	    if( !genleps_fromHardProcessFinalState().at(iGen) &&
-		!genleps_fromHardProcessDecayed().at(iGen)       ) continue;
-	    gen2ndLep__idx = iGen;
-	    gen2ndLep__id = genleps_id().at(iGen);
-	    gen2ndLep__tauDecay = genleps_gentaudecay().at(iGen);
-	  }
+					for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
+						if( iGen == genLep_matchedTo_selLep__idx ) continue;
+						if( !genleps_isLastCopy().at(iGen) ) continue;
+						if( !genleps_fromHardProcessFinalState().at(iGen) &&
+								!genleps_fromHardProcessDecayed().at(iGen)       ) continue;
+						gen2ndLep__idx = iGen;
+						gen2ndLep__id = genleps_id().at(iGen);
+						gen2ndLep__tauDecay = genleps_gentaudecay().at(iGen);
+					}
 
-	  // If found second lep
-	  if( gen2ndLep__idx>=0 ){
+					// If found second lep
+					if( gen2ndLep__idx>=0 ){
 	      
-	    if( abs(gen2ndLep__id)==11 ) fill_bin_genLep2ID = 1;  // "ele";
-	    if( abs(gen2ndLep__id)==13 ) fill_bin_genLep2ID = 2;  // "mu";
-	    if( abs(gen2ndLep__id)==15 ){
-	      if( gen2ndLep__tauDecay==1 ) fill_bin_genLep2ID = 3;  // "lep tau, ele";
-	      if( gen2ndLep__tauDecay==2 ) fill_bin_genLep2ID = 4;  // "lep tau, mu";
-	      if( gen2ndLep__tauDecay==3 ) fill_bin_genLep2ID = 5;  // "had tau, 1 prong";
-	      if( gen2ndLep__tauDecay==4 ) fill_bin_genLep2ID = 6;  // "had tau, 3 prong";
-	      if( gen2ndLep__tauDecay==5 ) fill_bin_genLep2ID = 7;  // "\"other\" tau";
-	    } // end if 2nd lep is tau
+						if( abs(gen2ndLep__id)==11 ) fill_bin_genLep2ID = 1;  // "ele";
+						if( abs(gen2ndLep__id)==13 ) fill_bin_genLep2ID = 2;  // "mu";
+						if( abs(gen2ndLep__id)==15 ){
+							if( gen2ndLep__tauDecay==1 ) fill_bin_genLep2ID = 3;  // "lep tau, ele";
+							if( gen2ndLep__tauDecay==2 ) fill_bin_genLep2ID = 4;  // "lep tau, mu";
+							if( gen2ndLep__tauDecay==3 ) fill_bin_genLep2ID = 5;  // "had tau, 1 prong";
+							if( gen2ndLep__tauDecay==4 ) fill_bin_genLep2ID = 6;  // "had tau, 3 prong";
+							if( gen2ndLep__tauDecay==5 ) fill_bin_genLep2ID = 7;  // "\"other\" tau";
+						} // end if 2nd lep is tau
 
-	    /*
-	    // Try to match 2nd reco lepton if 2nd gen is hadTau
-	    if( abs(gen2ndLep__id)==15 && 
-		pass_evtSel[2] && 
-		(gen2ndLep__tauDecay==3 ||
-		 gen2ndLep__tauDecay==4   ) &&
-		pfmet_rl()>=250.0              ){
-	      
-	      cout << "Found 2lep event, with genHadTau: " << endl;
-	      cout << "  reco lep1_id=" << lep1_pdgid() << ", reco lep2_id=" << lep2_pdgid() << endl;
-	      cout << "  gen2ndLep_id=" << gen2ndLep__id << ", gen2ndLep__tauDecay=" << gen2ndLep__tauDecay << endl;
-	      for(int iGen=0; iGen<(int)genleps_p4().size(); iGen++){
-		if( iGen == genLep_matchedTo_selLep__idx ) continue;
-		if( !genleps_isLastCopy().at(iGen) ) continue;
-		if( ROOT::Math::VectorUtil::DeltaR(genleps_p4().at(iGen), lep2_p4()) < 0.01 ){
-		  cout << "  lep2 matched to gen lep in event: " << endl;
-		  cout << "    genLepID=" << genleps_id().at(iGen) << ", motherID=" << genleps_motherid().at(iGen);
-		  cout << "    genLepFromHardProcessFinal=" << genleps_fromHardProcessFinalState().at(iGen);
-		  cout << "    genLepFromHardProcessDecay=" << genleps_fromHardProcessDecayed().at(iGen)<< endl;
-		}
-	      }
 
-	      for(int iGen=0; iGen<(int)genqs_p4().size(); iGen++){
-		if( !genqs_isLastCopy().at(iGen) ) continue;
-		if( ROOT::Math::VectorUtil::DeltaR(genqs_p4().at(iGen), lep2_p4()) < 0.01 ){
-		  cout << "  lep2 matched to gen q in event: " << endl;
-		  cout << "    genQID=" << genqs_id().at(iGen) << ", motherID=" << genqs_motherid().at(iGen);
-		  cout << "    genQsFromHardProcessFinal=" << genqs_fromHardProcessFinalState().at(iGen);
-		  cout << "    genQsFromHardProcessDecay=" << genqs_fromHardProcessDecayed().at(iGen)<< endl;
-		}
-	      }
-	      cout << endl << endl;
-	    }
-	    */
-
-	  } // end if found 2nd gen lep
-	} // end if found first gen lep, matched to selected lepton
+					} // end if found 2nd gen lep
+				} // end if found first gen lep, matched to selected lepton
       } // end if 2lep event and not data
 
       
@@ -1189,21 +1181,21 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       int jet1_idx = -1;
       double max_csv = -99.9;
       for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
-	if( ak4pfjets_CSV().at(iJet) > max_csv ){
-	  jet1_idx = iJet;
-	  max_csv  = ak4pfjets_CSV().at(iJet);
-	}
+				if( ak4pfjets_CSV().at(iJet) > max_csv ){
+					jet1_idx = iJet;
+					max_csv  = ak4pfjets_CSV().at(iJet);
+				}
       }
       if(jet1_idx>=0) lep1lep2bb_TLV += ak4pfjets_p4().at(jet1_idx);
       
       int jet2_idx = -1;
       max_csv = -99.9;
       for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
-	if( iJet==jet1_idx ) continue;
-	if( ak4pfjets_CSV().at(iJet) > max_csv ){
-	  jet2_idx = iJet;
-	  max_csv = ak4pfjets_CSV().at(iJet);
-	}
+				if( iJet==jet1_idx ) continue;
+				if( ak4pfjets_CSV().at(iJet) > max_csv ){
+					jet2_idx = iJet;
+					max_csv = ak4pfjets_CSV().at(iJet);
+				}
       }
       if(jet2_idx>=0) lep1lep2bb_TLV += ak4pfjets_p4().at(jet2_idx);
       
@@ -1224,15 +1216,15 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       double minDr = 99.9;
       int minBJetIdx = -99;
       if(nvetoleps()>1){
-	lep2b_TLV += lep2_p4();
-	for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
-	  if(!ak4pfjets_passMEDbtag().at(iJet)) continue;
-	  if(ROOT::Math::VectorUtil::DeltaR(ak4pfjets_p4().at(iJet),lep2_p4())<minDr){
-	    minDr = ROOT::Math::VectorUtil::DeltaR(ak4pfjets_p4().at(iJet),lep2_p4());
-	    minBJetIdx = iJet;
-	  }
-	} // end loop over jets
-	if(minBJetIdx>=0) lep2b_TLV += ak4pfjets_p4().at(minBJetIdx);
+				lep2b_TLV += lep2_p4();
+				for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
+					if(!ak4pfjets_passMEDbtag().at(iJet)) continue;
+					if(ROOT::Math::VectorUtil::DeltaR(ak4pfjets_p4().at(iJet),lep2_p4())<minDr){
+						minDr = ROOT::Math::VectorUtil::DeltaR(ak4pfjets_p4().at(iJet),lep2_p4());
+						minBJetIdx = iJet;
+					}
+				} // end loop over jets
+				if(minBJetIdx>=0) lep2b_TLV += ak4pfjets_p4().at(minBJetIdx);
       } // end if nvetoleps>1
 
 
@@ -1251,204 +1243,33 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       int mStop = mass_stop();
       int mLSP  = mass_lsp();
 
-      double metResSF    = 1.0; 
-      double metResSF_up = 1.0; 
-      double metResSF_dn = 1.0;
-      double metResSF_corr    = 1.0; 
-      double metResSF_corr_up = 1.0; 
-      double metResSF_corr_dn = 1.0;
-      if(!analyzeFast_ && !sample.isData && apply_metRes_sf_){
-	wgtInfo->getMetResWeight( metResSF, metResSF_up, metResSF_dn );
-	wgtInfo->getMetResWeight_corridor( metResSF_corr, metResSF_corr_up, metResSF_corr_dn );
-      }
-      
-      double metTTbarSF    = 1.0; 
-      double metTTbarSF_up = 1.0; 
-      double metTTbarSF_dn = 1.0;
-      if(!analyzeFast_ && !sample.isData && apply_metTTbar_sf_){
-	wgtInfo->getMetTTbarWeight( metTTbarSF, metTTbarSF_up, metTTbarSF_dn );
-      }
-      
-      
-      for(int iReg=0; iReg<nRegions; iReg++){
-   
-	if( !pass_evtSel[iReg] && 
-	    !pass_evtSel_jup[iReg] &&
-	    !pass_evtSel_jdown[iReg]  ) continue;
 
-	//
-	// Yields
-	//
-	for(int iGen=0; iGen<nGenClassy; iGen++){
+			//
+			// Non-yield Histograms
+			//
+	for(int iGen=0; iGen<nGenClassy; iGen++) {
 
 	  if( !passGenClassy[iGen] ) continue;
-
-	  for(int iSys=0; iSys<nSystematics; iSys++){
 	  
-	    if     (systematicList[iSys].id==sysInfo::k_JESUp)  { if(!pass_evtSel_jup[iReg])   continue; }
-	    else if(systematicList[iSys].id==sysInfo::k_JESDown){ if(!pass_evtSel_jdown[iReg]) continue; }
-	    else                                                { if(!pass_evtSel[iReg])       continue; }
-
-	    // Histo Index
-	    int iHisto = iReg*nGenClassy*nSystematics + iGen*nSystematics + iSys;
-	    
-	    // Event Weight for this Systematic
-	    double wgt = wgtInfo->sys_wgts[systematicList[iSys].id];
-	    
-	    	    
-	    /*
-	    // ICHEP Signal Regions
-	    if( sample.isSignalScan ){
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP_jup,   mStop, mLSP, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP_jdown, mStop, mLSP, wgt );
-	      else fillHistosScan( h_yields_ICHEP_sigScan[iHisto], passCats_ICHEP, mStop, mLSP, wgt );
-	    }
-	    else{
-	      if( systematicList[iSys].id==sysInfo::k_JESUp ) fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP_jup, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP_jdown, wgt );
-	      else fillHistos( h_yields_ICHEP[iHisto], passCats_ICHEP, wgt );
-	    }
-
-
-	    // ICHEP Signal Regions, extened to 30fb
-	    if( sample.isSignalScan ){
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_ICHEP_ext30fb_sigScan[iHisto], passCats_ICHEP_ext30fb_jup,   mStop, mLSP, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_ICHEP_ext30fb_sigScan[iHisto], passCats_ICHEP_ext30fb_jdown, mStop, mLSP, wgt );
-	      else fillHistosScan( h_yields_ICHEP_ext30fb_sigScan[iHisto], passCats_ICHEP_ext30fb, mStop, mLSP, wgt );
-	    }
-	    else{
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb_jup, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb_jdown, wgt );
-	      else fillHistos( h_yields_ICHEP_ext30fb[iHisto], passCats_ICHEP_ext30fb, wgt );
-	    }
-	    
-
-	    // Dev Signal Regions, extened to 30fb, with mlb bins
-	    if( sample.isSignalScan ){
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto], passCats_dev_ext30fb_mlb_v1_jup,   mStop, mLSP, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto], passCats_dev_ext30fb_mlb_v1_jdown, mStop, mLSP, wgt );
-	      else fillHistosScan( h_yields_dev_ext30fb_mlb_v1_sigScan[iHisto], passCats_dev_ext30fb_mlb_v1, mStop, mLSP, wgt );
-	    }
-	    else{
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jup, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1_jdown, wgt );
-	      else fillHistos( h_yields_dev_ext30fb_mlb_v1[iHisto], passCats_dev_ext30fb_mlb_v1, wgt );
-	    }
-	    */
-	    
-	    // Dev Signal Regions, extened to 30fb, with mlb bins with tight bTagging
-	    int nTightTags = nTightTags_nominal;
-	    if( systematicList[iSys].id==sysInfo::k_JESUp )   nTightTags = nTightTags_jesup;
-	    if( systematicList[iSys].id==sysInfo::k_JESDown ) nTightTags = nTightTags_jesdown;
-	    
-	    if( ( (regionList[iReg]=="SR" || regionList[iReg]=="CR2l") && ( (Mlb_closestb()>=175.0 && nTightTags>=1) || (Mlb_closestb()<175.0) ) ) ||
-		( (regionList[iReg]!="SR" && regionList[iReg]!="CR2l") )    ){
-
-	      double wgt_mlb = wgt;
-	      
-	      if( (regionList[iReg]=="SR" || regionList[iReg]=="CR2l") && (Mlb_closestb()>=175.0 && nTightTags>=1) ){
-		if( systematicList[iSys].id==sysInfo::k_bTagEffHFUp)       { wgt_mlb *= (wgtInfo->sf_bTagEffHF_tight_up/wgtInfo->sf_bTagEffHF_up); }
-		else if( systematicList[iSys].id==sysInfo::k_bTagEffHFDown){ wgt_mlb *= (wgtInfo->sf_bTagEffHF_tight_dn/wgtInfo->sf_bTagEffHF_dn); }
-		else if( systematicList[iSys].id==sysInfo::k_bTagEffLFUp)  { wgt_mlb *= (wgtInfo->sf_bTagEffLF_tight_up/wgtInfo->sf_bTagEffLF_up); }
-		else if( systematicList[iSys].id==sysInfo::k_bTagEffLFDown){ wgt_mlb *= (wgtInfo->sf_bTagEffLF_tight_dn/wgtInfo->sf_bTagEffLF_dn); }
-		else                                                       { wgt_mlb *= (wgtInfo->sf_bTag_tight/wgtInfo->sf_bTag); }
-	      }
-
-	      // metResSFs setup to ==1 if not ttbar/tW->2l
-	      if( systematicList[iSys].id==sysInfo::k_metResUp )       { wgt_mlb *= metResSF_up; }
-	      else if( systematicList[iSys].id==sysInfo::k_metResDown ){ wgt_mlb *= metResSF_dn; }
-	      else                                                     { wgt_mlb *= metResSF; }
-
-	      // metTTbarSFs
-	      if( regionList[iReg]=="SR" ){
-		if( systematicList[iSys].id==sysInfo::k_metTTbarUp )       { wgt_mlb *= metTTbarSF_up; }
-		else if( systematicList[iSys].id==sysInfo::k_metTTbarDown ){ wgt_mlb *= metTTbarSF_dn; }
-		else                                                       { wgt_mlb *= metTTbarSF; }
-	      }
-
-	      if( sample.isSignalScan ){
-		if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2_jup,   mStop, mLSP, wgt_mlb );
-		else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, mStop, mLSP, wgt_mlb );
-		else fillHistosScan( h_yields_dev_ext30fb_mlb_v2_sigScan[iHisto], passCats_dev_ext30fb_mlb_v2, mStop, mLSP, wgt_mlb );
-	      }
-	      else{
-		if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jup, wgt_mlb );
-		else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2_jdown, wgt_mlb );
-		else fillHistos( h_yields_dev_ext30fb_mlb_v2[iHisto], passCats_dev_ext30fb_mlb_v2, wgt_mlb );
-	      }
-
-	      //if(regionList[iReg]=="CR2l" && systematicList[iSys].id==sysInfo::k_nominal){
-	      //  bool evt_inCR2l=false;
-	      //  for(int iCat=0; iCat<(int)passCats_dev_ext30fb_mlb_v2.size(); iCat++){ if( passCats_dev_ext30fb_mlb_v2[iCat]<=27) evt_inCR2l=true; break;}
-	      //  if(evt_inCR2l){
-	      //    if( sample.isSignalScan && mStop==800.0 && mLSP==100.0 ) fprintf( f_evtList, "%d %d %d \n", run(), ls(), evt() );
-	      //    if( sample.isData ) fprintf( f_evtList, "%d %d %d \n", run(), ls(), evt() );
-	      //  }
-	      //}
-	    
-	    }
-
-	    /*
-	    // Dev Signal Regions, extened to 30fb, with bJetPt bins
-	    if( sample.isSignalScan ){
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1_jup,   mStop, mLSP, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1_jdown, mStop, mLSP, wgt );
-	      else fillHistosScan( h_yields_dev_ext30fb_bJetPt_v1_sigScan[iHisto], passCats_dev_ext30fb_bJetPt_v1, mStop, mLSP, wgt );
-	    }
-	    else{
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jup, wgt );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1_jdown, wgt );
-	      else fillHistos( h_yields_dev_ext30fb_bJetPt_v1[iHisto], passCats_dev_ext30fb_bJetPt_v1, wgt );
-	    }
-	    */
-	    
-	    // Corridor Signal Regions
-	    double wgt_corridor = wgt;
-	      
-	    // metResSFs setup to ==1 if not ttbar/tW->2l
-	    if( systematicList[iSys].id==sysInfo::k_metResUp )        wgt_corridor *= metResSF_corr_up;
-	    else if( systematicList[iSys].id==sysInfo::k_metResDown ) wgt_corridor *= metResSF_corr_dn;
-	    else                                                      wgt_corridor *= metResSF_corr;
-	    		
-	    if( sample.isSignalScan ){
-
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )   fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jup,   mStop, mLSP, wgt_corridor );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor_jdown, mStop, mLSP, wgt_corridor );
-	      else fillHistosScan( h_yields_corridor_sigScan[iHisto], passCats_corridor, mStop, mLSP, wgt_corridor );
-	    }
-	    else{
-	      if( systematicList[iSys].id==sysInfo::k_JESUp )        fillHistos( h_yields_corridor[iHisto], passCats_corridor_jup, wgt_corridor );
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ) fillHistos( h_yields_corridor[iHisto], passCats_corridor_jdown, wgt_corridor );
-	      else fillHistos( h_yields_corridor[iHisto], passCats_corridor, wgt_corridor );
-	    }
-
-
-	  } // end loop over systematics
-
-	  
-	  
-	  //
-	  // Non-yield Histograms
-	  //
-	  if( pass_evtSel[iReg] ){
+	  if( pass_evtSel[iReg] ) {
 
 	    int nTightTags = nTightTags_nominal;
-	    if( ( (regionList[iReg]=="SR" || regionList[iReg]=="CR2l") && ( (Mlb_closestb()>=175.0 && nTightTags>=1) || (Mlb_closestb()<175.0) ) ) ||
-		( (regionList[iReg]!="SR" && regionList[iReg]!="CR2l") )    ){
+	    if( ( (analyzers.at(iReg)=="SR" || analyzers.at(iReg)=="CR2l") && ( (Mlb_closestb()>=175.0 && nTightTags>=1) || (Mlb_closestb()<175.0) ) ) ||
+		( (analyzers.at(iReg)!="SR" && analyzers.at(iReg)!="CR2l") )    ){
 	      
 	      double wgt_histos = wgt_nominal;
 	      wgt_histos *= metResSF;
-	      if( (regionList[iReg]=="SR" || regionList[iReg]=="CR2l") && (Mlb_closestb()>=175.0 && nTightTags>=1) ){
-		wgt_histos *= (wgtInfo->sf_bTag_tight/wgtInfo->sf_bTag); 
+	      if( (analyzers.at(iReg)=="SR" || analyzers.at(iReg)=="CR2l") && (Mlb_closestb()>=175.0 && nTightTags>=1) ){
+		wgt_histos *= (wgtInfo.sf_bTag_tight/wgtInfo.sf_bTag); 
 	      }
 
-	      if( regionList[iReg]=="SR" ) wgt_histos *= metTTbarSF;
+	      if( analyzers.at(iReg)=="SR" ) wgt_histos *= metTTbarSF;
 
 
 	      for(int iMassPt=0; iMassPt<nMassPts; iMassPt++){
 
 		if( sample.isSignalScan && mStop!=sample.massPtList[iMassPt].first && mLSP!=sample.massPtList[iMassPt].second ) continue;
-		//if(!isnormal(wgt_nominal)) cout << "NaN/inf weight: nEntries=" << wgtInfo->nEvents << ", lepSF=" << wgtInfo->sf_lep << ", vetoLep="<< wgtInfo->sf_vetoLep << ", btagSF=" << wgtInfo->sf_bTag << endl;
+		//if(!isnormal(wgt_nominal)) cout << "NaN/inf weight: nEntries=" << wgtInfo.nEvents << ", lepSF=" << wgtInfo.sf_lep << ", vetoLep="<< wgtInfo.sf_vetoLep << ", btagSF=" << wgtInfo.sf_bTag << endl;
 		// Histo Index
 		int iHisto = iReg*nGenClassy*nMassPts + iGen*nMassPts + iMassPt;
 
@@ -1468,7 +1289,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 		if( add2ndLepToMet_ ) met = pfmet_rl();
 
 		double mlb = Mlb_closestb();
-		if( regionList[iReg]=="CR0b" || regionList[iReg]=="CR0b_tightBTagHighMlb" ) mlb = ( lep1_p4() + ak4pfjets_leadbtag_p4() ).M();
+		if( analyzers.at(iReg)=="CR0b" || analyzers.at(iReg)=="CR0b_tightBTagHighMlb" ) mlb = ( lep1_p4() + ak4pfjets_leadbtag_p4() ).M();
 
 		// Met Sideband CR area, met>=150
 
@@ -1660,13 +1481,11 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
 
 	} // end loop over genClassifications
-	
-      }  // end loop over regions
 
      
-
+			*/
     
-    } // end loop over events in tree
+		} // end loop over events in tree
       
       
     //
@@ -1692,8 +1511,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   cout << "====================================================" << endl;
   cout << endl;
-  for(int iReg=0; iReg<nRegions; iReg++){
-    cout << "    " << regionList[iReg] << " Cutflow: " << endl;
+  for(int iReg=0; iReg<nAnalyzers; iReg++){
+    cout << "    " << analyzers.at(iReg)->GetLabel() << " Cutflow: " << endl;
     for(int iCut=1; iCut<=(int)h_cutflow[iReg]->GetNbinsX(); iCut++){
       cout << "      nEvents pass " << h_cutflow[iReg]->GetXaxis()->GetBinLabel(iCut) << " = " << h_cutflow[iReg]->GetBinContent(iCut) << endl;
     }
@@ -1706,7 +1525,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   // Clean stopCORE objects
   //
-  wgtInfo->~evtWgtInfo(); 
+  wgtInfo.~evtWgtInfo(); 
 
 
   //
@@ -1743,12 +1562,12 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   return 0;
 
-}
+} // End of function "looper"
 
 
 /////////////////////////////////////////////////////////////////////////
 
-void fillHistos( TH1D *histo, vector<int> passCats, double wgt ){
+void fillHistos( TH1D *histo, vector<int> passCats, double wgt ){   ////////// can replace these with simple one-line range-based for loops
 
   for(int iCat=0; iCat<(int)passCats.size(); iCat++){
     histo->Fill( passCats[iCat], wgt );
