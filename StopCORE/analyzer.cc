@@ -69,7 +69,7 @@ bool analyzer::PassSelections() {
 	selectionInfo::SetJesType( jesType );
 	selectionInfo::SetIncludeTaus( includeTaus );
 	for( std::pair<std::string,bool(*)()> selection : selections ) {
-		if( selection.second == false ) return false;
+		if( selection.second() == false ) return false;
 	}
 	return true;
 }

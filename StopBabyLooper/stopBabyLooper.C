@@ -987,7 +987,7 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 				std::vector<bool> cutflow_results = selectionInfo::get_selectionResults( thisAnalyzer->GetSelections() );
 				for( uint i=0; i<cutflow_results.size(); i++ ) {
 					if( !cutflow_results.at(i) ) break;
-					h_cutflow[iAna]->Fill( i );
+					h_cutflow[iAna]->Fill( i+1 );
 				}
 
 

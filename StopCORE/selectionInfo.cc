@@ -381,8 +381,15 @@ bool selectionInfo::pass_geX_minDPhi(double cut_minDPhi, int jesType, bool add2n
 bool selectionInfo::pass_j1NotBtag() { return !pass_j1MedBtag( localJesType ); }
 
 bool selectionInfo::pass_j1MedBtag( int jesType ) {
-	if(      jesType==1 )  return babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
-	else if( jesType==-1 ) return babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
+	if( jesType==1 ) {
+		if( babyAnalyzer.jup_ngoodjets() == 0 ) return false;
+		return babyAnalyzer.jup_ak4pfjets_passMEDbtag().at(0);
+	}
+	else if( jesType==-1 ) {
+		if( babyAnalyzer.jdown_ngoodjets() == 0 ) return false;
+		return babyAnalyzer.jdown_ak4pfjets_passMEDbtag().at(0);
+	}
+	if( babyAnalyzer.ngoodjets() == 0 ) return false;
 	return babyAnalyzer.ak4pfjets_passMEDbtag().at(0);
 }
 
@@ -462,7 +469,7 @@ std::vector<bool> selectionInfo::get_selectionResults( std::vector<selectionInfo
 
 	std::vector<bool> result;
 	for( selectionInfo::cut thisCut : cutList ) {
-		result.push_back( thisCut.second );
+		result.push_back( thisCut.second() );
 	}
 
 	return result;
