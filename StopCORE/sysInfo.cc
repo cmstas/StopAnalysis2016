@@ -488,7 +488,7 @@ void sysInfo::evtWgtInfo::setUp( sampleInfo::ID sample, bool useBTagUtils, bool 
 
 //////////////////////////////////////////////////////////////////////
 
-sysInfo::evtWgtInfo::~evtWgtInfo(){
+void sysInfo::evtWgtInfo::cleanUp(){
   
   sample_info->~sampleUtil();
   

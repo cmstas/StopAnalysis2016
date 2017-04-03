@@ -1525,7 +1525,7 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
   //
   // Clean stopCORE objects
   //
-  wgtInfo.~evtWgtInfo(); 
+  wgtInfo.cleanUp(); 
 
 
   //

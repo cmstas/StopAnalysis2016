@@ -301,9 +301,11 @@ namespace sysInfo{
 
          
     evtWgtInfo();
-    ~evtWgtInfo();
+    // ~evtWgtInfo();
 
     void setUp( sampleInfo::ID sample, bool useBTagUtils=false, bool useLepSFUtils=false, bool use2ndLepToMet=false );
+
+		void cleanUp();
 
     void getWeightHistogramFromBaby( TFile *sourceFile );
 
