@@ -123,10 +123,13 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
   // Signal and Control Regions
   //
   std::vector<std::string> regionList;
-  regionList.push_back("SR");
-  regionList.push_back("CR0b");
-  regionList.push_back("CR0b_tightBTagHighMlb");
-  regionList.push_back("CR2l");
+  regionList.push_back("SR_bulk");
+	regionList.push_back("SR_corridor");
+  regionList.push_back("CR0b_bulk");
+  regionList.push_back("CR0b_highMlb_bulk");
+	regionList.push_back("CR0b_corridor");
+  regionList.push_back("CR2L_bulk");
+	regionList.push_back("CR2L_corridor");
 
 
   //
@@ -863,7 +866,7 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
   //
   // Make yield tables
   //
-  for(int iRegion=0; iRegion<(int)regionList.size(); iRegion++){
+  for(int iRegion=0; iRegion<(int)regionList.size(); iRegion++) {
 
     // Determine if data or psuedodata
     if(usePsuedoData){
@@ -882,9 +885,15 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
       sysInfo::Util systematic(systematicList[iSys]);
       
       // Loop over fileList
-      for(int iFile=0; iFile<(int)fileList.size(); iFile++ ){
+      for(int iFile=0; iFile<(int)fileList.size(); iFile++ ) {
 	
 	std::vector< std::vector<yieldHelper> > iTableList = fileList[iFile];
+
+	// Quick hack to separate corridor regions and bulk regions (necessary to prevent crashes)
+	TString regionName = TString( regionList.at(iRegion) );
+	TString categoryName = TString( iTableList.at(0).at(0).histName );
+	if( (regionName.Contains("corridor") && !categoryName.Contains("corridor")) ||
+			(!regionName.Contains("corridor") && categoryName.Contains("corridor")) ) continue;
 
 	// Open output file
 	std::string f_out_name = f_out_name_base;
