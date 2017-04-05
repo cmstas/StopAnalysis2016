@@ -334,7 +334,8 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 				TH1D* h_template = thisAnalyzer->GetYieldTemplate();
 				TH1D* h_tmp = 0;
 
-				TString yieldname = h_template->GetName();
+				// TString yieldname = h_template->GetName();
+				TString yieldname = "h_yields";
 				yieldname += reg_gen_sys_name;
 				h_tmp = (TH1D*)h_template->Clone( yieldname );
 				h_tmp->SetDirectory(f_output);
