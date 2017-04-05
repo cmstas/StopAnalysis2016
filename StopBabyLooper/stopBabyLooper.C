@@ -969,7 +969,7 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 				// Make an array of which genClassy's this event passes
 				bool passedGenClassies[genClassyInfo::k_nGenClassy];
 				for( genClassyInfo::Util thisGenClassy : thisAnalyzer->GetGenClassifications() ) {
-					passedGenClassies[thisGenClassy.id] = thisGenClassy.eval_GenClassy;
+					passedGenClassies[thisGenClassy.id] = thisGenClassy.eval_GenClassy();
 
 					// Manually correct the ZZto2L2Nu sample
 					if( sample.id==sampleInfo::k_ZZTo2L2Nu_powheg_pythia8 ) {

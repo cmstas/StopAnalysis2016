@@ -22,15 +22,15 @@ make
 ./runBabyLooper 
 
 # Create pdfs of latex files
-echo "Converting Tex to PDF..."
+echo "Converting TeX to PDF..."
 echo ""
 
 sed -i 's/0\.0~-~0\.0~\\%/--/g' Output/BkgEstimate/bkgEst_lostLepton__*__uncertaintyTable__summary.tex
 
 cd Output/Tables/
-for x in `/bin/ls *.tex`; do pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
+for x in `/bin/ls *.tex`; do echo $x; pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
 cd ../BkgEstimate/
-for x in `/bin/ls *.tex`; do pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
+for x in `/bin/ls *.tex`; do echo $x; pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
 cd ../../
 
 # Clean up 
