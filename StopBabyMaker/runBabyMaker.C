@@ -66,6 +66,7 @@ int main(int argc, char **argv){
   
   //const char* filename = (file == -1 ? "*postprocess.root" : Form("%spostprocess.root"));
   const char* filename = (file == -1 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
+  //const char* filename = "ntuple_TTJets_HT-1200to2500_new.root";
   cout << filename << endl;
   
   const char* suffix = file == -1 ? "" : Form("_%i", file);

@@ -1281,3 +1281,7 @@ Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2_fastsim/SMS-T2bW_TuneCUET
 SAMPLE
 Name Signal_T2tb
 Path /hadoop/cms/store/group/snt/run2_25ns_80MiniAODv2_fastsim/SMS-T2bt_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/V08-00-09/
+
+SAMPLE
+Name ttbar_CMS4_test
+Path /home/users/namin/2017/slimming/CMSSW_8_0_26_patch1/src/CMS3/NtupleMaker/test/for_comparisons/

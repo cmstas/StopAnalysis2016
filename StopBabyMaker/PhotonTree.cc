@@ -34,7 +34,8 @@ void PhotonTree::FillCommon ()
     pt.push_back(cms3.photons_p4().at(idx).pt());
     eta.push_back(cms3.photons_p4().at(idx).eta());
     phi.push_back(cms3.photons_p4().at(idx).phi());
-    mass.push_back(cms3.photons_mass().at(idx));
+    //mass.push_back(cms3.photons_mass().at(idx));
+    mass.push_back(cms3.photons_p4().at(idx).M());
     //id variables
     sigmaIEtaEta_fill5x5.push_back(photons_full5x5_sigmaIEtaIEta().at(idx));
     hOverE.push_back(photons_full5x5_hOverEtowBC().at(idx));

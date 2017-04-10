@@ -14,8 +14,8 @@ void TauTree::FillCommon (int idx,float tau_pt_cut, float tau_eta_cut)
     if(taus_pf_p4().at(idx).pt() < tau_pt_cut) return;
     if(fabs(taus_pf_p4().at(idx).eta()) > tau_eta_cut) return;
 
-    tau_leadtrack_p4.push_back(taus_pf_lead_chargecand_p4().at(idx));
-    tau_leadneutral_p4.push_back(taus_pf_lead_neutrcand_p4().at(idx));
+    //tau_leadtrack_p4.push_back(taus_pf_lead_chargecand_p4().at(idx));
+    //tau_leadneutral_p4.push_back(taus_pf_lead_neutrcand_p4().at(idx));
     tau_p4.push_back(taus_pf_p4().at(idx));
     //tau_isocand_p4.push_back(taus_pf_isocands_p4().at(idx));//this does crash constantly
     //tau_sigcand_p4.push_back(taus_pf_signalcands_p4().at(idx));//this does crash constantly

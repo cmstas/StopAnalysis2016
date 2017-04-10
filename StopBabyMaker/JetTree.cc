@@ -300,8 +300,8 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 	ak4pfjets_hadron_flavor.push_back(pfjets_hadronFlavour().at(jindex));
         ak4pfjets_loose_puid.push_back(loosePileupJetId(jindex));
         ak4pfjets_loose_pfid.push_back(isLoosePFJetV2(jindex));
-        ak4pfjets_medium_pfid.push_back(isMediumPFJet(jindex));
-        ak4pfjets_tight_pfid.push_back(isTightPFJet(jindex));
+        //ak4pfjets_medium_pfid.push_back(isMediumPFJetV2(jindex));
+        ak4pfjets_tight_pfid.push_back(isTightPFJetV2(jindex));
 
         ak4pfjets_chf.push_back(pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
         ak4pfjets_nhf.push_back(pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
