@@ -22,6 +22,7 @@ make
 ./runBabyLooper 
 
 # Create pdfs of latex files
+echo ""
 echo "Converting TeX to PDF..."
 echo ""
 

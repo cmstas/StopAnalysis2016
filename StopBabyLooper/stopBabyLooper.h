@@ -96,6 +96,9 @@ public:
   TString outName_base;
   TString hName_base;
 
+	TString name_SR;
+	TString name_CR;
+
   bool forceOneTF;
   bool useFractionInCR;
   
