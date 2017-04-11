@@ -29,9 +29,9 @@ echo ""
 sed -i 's/0\.0~-~0\.0~\\%/--/g' Output/BkgEstimate/bkgEst_lostLepton__*__uncertaintyTable__summary.tex
 
 cd Output/Tables/
-for x in `/bin/ls *.tex`; do echo $x; pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
+for x in `/bin/ls *.tex`; do echo $x; pdflatex -interaction=nonstopmode $x >& pass1.log; pdflatex -interaction=nonstopmode $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
 cd ../BkgEstimate/
-for x in `/bin/ls *.tex`; do echo $x; pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
+for x in `/bin/ls *.tex`; do echo $x; pdflatex -interaction=nonstopmode $x >& pass1.log; pdflatex -interaction=nonstopmode $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
 cd ../../
 
 # Clean up 
