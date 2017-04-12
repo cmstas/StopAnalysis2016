@@ -499,7 +499,7 @@ int bkgEstimate_diLepton(){
     TFile  *f_out = new TFile(root_fileName.Data(), "recreate");
     
     // Count Additional Systematics
-    int additional_sys = 4; // +2 for data stats up/down, +2 for mc status up/down
+    int additional_sys = 4; // +2 for data stats up/down, +2 for mc stats up/down
     if(useFraction) additional_sys += 2; // +2 for impurity 
 
     // Total Systematics

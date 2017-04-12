@@ -639,6 +639,8 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_sample = 1.0;
 
   for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts[iSys]=1.0;
+  for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_corridor[iSys]=1.0;
+  for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_metTTbar[iSys]=1.0;
   
   return;
 }

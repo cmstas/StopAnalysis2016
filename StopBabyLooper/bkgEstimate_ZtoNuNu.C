@@ -327,7 +327,7 @@ int bkgEstimate_ZtoNuNu(){
     texFile += "__resultsTable.tex";
     yFile = fopen(texFile.Data(), "w");
     
-    cout << "Writing Table of Z to Nu Nu Estimates to file; " << endl;
+    cout << "Writing Table of ZtoNuNu Estimates to file; " << endl;
     cout << "    " << texFile << endl;
 
     printLatexHeader(yFile);
@@ -363,7 +363,7 @@ int bkgEstimate_ZtoNuNu(){
     uncFileSummaryName += "__uncertaintyTable__summary.tex";
     uncFileSummary = fopen(uncFileSummaryName.Data(), "w");
     
-    cout << "Writing Table of Z to Nu Nu Uncertainties to: " << endl;
+    cout << "Writing Table of ZtoNuNu Uncertainties to: " << endl;
     cout << "    " << uncFileSummaryName << endl;
     
     printLatexHeader(uncFileSummary);
