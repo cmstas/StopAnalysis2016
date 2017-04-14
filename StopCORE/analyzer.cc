@@ -8,6 +8,8 @@ analyzer::analyzer( std::string new_label )
 	add2ndLep = false;
 	includeTaus = false;
 	isCorridor = false;
+	useMetTTbarWgts = false;
+	useTightTagHighMlb = false;
 	jesType = 0;
 }
 
@@ -47,9 +49,9 @@ std::vector<sysInfo::Util> analyzer::GetSystematics() { return systematics; }
 
 double analyzer::GetEventWeight( sysInfo::ID whichSystematic ) {
 
-	if( useMetTTbarWgts ) return sysInfo::GetEventWeight_metTTbar( whichSystematic );
-	else if( isCorridor ) return sysInfo::GetEventWeight_corridor( whichSystematic );
-
+	if( isCorridor ) return sysInfo::GetEventWeight_corridor( whichSystematic );
+	else if( useTightTagHighMlb &&  useMetTTbarWgts ) return sysInfo::GetEventWeight_SRbulk( whichSystematic );
+	else if( useTightTagHighMlb && !useMetTTbarWgts ) return sysInfo::GetEventWeight_CR2lbulk( whichSystematic );
 	return sysInfo::GetEventWeight( whichSystematic );
 }
 
@@ -82,6 +84,7 @@ void analyzer::SetIncludeTaus( bool use_taus ) {includeTaus = use_taus; }
 void analyzer::SetIsCorridor( bool is_corridor ) {isCorridor = is_corridor; }
 void analyzer::SetJesType( int jestype ) { jesType = jestype; }
 void analyzer::SetUseMetTTbarWeights( bool use_metttbar ) { useMetTTbarWgts = use_metttbar; }
+void analyzer::SetUseTightTagHighMlb( bool use_tighttag ) { useTightTagHighMlb = use_tighttag; }
 void analyzer::SetYieldHistogram( int idx, TH1D* histo ) { h_yield[idx] = histo; }
 void analyzer::SetYieldTemplate( TH1D* yield_template ) { h_yield_template = yield_template; }
 

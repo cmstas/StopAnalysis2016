@@ -94,7 +94,8 @@ namespace sysInfo{
 	//
 	double GetEventWeight( ID whichSyst );
 	double GetEventWeight_corridor( ID whichSyst );
-	double GetEventWeight_metTTbar( ID whichSyst );
+	double GetEventWeight_SRbulk( ID whichSyst );
+	double GetEventWeight_CR2lbulk( ID whichSyst );
 
 
   //
@@ -175,7 +176,8 @@ namespace sysInfo{
     // Event weights for each systematic
     double sys_wgts[k_nSys];
 		double sys_wgts_corridor[k_nSys];
-		double sys_wgts_metTTbar[k_nSys];
+		double sys_wgts_SRbulk[k_nSys];
+	  double sys_wgts_CR2lbulk[k_nSys];
 
     // Variables to form baseline event weight
     int mStop;

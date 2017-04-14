@@ -76,6 +76,9 @@ int stopBabyLooper(){
 
 	SR_MlbBinned.SetUseMetTTbarWeights( true );
 
+	SR_MlbBinned.SetUseTightTagHighMlb( true );
+	CR2L_MlbBinned.SetUseTightTagHighMlb( true );
+
 	// Set selections and categories for the analyzers
 	SR_MlbBinned.AddSelections(   selectionInfo::get_selection_SR() );
 	SR_corridor.AddSelections(    selectionInfo::get_selection_SR_corridor() );
@@ -1040,50 +1043,7 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 			/*
 
 
-			//
-			// Yields
-			//
-			for(int iGen=0; iGen<nGenClassy; iGen++) {
 
-				if( !passGenClassy[iGen] ) continue;
-
-				for(int iSys=0; iSys<nSystematics; iSys++){
-	    
-					if( ( (analyzers.at(iReg)=="SR" || analyzers.at(iReg)=="CR2l") &&
-								( (Mlb_closestb()>=175.0 && nTightTags>=1) || (Mlb_closestb()<175.0) ) ) ||
-							( (analyzers.at(iReg)!="SR" && analyzers.at(iReg)!="CR2l") )    ){
-
-
-						////////////// This is important! Apply tight btag SFs to tight-btag regions (categories) /////////////////////
-						if( (analyzers.at(iReg)=="SR" || analyzers.at(iReg)=="CR2l") &&
-								(Mlb_closestb()>=175.0 && nTightTags>=1) ){
-							if( systematicList[iSys].id==sysInfo::k_bTagEffHFUp)       {
-								wgt_mlb *= (wgtInfo.sf_bTagEffHF_tight_up/wgtInfo.sf_bTagEffHF_up);
-							}
-							else if( systematicList[iSys].id==sysInfo::k_bTagEffHFDown) {
-								wgt_mlb *= (wgtInfo.sf_bTagEffHF_tight_dn/wgtInfo.sf_bTagEffHF_dn);
-							}
-							else if( systematicList[iSys].id==sysInfo::k_bTagEffLFUp)  {
-								wgt_mlb *= (wgtInfo.sf_bTagEffLF_tight_up/wgtInfo.sf_bTagEffLF_up);
-							}
-							else if( systematicList[iSys].id==sysInfo::k_bTagEffLFDown){
-								wgt_mlb *= (wgtInfo.sf_bTagEffLF_tight_dn/wgtInfo.sf_bTagEffLF_dn);
-							}
-							else {
-								wgt_mlb *= (wgtInfo.sf_bTag_tight/wgtInfo.sf_bTag);
-							}
-						}
-					}
-
-
-				} // end loop over systematics
-			} // end loop over genClassy's
-
-
-
-
-  
-      
       
 
       /////////////////////////////

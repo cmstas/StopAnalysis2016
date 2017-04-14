@@ -56,6 +56,7 @@ public:
 	void SetIsCorridor( bool is_corridor );
 	void SetJesType( int jestype );
 	void SetUseMetTTbarWeights( bool use_metttbar );
+	void SetUseTightTagHighMlb( bool use_tighttag );
 	void SetYieldHistogram( int idx, TH1D* histo );
 	void SetYieldTemplate( TH1D* yield_template );
 
@@ -72,6 +73,7 @@ private:
 	bool isCorridor;
 	int  jesType;
 	bool useMetTTbarWgts;
+	bool useTightTagHighMlb;
 	
 	TH1D *h_yield_template;
 	TH3D *h_yield_template_sigScan;

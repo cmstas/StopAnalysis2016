@@ -389,7 +389,9 @@ double sysInfo::GetEventWeight( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgt
 
 double sysInfo::GetEventWeight_corridor( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_corridor[whichSyst]; }
 
-double sysInfo::GetEventWeight_metTTbar( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_metTTbar[whichSyst]; }
+double sysInfo::GetEventWeight_SRbulk( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_SRbulk[whichSyst]; }
+
+double sysInfo::GetEventWeight_CR2lbulk( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_CR2lbulk[whichSyst]; }
 
 //////////////////////////////////////////////////////////////////////
 
@@ -640,7 +642,8 @@ void sysInfo::evtWgtInfo::initializeWeights(){
 
   for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts[iSys]=1.0;
   for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_corridor[iSys]=1.0;
-  for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_metTTbar[iSys]=1.0;
+  for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_SRbulk[iSys]=1.0;
+  for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_CR2lbulk[iSys]=1.0;
   
   return;
 }
@@ -1010,23 +1013,48 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     }
 
 
-		// Deal with alternate MET resolution weights for corridor regions
+		// Corridor regions use alternate MET resolution weights
 		double wgt_corridor = sys_wgt;
 		if(      iSys==k_metResUp   ) wgt_corridor *= sf_metRes_corridor_up / sf_metRes_up;
 		else if( iSys==k_metResDown ) wgt_corridor *= sf_metRes_corridor_dn / sf_metRes_dn;
 		else wgt_corridor *= sf_metRes_corridor / sf_metRes;
 
-		// Deal with MET ttbar weights for MET extrapolation regions
-		double wgt_metTTbar = sys_wgt;
-		if(      iSys==k_metTTbarUp   ) wgt_metTTbar *= sf_metTTbar;
-		else if( iSys==k_metTTbarDown ) wgt_metTTbar *= sf_metTTbar_up;
-		else wgt_metTTbar *= sf_metTTbar;
-    
+		// Bulk SR uses MET TTbar weights
+		double wgt_SRbulk = sys_wgt;
+		if(      iSys==k_metTTbarUp   ) wgt_SRbulk *= sf_metTTbar;
+		else if( iSys==k_metTTbarDown ) wgt_SRbulk *= sf_metTTbar_up;
+		else wgt_SRbulk *= sf_metTTbar;
+
+		// Bulk SR and CR2L both use tight btag SFs in high-Mlb regions
+		double wgt_CR2lbulk = sys_wgt;
+		if( babyAnalyzer.Mlb_closestb() >= 175. && babyAnalyzer.ntightbtags() >= 1 ) {
+			if( iSys==k_bTagEffHFUp ) {
+				wgt_SRbulk   *= sf_bTagEffHF_tight_up / sf_bTagEffHF_up;
+				wgt_CR2lbulk *= sf_bTagEffHF_tight_up / sf_bTagEffHF_up;
+			}
+			else if( iSys==k_bTagEffHFDown ) {
+				wgt_SRbulk   *= sf_bTagEffHF_tight_dn / sf_bTagEffHF_dn;
+				wgt_CR2lbulk *= sf_bTagEffHF_tight_dn / sf_bTagEffHF_dn;
+			}
+			else if( iSys==k_bTagEffLFUp ) {
+				wgt_SRbulk   *= sf_bTagEffLF_tight_up / sf_bTagEffLF_up;
+				wgt_CR2lbulk *= sf_bTagEffLF_tight_up / sf_bTagEffLF_up;
+			}
+			else if( iSys==k_bTagEffLFDown ) {
+				wgt_SRbulk   *= sf_bTagEffLF_tight_dn / sf_bTagEffLF_dn;
+				wgt_CR2lbulk *= sf_bTagEffLF_tight_dn / sf_bTagEffLF_dn;
+			}
+			else {
+				wgt_SRbulk   *= sf_bTag_tight / sf_bTag;
+				wgt_CR2lbulk *= sf_bTag_tight / sf_bTag;
+			}
+		}
 
     // Fill Array Element
     sys_wgts[iSys] = sys_wgt;
 		sys_wgts_corridor[iSys] = wgt_corridor;
-		sys_wgts_metTTbar[iSys] = wgt_metTTbar;
+		sys_wgts_SRbulk[iSys] = wgt_SRbulk;
+		sys_wgts_CR2lbulk[iSys] = wgt_CR2lbulk;
 
 
     // Break if only filling nominal
