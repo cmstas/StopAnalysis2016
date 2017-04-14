@@ -330,7 +330,7 @@ int bkgEstimate_1lepFromW(){
     TFile  *f_out = new TFile(root_fileName.Data(), "recreate");
     
     // Count Additional Systematics
-    int additional_sys = 4; // +2 for data stats up/down, +2 for mc status up/down
+    int additional_sys = 4; // +2 for data stats up/down, +2 for mc stats up/down
     if(useFraction) additional_sys += 2; // +2 for impurity 
 
     // Total Systematics
@@ -422,8 +422,8 @@ int bkgEstimate_1lepFromW(){
     fprintf(f_results, "} \\hline \n");
 
     fprintf(f_results, "Region & MET bin & $Observed_{CR}$");
-    if(useFraction) fprintf(f_results, " & $MC_{CR}^{2\\ell~frac}$");
-    fprintf(f_results, " & $TF_{lepton}$");
+    if(useFraction) fprintf(f_results, " & $MC_{CR}^{1\\ell~W~frac}$");
+    fprintf(f_results, " & $TF_{btag}$");
     if(!oneTF) fprintf(f_results, " & $TF_{SR~bin}$ & $TF_{Total}$");
     fprintf(f_results, " & $SR~Estimate$");
     fprintf(f_results, " \\"); fprintf(f_results, "\\ \\hline \\hline \n");
@@ -458,7 +458,7 @@ int bkgEstimate_1lepFromW(){
     
     printLatexHeader(f_uncFile_summary);
     fprintf(f_uncFile_summary, "\\begin{table} \n");
-    fprintf(f_uncFile_summary, "\\caption{ Summary of 1l-from-W Lepton Background Estimate Uncertainties } \n");
+    fprintf(f_uncFile_summary, "\\caption{ Summary of 1l-from-W Background Estimate Uncertainties } \n");
     fprintf(f_uncFile_summary, "\\scalebox{0.7}{ \n");
 
     fprintf(f_uncFile_summary, "\\begin{tabular}{|l|c|"); // Systematic, Data Yield CR
@@ -469,8 +469,8 @@ int bkgEstimate_1lepFromW(){
     fprintf(f_uncFile_summary, "} \\hline \n");
     
     fprintf(f_uncFile_summary, "Systematic & $Observed_{CR},~(\\%%)$");
-    if(useFraction) fprintf(f_uncFile_summary, "& $MC_{CR}^{2\\ell~frac},~(\\%%)$");
-    fprintf(f_uncFile_summary, " & $TF_{lepton},~(\\%%)$");
+    if(useFraction) fprintf(f_uncFile_summary, "& $MC_{CR}^{1\\ell~W~frac},~(\\%%)$");
+    fprintf(f_uncFile_summary, " & $TF_{btag},~(\\%%)$");
     if(!oneTF) fprintf(f_uncFile_summary, " & $TF_{SR~Bin},~(\\%%)$ & $TF_{Total},~(\\%%)$");
     fprintf(f_uncFile_summary, " & $SR~Estimate,~(\\%%)$");
     fprintf(f_uncFile_summary, " \\"); fprintf(f_uncFile_summary, "\\ \\hline \\hline \n");
@@ -574,8 +574,8 @@ int bkgEstimate_1lepFromW(){
 
       fprintf(f_uncFile_fullCalc, "Systematic & $Observed_{CR},~(\\%%)$ & $MC_{Incl}^{CR},~(\\%%)$");
       if(useFraction) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{CR},~(\\%%)$ & $MC_{CR}^{1\\ell~frac},~(\\%%)$");
-      if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR~bin},~(\\%%)$ & $TF_{lepton},~(\\%%)$");
-      else                             fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR},~(\\%%)$ & $TF_{lepton},~(\\%%)$");
+      if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR~bin},~(\\%%)$ & $TF_{btag},~(\\%%)$");
+      else                             fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR},~(\\%%)$ & $TF_{btag},~(\\%%)$");
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR~bin},~(\\%%)$ & $TF_{SR~Bin},~(\\%%)$ & $TF_{Total},~(\\%%)$");
       fprintf(f_uncFile_fullCalc, " & $SR~Estimate$");
       fprintf(f_uncFile_fullCalc, " \\"); fprintf(f_uncFile_fullCalc, "\\ \\hline \\hline \n");
@@ -636,7 +636,7 @@ int bkgEstimate_1lepFromW(){
       
       
       //
-      // CR, mc, cr2sr bin, ge2lep genClassy
+      // CR, mc, cr2sr bin, 1lW genClassy
       //
       hName = hNameBase;
       hName += "__";
@@ -647,14 +647,14 @@ int bkgEstimate_1lepFromW(){
       hName += nominal_sys.label;
       
       h_temp = (TH1D*)f_CR_mc->Get(hName);
-      if(!h_temp) cout << "BAD MC CR, ge2lep genClassy, CRtoSR bin HISTO: " << hName << endl;
+      if(!h_temp) cout << "BAD MC CR, 1lW genClassy, CRtoSR bin HISTO: " << hName << endl;
       
-      double MC_CR_cr2sr_ge2lep_yield = h_temp->GetBinContent( CR_bin);
-      double MC_CR_cr2sr_ge2lep_error = h_temp->GetBinError( CR_bin );
+      double MC_CR_cr2sr_1lW_yield = h_temp->GetBinContent( CR_bin);
+      double MC_CR_cr2sr_1lW_error = h_temp->GetBinError( CR_bin );
     
       if(doRescale){
-	MC_CR_cr2sr_ge2lep_error *= rescale;
-	MC_CR_cr2sr_ge2lep_yield *= rescale;
+	MC_CR_cr2sr_1lW_error *= rescale;
+	MC_CR_cr2sr_1lW_yield *= rescale;
       }
 
 
@@ -707,13 +707,13 @@ int bkgEstimate_1lepFromW(){
       
       
       //
-      // CR, mc, cr2sr bin, non-ge2lep genClassy
+      // CR, mc, cr2sr bin, non-1lW genClassy
       //
-      double MC_CR_cr2sr_non_ge2lep_yield = 0.0;
+      double MC_CR_cr2sr_non_1lW_yield = 0.0;
       
       
       //
-      // CR, mc, cr2sr bin, fraction of ge2lep
+      // CR, mc, cr2sr bin, fraction of 1lW
       //
       double MC_CR_fraction             = 1.0;
       double MC_CR_fraction_statErr     = 0.0;
@@ -766,24 +766,24 @@ int bkgEstimate_1lepFromW(){
 	//
 	if(useFraction){
 	  
-	  // If using fraction, get ge2lep CR MC yield
-	  if(MC_CR_cr2sr_ge2lep_yield>0.0 && MC_SR_bin_yield>0.0){
+	  // If using fraction, get 1lW CR MC yield
+	  if(MC_CR_cr2sr_1lW_yield>0.0 && MC_SR_bin_yield>0.0){
 
-	    // Get MC Non-ge2lep Yield
-	    MC_CR_cr2sr_non_ge2lep_yield = MC_CR_cr2sr_incl_yield - MC_CR_cr2sr_ge2lep_yield;
+	    // Get MC Non-1lW Yield
+	    MC_CR_cr2sr_non_1lW_yield = MC_CR_cr2sr_incl_yield - MC_CR_cr2sr_1lW_yield;
 	    
-	    // Get MC Fraction of ge2lep
-	    MC_CR_fraction             = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + MC_CR_cr2sr_non_ge2lep_yield );
-	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
+	    // Get MC Fraction of 1lW
+	    MC_CR_fraction             = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + MC_CR_cr2sr_non_1lW_yield );
+	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_1lW_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
 	    MC_CR_fraction_err         = MC_CR_fraction_statErr;
 
 	    // Get MC Fraction, varying impurity
-	    MC_CR_fraction_impurity_up = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + ((1.0+impurity_sys)*MC_CR_cr2sr_non_ge2lep_yield) );
-	    MC_CR_fraction_impurity_dn = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + ((1.0-impurity_sys)*MC_CR_cr2sr_non_ge2lep_yield) );
+	    MC_CR_fraction_impurity_up = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + ((1.0+impurity_sys)*MC_CR_cr2sr_non_1lW_yield) );
+	    MC_CR_fraction_impurity_dn = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + ((1.0-impurity_sys)*MC_CR_cr2sr_non_1lW_yield) );
 	    
 	    // Get Transfer Factor SR/CR
-	    tf_cr2sr = MC_SR_bin_yield/MC_CR_cr2sr_ge2lep_yield;
-	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield,2) + pow(MC_SR_bin_error/MC_SR_bin_yield,2) );  // Gaussian Errors for each component
+	    tf_cr2sr = MC_SR_bin_yield/MC_CR_cr2sr_1lW_yield;
+	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_1lW_error/MC_CR_cr2sr_1lW_yield,2) + pow(MC_SR_bin_error/MC_SR_bin_yield,2) );  // Gaussian Errors for each component
 	    tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_SR_bin_error/MC_SR_bin_yield,2) );  // Gausisan Errors for MC_SR_bin_yield only to avoid double counting , since MC_CR_cr2sr_error is included in MC fraction error 
 	    tf_cr2sr_err = tf_cr2sr_statErr;
 
@@ -845,24 +845,24 @@ int bkgEstimate_1lepFromW(){
 	//
 	if(useFraction){
 	  
-	  // If using fraction, get ge2lep CR MC yield
-	  if(MC_CR_cr2sr_ge2lep_yield>0.0 && MC_SR_cr2sr_yield>0.0 && MC_SR_bin_yield>0.0){
+	  // If using fraction, get 1lW CR MC yield
+	  if(MC_CR_cr2sr_1lW_yield>0.0 && MC_SR_cr2sr_yield>0.0 && MC_SR_bin_yield>0.0){
 
-	    // Get MC Non-ge2lep Yield
-	    MC_CR_cr2sr_non_ge2lep_yield = MC_CR_cr2sr_incl_yield - MC_CR_cr2sr_ge2lep_yield;
+	    // Get MC Non-1lW Yield
+	    MC_CR_cr2sr_non_1lW_yield = MC_CR_cr2sr_incl_yield - MC_CR_cr2sr_1lW_yield;
 	    
-	    // Get MC Fraction of ge2lep
-	    MC_CR_fraction             = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + MC_CR_cr2sr_non_ge2lep_yield );
-	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
+	    // Get MC Fraction of 1lW
+	    MC_CR_fraction             = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + MC_CR_cr2sr_non_1lW_yield );
+	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_1lW_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
 	    MC_CR_fraction_err         = MC_CR_fraction_statErr;
 
 	    // Get MC Fraction, varying impurity
-	    MC_CR_fraction_impurity_up = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + ((1.0+impurity_sys)*MC_CR_cr2sr_non_ge2lep_yield) );
-	    MC_CR_fraction_impurity_dn = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + ((1.0-impurity_sys)*MC_CR_cr2sr_non_ge2lep_yield) );
+	    MC_CR_fraction_impurity_up = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + ((1.0+impurity_sys)*MC_CR_cr2sr_non_1lW_yield) );
+	    MC_CR_fraction_impurity_dn = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + ((1.0-impurity_sys)*MC_CR_cr2sr_non_1lW_yield) );
 	    
 	    // Get Transfer Factor SR/CR
-	    tf_cr2sr = MC_SR_cr2sr_yield/MC_CR_cr2sr_ge2lep_yield;
-	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield,2) + pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Gaussian Errors for all components
+	    tf_cr2sr = MC_SR_cr2sr_yield/MC_CR_cr2sr_1lW_yield;
+	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_1lW_error/MC_CR_cr2sr_1lW_yield,2) + pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Gaussian Errors for all components
 	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Removed MC_SR_cr2sr_error since it is included MC fraction
 	    tf_cr2sr_statErr = 0.0;  // Removed MC_SR_cr2sr_error since it is included in tf_srBin error
 	    tf_cr2sr_err = tf_cr2sr_statErr;
@@ -939,7 +939,7 @@ int bkgEstimate_1lepFromW(){
       
       // Uncertainty File, for each category, Nominal Values
       fprintf(f_uncFile_fullCalc, "Nominal & %.2f & %.2f", Data_CR_cr2sr_yield, MC_CR_cr2sr_incl_yield);
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f & %.2f", MC_CR_cr2sr_ge2lep_yield, MC_CR_fraction);
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f & %.2f", MC_CR_cr2sr_1lW_yield, MC_CR_fraction);
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f & %.2f", MC_SR_bin_yield, tf_cr2sr);
       else                             fprintf(f_uncFile_fullCalc, " & %.2f & %.2f", MC_SR_cr2sr_yield, tf_cr2sr);
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f & %.2f & %.2f", MC_SR_bin_yield, tf_srBin, tf_tot);
@@ -960,7 +960,7 @@ int bkgEstimate_1lepFromW(){
 
       // Uncertainty File, for each category, Data Stats Up
       fprintf(f_uncFile_fullCalc, "Data Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield+Data_CR_cr2sr_error, (100*Data_CR_cr2sr_error/Data_CR_cr2sr_yield), MC_CR_cr2sr_incl_yield, 0.0);
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield, 0.0, MC_CR_fraction, 0.0);
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield, 0.0, MC_CR_fraction, 0.0);
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_cr2sr, 0.0);
       else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield, 0.0, tf_cr2sr, 0.0);
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_srBin, 0.0, tf_tot, 0.0);
@@ -970,7 +970,7 @@ int bkgEstimate_1lepFromW(){
       
       // Uncertainty File, for each category, Data Stats Down
       fprintf(f_uncFile_fullCalc, "Data Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield-Data_CR_cr2sr_error, (100*Data_CR_cr2sr_error/Data_CR_cr2sr_yield), MC_CR_cr2sr_incl_yield, 0.0);
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield, 0.0, MC_CR_fraction, 0.0);
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield, 0.0, MC_CR_fraction, 0.0);
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_cr2sr, 0.0);
       else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield, 0.0, tf_cr2sr, 0.0);
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_srBin, 0.0, tf_tot, 0.0);
@@ -1015,7 +1015,7 @@ int bkgEstimate_1lepFromW(){
       
       // Uncertainty File, per category, MC Stats Up
       fprintf(f_uncFile_fullCalc, "MC Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield+MC_CR_cr2sr_incl_error, (100.0*MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield) );
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield+MC_CR_cr2sr_ge2lep_error, (100.0*MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield), MC_CR_fraction+MC_CR_fraction_statErr, (100.0*MC_CR_fraction_statErr/MC_CR_fraction) );
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield+MC_CR_cr2sr_1lW_error, (100.0*MC_CR_cr2sr_1lW_error/MC_CR_cr2sr_1lW_yield), MC_CR_fraction+MC_CR_fraction_statErr, (100.0*MC_CR_fraction_statErr/MC_CR_fraction) );
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield+MC_SR_bin_error, (100.0*MC_SR_bin_error/MC_SR_bin_yield), tf_cr2sr+tf_cr2sr_statErr, (100.0*tf_cr2sr_statErr/tf_cr2sr) );
       else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield+MC_SR_cr2sr_error, (100.0*MC_SR_cr2sr_error/MC_SR_cr2sr_yield), tf_cr2sr+tf_cr2sr_statErr, (100.0*tf_cr2sr_statErr/tf_cr2sr) );
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield+MC_SR_bin_error, (100.0*MC_SR_bin_error/MC_SR_bin_yield), tf_srBin+tf_srBin_statErr, (100.0*tf_srBin_statErr/tf_srBin), tf_tot+tf_tot_statErr, (100.0*tf_tot_statErr/tf_tot) );
@@ -1025,7 +1025,7 @@ int bkgEstimate_1lepFromW(){
       
       // Uncertainty File, per category, MC Stats Down
       fprintf(f_uncFile_fullCalc, "MC Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield-MC_CR_cr2sr_incl_error, (100.0*MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield) );
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield-MC_CR_cr2sr_ge2lep_error, (100.0*MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield), MC_CR_fraction-MC_CR_fraction_statErr, (100.0*MC_CR_fraction_statErr/MC_CR_fraction) );
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield-MC_CR_cr2sr_1lW_error, (100.0*MC_CR_cr2sr_1lW_error/MC_CR_cr2sr_1lW_yield), MC_CR_fraction-MC_CR_fraction_statErr, (100.0*MC_CR_fraction_statErr/MC_CR_fraction) );
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield-MC_SR_bin_error, (100.0*MC_SR_bin_error/MC_SR_bin_yield), tf_cr2sr-tf_cr2sr_statErr, (100.0*tf_cr2sr_statErr/tf_cr2sr) );
       else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield-MC_SR_cr2sr_error, (100.0*MC_SR_cr2sr_error/MC_SR_cr2sr_yield), tf_cr2sr-tf_cr2sr_statErr, (100.0*tf_cr2sr_statErr/tf_cr2sr) );
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield-MC_SR_bin_error, (100.0*MC_SR_bin_error/MC_SR_bin_yield), tf_srBin-tf_srBin_statErr, (100.0*tf_srBin_statErr/tf_srBin), tf_tot-tf_tot_statErr, (100.0*tf_tot_statErr/tf_tot) );
@@ -1078,7 +1078,7 @@ int bkgEstimate_1lepFromW(){
       
 	// Uncertainty File, per category, MC CR Purity Up
 	fprintf(f_uncFile_fullCalc, "CR Impurity Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield, 0.0 );
-	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield, 0.0, MC_CR_fraction_impurity_up, (100.0*(MC_CR_fraction_impurity_up-MC_CR_fraction)/MC_CR_fraction) );
+	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield, 0.0, MC_CR_fraction_impurity_up, (100.0*(MC_CR_fraction_impurity_up-MC_CR_fraction)/MC_CR_fraction) );
 	if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_cr2sr, 0.0 );
 	else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield, 0.0, tf_cr2sr, 0.0 );
 	if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_srBin, 0.0, tf_tot, 0.0 );
@@ -1088,7 +1088,7 @@ int bkgEstimate_1lepFromW(){
 	
 	// Uncertainty File, per category, MC CR Purity Down
 	fprintf(f_uncFile_fullCalc, "CR Impurity Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield, 0.0 );
-	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield, 0.0, MC_CR_fraction_impurity_dn, (100.0*(MC_CR_fraction_impurity_dn-MC_CR_fraction)/MC_CR_fraction) );
+	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield, 0.0, MC_CR_fraction_impurity_dn, (100.0*(MC_CR_fraction_impurity_dn-MC_CR_fraction)/MC_CR_fraction) );
 	if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_cr2sr, 0.0 );
 	else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield, 0.0, tf_cr2sr, 0.0 );
 	if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_srBin, 0.0, tf_tot, 0.0 );
@@ -1181,7 +1181,7 @@ int bkgEstimate_1lepFromW(){
 
 
 	//
-	// CR, MC, cr2sr bin, ge2lep genClassy, sys up
+	// CR, MC, cr2sr bin, 1lW genClassy, sys up
 	//
 	hName = hNameBase;
 	hName += "__";
@@ -1194,12 +1194,12 @@ int bkgEstimate_1lepFromW(){
 	h_temp = (TH1D*)f_CR_mc->Get(hName);
 	if(!h_temp) cout << "BAD CR CRtoSR UP MC HISTO: " << hName << endl;
 	
-	double MC_CR_cr2sr_ge2lep_yield_up = h_temp->GetBinContent( CR_bin );
-	double MC_CR_cr2sr_ge2lep_error_up = h_temp->GetBinError( CR_bin );
+	double MC_CR_cr2sr_1lW_yield_up = h_temp->GetBinContent( CR_bin );
+	double MC_CR_cr2sr_1lW_error_up = h_temp->GetBinError( CR_bin );
       
 	if(doRescale){
-	  MC_CR_cr2sr_ge2lep_error_up *= rescale;
-	  MC_CR_cr2sr_ge2lep_yield_up *= rescale;
+	  MC_CR_cr2sr_1lW_error_up *= rescale;
+	  MC_CR_cr2sr_1lW_yield_up *= rescale;
 	}
 
 
@@ -1227,10 +1227,10 @@ int bkgEstimate_1lepFromW(){
 
 		
 
-	// CR, mc, cr2sr bin, non-ge2lep genClassy
-	double MC_CR_cr2sr_non_ge2lep_yield_up = 0.0;
+	// CR, mc, cr2sr bin, non-1lW genClassy
+	double MC_CR_cr2sr_non_1lW_yield_up = 0.0;
             
-	// CR, mc, cr2sr bin, fraction of ge2lep
+	// CR, mc, cr2sr bin, fraction of 1lW
 	double MC_CR_fraction_up = 1.0;
 	double MC_CR_fraction_up_statErr = 0.0;
 	
@@ -1261,20 +1261,20 @@ int bkgEstimate_1lepFromW(){
 	  //
 	  if(useFraction){
 	  
-	    // If using fraction, get ge2lep CR MC yield
-	    if(MC_CR_cr2sr_ge2lep_yield_up>0.0 && MC_SR_bin_yield_up>0.0){
+	    // If using fraction, get 1lW CR MC yield
+	    if(MC_CR_cr2sr_1lW_yield_up>0.0 && MC_SR_bin_yield_up>0.0){
 
-	      // Get MC Non-ge2lep Yield
-	      MC_CR_cr2sr_non_ge2lep_yield_up = MC_CR_cr2sr_incl_yield_up - MC_CR_cr2sr_ge2lep_yield_up;
+	      // Get MC Non-1lW Yield
+	      MC_CR_cr2sr_non_1lW_yield_up = MC_CR_cr2sr_incl_yield_up - MC_CR_cr2sr_1lW_yield_up;
 	    
-	      // Get MC Fraction of ge2lep
-	      MC_CR_fraction_up          = ( MC_CR_cr2sr_ge2lep_yield_up ) / ( MC_CR_cr2sr_ge2lep_yield_up + MC_CR_cr2sr_non_ge2lep_yield_up );
-	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
+	      // Get MC Fraction of 1lW
+	      MC_CR_fraction_up          = ( MC_CR_cr2sr_1lW_yield_up ) / ( MC_CR_cr2sr_1lW_yield_up + MC_CR_cr2sr_non_1lW_yield_up );
+	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_1lW_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
 	    
 	      // Get Transfer Factor SR/CR
-	      tf_cr2sr_up = MC_SR_bin_yield_up/MC_CR_cr2sr_ge2lep_yield_up;
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_ge2lep_error_up/MC_CR_cr2sr_ge2lep_yield_up,2) + pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) );  // Gaussian errors for all components
-	      tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) ); // Avoid double counting MC_CR_cr2sr_ge2lep_error, since it is included in MC_CR_fraction_up_statErr
+	      tf_cr2sr_up = MC_SR_bin_yield_up/MC_CR_cr2sr_1lW_yield_up;
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_1lW_error_up/MC_CR_cr2sr_1lW_yield_up,2) + pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) );  // Gaussian errors for all components
+	      tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) ); // Avoid double counting MC_CR_cr2sr_1lW_error, since it is included in MC_CR_fraction_up_statErr
 	    
 	      // In This Case tf_tot=tf_cr2sr
 	      tf_tot_up = tf_cr2sr_up;
@@ -1323,20 +1323,20 @@ int bkgEstimate_1lepFromW(){
 	  //
 	  if(useFraction){
 	  
-	    // If using fraction, get ge2lep CR MC yield
-	    if(MC_CR_cr2sr_ge2lep_yield_up>0.0 && MC_SR_cr2sr_yield_up>0.0 && MC_SR_bin_yield_up>0.0){
+	    // If using fraction, get 1lW CR MC yield
+	    if(MC_CR_cr2sr_1lW_yield_up>0.0 && MC_SR_cr2sr_yield_up>0.0 && MC_SR_bin_yield_up>0.0){
 
-	      // Get MC Non-ge2lep Yield
-	      MC_CR_cr2sr_non_ge2lep_yield_up = MC_CR_cr2sr_incl_yield_up - MC_CR_cr2sr_ge2lep_yield_up;
+	      // Get MC Non-1lW Yield
+	      MC_CR_cr2sr_non_1lW_yield_up = MC_CR_cr2sr_incl_yield_up - MC_CR_cr2sr_1lW_yield_up;
 	    
-	      // Get MC Fraction of ge2lep
-	      MC_CR_fraction_up         = ( MC_CR_cr2sr_ge2lep_yield_up ) / ( MC_CR_cr2sr_ge2lep_yield_up + MC_CR_cr2sr_non_ge2lep_yield_up );
-	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
+	      // Get MC Fraction of 1lW
+	      MC_CR_fraction_up         = ( MC_CR_cr2sr_1lW_yield_up ) / ( MC_CR_cr2sr_1lW_yield_up + MC_CR_cr2sr_non_1lW_yield_up );
+	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_1lW_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
 	    
 	      // Get Transfer Factor SR/CR
-	      tf_cr2sr_up = MC_SR_cr2sr_yield_up/MC_CR_cr2sr_ge2lep_yield_up;
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_ge2lep_error_up/MC_CR_cr2sr_ge2lep_yield_up,2) + pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Gaussian errors for all components 
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Avoid touble counting MC_CR_cr2sr_ge2lep_yield_up, since its error is included in MC_CR_fraction_up
+	      tf_cr2sr_up = MC_SR_cr2sr_yield_up/MC_CR_cr2sr_1lW_yield_up;
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_1lW_error_up/MC_CR_cr2sr_1lW_yield_up,2) + pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Gaussian errors for all components 
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Avoid double counting MC_CR_cr2sr_1lW_yield_up, since its error is included in MC_CR_fraction_up
 	      tf_cr2sr_up_statErr = 0.0;  // Avoid double counting MC_SR_cr2sr_error_up since it is included in tf_srBin_err
 	    
 	      // Get Transfer Factor of SR_bin/SR
@@ -1441,7 +1441,7 @@ int bkgEstimate_1lepFromW(){
 	
       
 	//
-	// CR, MC, CRtoSR bin, ge2lep genClassy dn
+	// CR, MC, CRtoSR bin, 1lW genClassy dn
 	//
 	hName = hNameBase;
 	hName += "__";
@@ -1454,12 +1454,12 @@ int bkgEstimate_1lepFromW(){
 	h_temp = (TH1D*)f_CR_mc->Get(hName);
 	if(!h_temp) cout << "BAD CR CRtoSR DN MC HISTO: " << hName << endl;
 	
-	double MC_CR_cr2sr_ge2lep_yield_dn = h_temp->GetBinContent( CR_bin );
-	double MC_CR_cr2sr_ge2lep_error_dn = h_temp->GetBinError( CR_bin );
+	double MC_CR_cr2sr_1lW_yield_dn = h_temp->GetBinContent( CR_bin );
+	double MC_CR_cr2sr_1lW_error_dn = h_temp->GetBinError( CR_bin );
 	
 	if(doRescale){
-	  MC_CR_cr2sr_ge2lep_error_dn *= rescale;
-	  MC_CR_cr2sr_ge2lep_yield_dn *= rescale;
+	  MC_CR_cr2sr_1lW_error_dn *= rescale;
+	  MC_CR_cr2sr_1lW_yield_dn *= rescale;
 	}
 
 
@@ -1488,10 +1488,10 @@ int bkgEstimate_1lepFromW(){
 	
 
 
-	// CR, mc, cr2sr bin, non-ge2lep genClassy
-	double MC_CR_cr2sr_non_ge2lep_yield_dn = 0.0;
+	// CR, mc, cr2sr bin, non-1lW genClassy
+	double MC_CR_cr2sr_non_1lW_yield_dn = 0.0;
             
-	// CR, mc, cr2sr bin, fraction of ge2lep
+	// CR, mc, cr2sr bin, fraction of 1lW
 	double MC_CR_fraction_dn = 1.0;
 	double MC_CR_fraction_dn_statErr = 0.0;
 	
@@ -1522,19 +1522,19 @@ int bkgEstimate_1lepFromW(){
 	  //
 	  if(useFraction){
 	  
-	    // If using fraction, get ge2lep CR MC yield
-	    if(MC_CR_cr2sr_ge2lep_yield_dn>0.0 && MC_SR_bin_yield_dn>0.0){
+	    // If using fraction, get 1lW CR MC yield
+	    if(MC_CR_cr2sr_1lW_yield_dn>0.0 && MC_SR_bin_yield_dn>0.0){
 
-	      // Get MC Non-ge2lep Yield
-	      MC_CR_cr2sr_non_ge2lep_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_ge2lep_yield_dn;
+	      // Get MC Non-1lW Yield
+	      MC_CR_cr2sr_non_1lW_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_1lW_yield_dn;
 	      
-	      // Get MC Fraction of ge2lep
-	      MC_CR_fraction_dn          = ( MC_CR_cr2sr_ge2lep_yield_dn ) / ( MC_CR_cr2sr_ge2lep_yield_dn + MC_CR_cr2sr_non_ge2lep_yield_dn );
-	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
+	      // Get MC Fraction of 1lW
+	      MC_CR_fraction_dn          = ( MC_CR_cr2sr_1lW_yield_dn ) / ( MC_CR_cr2sr_1lW_yield_dn + MC_CR_cr2sr_non_1lW_yield_dn );
+	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_1lW_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
 
 	      // Get Transfer Factor SR/CR
-	      tf_cr2sr_dn = MC_SR_bin_yield_dn/MC_CR_cr2sr_ge2lep_yield_dn;
-	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_ge2lep_error_dn/MC_CR_cr2sr_ge2lep_yield_dn,2) + pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) ); 
+	      tf_cr2sr_dn = MC_SR_bin_yield_dn/MC_CR_cr2sr_1lW_yield_dn;
+	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_1lW_error_dn/MC_CR_cr2sr_1lW_yield_dn,2) + pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) ); 
 	      tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) );  // Avoid double counting MC_CR_bin_error sinc eit is inlcuded in MC_CR_fraction_dn
 	    
 	      // In This Case tf_tot=tf_cr2sr
@@ -1584,19 +1584,19 @@ int bkgEstimate_1lepFromW(){
 	  //
 	  if(useFraction){
 	  
-	    // If using fraction, get ge2lep CR MC yield
-	    if(MC_CR_cr2sr_ge2lep_yield_dn>0.0 && MC_SR_cr2sr_yield_dn>0.0 && MC_SR_bin_yield_dn>0.0){
+	    // If using fraction, get 1lW CR MC yield
+	    if(MC_CR_cr2sr_1lW_yield_dn>0.0 && MC_SR_cr2sr_yield_dn>0.0 && MC_SR_bin_yield_dn>0.0){
 
-	      // Get MC Non-ge2lep Yield
-	      MC_CR_cr2sr_non_ge2lep_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_ge2lep_yield_dn;
+	      // Get MC Non-1lW Yield
+	      MC_CR_cr2sr_non_1lW_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_1lW_yield_dn;
 	    
-	      // Get MC Fraction of ge2lep
-	      MC_CR_fraction_dn         = ( MC_CR_cr2sr_ge2lep_yield_dn ) / ( MC_CR_cr2sr_ge2lep_yield_dn + MC_CR_cr2sr_non_ge2lep_yield_dn );
-	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
+	      // Get MC Fraction of 1lW
+	      MC_CR_fraction_dn         = ( MC_CR_cr2sr_1lW_yield_dn ) / ( MC_CR_cr2sr_1lW_yield_dn + MC_CR_cr2sr_non_1lW_yield_dn );
+	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_1lW_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
 
 	      // Get Transfer Factor SR/CR
-	      tf_cr2sr_dn = MC_SR_cr2sr_yield_dn/MC_CR_cr2sr_ge2lep_yield_dn;
-	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_ge2lep_error_dn/MC_CR_cr2sr_ge2lep_yield_dn,2) + pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) );  // Gaussian errors for each component
+	      tf_cr2sr_dn = MC_SR_cr2sr_yield_dn/MC_CR_cr2sr_1lW_yield_dn;
+	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_1lW_error_dn/MC_CR_cr2sr_1lW_yield_dn,2) + pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) );  // Gaussian errors for each component
 	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) );  // Avoid double counting MC_CR_cr2sr_error since it is included in MC_CR_fraction
 	      tf_cr2sr_dn_statErr = 0.0;  // Avoid double counting MC_SR_cr2sr_error_dn since it is included in tf_srBin_dn
 	    
@@ -1717,7 +1717,7 @@ int bkgEstimate_1lepFromW(){
 
 	// Uncertainty File, per category, Sys Variation Up
 	fprintf(f_uncFile_fullCalc, "%s,~Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", systematicList[iSys].tex.c_str(), Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield_up, (100.0*(MC_CR_cr2sr_incl_yield_up-MC_CR_cr2sr_incl_yield)/MC_CR_cr2sr_incl_yield) );
-	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield_up, (100.0*(MC_CR_cr2sr_ge2lep_yield_up-MC_CR_cr2sr_ge2lep_yield)/MC_CR_cr2sr_ge2lep_yield), MC_CR_fraction_up, (100.0*(MC_CR_fraction_up-MC_CR_fraction)/MC_CR_fraction) );
+	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield_up, (100.0*(MC_CR_cr2sr_1lW_yield_up-MC_CR_cr2sr_1lW_yield)/MC_CR_cr2sr_1lW_yield), MC_CR_fraction_up, (100.0*(MC_CR_fraction_up-MC_CR_fraction)/MC_CR_fraction) );
 	if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield_up, (100.0*(MC_SR_bin_yield_up-MC_SR_bin_yield)/MC_SR_bin_yield), tf_cr2sr_up, (100.0*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr) );
 	else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield_up, (100.0*(MC_SR_cr2sr_yield_up-MC_SR_cr2sr_yield)/MC_SR_cr2sr_yield), tf_cr2sr_up, (100.0*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr) );
 	if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield_up, (100.0*(MC_SR_bin_yield_up-MC_SR_bin_yield)/MC_SR_bin_yield), tf_srBin_up, (100.0*(tf_srBin_up-tf_srBin)/tf_srBin), tf_tot_up, (100.0*(tf_tot_up-tf_tot)/tf_tot) );
@@ -1727,7 +1727,7 @@ int bkgEstimate_1lepFromW(){
 	
 	// Uncertainty File, per category, Sys Variation Dn
 	fprintf(f_uncFile_fullCalc, "%s,~Dn & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", systematicList[iSys].tex.c_str(), Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield_dn, (100.0*(MC_CR_cr2sr_incl_yield_dn-MC_CR_cr2sr_incl_yield)/MC_CR_cr2sr_incl_yield) );
-	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield_dn, (100.0*(MC_CR_cr2sr_ge2lep_yield_dn-MC_CR_cr2sr_ge2lep_yield)/MC_CR_cr2sr_ge2lep_yield), MC_CR_fraction_dn, (100.0*(MC_CR_fraction_dn-MC_CR_fraction)/MC_CR_fraction) );
+	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield_dn, (100.0*(MC_CR_cr2sr_1lW_yield_dn-MC_CR_cr2sr_1lW_yield)/MC_CR_cr2sr_1lW_yield), MC_CR_fraction_dn, (100.0*(MC_CR_fraction_dn-MC_CR_fraction)/MC_CR_fraction) );
 	if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield_dn, (100.0*(MC_SR_bin_yield_dn-MC_SR_bin_yield)/MC_SR_bin_yield), tf_cr2sr_dn, (100.0*(tf_cr2sr_dn-tf_cr2sr)/tf_cr2sr) );
 	else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield_dn, (100.0*(MC_SR_cr2sr_yield_dn-MC_SR_cr2sr_yield)/MC_SR_cr2sr_yield), tf_cr2sr_dn, (100.0*(tf_cr2sr_dn-tf_cr2sr)/tf_cr2sr) );
 	if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield_dn, (100.0*(MC_SR_bin_yield_dn-MC_SR_bin_yield)/MC_SR_bin_yield), tf_srBin_dn, (100.0*(tf_srBin_dn-tf_srBin)/tf_srBin), tf_tot_dn, (100.0*(tf_tot_dn-tf_tot)/tf_tot) );
