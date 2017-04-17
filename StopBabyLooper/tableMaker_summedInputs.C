@@ -371,7 +371,7 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
     if(usePsuedoData){
       data_util = new sampleInfo::sampleUtil( sampleInfo::k_allBkg );
     }
-    else if( blindSR && regionList.at(iRegion).first=="SR" ){
+    else if( blindSR && TString(regionList.at(iRegion).first).Contains("SR") ){
       data_util = new sampleInfo::sampleUtil( sampleInfo::k_allBkg );
     }
     else{
