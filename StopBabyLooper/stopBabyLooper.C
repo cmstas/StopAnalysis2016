@@ -15,7 +15,7 @@ bool inclTaus_CR2l_  = false;
 
 bool useBTagSFs_fromFiles_ = true;
 bool useLepSFs_fromFiles_  = true;
-        
+
 bool apply_cr2lTrigger_sf_  = true; // only !=1 if pfmet!=pfmet_rl ie no weight for ==1lepton events in SR and CR0b
 bool apply_bTag_sf_         = true; // event weight, product of all jet wgts
 bool apply_lep_sf_          = true; // both lep1 and lep2 (if available) are multiplied together
@@ -35,6 +35,11 @@ bool apply_sample_sf_       = true; // only !=1.0 for some WJetsHT samps
 // Main
 //
 int stopBabyLooper(){
+
+	// Use sumw2 for all histograms
+	TH1::SetDefaultSumw2();
+	TH2::SetDefaultSumw2();
+	TH3::SetDefaultSumw2();
 
 
   // 
@@ -312,9 +317,6 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
   //
 
   cout << "    Preparing histograms" << endl << endl;
-  TH1::SetDefaultSumw2();
-  TH2::SetDefaultSumw2();
-  TH3::SetDefaultSumw2();
 
 
 	//
