@@ -1026,8 +1026,13 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 		else wgt_SRbulk *= sf_metTTbar;
 
 		// Bulk SR and CR2L both use tight btag SFs in high-Mlb regions
+		// Factor in JES when counting tight tags, but NOT when calculating Mlb!
 		double wgt_CR2lbulk = sys_wgt;
-		if( babyAnalyzer.Mlb_closestb() >= 175. && babyAnalyzer.ntightbtags() >= 1 ) {
+		double ntighttags = babyAnalyzer.ntightbtags();
+		if(      iSys==k_JESUp   ) ntighttags = babyAnalyzer.jup_ntightbtags();
+		else if( iSys==k_JESDown ) ntighttags = babyAnalyzer.jdown_ntightbtags();
+
+		if( babyAnalyzer.Mlb_closestb() >= 175. && ntighttags >= 1 ) {
 			if( iSys==k_bTagEffHFUp ) {
 				wgt_SRbulk   *= sf_bTagEffHF_tight_up / sf_bTagEffHF_up;
 				wgt_CR2lbulk *= sf_bTagEffHF_tight_up / sf_bTagEffHF_up;

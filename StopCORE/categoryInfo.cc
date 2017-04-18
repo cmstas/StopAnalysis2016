@@ -932,7 +932,7 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   
   if( dPhiMetJet<0.8 ) return result;
 
-  if( localTightTagHighMlb && mlb>=175. && nTightTags<1 ) return result;
+  if( localTightTagHighMlb && babyAnalyzer.Mlb_closestb()>=175. && nTightTags<1 ) return result;
 
 
   //
