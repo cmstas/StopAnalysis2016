@@ -3,9 +3,11 @@
 // These variables can only be used within categoryInfo.cc, but they can be set from outside using the functions below                                                             
 static int  localJesType = 0;
 static bool localAddLep2 = false;
+static bool localTightTagHighMlb = false;
 
 void categoryInfo::SetJesType( int type ) { localJesType = type; }
 void categoryInfo::SetAdd2ndLep( bool addlep2 ) { localAddLep2 = addlep2; }
+void categoryInfo::SetTightTagHighMlb( bool usetight ) { localTightTagHighMlb = usetight; }
 
 
 //////////////////////////////////////////////////////////////////////
@@ -929,6 +931,8 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   }
   
   if( dPhiMetJet<0.8 ) return result;
+
+  if( localTightTagHighMlb && mlb>=175. && nTightTags<1 ) return result;
 
 
   //

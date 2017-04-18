@@ -42,6 +42,7 @@ std::vector<std::pair<std::string,bool(*)()> > analyzer::GetSelections() { retur
 std::vector<int> analyzer::GetCategoriesPassed() {
 	categoryInfo::SetJesType( jesType );
 	categoryInfo::SetAdd2ndLep( add2ndLep );
+	categoryInfo::SetTightTagHighMlb( useTightTagHighMlb );
 	return categories_function( jesType, add2ndLep );
 }
 

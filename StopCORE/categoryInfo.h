@@ -24,6 +24,7 @@ namespace categoryInfo{
   //
   void SetJesType( int type );
   void SetAdd2ndLep( bool addlep2 );
+	void SetTightTagHighMlb( bool usetight );
 
 
   TH1D* getYieldHistoTemplate_SR_ICHEP();
