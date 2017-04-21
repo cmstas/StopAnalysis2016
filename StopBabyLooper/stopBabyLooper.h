@@ -112,6 +112,9 @@ public:
   vector<TString> regionName_short;
   vector<TString> binName;
 
+	vector<TString> names_SR;
+	vector<TString> names_CR;
+
   bkgEstUtil(){};
   ~bkgEstUtil(){};
 };
