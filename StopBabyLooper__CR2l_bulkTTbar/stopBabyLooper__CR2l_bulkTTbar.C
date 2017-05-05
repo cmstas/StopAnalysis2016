@@ -28,16 +28,17 @@ bool apply_pu_sf_           = true;
 bool apply_sample_sf_       = true; // only !=1.0 for some WJetsHT samps
   
 
-//
-// Function Declarations
-//
-int looper( sampleInfo::ID sample, int nEvents, bool readFast );
 
 
 //
 // Main
 //
 int stopBabyLooper__CR2l_bulkTTbar(){
+
+	// Use sumw2 for all histograms
+	TH1::SetDefaultSumw2();
+	TH2::SetDefaultSumw2();
+	TH3::SetDefaultSumw2();
 
 
   // 
@@ -54,14 +55,81 @@ int stopBabyLooper__CR2l_bulkTTbar(){
   //sampleList.push_back( sampleInfo::k_met );
   //sampleList.push_back( sampleInfo::k_diLepton );
   //sampleList.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
-  //sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 ); 
-  
+  //sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
+
+  //
+  // Set up all the analyzer objects we'll need. One for each dilepton flavor we want to look at.
+  //
+  analyzer CR2l_bulkTTbar_emu( "CR2l_bulkTTbar_emu" );
+  CR2l_bulkTTbar_emu.SetAdd2ndLep(  true );
+  CR2l_bulkTTbar_emu.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
+  // CR2l_bulkTTbar_emu.AddSelection( "emu", some::function );
+  CR2l_bulkTTbar_emu.AddCategories(  categoryInfo::passCategory_CR2l_bulkTTbar );
+  CR2l_bulkTTbar_emu.SetYieldTemplate(  categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
+
+
+  // analyzer CR2L_bulkTTbar_ee( "CR2l_bulkTTbar_ee" );
+  // CR2l_bulkTTbar_ee.SetAdd2ndLep( true );
+  // CR2l_bulkTTbar_ee.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
+  // CR2l_bulkTTbar_ee.AddSelection( "ee", some::function );
+  // CR2l_bulkTTbar_ee.AddCategories( categoryInfo::passCategory_CR2l_bulkTTbar );
+  // CR2l_bulkTTbar_ee.SetYieldTemplate( categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
+
+
+  // analyzer CR2L_bulkTTbar_mumu( "CR2l_bulkTTbar_mumu" );
+  // CR2l_bulkTTbar_mumu.SetAdd2ndLep( true );
+  // CR2l_bulkTTbar_mumu.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
+  // CR2l_bulkTTbar_mumu.AddSelection( "mumu", some::function );
+  // CR2l_bulkTTbar_mumu.AddCategories( categoryInfo::passCategory_CR2l_bulkTTbar );
+  // CR2l_bulkTTbar_mumu.SetYieldTemplate( categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
+
+
+  // analyzer CR2L_bulkTTbar_incl( "CR2l_bulkTTbar_incl" );
+  // CR2l_bulkTTbar_incl.SetAdd2ndLep( true );
+  // CR2l_bulkTTbar_incl.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
+  // CR2l_bulkTTbar_incl.AddCategories( categoryInfo::passCategory_CR2l_bulkTTbar );
+  // CR2l_bulkTTbar_incl.SetYieldTemplate( categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
+
+  std::vector<analyzer*> analyzer_list = {&CR2l_bulkTTbar_emu};
+
 
   //
   // Loop over samples
   //
-  for( int iSample=0; iSample<(int)sampleList.size(); iSample++){
-    looper( sampleList[iSample] );
+  for( int iSample=0; iSample<(int)sampleList.size(); iSample++) {
+
+	  sampleInfo::ID currentSample = sampleList.at(iSample);
+
+	  // Give each analyzer the gen classifications and systematics appropriate to the current sample
+	  for( analyzer* iter : analyzer_list ) {
+		  iter->ResetGenClassifications();
+		  iter->ResetSystematics();
+		  if( sampleInfo::sampleUtil(currentSample).isData ) {
+			  iter->AddGenClassification( genClassyInfo::Util(genClassyInfo::k_incl) );
+			  iter->AddSystematic( sysInfo::Util(sysInfo::k_nominal) );
+		  }
+		  else {
+			  for( int i=0; i<genClassyInfo::k_nGenClassy; i++ ) iter->AddGenClassification( genClassyInfo::Util(genClassyInfo::ID(i)) );
+			  iter->AddSystematics( {sysInfo::Util(sysInfo::k_nominal),
+						  sysInfo::Util(sysInfo::k_JESUp),
+						  sysInfo::Util(sysInfo::k_JESDown),
+						  sysInfo::Util(sysInfo::k_ISRUp),
+						  sysInfo::Util(sysInfo::k_ISRDown),
+						  sysInfo::Util(sysInfo::k_metResUp),
+						  sysInfo::Util(sysInfo::k_metResDown),
+						  sysInfo::Util(sysInfo::k_lepSFUp),
+						  sysInfo::Util(sysInfo::k_lepSFDown),
+						  sysInfo::Util(sysInfo::k_pdfUp),
+						  sysInfo::Util(sysInfo::k_pdfDown),
+						  sysInfo::Util(sysInfo::k_alphasUp),
+						  sysInfo::Util(sysInfo::k_alphasDown),
+						  sysInfo::Util(sysInfo::k_q2Up),
+						  sysInfo::Util(sysInfo::k_q2Down) } );
+
+		  }
+	  } // End loop over analyzers
+
+	  looper( sampleList[iSample], analyzer_list );
   }
 
 
@@ -78,7 +146,7 @@ int stopBabyLooper__CR2l_bulkTTbar(){
 //
 // Functions
 //
-int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
+int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEvents, bool readFast ) {
 
 
   //
@@ -103,19 +171,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // Input SampleInfo
   //
   sampleInfo::sampleUtil sample( sampleID );
-  /*
-  bool sampleIsTTbar = false;
-  if( sample.id == sampleInfo::k_ttbar_powheg_pythia8 ||
-      sample.id == sampleInfo::k_ttbar_powheg_pythia8_ext4 ||
-      sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 ||
-      sample.id == sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 ||
-      sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 ||
-      sample.id == sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 ||
-      sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8 ||
-      sample.id == sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 ){
-    sampleIsTTbar = true;
-  }
-  */
 
   //
   // Input chain
@@ -131,7 +186,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
     // input file
     input += sample.inputBabies[iFile];
     
-    input.ReplaceAll("/skim/","/output/");
+    input.ReplaceAll("/skim/","/output/"); // Take normal list of baby files, but use the unskimmed versions
     
     chain->Add( input );
     cout << "      " << input << endl; 
@@ -158,18 +213,10 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   cout << "    Output Written to: " << endl;
   cout << "      " << f_output_name << endl;
   cout << endl;
-  
-  
-  //
-  // Selection Bools
-  //
-  
-  bool pass_evtSel        = false;
-  bool pass_evtSel_jup    = false;
-  bool pass_evtSel_jdown  = false;
-  TH1D *h_cutflow_evtSel  = selectionInfo::get_cutflowHistoTemplate_CR2l_bulkTTbar();
-  h_cutflow_evtSel->SetDirectory(f_output);
 
+
+
+  // Not sure yet what purpose this will serve... ////////////////////////////////////////////////////////////////////////////////////////////////////////
   vector< std::pair< TString, bool > > v_lepFlav; 
   std::pair< TString, bool > lepFlav;
   //lepFlav.first = "ee";   lepFlav.second = false; v_lepFlav.push_back(lepFlav);
@@ -177,6 +224,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //lepFlav.first = "mumu"; lepFlav.second = false; v_lepFlav.push_back(lepFlav);
   //lepFlav.first = "incl"; lepFlav.second = false; v_lepFlav.push_back(lepFlav);
   const int nLepFlav = v_lepFlav.size();
+
 
 
   //
@@ -192,18 +240,18 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   // Event Weight Utilities
   //
   cout << "    Loading eventWeight Utilities..." << endl << endl;
-  sysInfo::evtWgtInfo *wgtInfo = new sysInfo::evtWgtInfo( sample.id, useBTagSFs_fromUtils_, useLepSFs_fromUtils_, add2ndLepToMet_ );  
-  wgtInfo->apply_diLepTrigger_sf = apply_diLepTrigger_sf_;
-  wgtInfo->apply_bTag_sf         = apply_bTag_sf_;
-  wgtInfo->apply_lep_sf          = apply_lep_sf_;
-  wgtInfo->apply_vetoLep_sf      = apply_vetoLep_sf_;
-  wgtInfo->apply_lepFS_sf        = apply_lepFS_sf_;
-  wgtInfo->apply_topPt_sf        = apply_topPt_sf_;
-  wgtInfo->apply_metRes_sf       = apply_metRes_sf_;
-  wgtInfo->apply_ttbarSysPt_sf   = apply_ttbarSysPt_sf_;
-  wgtInfo->apply_ISR_sf          = apply_ISR_sf_;
-  wgtInfo->apply_pu_sf           = apply_pu_sf_;
-  wgtInfo->apply_sample_sf       = apply_sample_sf_;
+  wgtInfo.setUp( sample.id, useBTagSFs_fromUtils_, useLepSFs_fromUtils_, add2ndLepToMet_ );
+  wgtInfo.apply_diLepTrigger_sf = apply_diLepTrigger_sf_;
+  wgtInfo.apply_bTag_sf         = apply_bTag_sf_;
+  wgtInfo.apply_lep_sf          = apply_lep_sf_;
+  wgtInfo.apply_vetoLep_sf      = apply_vetoLep_sf_;
+  wgtInfo.apply_lepFS_sf        = apply_lepFS_sf_;
+  wgtInfo.apply_topPt_sf        = apply_topPt_sf_;
+  wgtInfo.apply_metRes_sf       = apply_metRes_sf_;
+  wgtInfo.apply_ttbarSysPt_sf   = apply_ttbarSysPt_sf_;
+  wgtInfo.apply_ISR_sf          = apply_ISR_sf_;
+  wgtInfo.apply_pu_sf           = apply_pu_sf_;
+  wgtInfo.apply_sample_sf       = apply_sample_sf_;
   
   
   //
@@ -257,12 +305,8 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   cout << nGenClassy << " genClassifications" << endl << endl;
 
 
-  //
-  // Declare Category Utils
-  //
-  vector<int> passCats_CR2l_bulkTTbar; 
-  vector<int> passCats_CR2l_bulkTTbar_jup;
-  vector<int> passCats_CR2l_bulkTTbar_jdown;
+  // Count number of analyzers in the list
+  const int nAnalyzers = analyzers.size();
   
   
   ////////////////////////
@@ -285,21 +329,48 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //    And if there is andditional selection involved in this histogram, please refer to it in "you name here"
   //
 
-  cout << "    Loading histograms" << endl << endl;
-  TH1::SetDefaultSumw2();
-  TH2::SetDefaultSumw2();
-  TH3::SetDefaultSumw2();
+  cout << "    Preparing histograms" << endl << endl;
 
   
 
   //
-  // Yields
+  // Declare yield histograms
   //
-  const int nHistos = nLepFlav*nGenClassy*nSystematics;
-  
-  // CR2l bulk TTbar bins
-  TH1D *h_yields_CR2l_bulkTTbar_template = categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar();
-  TH1D *h_yields_CR2l_bulkTTbar[nHistos];
+
+  f_output->cd(); // All yield histos will belong to the output file
+	for( analyzer* thisAnalyzer : analyzers ) {
+		for( int iClassy=0; iClassy<nGenClassy; iClassy++ ) {
+			for( int iSys=0; iSys<nSystematics; iSys++ ) {
+
+				int histIndex = iClassy*nSystematics + iSys;
+
+				// Gen and Systematic String
+				TString reg_gen_sys_name = "__";
+				reg_gen_sys_name += thisAnalyzer->GetLabel();
+				reg_gen_sys_name += "__genClassy_";
+				reg_gen_sys_name += genClassyList[iClassy].label;
+				reg_gen_sys_name += "__systematic_";
+				reg_gen_sys_name += systematicList[iSys].label;
+
+				TH1D* h_template = thisAnalyzer->GetYieldTemplate();
+				TH1D* h_tmp = 0;
+
+				// TString yieldname = h_template->GetName();
+				TString yieldname = "h_yields";
+				yieldname += reg_gen_sys_name;
+				h_tmp = (TH1D*)h_template->Clone( yieldname );
+				thisAnalyzer->SetYieldHistogram( histIndex, h_tmp );
+
+				// Need to do signal yield histograms too?
+
+			} // End loop over systematics
+		} // End loop over genClassys
+	} // End loop over analyzers
+
+
+  // const int nHistos = nLepFlav*nGenClassy*nSystematics;
+  const int nHistos = nAnalyzers*nGenClassy*nSystematics;
+
 
 
   //
@@ -323,19 +394,19 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   TH1D *h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[nHistos];
   
   // Loop over lepFlavs, genClassifications and systematics
-  for(int iFlav=0; iFlav<nLepFlav; iFlav++){
+  for(int iAna=0; iAna<nAnalyzers; iAna++){
     for(int iGen=0; iGen<nGenClassy; iGen++){
       for(int iSys=0; iSys<nSystematics; iSys++){
 	
 	// Histo Index
-	int iHisto = iFlav*nGenClassy*nSystematics + iGen*nSystematics + iSys;
+	int iHisto = iAna*nGenClassy*nSystematics + iGen*nSystematics + iSys;
 	//int iHisto = iGen*nSystematics + iSys;
 	
 	TString hName = "";
 
 	// Flav, Gen and Systematic String
 	TString flav_gen_sys_name = "__lepFlav_";
-	flav_gen_sys_name += v_lepFlav[iFlav].first; 
+	flav_gen_sys_name += analyzers.at(iAna)->GetLabel(); 
 	flav_gen_sys_name += "__genClassy_";
 	flav_gen_sys_name += genClassyList[iGen].label;
 	flav_gen_sys_name += "__systematic_";
@@ -345,13 +416,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	// CR2l bulk TTbar Singal Regions
 
 	// Baseline Name
-	TString h_name_CR2l_bulkTTbar_base = h_yields_CR2l_bulkTTbar_template->GetName();
-	
-	// yields
-	TString h_name_CR2l_bulkTTbar = h_name_CR2l_bulkTTbar_base;
-	h_name_CR2l_bulkTTbar += flav_gen_sys_name;
-	h_yields_CR2l_bulkTTbar[iHisto] = (TH1D*)h_yields_CR2l_bulkTTbar_template->Clone(h_name_CR2l_bulkTTbar);
-	h_yields_CR2l_bulkTTbar[iHisto]->SetDirectory(f_output);
+	TString h_name_CR2l_bulkTTbar_base = "__";
 
 	
 	// MET, ge1bTags
@@ -441,7 +506,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
        
       } // end loop over systematics
     } // end loop over gen classifications
-  } // end loop over lepton flavours
+  } // end loop over analyzers
 
   
   //////////////////////////
@@ -451,116 +516,116 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //////////////////////////
 
   // nVtx
-  TH1D *h_nVtx[nLepFlav][nGenClassy];
-  TH1D *h_nVtx_noPUwgt[nLepFlav][nGenClassy];
-  TH1D *h_nTrueVtx[nLepFlav][nGenClassy];
+  TH1D *h_nVtx[nAnalyzers][nGenClassy];
+  TH1D *h_nVtx_noPUwgt[nAnalyzers][nGenClassy];
+  TH1D *h_nTrueVtx[nAnalyzers][nGenClassy];
   
   // nBTags
-  TH1D *h_nBTags[nLepFlav][nGenClassy];
+  TH1D *h_nBTags[nAnalyzers][nGenClassy];
   
   // nJets
-  TH1D *h_nJets_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_nJets_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_nJets_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_nJets_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_nJets_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_nJets_ge2bTags[nAnalyzers][nGenClassy];
   
   // nISRJets
-  TH1D *h_nISRJets_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_nISRJets_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_nISRJets_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_nISRJets_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_nISRJets_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_nISRJets_ge2bTags[nAnalyzers][nGenClassy];
   
   // lep1 pT
-  TH1D *h_lep1Pt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_lep1Pt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_lep1Pt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_lep1Pt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_lep1Pt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_lep1Pt_ge2bTags[nAnalyzers][nGenClassy];
 
   // lep2 pT
-  TH1D *h_lep2Pt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_lep2Pt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_lep2Pt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_lep2Pt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_lep2Pt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_lep2Pt_ge2bTags[nAnalyzers][nGenClassy];
 
   // el pT
-  TH1D *h_elPt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_elPt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_elPt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_elPt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_elPt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_elPt_ge2bTags[nAnalyzers][nGenClassy];
 
   // mu pT
-  TH1D *h_muPt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_muPt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_muPt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_muPt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_muPt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_muPt_ge2bTags[nAnalyzers][nGenClassy];
 
   
   // diLep pT
-  TH1D *h_diLepPt_ge0bTags[nLepFlav][nGenClassy];
-  //TH1D *h_diLepPt_ge1bTags[nLepFlav][nGenClassy]; // moved to section with all systematics
-  TH1D *h_diLepPt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_diLepPt_ge0bTags[nAnalyzers][nGenClassy];
+  //TH1D *h_diLepPt_ge1bTags[nAnalyzers][nGenClassy]; // moved to section with all systematics
+  TH1D *h_diLepPt_ge2bTags[nAnalyzers][nGenClassy];
 
   // jet pT
-  TH1D *h_jetPt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_jetPt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_jetPt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_jetPt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_jetPt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_jetPt_ge2bTags[nAnalyzers][nGenClassy];
 
   // jet 1 pT
-  TH1D *h_jet1Pt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_jet1Pt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_jet1Pt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_jet1Pt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_jet1Pt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_jet1Pt_ge2bTags[nAnalyzers][nGenClassy];
 
   // jet 2 pT
-  TH1D *h_jet2Pt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_jet2Pt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_jet2Pt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_jet2Pt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_jet2Pt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_jet2Pt_ge2bTags[nAnalyzers][nGenClassy];
 
   // csv jet 1 pT
-  TH1D *h_csvJet1Pt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_csvJet1Pt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_csvJet1Pt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_csvJet1Pt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_csvJet1Pt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_csvJet1Pt_ge2bTags[nAnalyzers][nGenClassy];
 
   // csv jet 2 pT
-  TH1D *h_csvJet2Pt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_csvJet2Pt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_csvJet2Pt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_csvJet2Pt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_csvJet2Pt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_csvJet2Pt_ge2bTags[nAnalyzers][nGenClassy];
   
   // met
-  TH1D *h_met_ge0bTags[nLepFlav][nGenClassy];
-  //TH1D *h_met_ge1bTags[nLepFlav][nGenClassy]; // moved to section for all systematics
-  TH1D *h_met_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_met_ge0bTags[nAnalyzers][nGenClassy];
+  //TH1D *h_met_ge1bTags[nAnalyzers][nGenClassy]; // moved to section for all systematics
+  TH1D *h_met_ge2bTags[nAnalyzers][nGenClassy];
 
   // lep1lep2bbMet, ttbar visible system pT
-  TH1D *h_lep1lep2bbPt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_lep1lep2bbPt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_lep1lep2bbPt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_lep1lep2bbPt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_lep1lep2bbPt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_lep1lep2bbPt_ge2bTags[nAnalyzers][nGenClassy];
  
   // lep1lep2bbMet, ttbar system pT
-  TH1D *h_lep1lep2bbMetPt_ge0bTags[nLepFlav][nGenClassy];
-  //TH1D *h_lep1lep2bbMetPt_ge1bTags[nLepFlav][nGenClassy]; moved to section for all systematics
-  TH1D *h_lep1lep2bbMetPt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_lep1lep2bbMetPt_ge0bTags[nAnalyzers][nGenClassy];
+  //TH1D *h_lep1lep2bbMetPt_ge1bTags[nAnalyzers][nGenClassy]; moved to section for all systematics
+  TH1D *h_lep1lep2bbMetPt_ge2bTags[nAnalyzers][nGenClassy];
   
   // mt
-  TH1D *h_mt_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_mt_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_mt_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_mt_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_mt_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_mt_ge2bTags[nAnalyzers][nGenClassy];
 
   // modifiedTopness
-  TH1D *h_modTopness_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_modTopness_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_modTopness_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_modTopness_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_modTopness_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_modTopness_ge2bTags[nAnalyzers][nGenClassy];
 
   // mt2w
-  TH1D *h_mt2w_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_mt2w_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_mt2w_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_mt2w_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_mt2w_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_mt2w_ge2bTags[nAnalyzers][nGenClassy];
 
   // Mlb
-  TH1D *h_mlb_ge0bTags[nLepFlav][nGenClassy];
-  TH1D *h_mlb_ge1bTags[nLepFlav][nGenClassy];
-  TH1D *h_mlb_ge2bTags[nLepFlav][nGenClassy];
+  TH1D *h_mlb_ge0bTags[nAnalyzers][nGenClassy];
+  TH1D *h_mlb_ge1bTags[nAnalyzers][nGenClassy];
+  TH1D *h_mlb_ge2bTags[nAnalyzers][nGenClassy];
 
-  for(int iFlav=0; iFlav<nLepFlav; iFlav++){
+  for(int iAna=0; iAna<nAnalyzers; iAna++){
     for(int iGen=0; iGen<nGenClassy; iGen++){
-      
+
       TString hName = "";
       
       TString flav_gen_name = "__lepFlav_";
-      flav_gen_name += v_lepFlav[iFlav].first; 
+      flav_gen_name += analyzers.at(iAna)->GetLabel(); 
       flav_gen_name += "__genClassy_";
       flav_gen_name += genClassyList[iGen].label;
 
@@ -572,391 +637,391 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       // NVtx
       hName = "h_nVtx";
       hName += flav_gen_sys_name;
-      h_nVtx[iFlav][iGen] = new TH1D( hName, "Number of Primary Vertices;nVtx", 60, 0.0, 60.0);
-      h_nVtx[iFlav][iGen]->SetDirectory(f_output);
+      h_nVtx[iAna][iGen] = new TH1D( hName, "Number of Primary Vertices;nVtx", 60, 0.0, 60.0);
+      h_nVtx[iAna][iGen]->SetDirectory(f_output);
 
       // NVtx, no pileup wgt
       hName = "h_nVtx_noPUwgt";
       hName += flav_gen_sys_name;
-      h_nVtx_noPUwgt[iFlav][iGen] = new TH1D( hName, "Number of Primary Vertices, without pileup weight;nVtx", 60, 0.0, 60.0);
-      h_nVtx_noPUwgt[iFlav][iGen]->SetDirectory(f_output);
+      h_nVtx_noPUwgt[iAna][iGen] = new TH1D( hName, "Number of Primary Vertices, without pileup weight;nVtx", 60, 0.0, 60.0);
+      h_nVtx_noPUwgt[iAna][iGen]->SetDirectory(f_output);
 
       // NVtx
       hName = "h_nTrueVtx";
       hName += flav_gen_sys_name;
-      h_nTrueVtx[iFlav][iGen] = new TH1D( hName, "Number of True Primary Vertices;nVtx", 60, 0.0, 60.0);
-      h_nTrueVtx[iFlav][iGen]->SetDirectory(f_output);
+      h_nTrueVtx[iAna][iGen] = new TH1D( hName, "Number of True Primary Vertices;nVtx", 60, 0.0, 60.0);
+      h_nTrueVtx[iAna][iGen]->SetDirectory(f_output);
 
 
       // NBTags
       hName = "h_nBTags";
       hName += flav_gen_sys_name;
-      h_nBTags[iFlav][iGen] = new TH1D( hName, "Number of bTagged Jets;nBTags", 5, -0.5, 4.5);
-      h_nBTags[iFlav][iGen]->SetDirectory(f_output);
+      h_nBTags[iAna][iGen] = new TH1D( hName, "Number of bTagged Jets;nBTags", 5, -0.5, 4.5);
+      h_nBTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // Njets, g0bTags
       hName = "h_nJets__ge0bTags";
       hName += flav_gen_sys_name;
-      h_nJets_ge0bTags[iFlav][iGen] = new TH1D( hName, "Number of Selected Jets, >=0 bTags;nJets", 11, -0.5, 10.5);
-      h_nJets_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_nJets_ge0bTags[iAna][iGen] = new TH1D( hName, "Number of Selected Jets, >=0 bTags;nJets", 11, -0.5, 10.5);
+      h_nJets_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // Njets, g1bTags
       hName = "h_nJets__ge1bTags";
       hName += flav_gen_sys_name;
-      h_nJets_ge1bTags[iFlav][iGen] = new TH1D( hName, "Number of Selected Jets, >=1 bTags;nJets", 11, -0.5, 10.5);
-      h_nJets_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_nJets_ge1bTags[iAna][iGen] = new TH1D( hName, "Number of Selected Jets, >=1 bTags;nJets", 11, -0.5, 10.5);
+      h_nJets_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // Njets, g2bTags
       hName = "h_nJets__ge2bTags";
       hName += flav_gen_sys_name;
-      h_nJets_ge2bTags[iFlav][iGen] = new TH1D( hName, "Number of Selected Jets, >=2 bTags;nJets", 11, -0.5, 10.5);
-      h_nJets_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_nJets_ge2bTags[iAna][iGen] = new TH1D( hName, "Number of Selected Jets, >=2 bTags;nJets", 11, -0.5, 10.5);
+      h_nJets_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
       // Njets, g0bTags
       hName = "h_nISRJets__ge0bTags";
       hName += flav_gen_sys_name;
-      h_nISRJets_ge0bTags[iFlav][iGen] = new TH1D( hName, "Number of Selected Jets, >=0 bTags;nISRJets", 11, -0.5, 10.5);
-      h_nISRJets_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_nISRJets_ge0bTags[iAna][iGen] = new TH1D( hName, "Number of Selected Jets, >=0 bTags;nISRJets", 11, -0.5, 10.5);
+      h_nISRJets_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // Njets, g1bTags
       hName = "h_nISRJets__ge1bTags";
       hName += flav_gen_sys_name;
-      h_nISRJets_ge1bTags[iFlav][iGen] = new TH1D( hName, "Number of Selected Jets, >=1 bTags;nISRJets", 11, -0.5, 10.5);
-      h_nISRJets_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_nISRJets_ge1bTags[iAna][iGen] = new TH1D( hName, "Number of Selected Jets, >=1 bTags;nISRJets", 11, -0.5, 10.5);
+      h_nISRJets_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // Njets, g2bTags
       hName = "h_nISRJets__ge2bTags";
       hName += flav_gen_sys_name;
-      h_nISRJets_ge2bTags[iFlav][iGen] = new TH1D( hName, "Number of Selected Jets, >=2 bTags;nISRJets", 11, -0.5, 10.5);
-      h_nISRJets_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_nISRJets_ge2bTags[iAna][iGen] = new TH1D( hName, "Number of Selected Jets, >=2 bTags;nISRJets", 11, -0.5, 10.5);
+      h_nISRJets_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // lep1 pT, ge0bTags
       hName = "h_lep1Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_lep1Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Leading Lepton pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_lep1Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep1Pt_ge0bTags[iAna][iGen] = new TH1D( hName, "Leading Lepton pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_lep1Pt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // lep1 pT, ge1bTags
       hName = "h_lep1Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_lep1Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Leading Lepton pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_lep1Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep1Pt_ge1bTags[iAna][iGen] = new TH1D( hName, "Leading Lepton pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_lep1Pt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // lep1 pT, ge2bTags
       hName = "h_lep1Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_lep1Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Leading Lepton pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_lep1Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep1Pt_ge2bTags[iAna][iGen] = new TH1D( hName, "Leading Lepton pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_lep1Pt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
      
       // lep2 pT, ge0bTags
       hName = "h_lep2Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_lep2Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Trailing Lepton pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_lep2Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep2Pt_ge0bTags[iAna][iGen] = new TH1D( hName, "Trailing Lepton pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_lep2Pt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // lep2 pT, ge1bTags
       hName = "h_lep2Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_lep2Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Trailing Lepton pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_lep2Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep2Pt_ge1bTags[iAna][iGen] = new TH1D( hName, "Trailing Lepton pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_lep2Pt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // lep2 pT, ge2bTags
       hName = "h_lep2Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_lep2Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Trailing Lepton pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_lep2Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep2Pt_ge2bTags[iAna][iGen] = new TH1D( hName, "Trailing Lepton pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_lep2Pt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // el pT, ge0bTags
       hName = "h_elPt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_elPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Electron pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_elPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_elPt_ge0bTags[iAna][iGen] = new TH1D( hName, "Electron pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_elPt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // el pT, ge1bTags
       hName = "h_elPt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_elPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Electron pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_elPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_elPt_ge1bTags[iAna][iGen] = new TH1D( hName, "Electron pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_elPt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // el pT, ge2bTags
       hName = "h_elPt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_elPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Electron pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_elPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_elPt_ge2bTags[iAna][iGen] = new TH1D( hName, "Electron pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_elPt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // mu pT, ge0bTags
       hName = "h_muPt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_muPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Muon pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_muPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_muPt_ge0bTags[iAna][iGen] = new TH1D( hName, "Muon pT, >=0 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_muPt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // mu pT, ge1bTags
       hName = "h_muPt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_muPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Muon pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_muPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_muPt_ge1bTags[iAna][iGen] = new TH1D( hName, "Muon pT, >=1 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_muPt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // mu pT, ge2bTags
       hName = "h_muPt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_muPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Muon pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
-      h_muPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_muPt_ge2bTags[iAna][iGen] = new TH1D( hName, "Muon pT, >=2 bTags;pT [GeV]", 20, 0.0, 200.0);
+      h_muPt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
       
       // diLep pT, ge0bTags
       hName = "h_diLepPt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_diLepPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_diLepPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_diLepPt_ge0bTags[iAna][iGen] = new TH1D( hName, "diLepton System pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_diLepPt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // diLep pT, ge1bTags
       //hName = "h_diLepPt__ge1bTags";
       //hName += flav_gen_sys_name;
-      //h_diLepPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      //h_diLepPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      //h_diLepPt_ge1bTags[iAna][iGen] = new TH1D( hName, "diLepton System pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      //h_diLepPt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // diLep pT, ge2bTags
       hName = "h_diLepPt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_diLepPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "diLepton System pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_diLepPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_diLepPt_ge2bTags[iAna][iGen] = new TH1D( hName, "diLepton System pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_diLepPt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // jet pT, ge0bTags
       hName = "h_jetPt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_jetPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jetPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jetPt_ge0bTags[iAna][iGen] = new TH1D( hName, "Selected Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jetPt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // jet pT, ge1bTags
       hName = "h_jetPt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_jetPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jetPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jetPt_ge1bTags[iAna][iGen] = new TH1D( hName, "Selected Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jetPt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // jet pT, ge2bTags
       hName = "h_jetPt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_jetPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Selected Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jetPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jetPt_ge2bTags[iAna][iGen] = new TH1D( hName, "Selected Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jetPt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // jet1 pT, ge0bTags
       hName = "h_jet1Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_jet1Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jet1Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jet1Pt_ge0bTags[iAna][iGen] = new TH1D( hName, "Leading Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jet1Pt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // jet1 pT, ge1bTags
       hName = "h_jet1Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_jet1Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jet1Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jet1Pt_ge1bTags[iAna][iGen] = new TH1D( hName, "Leading Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jet1Pt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // jet1 pT, ge2bTags
       hName = "h_jet1Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_jet1Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Leading Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jet1Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jet1Pt_ge2bTags[iAna][iGen] = new TH1D( hName, "Leading Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jet1Pt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // jet2 pT, ge0bTags
       hName = "h_jet2Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_jet2Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jet2Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jet2Pt_ge0bTags[iAna][iGen] = new TH1D( hName, "Trailing Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jet2Pt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // jet2 pT, ge1bTags
       hName = "h_jet2Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_jet2Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jet2Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jet2Pt_ge1bTags[iAna][iGen] = new TH1D( hName, "Trailing Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jet2Pt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // jet2 pT, ge2bTags
       hName = "h_jet2Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_jet2Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Trailing Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_jet2Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_jet2Pt_ge2bTags[iAna][iGen] = new TH1D( hName, "Trailing Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_jet2Pt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // csvJet1 pT, ge0bTags
       hName = "h_csvJet1Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_csvJet1Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_csvJet1Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_csvJet1Pt_ge0bTags[iAna][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_csvJet1Pt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // csvJet1 pT, ge1bTags
       hName = "h_csvJet1Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_csvJet1Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_csvJet1Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_csvJet1Pt_ge1bTags[iAna][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_csvJet1Pt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // csvJet1 pT, ge2bTags
       hName = "h_csvJet1Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_csvJet1Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_csvJet1Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_csvJet1Pt_ge2bTags[iAna][iGen] = new TH1D( hName, "Highest bTag Disc. Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_csvJet1Pt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // csvJet2 pT, ge0bTags
       hName = "h_csvJet2Pt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_csvJet2Pt_ge0bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_csvJet2Pt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_csvJet2Pt_ge0bTags[iAna][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_csvJet2Pt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // csvJet2 pT, ge1bTags
       hName = "h_csvJet2Pt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_csvJet2Pt_ge1bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_csvJet2Pt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_csvJet2Pt_ge1bTags[iAna][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_csvJet2Pt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // csvJet2 pT, ge2bTags
       hName = "h_csvJet2Pt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_csvJet2Pt_ge2bTags[iFlav][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_csvJet2Pt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_csvJet2Pt_ge2bTags[iAna][iGen] = new TH1D( hName, "2nd Highest bTag Disc. Jet pT, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_csvJet2Pt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // MET, ge0bTags
       hName = "h_met__ge0bTags";
       hName += flav_gen_sys_name;
-      h_met_ge0bTags[iFlav][iGen] = new TH1D( hName, "MET, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_met_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_met_ge0bTags[iAna][iGen] = new TH1D( hName, "MET, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_met_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // MET, ge1bTags
       //hName = "h_met__ge1bTags";
       //hName += flav_gen_sys_name;
-      //h_met_ge1bTags[iFlav][iGen] = new TH1D( hName, "MET, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      //h_met_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      //h_met_ge1bTags[iAna][iGen] = new TH1D( hName, "MET, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      //h_met_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // MET, ge2bTags
       hName = "h_met__ge2bTags";
       hName += flav_gen_sys_name;
-      h_met_ge2bTags[iFlav][iGen] = new TH1D( hName, "MET, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_met_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_met_ge2bTags[iAna][iGen] = new TH1D( hName, "MET, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_met_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // lep1lep2bb pT, ge0bTags
       hName = "h_lep1lep2bbPt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_lep1lep2bbPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "lep1lep2bb, t#bar{t} visible system, p_{T}, >=0 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
-      h_lep1lep2bbPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep1lep2bbPt_ge0bTags[iAna][iGen] = new TH1D( hName, "lep1lep2bb, t#bar{t} visible system, p_{T}, >=0 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
+      h_lep1lep2bbPt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
       
       // lep1lep2bb pT, ge1bTags
       hName = "h_lep1lep2bbPt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_lep1lep2bbPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "lep1lep2bb, t#bar{t} visible system, p_{T}, >=1 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
-      h_lep1lep2bbPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep1lep2bbPt_ge1bTags[iAna][iGen] = new TH1D( hName, "lep1lep2bb, t#bar{t} visible system, p_{T}, >=1 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
+      h_lep1lep2bbPt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // lep1lep2bb pT, ge2bTags
       hName = "h_lep1lep2bbPt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_lep1lep2bbPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "lep1lep2bb, t#bar{t} visible system, p_{T}, >=2 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
-      h_lep1lep2bbPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep1lep2bbPt_ge2bTags[iAna][iGen] = new TH1D( hName, "lep1lep2bb, t#bar{t} visible system, p_{T}, >=2 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
+      h_lep1lep2bbPt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
       
       // lep1lep2bbMet pT, ge0bTags
       hName = "h_lep1lep2bbMetPt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_lep1lep2bbMetPt_ge0bTags[iFlav][iGen] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=0 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
-      h_lep1lep2bbMetPt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep1lep2bbMetPt_ge0bTags[iAna][iGen] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=0 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
+      h_lep1lep2bbMetPt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
       
       // lep1lep2bbMet pT, ge1bTags
       //hName = "h_lep1lep2bbMetPt__ge1bTags";
       //hName += flav_gen_sys_name;
-      //h_lep1lep2bbMetPt_ge1bTags[iFlav][iGen] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=1 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
-      //h_lep1lep2bbMetPt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      //h_lep1lep2bbMetPt_ge1bTags[iAna][iGen] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=1 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
+      //h_lep1lep2bbMetPt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // lep1lep2bbMet pT, ge2bTags
       hName = "h_lep1lep2bbMetPt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_lep1lep2bbMetPt_ge2bTags[iFlav][iGen] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=2 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
-      h_lep1lep2bbMetPt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_lep1lep2bbMetPt_ge2bTags[iAna][iGen] = new TH1D( hName, "lep1lep2bbMet, t#bar{t} system, p_{T}, >=2 bTags;p_{T} [GeV]", 32, 0.0, 800.0 );
+      h_lep1lep2bbMetPt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
       
       // MT, ge0bTags
       hName = "h_mt__ge0bTags";
       hName += flav_gen_sys_name;
-      h_mt_ge0bTags[iFlav][iGen] = new TH1D( hName, "MT, >=0 bTags;M_{T} [GeV]", 32, 0.0, 800.0);
-      h_mt_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mt_ge0bTags[iAna][iGen] = new TH1D( hName, "MT, >=0 bTags;M_{T} [GeV]", 32, 0.0, 800.0);
+      h_mt_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // MT, ge1bTags
       hName = "h_mt__ge1bTags";
       hName += flav_gen_sys_name;
-      h_mt_ge1bTags[iFlav][iGen] = new TH1D( hName, "MT, >=1 bTags;M_{T} [GeV]", 32, 0.0, 800.0);
-      h_mt_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mt_ge1bTags[iAna][iGen] = new TH1D( hName, "MT, >=1 bTags;M_{T} [GeV]", 32, 0.0, 800.0);
+      h_mt_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // MT, ge2bTags
       hName = "h_mt__ge2bTags";
       hName += flav_gen_sys_name;
-      h_mt_ge2bTags[iFlav][iGen] = new TH1D( hName, "MT, >=2 bTags;M_{T} [GeV]", 32, 0.0, 800.0);
-      h_mt_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mt_ge2bTags[iAna][iGen] = new TH1D( hName, "MT, >=2 bTags;M_{T} [GeV]", 32, 0.0, 800.0);
+      h_mt_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // modified topness, ge0bTags
       hName = "h_modTopness__ge0bTags";
       hName += flav_gen_sys_name;
-      h_modTopness_ge0bTags[iFlav][iGen] = new TH1D( hName, "modified topness, >=0 bTags;pT [GeV]", 20, -20.0, 20.0);
-      h_modTopness_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_modTopness_ge0bTags[iAna][iGen] = new TH1D( hName, "modified topness, >=0 bTags;pT [GeV]", 20, -20.0, 20.0);
+      h_modTopness_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // modified topness, ge1bTags
       hName = "h_modTopness__ge1bTags";
       hName += flav_gen_sys_name;
-      h_modTopness_ge1bTags[iFlav][iGen] = new TH1D( hName, "modified topness, >=1 bTags;pT [GeV]", 20, -20.0, 20.0);
-      h_modTopness_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_modTopness_ge1bTags[iAna][iGen] = new TH1D( hName, "modified topness, >=1 bTags;pT [GeV]", 20, -20.0, 20.0);
+      h_modTopness_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // modified topness, ge2bTags
       hName = "h_modTopness__ge2bTags";
       hName += flav_gen_sys_name;
-      h_modTopness_ge2bTags[iFlav][iGen] = new TH1D( hName, "modified topness, >=2 bTags;pT [GeV]", 20, -20.0, 20.0);
-      h_modTopness_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_modTopness_ge2bTags[iAna][iGen] = new TH1D( hName, "modified topness, >=2 bTags;pT [GeV]", 20, -20.0, 20.0);
+      h_modTopness_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // MT2W, ge0bTags
       hName = "h_mt2w__ge0bTags";
       hName += flav_gen_sys_name;
-      h_mt2w_ge0bTags[iFlav][iGen] = new TH1D( hName, "MT2W, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_mt2w_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mt2w_ge0bTags[iAna][iGen] = new TH1D( hName, "MT2W, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_mt2w_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // MT2W, ge1bTags
       hName = "h_mt2w__ge1bTags";
       hName += flav_gen_sys_name;
-      h_mt2w_ge1bTags[iFlav][iGen] = new TH1D( hName, "MT2W, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_mt2w_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mt2w_ge1bTags[iAna][iGen] = new TH1D( hName, "MT2W, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_mt2w_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // MT2W, ge2bTags
       hName = "h_mt2w__ge2bTags";
       hName += flav_gen_sys_name;
-      h_mt2w_ge2bTags[iFlav][iGen] = new TH1D( hName, "MT2W, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_mt2w_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mt2w_ge2bTags[iAna][iGen] = new TH1D( hName, "MT2W, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_mt2w_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
       // Mlb, ge0bTags
       hName = "h_mlb__ge0bTags";
       hName += flav_gen_sys_name;
-      h_mlb_ge0bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_mlb_ge0bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mlb_ge0bTags[iAna][iGen] = new TH1D( hName, "Mlb, >=0 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_mlb_ge0bTags[iAna][iGen]->SetDirectory(f_output);
 
       // Mlb, ge1bTags
       hName = "h_mlb__ge1bTags";
       hName += flav_gen_sys_name;
-      h_mlb_ge1bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_mlb_ge1bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mlb_ge1bTags[iAna][iGen] = new TH1D( hName, "Mlb, >=1 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_mlb_ge1bTags[iAna][iGen]->SetDirectory(f_output);
 
       // Mlb, ge2bTags
       hName = "h_mlb__ge2bTags";
       hName += flav_gen_sys_name;
-      h_mlb_ge2bTags[iFlav][iGen] = new TH1D( hName, "Mlb, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
-      h_mlb_ge2bTags[iFlav][iGen]->SetDirectory(f_output);
+      h_mlb_ge2bTags[iAna][iGen] = new TH1D( hName, "Mlb, >=2 bTags;pT [GeV]", 32, 0.0, 800.0);
+      h_mlb_ge2bTags[iAna][iGen]->SetDirectory(f_output);
 
 
     } // end loop over genClassifications for histogram arrays
-  } // end loop over leptonFlavs for histogram arrays
+  } // end loop over leptonFlavs (analyzers) for histogram arrays
 
         
 
@@ -1051,8 +1116,20 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
     h2_diMu_trigger_eff_den = new TH2D( "h_diMu_trigger_eff_den", "mumu trigger efficiency, denominator;lep2 pT;lep1 pT", 20, 0.0, 200.0, 20, 0.0, 200.0 );
 
   } // end if data for trigger efficiency histogram declarations
-  
-  
+
+
+  // Set up cutflow histograms
+  TH1D* h_cutflow[nAnalyzers];
+  for( int iAna=0; iAna<nAnalyzers; iAna++ ) {
+
+	  analyzer* thisAnalyzer = analyzers.at(iAna);
+	  std::string histName  = "h_cutflow_";
+	  std::string histTitle = "Cutflow histogram ";
+	  histName  += thisAnalyzer->GetLabel();
+	  histTitle += thisAnalyzer->GetLabel();
+
+	  h_cutflow[iAna] = selectionInfo::get_cutflowHistoTemplate( thisAnalyzer->GetSelections(), histName, histTitle );
+  }
 
 
   //////////////////////
@@ -1088,7 +1165,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
     babyAnalyzer.Init(tree);
 
     // Get weight histogram from baby
-    wgtInfo->getWeightHistogramFromBaby( file );
+    wgtInfo.getWeightHistogramFromBaby( file );
             
     // Loop over Events in current file
     if( nEventsTotal >= nEventsChain ) continue;
@@ -1110,20 +1187,6 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
       // Progress
       stop_1l_babyAnalyzer::progress( nEventsTotal, nEventsChain );
-
-      
-
-      /////////////////////////////
-      //                         //
-      // Calculate Event Weights //
-      //                         //
-      /////////////////////////////
-   
-      wgtInfo->getEventWeights( analyzeFast_ );
-
-      double wgt_nominal = wgtInfo->sys_wgts[sysInfo::k_nominal];
-      double wgt_nominal_noPU = wgt_nominal;
-      if(!sample.isData && apply_pu_sf_) wgt_nominal_noPU = (1.0/wgtInfo->sf_pu);
       
       
       /////////////////////
@@ -1151,214 +1214,140 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	if( nupt()>200.0 ) continue;
       }
 
-      // Evt Selection
-      pass_evtSel = selectionInfo::pass_CR2l_bulkTTbar(0, add2ndLepToMet_);
+      // Pre-calculate all the event weights
+      wgtInfo.getEventWeights();
 
-      if( !sample.isData && !analyzeFast_ ) pass_evtSel_jup   = selectionInfo::pass_CR2l_bulkTTbar(1,  add2ndLepToMet_);
-      if( !sample.isData && !analyzeFast_ ) pass_evtSel_jdown = selectionInfo::pass_CR2l_bulkTTbar(-1, add2ndLepToMet_);
 
-      bool passAnyRegion = false;
-      if( pass_evtSel || pass_evtSel_jup || pass_evtSel_jdown ) passAnyRegion=true;
 
-      // Cutflow
-      vector<bool> cutflow = selectionInfo::get_selectionResults_CR2l_bulkTTbar(0, -1);
-      for(int i=0; i<(int)cutflow.size(); i++){
-	if(!cutflow[i]) break;
-	h_cutflow_evtSel->Fill( i, cutflow[i] );
-      }
+      // Dan's modifications should start here!  ////////////////////////////////////////////////////
 
 
       //
       // If Data, before selection continue, look at trigger efficiency
       //
-      if( sample.isData && sample.id==sampleInfo::k_met ){
 
-	// Check if event passes cutlist for "diLepton selection"
-	bool pass_selection_noTrigger = true;
-	for(int iCut=0; iCut<(int)cutflow.size(); iCut++){
-	  if( iCut==1 ) continue; // ignore diLepton trigger cut
-	  if( !cutflow[iCut] ){
-	    pass_selection_noTrigger = false;
-	    break;
-	  }
-	}
+      //////////// This can maybe be modified to take advantage of the analyzer structure //////////////////////////////////////////
+
+      if( sample.isData && sample.id==sampleInfo::k_met ) {
+
+	      double wgt_nominal = sysInfo::GetEventWeight( sysInfo::k_nominal );
+
+	      // Check if event passes cutlist for "diLepton selection"    //////////////// this needs fixing ///////////////////
+	      bool pass_selection_noTrigger = true;
+	      for(int iCut=0; iCut<(int)cutflow.size(); iCut++) {
+		      if( iCut==1 ) continue; // ignore diLepton trigger cut
+		      if( !cutflow[iCut] ){
+			      pass_selection_noTrigger = false;
+			      break;
+		      }
+	      }
 	
-	// Check if event passes triggers
-	bool pass_trigger_singleEl = HLT_SingleEl();
-	bool pass_trigger_singleMu = HLT_SingleMu(); 
-	bool pass_trigger_met      = HLT_MET() || HLT_MET100_MHT100();
-	bool pass_trigger_emu      = HLT_MuE();
-	bool pass_trigger_diEl     = HLT_DiEl();
-	bool pass_trigger_diMu     = HLT_DiMu();
-	bool pass_trigger_diLep    = HLT_DiEl() || HLT_MuE() || HLT_DiMu();
+	      // Check if event passes triggers
+	      bool pass_trigger_singleEl = HLT_SingleEl();
+	      bool pass_trigger_singleMu = HLT_SingleMu(); 
+	      bool pass_trigger_met      = HLT_MET() || HLT_MET100_MHT100();
+	      bool pass_trigger_emu      = HLT_MuE();
+	      bool pass_trigger_diEl     = HLT_DiEl();
+	      bool pass_trigger_diMu     = HLT_DiMu();
+	      bool pass_trigger_diLep    = HLT_DiEl() || HLT_MuE() || HLT_DiMu();
 	
-	// DiLep Triggers (OR'd of all 3), MET trigger method
-	if( pass_selection_noTrigger && pass_trigger_met ){
-	  h1_diLep_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
-	  h1_diLep_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
-	  h2_diLep_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
-	  nEvents_pass_diLepSel_and_metTrig++;
-	  if( pass_trigger_diLep ){
-	    nEvents_pass_diLepSel_and_metTrig_and_diLepTrig++;
-	    h1_diLep_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
-	    h1_diLep_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
-	    h2_diLep_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
-	    
-	  }
-	}
+	      // DiLep Triggers (OR'd of all 3), MET trigger method
+	      if( pass_selection_noTrigger && pass_trigger_met ) {
+		      h1_diLep_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );    ////////////////// Make sure the correct histograms are getting filled
+		      h1_diLep_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
+		      h2_diLep_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );  ///////////////// Also, what's up with wgt_nominal? Isn't the weight always 1 in data? ///////////
+		      nEvents_pass_diLepSel_and_metTrig++;
+		      if( pass_trigger_diLep ) {
+			      nEvents_pass_diLepSel_and_metTrig_and_diLepTrig++;
+			      h1_diLep_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
+			      h1_diLep_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
+			      h2_diLep_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+		      }
+	      }
 
-	// E/Mu Triggers
-	if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==24 ){
+	      // E/Mu Triggers
+	      if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==24 ){
 
-	  // E/mu Trigger, SingleLep factorized method, Test trailing electron leg
-	  if( pass_selection_noTrigger && pass_trigger_singleEl && abs(lep1_pdgid())==11 ){
-	    nEvents_pass_diLepSel_and_singleElTrig++;
-	    if( pass_trigger_emu ){
-	      nEvents_pass_diLepSel_and_singleElTrig_and_emuTrig++;
-	    }
-	  }
+		      // E/mu Trigger, SingleLep factorized method, Test trailing electron leg
+		      if( pass_selection_noTrigger && pass_trigger_singleEl && abs(lep1_pdgid())==11 ){
+			      nEvents_pass_diLepSel_and_singleElTrig++;
+			      if( pass_trigger_emu ){
+				      nEvents_pass_diLepSel_and_singleElTrig_and_emuTrig++;
+			      }
+		      }
 
-	  // E/mu Trigger, SingleLep factorized method, Test trailing muon leg
-	  if( pass_selection_noTrigger && pass_trigger_singleMu && abs(lep1_pdgid())==13 ){
-	    nEvents_pass_diLepSel_and_singleMuTrig++;
-	    if( pass_trigger_diLep ){
-	      nEvents_pass_diLepSel_and_singleMuTrig_and_emuTrig++;
-	    }
-	  }
+		      // E/mu Trigger, SingleLep factorized method, Test trailing muon leg
+		      if( pass_selection_noTrigger && pass_trigger_singleMu && abs(lep1_pdgid())==13 ){
+			      nEvents_pass_diLepSel_and_singleMuTrig++;
+			      if( pass_trigger_diLep ){
+				      nEvents_pass_diLepSel_and_singleMuTrig_and_emuTrig++;
+			      }
+		      }
 
-	  // E/mu Trigger, MET Trigger method
-	  if( pass_selection_noTrigger && pass_trigger_met ){
-	    nEvents_pass_diLepSel_and_metTrig_emuEvents++;
-	    h1_emu_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
-	    h1_emu_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
-	    h2_emu_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
-	    if( pass_trigger_emu ){
-	      nEvents_pass_diLepSel_and_metTrig_and_emuTrig++;
-	      h1_emu_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
-	      h1_emu_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
-	      h2_emu_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
-	    }
-	  }
+		      // E/mu Trigger, MET Trigger method
+		      if( pass_selection_noTrigger && pass_trigger_met ){
+			      nEvents_pass_diLepSel_and_metTrig_emuEvents++;
+			      h1_emu_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
+			      h1_emu_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
+			      h2_emu_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+			      if( pass_trigger_emu ){
+				      nEvents_pass_diLepSel_and_metTrig_and_emuTrig++;
+				      h1_emu_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
+				      h1_emu_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
+				      h2_emu_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+			      }
+		      }
 
-	} // end if e/mu
+	      } // end if e/mu
 
 	
-	// DiEl Triggers, MET Trigger method
-	if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==22 ){
-	  if( pass_selection_noTrigger && pass_trigger_met ){
-	    nEvents_pass_diLepSel_and_metTrig_diElEvents++;
-	    h1_diEl_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
-	    h1_diEl_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
-	    h2_diEl_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
-	    if( pass_trigger_diEl ){
-	      nEvents_pass_diLepSel_and_metTrig_and_diElTrig++;
-	      h1_diEl_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
-	      h1_diEl_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
-	      h2_diEl_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
-	    }
-	  }
-	} // end if elel
+	      // DiEl Triggers, MET Trigger method
+	      if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==22 ){
+		      if( pass_selection_noTrigger && pass_trigger_met ){
+			      nEvents_pass_diLepSel_and_metTrig_diElEvents++;
+			      h1_diEl_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
+			      h1_diEl_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
+			      h2_diEl_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+			      if( pass_trigger_diEl ){
+				      nEvents_pass_diLepSel_and_metTrig_and_diElTrig++;
+				      h1_diEl_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
+				      h1_diEl_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
+				      h2_diEl_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+			      }
+		      }
+	      } // end if elel
 
 
-	// DiMu Triggers, MET Trigger method
-	if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==26 ){
-	  if( pass_selection_noTrigger && pass_trigger_met ){
-	    nEvents_pass_diLepSel_and_metTrig_diMuEvents++;
-	    h1_diMu_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
-	    h1_diMu_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
-	    h2_diMu_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
-	    if( pass_trigger_diMu ){
-	      nEvents_pass_diLepSel_and_metTrig_and_diMuTrig++;
-	      h1_diMu_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
-	      h1_diMu_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
-	      h2_diMu_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
-	    }
-	  }
-	} // end if mumu
+	      // DiMu Triggers, MET Trigger method
+	      if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==26 ){
+		      if( pass_selection_noTrigger && pass_trigger_met ){
+			      nEvents_pass_diLepSel_and_metTrig_diMuEvents++;
+			      h1_diMu_trigger_eff_vs_lep1Pt_den->Fill( lep1_p4().Pt(), wgt_nominal );
+			      h1_diMu_trigger_eff_vs_lep2Pt_den->Fill( lep2_p4().Pt(), wgt_nominal );
+			      h2_diMu_trigger_eff_den->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+			      if( pass_trigger_diMu ){
+				      nEvents_pass_diLepSel_and_metTrig_and_diMuTrig++;
+				      h1_diMu_trigger_eff_vs_lep1Pt_num->Fill( lep1_p4().Pt(), wgt_nominal );
+				      h1_diMu_trigger_eff_vs_lep2Pt_num->Fill( lep2_p4().Pt(), wgt_nominal );
+				      h2_diMu_trigger_eff_num->Fill( lep2_p4().Pt(), lep1_p4().Pt(), wgt_nominal );
+			      }
+		      }
+	      } // end if mumu
 
 
       } // end if sample is data
 
 
-      
-      //
-      // Continue if Event Passes No Region of Interest
-      //
-      if( !passAnyRegion ) continue;
-
-
-      // Intialize lepFlav vector
-      for(int iFlav=0; iFlav<nLepFlav; iFlav++){ v_lepFlav[iFlav].second=false; }
-
-      // Check Lepton Flavs
-      for(int iFlav=0; iFlav<nLepFlav; iFlav++){
-	if( v_lepFlav[iFlav].first=="ee" ){
-	  if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==22 ){ v_lepFlav[iFlav].second = true; }
-	}
-	if( v_lepFlav[iFlav].first=="emu" ){
-	  if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==24 ){ v_lepFlav[iFlav].second = true; }
-	}
-	if( v_lepFlav[iFlav].first=="mumu" ){
-	  if( (abs(lep1_pdgid())+abs(lep2_pdgid()))==26 ){ v_lepFlav[iFlav].second = true; }
-	}
-	if( v_lepFlav[iFlav].first=="incl" ){ v_lepFlav[iFlav].second = true; }
-      }
-	
-      
-      
-      
-      ///////////////////////////////
-      //                           //
-      // Check Gen Classifications //
-      //                           //
-      ///////////////////////////////
-   
-      for(int i=0; i<nGenClassy; i++){
-	passGenClassy[i] = genClassyList[i].eval_GenClassy();
-      }
-
-      // Fix ZZ->2l2Nu, in baby is Z->NuNu, should be lostLep
-      if( sample.id==sampleInfo::k_ZZTo2L2Nu_powheg_pythia8 ){
-        for(int i=0; i<nGenClassy; i++){
-          passGenClassy[i] = false;
-          if( i==genClassyInfo::k_ge2lep ||
-	      i==genClassyInfo::k_incl      ) passGenClassy[i] = true;
-	}
-      }
 
 
 
-      ////////////////////////////
-      //                        //
-      // Check Yield Cateogries //
-      //                        //
-      ////////////////////////////
-   
-      // CR2l bulk TTbar regions
-      passCats_CR2l_bulkTTbar.clear(); 
-      passCats_CR2l_bulkTTbar_jup.clear();
-      passCats_CR2l_bulkTTbar_jdown.clear();
-
-      if( pass_evtSel ){
-	passCats_CR2l_bulkTTbar = categoryInfo::passCategory_CR2l_bulkTTbar(0, add2ndLepToMet_);
-      }
-      
-      // No JES for data
-      if( !sample.isData ){
-	if( pass_evtSel_jup ){
-	  passCats_CR2l_bulkTTbar_jup = categoryInfo::passCategory_CR2l_bulkTTbar(1, add2ndLepToMet_);
-	}
-	if( pass_evtSel_jdown ){
-	  passCats_CR2l_bulkTTbar_jdown = categoryInfo::passCategory_CR2l_bulkTTbar(-1, add2ndLepToMet_);
-	}
-      }
-  
-      
       /////////////////////////////
       //                         //
       // Compute Event Variables //
       //                         //
       /////////////////////////////
+
+      /////////////////////////////////  May be able to simplify some of the jup/jdown calculations? ///////////////////////////
       
       /*
       // gen ttbar system pT
@@ -1367,15 +1356,15 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       int nFoundGenTop=0;
       if( sampleIsTTbar ){
 	
-	for(int iGen=0; iGen<(int)genqs_p4().size(); iGen++){
-	  if( abs(genqs_id().at(iGen))==6 &&
-	      genqs_isLastCopy().at(iGen)    ){
-	    genTTbar_LV += genqs_p4().at(iGen);
-	    nFoundGenTop++;
-	  } // end if last copy of top
-	} // end loop over gen quarks
+	      for(int iGen=0; iGen<(int)genqs_p4().size(); iGen++){
+		      if( abs(genqs_id().at(iGen))==6 &&
+		          genqs_isLastCopy().at(iGen)    ){
+			      genTTbar_LV += genqs_p4().at(iGen);
+			      nFoundGenTop++;
+		      } // end if last copy of top
+	      } // end loop over gen quarks
 
-	if( nFoundGenTop == 2 ) ttbarPt = genTTbar_LV.Pt();
+	      if( nFoundGenTop == 2 ) ttbarPt = genTTbar_LV.Pt();
 
       } // end if sample is ttbar
       */
@@ -1387,7 +1376,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
       LorentzVector csvJet2_TLV(0.0,0.0,0.0,0.0);
       double csvJet2_pt = -99.9;
-      
+
       LorentzVector lep1lep2bb_TLV(0.0,0.0,0.0,0.0);
       double lep1lep2bb_pt = -99.9;
 
@@ -1396,16 +1385,16 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 
       LorentzVector lep1lep2bbMet_TLV_jup(0.0,0.0,0.0,0.0);
       //double lep1lep2bbMet_pt_jup = -99.9;
-      
+
       LorentzVector lep1lep2bbMet_TLV_jdown(0.0,0.0,0.0,0.0);
       //double lep1lep2bbMet_pt_jdown = -99.9;
-      
+
       lep1lep2bb_TLV += lep1_p4();
       lep1lep2bb_TLV += lep2_p4();
 
       lep1lep2bbMet_TLV_jup = lep1lep2bb_TLV;
       lep1lep2bbMet_TLV_jdown = lep1lep2bb_TLV;
-     
+
 
       // Nominal
       int jet1_idx = -1;
@@ -1413,37 +1402,37 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       double max_csv = -99.9;
       double second_csv = -99.9;
       for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
-	if( ak4pfjets_CSV().at(iJet) > max_csv ){
-	  jet1_idx = iJet;
-	  max_csv  = ak4pfjets_CSV().at(iJet);
-	}
+	      if( ak4pfjets_CSV().at(iJet) > max_csv ){
+		      jet1_idx = iJet;
+		      max_csv  = ak4pfjets_CSV().at(iJet);
+	      }
       }
       for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
-	if( iJet==jet1_idx ) continue;
-	if( ak4pfjets_CSV().at(iJet) > second_csv ){
-	  jet2_idx = iJet;
-	 second_csv = ak4pfjets_CSV().at(iJet);
-	} 
+	      if( iJet==jet1_idx ) continue;
+	      if( ak4pfjets_CSV().at(iJet) > second_csv ){
+		      jet2_idx = iJet;
+		      second_csv = ak4pfjets_CSV().at(iJet);
+	      } 
       }
       if(jet1_idx>=0){
-	lep1lep2bb_TLV += ak4pfjets_p4().at(jet1_idx);
-	csvJet1_TLV += ak4pfjets_p4().at(jet1_idx);
-	csvJet1_pt = csvJet1_TLV.Pt();
+	      lep1lep2bb_TLV += ak4pfjets_p4().at(jet1_idx);
+	      csvJet1_TLV += ak4pfjets_p4().at(jet1_idx);
+	      csvJet1_pt = csvJet1_TLV.Pt();
       }
       if(jet2_idx>=0){
-	lep1lep2bb_TLV += ak4pfjets_p4().at(jet2_idx);
-	csvJet2_TLV += ak4pfjets_p4().at(jet2_idx);
-	csvJet2_pt = csvJet2_TLV.Pt();
+	      lep1lep2bb_TLV += ak4pfjets_p4().at(jet2_idx);
+	      csvJet2_TLV += ak4pfjets_p4().at(jet2_idx);
+	      csvJet2_pt = csvJet2_TLV.Pt();
       }
 
       lep1lep2bb_pt = lep1lep2bb_TLV.Pt();
-     
+
       // lep1 lep2 b b MET TLV
       lep1lep2bbMet_TLV = lep1lep2bb_TLV;
-      
+
       LorentzVector met_TLV( pfmet()*cos(pfmet_phi()), pfmet()*sin(pfmet_phi()), 0.0, pfmet() );
       lep1lep2bbMet_TLV += met_TLV;
-      
+
       lep1lep2bbMet_pt = lep1lep2bbMet_TLV.Pt();
 
 
@@ -1453,21 +1442,21 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       max_csv = -99.9;
       second_csv = -99.9;
       for(int iJet=0; iJet<(int)jup_ak4pfjets_p4().size(); iJet++){
-	if( jup_ak4pfjets_CSV().at(iJet) > max_csv ){
-	  jet1_idx = iJet;
-	  max_csv  = jup_ak4pfjets_CSV().at(iJet);
-	}
+	      if( jup_ak4pfjets_CSV().at(iJet) > max_csv ){
+		      jet1_idx = iJet;
+		      max_csv  = jup_ak4pfjets_CSV().at(iJet);
+	      }
       }
       for(int iJet=0; iJet<(int)jup_ak4pfjets_p4().size(); iJet++){
-	if( iJet==jet1_idx ) continue;
-	else if( jup_ak4pfjets_CSV().at(iJet) > second_csv ){
-	  jet2_idx = iJet;
-	  second_csv  = jup_ak4pfjets_CSV().at(iJet);
-	} 
+	      if( iJet==jet1_idx ) continue;
+	      else if( jup_ak4pfjets_CSV().at(iJet) > second_csv ){
+		      jet2_idx = iJet;
+		      second_csv  = jup_ak4pfjets_CSV().at(iJet);
+	      } 
       }
       if(jet1_idx>=0) lep1lep2bbMet_TLV_jup += jup_ak4pfjets_p4().at(jet1_idx);
       if(jet2_idx>=0) lep1lep2bbMet_TLV_jup += jup_ak4pfjets_p4().at(jet2_idx);
-      
+
       LorentzVector met_TLV_jup( pfmet_jup()*cos(pfmet_phi_jup()), pfmet_jup()*sin(pfmet_phi_jup()), 0.0, pfmet_jup() );
       lep1lep2bbMet_TLV_jup += met_TLV_jup;
 
@@ -1477,28 +1466,29 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       max_csv = -99.9;
       second_csv = -99.9;
       for(int iJet=0; iJet<(int)jdown_ak4pfjets_p4().size(); iJet++){
-	if( jdown_ak4pfjets_CSV().at(iJet) > max_csv ){
-	  jet1_idx = iJet;
-	  max_csv  = jdown_ak4pfjets_CSV().at(iJet);
-	}
+	      if( jdown_ak4pfjets_CSV().at(iJet) > max_csv ){
+		      jet1_idx = iJet;
+		      max_csv  = jdown_ak4pfjets_CSV().at(iJet);
+	      }
       }
       for(int iJet=0; iJet<(int)jdown_ak4pfjets_p4().size(); iJet++){
-	if( iJet==jet1_idx ) continue;
-	if( jdown_ak4pfjets_CSV().at(iJet) > second_csv ){
-	  jet2_idx = iJet;
-	 second_csv  = jdown_ak4pfjets_CSV().at(iJet);
-	} 
+	      if( iJet==jet1_idx ) continue;
+	      if( jdown_ak4pfjets_CSV().at(iJet) > second_csv ){
+		      jet2_idx = iJet;
+		      second_csv  = jdown_ak4pfjets_CSV().at(iJet);
+	      } 
       }
       if(jet1_idx>=0) lep1lep2bbMet_TLV_jdown += jdown_ak4pfjets_p4().at(jet1_idx);
       if(jet2_idx>=0) lep1lep2bbMet_TLV_jdown += jdown_ak4pfjets_p4().at(jet2_idx);
-      
+
       LorentzVector met_TLV_jdown( pfmet_jdown()*cos(pfmet_phi_jdown()), pfmet_jdown()*sin(pfmet_phi_jdown()), 0.0, pfmet_jdown() );
       lep1lep2bbMet_TLV_jdown += met_TLV_jdown;
 
-    
+
+      ////////////////////////// Probably need to move this stuff to the "fill non-yield histograms" section //////////////////////////
       double met = pfmet();
       if(add2ndLepToMet_) met = pfmet_rl();
-      
+
       double mt = mt_met_lep();
       if(add2ndLepToMet_) mt = mt_met_lep_rl();
 
@@ -1509,112 +1499,131 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
       if(add2ndLepToMet_) mt2w = MT2W_rl();
 
 
-      double metResSF = 1.0; double metResSF_up = 1.0; double metResSF_dn = 1.0;
-      if(!analyzeFast_ && !sample.isData && apply_metRes_sf_){
-	wgtInfo->getMetResWeight( metResSF, metResSF_up, metResSF_dn );
-      }
-      wgt_nominal *= metResSF;
-      
-      /////////////////////
-      //                 //
-      // Fill Histograms //
-      //                 //
-      /////////////////////
 
-      
-      //
-      // Pass CR2l bulkTTbar Region
-      //
-      if( pass_evtSel || pass_evtSel_jup || pass_evtSel_jdown ){
 
-	//
-	// Yields
-	//
-	for(int iFlav=0; iFlav<nLepFlav; iFlav++){
+			/////////////////////////////////////////////////////////////
+			//                                                         //
+			// Loop over all analyzers, genClassy's, systematics, etc. //
+			//                                                         //
+			/////////////////////////////////////////////////////////////
 
-	  if( !v_lepFlav[iFlav].second ) continue;
+			// Loop over all analyzers
+			for( int iAna=0; iAna<nAnalyzers; iAna++ ) {
+				analyzer* thisAnalyzer = analyzers.at(iAna);
 
-	  for(int iGen=0; iGen<nGenClassy; iGen++){
-	  
-	    if( !passGenClassy[iGen] ) continue;
 
-	    for(int iSys=0; iSys<nSystematics; iSys++){
-	  
-	      if(systematicList[iSys].id==sysInfo::k_JESUp){ if(!pass_evtSel_jup) continue; }
-	      else if(systematicList[iSys].id==sysInfo::k_JESDown){ if(!pass_evtSel_jdown) continue; }
-	      else{ if(!pass_evtSel) continue; }
+				// Make an array of which genClassy's this event passes
+				bool passedGenClassies[genClassyInfo::k_nGenClassy];
+				for( genClassyInfo::Util thisGenClassy : thisAnalyzer->GetGenClassifications() ) {
+					passedGenClassies[thisGenClassy.id] = thisGenClassy.eval_GenClassy();
 
-	      // Histo Index
-	      int iHisto = iFlav*nGenClassy*nSystematics + iGen*nSystematics + iSys;
+					// Manually correct the ZZto2L2Nu sample
+					if( sample.id==sampleInfo::k_ZZTo2L2Nu_powheg_pythia8 ) {
+						if( thisGenClassy.id == genClassyInfo::k_ge2lep ||
+								thisGenClassy.id == genClassyInfo::k_incl ) passedGenClassies[thisGenClassy.id] = true;
+						else passedGenClassies[thisGenClassy.id] = false;
+					}
+				}
+
+				// Check if this event passes selections with JES set to nominal
+				//  (saves us having to evaluate this for every systematic)
+				thisAnalyzer->SetJesType( 0 );
+				bool pass_JESnominal = thisAnalyzer->PassSelections();
+
+				// Fill cutflow histogram
+				std::vector<bool> cutflow_results = selectionInfo::get_selectionResults( thisAnalyzer->GetSelections() );
+				for( uint i=0; i<cutflow_results.size(); i++ ) {
+					if( !cutflow_results.at(i) ) break;
+					h_cutflow[iAna]->Fill( i+1 );
+				}
+
+
+				// Loop over all systematics in the analyzer
+				for( sysInfo::Util thisSystematic : thisAnalyzer->GetSystematics() ) {
+
+					// Check if this event passes selections, and also set the appropriate JES type for future use
+					if( thisSystematic.id == sysInfo::k_JESUp ) {
+						thisAnalyzer->SetJesType( 1 );
+						if( !thisAnalyzer->PassSelections() ) continue;
+					}
+					else if( thisSystematic.id == sysInfo::k_JESDown ) {
+						thisAnalyzer->SetJesType( -1 );
+						if( !thisAnalyzer->PassSelections() ) continue;
+					}
+					else {
+						thisAnalyzer->SetJesType( 0 );
+						if( !pass_JESnominal ) continue;
+					}
+
+					// If we've passed selections, then get the event weight and the categories passed
+					double weight = thisAnalyzer->GetEventWeight( thisSystematic.id );
+					std::vector<int> categories_passed = thisAnalyzer->GetCategoriesPassed();
+
+					// Loop over all the gen classifications that we passed
+					for( genClassyInfo::Util thisGenClassy : thisAnalyzer->GetGenClassifications() ) {
+						int iGen = thisGenClassy.id;
+						if( !passedGenClassies[iGen] ) continue;
+
+						// Get the index for the histogram corresponding to this genClassy and systematic
+						int histIndex = iGen*nSystematics + thisSystematic.id;
+
+						// Fill yield histograms
+						for( int category : categories_passed ) {
+							thisAnalyzer->GetYieldHistogram( histIndex )->Fill( category, weight );
+						}
+
+						/////////////////////////////////////
+						//                                 //
+						// Fill other non-yield histograms //
+						//                                 //
+						/////////////////////////////////////
+
+
+
+
+						// Histo Index
+						int iHisto = iAna*nGenClassy*nSystematics + iGen*nSystematics + iSys;
+
+						bool add2ndLepToMet = thisAnalyzer->GetAdd2ndLep();
 	      
-	      // Event Weight for this Systematic
-	      double wgt = wgtInfo->sys_wgts[systematicList[iSys].id];
 
-	      // metResSFs setup to ==1 if not ttbar/tW->2l
-	      if( systematicList[iSys].id==sysInfo::k_metResUp ) wgt *= metResSF_up;
-	      else if( systematicList[iSys].id==sysInfo::k_metResDown ) wgt *= metResSF_dn;
-	      else wgt *= metResSF; 
-
-
-	      // CR2l Bulk TTbar Regions
-	    
-	      // JES Up
-	      if( systematicList[iSys].id==sysInfo::k_JESUp ){
-		for(int iCat=0; iCat<(int)passCats_CR2l_bulkTTbar_jup.size(); iCat++){
-		  h_yields_CR2l_bulkTTbar[iHisto]->Fill( passCats_CR2l_bulkTTbar_jup[iCat], wgt );
-		}
-	      }
-	      // JES Dn
-	      else if( systematicList[iSys].id==sysInfo::k_JESDown ){
-		for(int iCat=0; iCat<(int)passCats_CR2l_bulkTTbar_jdown.size(); iCat++){
-		  h_yields_CR2l_bulkTTbar[iHisto]->Fill( passCats_CR2l_bulkTTbar_jdown[iCat], wgt );
-		}
-	      }
-	      // All Others
-	      else{
-		for(int iCat=0; iCat<(int)passCats_CR2l_bulkTTbar.size(); iCat++){
-		  h_yields_CR2l_bulkTTbar[iHisto]->Fill( passCats_CR2l_bulkTTbar[iCat], wgt );
-		}
-	      }
-	      
-
-	      // Systematic variations for variables
-	      if(systematicList[iSys].id==sysInfo::k_JESUp){
-		if(add2ndLepToMet_) met = pfmet_rl_jup();
-		else                met = pfmet_jup();
-	      }
-	      else if(systematicList[iSys].id==sysInfo::k_JESDown){
-		if(add2ndLepToMet_) met = pfmet_rl_jdown();
-		else                met = pfmet_jdown();
-	      }
-	      else{
-		if(add2ndLepToMet_) met = pfmet_rl();
-		else                met = pfmet();
-	      }
+						// Systematic variations for variables
+						if(systematicList[iSys].id==sysInfo::k_JESUp){
+							if(add2ndLepToMet) met = pfmet_rl_jup();
+							else               met = pfmet_jup();
+						}
+						else if(systematicList[iSys].id==sysInfo::k_JESDown){
+							if(add2ndLepToMet) met = pfmet_rl_jdown();
+							else               met = pfmet_jdown();
+						}
+						else{
+							if(add2ndLepToMet) met = pfmet_rl();
+							else               met = pfmet();
+						}
 
 	      // met
 	      if(systematicList[iSys].id==sysInfo::k_JESUp){
 		if( jup_ngoodbtags()>=1 ){
-		  h_met_ge1bTags[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>50)  h_met_ge1bTags_ge50ttbarSysPt[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>100) h_met_ge1bTags_ge100ttbarSysPt[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>150) h_met_ge1bTags_ge150ttbarSysPt[iHisto]->Fill( met, wgt );
+		  h_met_ge1bTags[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>50)  h_met_ge1bTags_ge50ttbarSysPt[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>100) h_met_ge1bTags_ge100ttbarSysPt[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>150) h_met_ge1bTags_ge150ttbarSysPt[iHisto]->Fill( met, weight );
 		}
 	      }
 	      else if(systematicList[iSys].id==sysInfo::k_JESDown){
 		if( jdown_ngoodbtags()>=1 ){
-		  h_met_ge1bTags[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>50)  h_met_ge1bTags_ge50ttbarSysPt[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>100) h_met_ge1bTags_ge100ttbarSysPt[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>150) h_met_ge1bTags_ge150ttbarSysPt[iHisto]->Fill( met, wgt );
+		  h_met_ge1bTags[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>50)  h_met_ge1bTags_ge50ttbarSysPt[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>100) h_met_ge1bTags_ge100ttbarSysPt[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>150) h_met_ge1bTags_ge150ttbarSysPt[iHisto]->Fill( met, weight );
 		}
 	      }
 	      else{
 		if( ngoodbtags()>=1 ){
-		  h_met_ge1bTags[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>50)  h_met_ge1bTags_ge50ttbarSysPt[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>100) h_met_ge1bTags_ge100ttbarSysPt[iHisto]->Fill( met, wgt );
-		  if(lep1lep2bbMet_pt>150) h_met_ge1bTags_ge150ttbarSysPt[iHisto]->Fill( met, wgt );
+		  h_met_ge1bTags[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>50)  h_met_ge1bTags_ge50ttbarSysPt[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>100) h_met_ge1bTags_ge100ttbarSysPt[iHisto]->Fill( met, weight );
+		  if(lep1lep2bbMet_pt>150) h_met_ge1bTags_ge150ttbarSysPt[iHisto]->Fill( met, weight );
 		}
 	      }
 
@@ -1622,23 +1631,23 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      // diLepPt
 	      if(systematicList[iSys].id==sysInfo::k_JESUp){
 		if( jup_ngoodbtags()>=1 ){
-		  h_diLepPt_ge1bTags[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
-		  if(met>100) h_diLepPt_ge1bTags_ge100met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
-		  if(met>150) h_diLepPt_ge1bTags_ge150met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
+		  h_diLepPt_ge1bTags[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
+		  if(met>100) h_diLepPt_ge1bTags_ge100met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
+		  if(met>150) h_diLepPt_ge1bTags_ge150met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
 		}
 	      }
 	      else if(systematicList[iSys].id==sysInfo::k_JESDown){
 		if( jdown_ngoodbtags()>=1 ){
-		  h_diLepPt_ge1bTags[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
-		  if(met>100) h_diLepPt_ge1bTags_ge100met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
-		  if(met>150) h_diLepPt_ge1bTags_ge150met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
+		  h_diLepPt_ge1bTags[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
+		  if(met>100) h_diLepPt_ge1bTags_ge100met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
+		  if(met>150) h_diLepPt_ge1bTags_ge150met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
 		}
 	      }
 	      else{
 		if( ngoodbtags()>=1 ){
-		  h_diLepPt_ge1bTags[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
-		  if(met>100) h_diLepPt_ge1bTags_ge100met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
-		  if(met>150) h_diLepPt_ge1bTags_ge150met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt );
+		  h_diLepPt_ge1bTags[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
+		  if(met>100) h_diLepPt_ge1bTags_ge100met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
+		  if(met>150) h_diLepPt_ge1bTags_ge150met[iHisto]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
 		}
 	      }
 
@@ -1646,188 +1655,183 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
 	      // lep1lep2bbMet
 	      if(systematicList[iSys].id==sysInfo::k_JESUp){
 		if( jup_ngoodbtags()>=1 ){
-		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
-		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
-		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
-		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
-		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
-		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), wgt );
+		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), weight );
+		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), weight );
+		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), weight );
+		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), weight );
+		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), weight );
+		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jup.Pt(), weight );
 		}
 	      }
 	      else if(systematicList[iSys].id==sysInfo::k_JESDown){
 		if( jdown_ngoodbtags()>=1 ){
-		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
-		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
-		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
-		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
-		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
-		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), wgt );
+		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), weight );
+		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), weight );
+		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), weight );
+		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), weight );
+		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), weight );
+		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_TLV_jdown.Pt(), weight );
 		}
 	      }
 	      else{
 		if( ngoodbtags()>=1 ){
-		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
-		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_pt, wgt );
+		  h_lep1lep2bbMetPt_ge1bTags[iHisto]->Fill( lep1lep2bbMet_pt, weight );
+		  if(met>100) h_lep1lep2bbMetPt_ge1bTags_ge100met[iHisto]->Fill( lep1lep2bbMet_pt, weight );
+		  if(met>150) h_lep1lep2bbMetPt_ge1bTags_ge150met[iHisto]->Fill( lep1lep2bbMet_pt, weight );
+		  if(nvtxs()>=0.0 && nvtxs()<12.0)  h_lep1lep2bbMetPt_ge1bTags_0to12nVtx[iHisto]->Fill( lep1lep2bbMet_pt, weight );
+		  if(nvtxs()>=12.0 && nvtxs()<24.0) h_lep1lep2bbMetPt_ge1bTags_12to24nVtx[iHisto]->Fill( lep1lep2bbMet_pt, weight );
+		  if(nvtxs()>=24.0)                 h_lep1lep2bbMetPt_ge1bTags_ge24nVtx[iHisto]->Fill( lep1lep2bbMet_pt, weight );
 		}
 	      }
 
 
+	      // These histograms only get filled for the nominal systematic
+	      if( thisSystematic.id == sysInfo::k_nominal ) {
 
-	    } // end loop over systematics
-	  
 
-	    //
-	    // Non-yield Histograms
-	    //
-	    if( pass_evtSel ){
-	    
-	      // nVtx
-	      h_nVtx[iFlav][iGen]->Fill( nvtxs(), wgt_nominal );
+							// nVtx
+							h_nVtx[iAna][iGen]->Fill( nvtxs(), weight );
 	      
-	      // nVtx, no pileup weight
-	      if( sample.isData ) h_nVtx_noPUwgt[iFlav][iGen]->Fill( nvtxs(), wgt_nominal );
-	      else                h_nVtx_noPUwgt[iFlav][iGen]->Fill( nvtxs(), wgt_nominal_noPU );
-	      
-	      // nTruVtx
-	      if( !sample.isData ) h_nTrueVtx[iFlav][iGen]->Fill( pu_ntrue(), wgt_nominal );
-	      
-	      // nBTags
-	      h_nBTags[iFlav][iGen]->Fill( ngoodbtags(), wgt_nominal );
+							// nVtx, no pileup weight
+							if( sample.isData ) h_nVtx_noPUwgt[iAna][iGen]->Fill( nvtxs(), weight );
+							else                h_nVtx_noPUwgt[iAna][iGen]->Fill( nvtxs(), weight_noPU );   //////////// What to do about this weight? //////////////////
 
-	      // nJets
-	      if( ngoodbtags()>=0 ) h_nJets_ge0bTags[iFlav][iGen]->Fill( ngoodjets(), wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_nJets_ge1bTags[iFlav][iGen]->Fill( ngoodjets(), wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_nJets_ge2bTags[iFlav][iGen]->Fill( ngoodjets(), wgt_nominal );
-	    
-	      // nISRJets
-	      if(!sample.isData){
-		if( ngoodbtags()>=0 ) h_nISRJets_ge0bTags[iFlav][iGen]->Fill( NISRjets(), wgt_nominal );
-		if( ngoodbtags()>=1 ) h_nISRJets_ge1bTags[iFlav][iGen]->Fill( NISRjets(), wgt_nominal );
-		if( ngoodbtags()>=2 ) h_nISRJets_ge2bTags[iFlav][iGen]->Fill( NISRjets(), wgt_nominal );
-	      }
+							// nTruVtx
+							if( !sample.isData ) h_nTrueVtx[iAna][iGen]->Fill( pu_ntrue(), weight );
 
-	      // lep1 pT
-	      if( ngoodbtags()>=0 ) h_lep1Pt_ge0bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_lep1Pt_ge1bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_lep1Pt_ge2bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
+							// nBTags
+							h_nBTags[iAna][iGen]->Fill( ngoodbtags(), weight );
 
-	      // lep2 pT
-	      if( ngoodbtags()>=0 ) h_lep2Pt_ge0bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_lep2Pt_ge1bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_lep2Pt_ge2bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
+							// nJets
+							if( ngoodbtags()>=0 ) h_nJets_ge0bTags[iAna][iGen]->Fill( ngoodjets(), weight );
+							if( ngoodbtags()>=1 ) h_nJets_ge1bTags[iAna][iGen]->Fill( ngoodjets(), weight );
+							if( ngoodbtags()>=2 ) h_nJets_ge2bTags[iAna][iGen]->Fill( ngoodjets(), weight );
 
-	      // el pT
-	      if( abs(lep1_pdgid())==11){
-		if( ngoodbtags()>=0 ) h_elPt_ge0bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
-		if( ngoodbtags()>=1 ) h_elPt_ge1bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
-		if( ngoodbtags()>=2 ) h_elPt_ge2bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
-	      }
-	      if( abs(lep2_pdgid())==11){
-		if( ngoodbtags()>=0 ) h_elPt_ge0bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
-		if( ngoodbtags()>=1 ) h_elPt_ge1bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
-		if( ngoodbtags()>=2 ) h_elPt_ge2bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
-	      }
+							// nISRJets
+							if(!sample.isData){
+								if( ngoodbtags()>=0 ) h_nISRJets_ge0bTags[iAna][iGen]->Fill( NISRjets(), weight );
+								if( ngoodbtags()>=1 ) h_nISRJets_ge1bTags[iAna][iGen]->Fill( NISRjets(), weight );
+								if( ngoodbtags()>=2 ) h_nISRJets_ge2bTags[iAna][iGen]->Fill( NISRjets(), weight );
+							}
 
-	      // mu pT
-	      if( abs(lep1_pdgid())==13){
-		if( ngoodbtags()>=0 ) h_muPt_ge0bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
-		if( ngoodbtags()>=1 ) h_muPt_ge1bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
-		if( ngoodbtags()>=2 ) h_muPt_ge2bTags[iFlav][iGen]->Fill( lep1_p4().Pt(), wgt_nominal );
-	      }
-	      if( abs(lep2_pdgid())==13){
-		if( ngoodbtags()>=0 ) h_muPt_ge0bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
-		if( ngoodbtags()>=1 ) h_muPt_ge1bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
-		if( ngoodbtags()>=2 ) h_muPt_ge2bTags[iFlav][iGen]->Fill( lep2_p4().Pt(), wgt_nominal );
-	      }
-	      
-	      // diLep pT
-	      if( ngoodbtags()>=0 ) h_diLepPt_ge0bTags[iFlav][iGen]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt_nominal );
-	      //if( ngoodbtags()>=1 ) h_diLepPt_ge1bTags[iFlav][iGen]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_diLepPt_ge2bTags[iFlav][iGen]->Fill( (lep1_p4()+lep2_p4()).Pt(), wgt_nominal );
+							// lep1 pT
+							if( ngoodbtags()>=0 ) h_lep1Pt_ge0bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
+							if( ngoodbtags()>=1 ) h_lep1Pt_ge1bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
+							if( ngoodbtags()>=2 ) h_lep1Pt_ge2bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
 
-	      // jet pT
-	      for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
-		if( ngoodbtags()>=0 ) h_jetPt_ge0bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[iJet].Pt(), wgt_nominal );
-		if( ngoodbtags()>=1 ) h_jetPt_ge1bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[iJet].Pt(), wgt_nominal );
-		if( ngoodbtags()>=2 ) h_jetPt_ge2bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[iJet].Pt(), wgt_nominal );
-	      }
+							// lep2 pT
+							if( ngoodbtags()>=0 ) h_lep2Pt_ge0bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
+							if( ngoodbtags()>=1 ) h_lep2Pt_ge1bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
+							if( ngoodbtags()>=2 ) h_lep2Pt_ge2bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
 
-	      // jet1 pt
-	      if( ngoodbtags()>=0 ) h_jet1Pt_ge0bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[0].Pt(), wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_jet1Pt_ge1bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[0].Pt(), wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_jet1Pt_ge2bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[0].Pt(), wgt_nominal );
+							// el pT
+							if( abs(lep1_pdgid())==11){
+								if( ngoodbtags()>=0 ) h_elPt_ge0bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
+								if( ngoodbtags()>=1 ) h_elPt_ge1bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
+								if( ngoodbtags()>=2 ) h_elPt_ge2bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
+							}
+							if( abs(lep2_pdgid())==11){
+								if( ngoodbtags()>=0 ) h_elPt_ge0bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
+								if( ngoodbtags()>=1 ) h_elPt_ge1bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
+								if( ngoodbtags()>=2 ) h_elPt_ge2bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
+							}
 
-	      // jet 2 pt
-	      if( ngoodbtags()>=0 ) h_jet2Pt_ge0bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[1].Pt(), wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_jet2Pt_ge1bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[1].Pt(), wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_jet2Pt_ge2bTags[iFlav][iGen]->Fill( ak4pfjets_p4()[1].Pt(), wgt_nominal );
+							// mu pT
+							if( abs(lep1_pdgid())==13){
+								if( ngoodbtags()>=0 ) h_muPt_ge0bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
+								if( ngoodbtags()>=1 ) h_muPt_ge1bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
+								if( ngoodbtags()>=2 ) h_muPt_ge2bTags[iAna][iGen]->Fill( lep1_p4().Pt(), weight );
+							}
+							if( abs(lep2_pdgid())==13){
+								if( ngoodbtags()>=0 ) h_muPt_ge0bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
+								if( ngoodbtags()>=1 ) h_muPt_ge1bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
+								if( ngoodbtags()>=2 ) h_muPt_ge2bTags[iAna][iGen]->Fill( lep2_p4().Pt(), weight );
+							}
 
-	      // csvJet1 pt
-	      if( ngoodbtags()>=0 ) h_csvJet1Pt_ge0bTags[iFlav][iGen]->Fill( csvJet1_pt, wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_csvJet1Pt_ge1bTags[iFlav][iGen]->Fill( csvJet1_pt, wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_csvJet1Pt_ge2bTags[iFlav][iGen]->Fill( csvJet1_pt, wgt_nominal );
+							// diLep pT
+							if( ngoodbtags()>=0 ) h_diLepPt_ge0bTags[iAna][iGen]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
+							//if( ngoodbtags()>=1 ) h_diLepPt_ge1bTags[iAna][iGen]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
+							if( ngoodbtags()>=2 ) h_diLepPt_ge2bTags[iAna][iGen]->Fill( (lep1_p4()+lep2_p4()).Pt(), weight );
 
-	      // csvJet 2 pt
-	      if( ngoodbtags()>=0 ) h_csvJet2Pt_ge0bTags[iFlav][iGen]->Fill( csvJet2_pt, wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_csvJet2Pt_ge1bTags[iFlav][iGen]->Fill( csvJet2_pt, wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_csvJet2Pt_ge2bTags[iFlav][iGen]->Fill( csvJet2_pt, wgt_nominal );
+							// jet pT
+							for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++){
+								if( ngoodbtags()>=0 ) h_jetPt_ge0bTags[iAna][iGen]->Fill( ak4pfjets_p4()[iJet].Pt(), weight );
+								if( ngoodbtags()>=1 ) h_jetPt_ge1bTags[iAna][iGen]->Fill( ak4pfjets_p4()[iJet].Pt(), weight );
+								if( ngoodbtags()>=2 ) h_jetPt_ge2bTags[iAna][iGen]->Fill( ak4pfjets_p4()[iJet].Pt(), weight );
+							}
 
-	      // met
-	      if( ngoodbtags()>=0 ) h_met_ge0bTags[iFlav][iGen]->Fill( met, wgt_nominal );
-	      //if( ngoodbtags()>=1 ) h_met_ge1bTags[iFlav][iGen]->Fill( met, wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_met_ge2bTags[iFlav][iGen]->Fill( met, wgt_nominal );
-	      
+							// jet1 pt
+							if( ngoodbtags()>=0 ) h_jet1Pt_ge0bTags[iAna][iGen]->Fill( ak4pfjets_p4()[0].Pt(), weight );
+							if( ngoodbtags()>=1 ) h_jet1Pt_ge1bTags[iAna][iGen]->Fill( ak4pfjets_p4()[0].Pt(), weight );
+							if( ngoodbtags()>=2 ) h_jet1Pt_ge2bTags[iAna][iGen]->Fill( ak4pfjets_p4()[0].Pt(), weight );
 
-	      // lep1lep2bb pT
-	      if( ngoodbtags()>=0 ) h_lep1lep2bbPt_ge0bTags[iFlav][iGen]->Fill( lep1lep2bb_pt, wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_lep1lep2bbPt_ge1bTags[iFlav][iGen]->Fill( lep1lep2bb_pt, wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_lep1lep2bbPt_ge2bTags[iFlav][iGen]->Fill( lep1lep2bb_pt, wgt_nominal );
+							// jet 2 pt
+							if( ngoodbtags()>=0 ) h_jet2Pt_ge0bTags[iAna][iGen]->Fill( ak4pfjets_p4()[1].Pt(), weight );
+							if( ngoodbtags()>=1 ) h_jet2Pt_ge1bTags[iAna][iGen]->Fill( ak4pfjets_p4()[1].Pt(), weight );
+							if( ngoodbtags()>=2 ) h_jet2Pt_ge2bTags[iAna][iGen]->Fill( ak4pfjets_p4()[1].Pt(), weight );
+
+							// csvJet1 pt
+							if( ngoodbtags()>=0 ) h_csvJet1Pt_ge0bTags[iAna][iGen]->Fill( csvJet1_pt, weight );
+							if( ngoodbtags()>=1 ) h_csvJet1Pt_ge1bTags[iAna][iGen]->Fill( csvJet1_pt, weight );
+							if( ngoodbtags()>=2 ) h_csvJet1Pt_ge2bTags[iAna][iGen]->Fill( csvJet1_pt, weight );
+
+							// csvJet 2 pt
+							if( ngoodbtags()>=0 ) h_csvJet2Pt_ge0bTags[iAna][iGen]->Fill( csvJet2_pt, weight );
+							if( ngoodbtags()>=1 ) h_csvJet2Pt_ge1bTags[iAna][iGen]->Fill( csvJet2_pt, weight );
+							if( ngoodbtags()>=2 ) h_csvJet2Pt_ge2bTags[iAna][iGen]->Fill( csvJet2_pt, weight );
+
+							// met
+							if( ngoodbtags()>=0 ) h_met_ge0bTags[iAna][iGen]->Fill( met, weight );
+							//if( ngoodbtags()>=1 ) h_met_ge1bTags[iAna][iGen]->Fill( met, weight );
+							if( ngoodbtags()>=2 ) h_met_ge2bTags[iAna][iGen]->Fill( met, weight );
 
 
-	      // lep1lep2bbMet pT
-	      if( ngoodbtags()>=0 ) h_lep1lep2bbMetPt_ge0bTags[iFlav][iGen]->Fill( lep1lep2bbMet_pt, wgt_nominal );
-	      //if( ngoodbtags()>=1 ) h_lep1lep2bbMetPt_ge1bTags[iFlav][iGen]->Fill( lep1lep2bbMet_pt, wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_lep1lep2bbMetPt_ge2bTags[iFlav][iGen]->Fill( lep1lep2bbMet_pt, wgt_nominal );
+							// lep1lep2bb pT
+							if( ngoodbtags()>=0 ) h_lep1lep2bbPt_ge0bTags[iAna][iGen]->Fill( lep1lep2bb_pt, weight );
+							if( ngoodbtags()>=1 ) h_lep1lep2bbPt_ge1bTags[iAna][iGen]->Fill( lep1lep2bb_pt, weight );
+							if( ngoodbtags()>=2 ) h_lep1lep2bbPt_ge2bTags[iAna][iGen]->Fill( lep1lep2bb_pt, weight );
 
-	    
-	      // mt
-	      if( ngoodbtags()>=0 ) h_mt_ge0bTags[iFlav][iGen]->Fill( mt, wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_mt_ge1bTags[iFlav][iGen]->Fill( mt, wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_mt_ge2bTags[iFlav][iGen]->Fill( mt, wgt_nominal );
-	      
 
-	      // modified topness
-	      if( ngoodbtags()>=0 ) h_modTopness_ge0bTags[iFlav][iGen]->Fill( tMod, wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_modTopness_ge1bTags[iFlav][iGen]->Fill( tMod, wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_modTopness_ge2bTags[iFlav][iGen]->Fill( tMod, wgt_nominal );
-	      
+							// lep1lep2bbMet pT
+							if( ngoodbtags()>=0 ) h_lep1lep2bbMetPt_ge0bTags[iAna][iGen]->Fill( lep1lep2bbMet_pt, weight );
+							//if( ngoodbtags()>=1 ) h_lep1lep2bbMetPt_ge1bTags[iAna][iGen]->Fill( lep1lep2bbMet_pt, weight );
+							if( ngoodbtags()>=2 ) h_lep1lep2bbMetPt_ge2bTags[iAna][iGen]->Fill( lep1lep2bbMet_pt, weight );
 
-	      // mt2w
-	      if( ngoodbtags()>=0 ) h_mt2w_ge0bTags[iFlav][iGen]->Fill( mt2w, wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_mt2w_ge1bTags[iFlav][iGen]->Fill( mt2w, wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_mt2w_ge2bTags[iFlav][iGen]->Fill( mt2w, wgt_nominal );
-	    
 
-	      // mlb
-	      if( ngoodbtags()>=0 ) h_mlb_ge0bTags[iFlav][iGen]->Fill( Mlb_closestb(), wgt_nominal );
-	      if( ngoodbtags()>=1 ) h_mlb_ge1bTags[iFlav][iGen]->Fill( Mlb_closestb(), wgt_nominal );
-	      if( ngoodbtags()>=2 ) h_mlb_ge2bTags[iFlav][iGen]->Fill( Mlb_closestb(), wgt_nominal );
-	    
+							// mt
+							if( ngoodbtags()>=0 ) h_mt_ge0bTags[iAna][iGen]->Fill( mt, weight );
+							if( ngoodbtags()>=1 ) h_mt_ge1bTags[iAna][iGen]->Fill( mt, weight );
+							if( ngoodbtags()>=2 ) h_mt_ge2bTags[iAna][iGen]->Fill( mt, weight );
 
-	    } // end if pass evt selection
-	  } // end loop over genClassifications
-	} // end loop over lepton flavours
-      } // end if pass CR2l bulkTTbar Region
 
-      
+							// modified topness
+							if( ngoodbtags()>=0 ) h_modTopness_ge0bTags[iAna][iGen]->Fill( tMod, weight );
+							if( ngoodbtags()>=1 ) h_modTopness_ge1bTags[iAna][iGen]->Fill( tMod, weight );
+							if( ngoodbtags()>=2 ) h_modTopness_ge2bTags[iAna][iGen]->Fill( tMod, weight );
 
-     
 
-    
+							// mt2w
+							if( ngoodbtags()>=0 ) h_mt2w_ge0bTags[iAna][iGen]->Fill( mt2w, weight );
+							if( ngoodbtags()>=1 ) h_mt2w_ge1bTags[iAna][iGen]->Fill( mt2w, weight );
+							if( ngoodbtags()>=2 ) h_mt2w_ge2bTags[iAna][iGen]->Fill( mt2w, weight );
+
+
+							// mlb
+							if( ngoodbtags()>=0 ) h_mlb_ge0bTags[iAna][iGen]->Fill( Mlb_closestb(), weight );
+							if( ngoodbtags()>=1 ) h_mlb_ge1bTags[iAna][iGen]->Fill( Mlb_closestb(), weight );
+							if( ngoodbtags()>=2 ) h_mlb_ge2bTags[iAna][iGen]->Fill( Mlb_closestb(), weight );
+
+
+
+						} // End filling non-yield nominal-only histograms
+
+
+					} // End loop over genClassy's
+
+				} // End loop over systematics
+
+			} // End loop over analyzers
+
     } // end loop over events in tree
       
       
@@ -1854,11 +1858,14 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   cout << "====================================================" << endl;
   cout << endl;
-  cout << "    Control Region, 2l bulk TTbar Cutflow: " << endl;
-  for(int iCut=1; iCut<=(int)h_cutflow_evtSel->GetNbinsX(); iCut++){
-    cout << "      nEvents pass " << h_cutflow_evtSel->GetXaxis()->GetBinLabel(iCut) << " = " << h_cutflow_evtSel->GetBinContent(iCut) << endl;
+  for(int iAna=0; iAna<nAnalyzers; iAna++) {
+	  cout << "    " << analyzers.at(iAna)->GetLabel() << " Cutflow: " << endl;
+	  for(int iCut=1; iCut<=(int)h_cutflow[iAna]->GetNbinsX(); iCut++) {
+		  cout << "      nEvents pass " << h_cutflow[iAna]->GetXaxis()->GetBinLabel(iCut) << " = " << h_cutflow[iAna]->GetBinContent(iCut) << endl;
+	  }
+	  cout << endl;
+	  cout << endl;
   }
-  cout << endl;
   cout << "====================================================" << endl;
 
   
@@ -1914,7 +1921,7 @@ int looper( sampleInfo::ID sampleID, int nEvents, bool readFast ) {
   //
   // Clean stopCORE objects
   //
-  wgtInfo->~evtWgtInfo(); 
+  wgtInfo.cleanUp();
 
 
   //
