@@ -58,6 +58,9 @@ namespace selectionInfo{
   bool pass_ZWindow_diLepMass();
   bool pass_geX_diLepMass(double cut_diLepMass=20.0);
   bool pass_ge20_diLepMass();
+	bool pass_ee_diLepFlavor();
+	bool pass_emu_diLepFlavor();
+	bool pass_mumu_diLepFlavor();
 
   // Jet Selection
   bool pass_geX_jets(int cut_nJets=2, int jesType=0);

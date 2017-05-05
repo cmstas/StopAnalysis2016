@@ -198,6 +198,12 @@ bool selectionInfo::pass_geX_diLepMass(double cut_diLepMass){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ee_diLepFlavor() { return (abs(babyAnalyzer.lep1_pdgid()) == 11 && abs(babyAnalyzer.lep2_pdgid()) == 11); }
+bool selectionInfo::pass_emu_diLepFlavor() { return (abs(babyAnalyzer.lep1_pdgid()) * abs(babyAnalyzer.lep2_pdgid()) == 11*13); }
+bool selectionInfo::pass_mumu_diLepFlavor() { return (abs(babyAnalyzer.lep1_pdgid()) == 13 && abs(babyAnalyzer.lep2_pdgid()) == 13); }
+
+//////////////////////////////////////////////////////////////////////
+
 bool selectionInfo::pass_ge2_jets(){ return selectionInfo::pass_geX_jets( 2, localJesType ); }
 bool selectionInfo::pass_ge5_jets(){ return selectionInfo::pass_geX_jets( 5, localJesType ); }
 

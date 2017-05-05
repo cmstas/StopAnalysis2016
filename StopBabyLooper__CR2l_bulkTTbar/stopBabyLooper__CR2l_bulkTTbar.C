@@ -63,7 +63,7 @@ int stopBabyLooper__CR2l_bulkTTbar(){
   analyzer CR2l_bulkTTbar_emu( "CR2l_bulkTTbar_emu" );
   CR2l_bulkTTbar_emu.SetAdd2ndLep(  true );
   CR2l_bulkTTbar_emu.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
-  // CR2l_bulkTTbar_emu.AddSelection( "emu", some::function );
+  CR2l_bulkTTbar_emu.AddSelection( "emuFlavor", selectionInfo::pass_emu_diLepFlavor );
   CR2l_bulkTTbar_emu.AddCategories(  categoryInfo::passCategory_CR2l_bulkTTbar );
   CR2l_bulkTTbar_emu.SetYieldTemplate(  categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
 
@@ -71,7 +71,7 @@ int stopBabyLooper__CR2l_bulkTTbar(){
   // analyzer CR2L_bulkTTbar_ee( "CR2l_bulkTTbar_ee" );
   // CR2l_bulkTTbar_ee.SetAdd2ndLep( true );
   // CR2l_bulkTTbar_ee.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
-  // CR2l_bulkTTbar_ee.AddSelection( "ee", some::function );
+  // CR2l_bulkTTbar_ee.AddSelection( "eeFlavor", selectionInfo::pass_ee_diLepFlavor );
   // CR2l_bulkTTbar_ee.AddCategories( categoryInfo::passCategory_CR2l_bulkTTbar );
   // CR2l_bulkTTbar_ee.SetYieldTemplate( categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
 
@@ -79,7 +79,7 @@ int stopBabyLooper__CR2l_bulkTTbar(){
   // analyzer CR2L_bulkTTbar_mumu( "CR2l_bulkTTbar_mumu" );
   // CR2l_bulkTTbar_mumu.SetAdd2ndLep( true );
   // CR2l_bulkTTbar_mumu.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
-  // CR2l_bulkTTbar_mumu.AddSelection( "mumu", some::function );
+  // CR2l_bulkTTbar_mumu.AddSelection( "mumuFlavor", selectionInfo::pass_mumu_diLepFlavor );
   // CR2l_bulkTTbar_mumu.AddCategories( categoryInfo::passCategory_CR2l_bulkTTbar );
   // CR2l_bulkTTbar_mumu.SetYieldTemplate( categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
 
