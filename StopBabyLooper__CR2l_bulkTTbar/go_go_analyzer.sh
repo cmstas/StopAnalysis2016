@@ -29,7 +29,7 @@ make
 echo "Converting Tex to PDF..."
 echo ""
 cd Output/Tables/
-for x in `/bin/ls *.tex`; do pdflatex $x >& pass1.log; pdflatex $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
+for x in `/bin/ls *.tex`; do echo $x; pdflatex -interaction=nonstopmode $x >& pass1.log; pdflatex -interaction=nonstopmode $x >& ../Log/pdf2tex_$x.log; rm *.aux; rm *.log; done
 cd ../../
 
 # Clean up 
