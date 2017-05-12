@@ -386,7 +386,7 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 	      TString hName = "";
 
 	      // Flav, Gen and Systematic String
-	      TString flav_gen_sys_name = "__lepFlav_";
+	      TString flav_gen_sys_name = "__";
 	      flav_gen_sys_name += analyzers.at(iAna)->GetLabel(); 
 	      flav_gen_sys_name += "__genClassy_";
 	      flav_gen_sys_name += genClassyList[iGen].label;
@@ -1369,8 +1369,6 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 						/////////////////////////////////////
 
 
-
-
 						// Histo Index
 						int iHisto = iAna*nGenClassy*nSystematics + iGen*nSystematics + iSys;
 
@@ -1498,7 +1496,7 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 	      
 							// nVtx, no pileup weight
 							if( sample.isData ) h_nVtx_noPUwgt[iAna][iGen]->Fill( nvtxs(), weight );
-							else                h_nVtx_noPUwgt[iAna][iGen]->Fill( nvtxs(), weight_noPU );   //////////// What to do about this weight? //////////////////
+							else                h_nVtx_noPUwgt[iAna][iGen]->Fill( nvtxs(), weight_noPU );
 
 							// nTruVtx
 							if( !sample.isData ) h_nTrueVtx[iAna][iGen]->Fill( pu_ntrue(), weight );

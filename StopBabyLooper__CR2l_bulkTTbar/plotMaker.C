@@ -34,10 +34,10 @@ void plotMaker( bool plotByGenDecay ){
   // Signal and Control Regions
   //
   std::vector<std::string> regionList;
-  //regionList.push_back("ee");
-  regionList.push_back("emu");
-  //regionList.push_back("mumu");
-  //regionList.push_back("incl");
+  //regionList.push_back("CR2l_bulkTTbar_ee");
+  regionList.push_back("CR2l_bulkTTbar_emu");
+  //regionList.push_back("CR2l_bulkTTbar_mumu");
+  //regionList.push_back("CR2l_bulkTTbar_incl");
 
 
   //
@@ -198,7 +198,7 @@ void plotMaker( bool plotByGenDecay ){
   // Plot Yields
   
   // Signal Region
-  var_list_label.push_back( "h_yields_CR2l_bulkTTbar" );
+  var_list_label.push_back( "h_yields" );
   var_list_title.push_back( "CR2l bulkTTbar Region Yields" );
   var_list_xaxis.push_back( "Yields" );
 
@@ -2271,7 +2271,7 @@ void plotMaker( bool plotByGenDecay ){
 	f_data = new TFile( f_name.Data(), "read" );
 	
 	hName = var_list_label[iVar];
-	hName += "__lepFlav_";
+	hName += "__";
 	hName += regionList[iReg];
 	hName += "__genClassy_";
 	hName += data_genClassy.label;
@@ -2321,7 +2321,7 @@ void plotMaker( bool plotByGenDecay ){
 	bkg_files.push_back(f_bkg);
 	
 	hName = var_list_label[iVar];
-	hName += "__lepFlav_";
+	hName += "__";
 	hName += regionList[iReg];
 	hName += "__genClassy_";
 	hName += genClassification.label;
@@ -2366,7 +2366,7 @@ void plotMaker( bool plotByGenDecay ){
 	    
 	    // Get Up Variation
 	    hName = var_list_label[iVar];
-	    hName += "__lepFlav_";
+	    hName += "__";
 	    hName += regionList[iReg];
 	    hName += "__genClassy_";
 	    hName += genClassification.label;
@@ -2402,7 +2402,7 @@ void plotMaker( bool plotByGenDecay ){
 	    
 	    // Get Down Variation
 	    hName = var_list_label[iVar];
-	    hName += "__lepFlav_";
+	    hName += "__";
 	    hName += regionList[iReg];
 	    hName += "__genClassy_";
 	    hName += genClassification.label;
@@ -2505,7 +2505,7 @@ void plotMaker( bool plotByGenDecay ){
 	sig_files.push_back(f_sig);
 
 	hName = var_list_label[iVar];
-	hName += "__lepFlav_";
+	hName += "__";
 	hName += regionList[iReg];
 	hName += "__genClassy_";
 	hName += genClassification.label;
@@ -2599,7 +2599,7 @@ void plotMaker( bool plotByGenDecay ){
       if(plotByGenDecay) options  += "__byGenDecayMode__";
       else                options += "__byProductionMode__";
       options += var_list_label[iVar];
-      options += "__lepFlav_";
+      options += "__";
       options += regionList[iReg];
       options += "__logScale";
       if( var_doRebin[iVar] ) options += "__rebinned";
@@ -2644,7 +2644,7 @@ void plotMaker( bool plotByGenDecay ){
       if(plotByGenDecay) options  += "__byGenDecayMode__";
       else                options += "__byProductionMode__";
       options += var_list_label[iVar];
-      options += "__lepFlav_";
+      options += "__";
       options += regionList[iReg];
       options += "__linScale";
       if( var_doRebin[iVar] ) options += "__rebinned";
