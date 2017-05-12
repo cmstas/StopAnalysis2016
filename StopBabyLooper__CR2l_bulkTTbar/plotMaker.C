@@ -2588,8 +2588,6 @@ void plotMaker( bool plotByGenDecay ){
 	
       } // end loop over signal samples
       
-      TFile *f_dummy = new TFile("Output/Plots/f_dummy.root", "recreate");
-      
       // Option String, Log Scale Plot
       std::string options = "";
       
@@ -2702,8 +2700,6 @@ void plotMaker( bool plotByGenDecay ){
 	sig_files[iSig]->Close();
 	sig_files[iSig]->~TFile();
       }
-      
-      f_dummy->Close();
       
       
     } // end loop over regions
