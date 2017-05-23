@@ -8,6 +8,7 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
   //      and columns will be the input samples split by gen and reco
   //      classifications
 
+	std::cout << "Making yield tables..." << std::endl;
   
   //
   // Configuration Variables

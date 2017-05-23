@@ -8,7 +8,9 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
   //      and columns will be the input samples split by gen and reco
   //      classifications
 
-  
+	std::cout << "Making yield tables..." << std::endl;
+
+
   //
   // Sample List
   //
@@ -108,442 +110,133 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 
 
   //
-  // Signal and Control Regions
-  //
-  std::vector<std::string> regionList;
-  regionList.push_back("SR");
-  regionList.push_back("CR0b");
-  regionList.push_back("CR0b_tightBTagHighMlb");
-  regionList.push_back("CR2l");
-
-
-  //
   // Category List
   //
-  std::vector< std::vector< std::vector<yieldHelper> > > fileList;
-  std::vector< std::vector<yieldHelper> > tableList;
+  std::vector< std::vector<yieldHelper> > tableList_bulk, tableList_corridor;
   std::vector<yieldHelper> catList;
   yieldHelper cat;
   
-  /*
-  //
-  // Yields, 2016 ICHEP, 12.9fb
-  //
 
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 1; cat.tex = "2jets,~modTopness$\\ge6.4$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 2; cat.tex = "2jets,~modTopness$\\ge6.4$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 3; cat.tex = "2jets,~modTopness$\\ge6.4$,~$MET>450$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  catList.clear();
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 4; cat.tex = "3jets,~MT2W$\\ge$200,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 5; cat.tex = "3jets,~MT2W$\\ge$200,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 6; cat.tex = "3jets,~MT2W$\\ge$200,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 7; cat.tex = "3jets,~MT2W$\\ge$200,~$MET>550$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  catList.clear();
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 8; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 9; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 10; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$MET>450$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-  
-  catList.clear();
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 11; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 12; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 13; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 14; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$550<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP"; cat.binNumber = 15; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  fileList.push_back( tableList );
-  tableList.clear();
-
-
-  //
-  // Yields, ICHEP ext30fb
-  //
-  catList.clear();
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 1; cat.tex = "2jets,~modTopness$\\ge6.4$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 2; cat.tex = "2jets,~modTopness$\\ge6.4$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 3; cat.tex = "2jets,~modTopness$\\ge6.4$,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 4; cat.tex = "2jets,~modTopness$\\ge6.4$,~$550<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 5; cat.tex = "2jets,~modTopness$\\ge6.4$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  catList.clear();
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 6; cat.tex = "3jets,~MT2W$\\ge$200,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 7; cat.tex = "3jets,~MT2W$\\ge$200,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 8; cat.tex = "3jets,~MT2W$\\ge$200,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 9; cat.tex = "3jets,~MT2W$\\ge$200,~$550<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 10; cat.tex = "3jets,~MT2W$\\ge$200,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  catList.clear();
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 11; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 12; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 13; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 14; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$550<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 15; cat.tex = "$\\ge$4jets,~MT2W$<200$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-  
-  catList.clear();
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 16; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 17; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 18; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 19; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$550<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 20; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$650<MET<800$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_ICHEP_ext30fb"; cat.binNumber = 21; cat.tex = "$\\ge$4jets,~MT2W$\\ge200$,~$MET>800$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  fileList.push_back( tableList );
-  tableList.clear();
-
-
-  //
-  // Yields, dev ext30fb, mlb
-  //
-
-  // Region A, mlb
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 1; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 2; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$350<MET<500$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 3; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$MET>500$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region B, mlb
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 4; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 5; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 6; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$450<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 7; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-  
-  // Region C, mlb
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 8; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 9; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 10; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 11; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$550<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 12; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region D, mlb
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 13; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 14; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 15; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 16; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$MET>550$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region E, mlb
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 17; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 18; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$350<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 19; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$MET>550$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region F, mlb
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 20; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}\\ge175$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 21; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}\\ge175$,~$350<MET<500$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 22; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}\\ge175$,~$MET>500$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-  
-  // Region G, mlb
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 23; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 24; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 25; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$450<MET<600$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 26; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$MET>600$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region H, mlb
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 27; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 28; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$350<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v1"; cat.binNumber = 29; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  fileList.push_back( tableList );
-  tableList.clear();
-  */
   
   //
   // Yields, dev ext30fb, mlb with tight bTagging
   //
-  
+
   // Region A, mlb and tight bTagging
   catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 1; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$250<MET<350$";
+  cat.histName = "h_yields"; cat.binNumber = 1; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 2; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$350<MET<450$";
+  cat.histName = "h_yields"; cat.binNumber = 2; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 3; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$450<MET<600$";
+  cat.histName = "h_yields"; cat.binNumber = 3; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$450<MET<600$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 4; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$MET>600$";
+  cat.histName = "h_yields"; cat.binNumber = 4; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$MET>600$";
   catList.push_back( cat );
-  tableList.push_back( catList );
+  tableList_bulk.push_back( catList );
 
   // Region B, mlb and tight bTagging
   catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 5; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$250<MET<450$";
+  cat.histName = "h_yields"; cat.binNumber = 5; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$250<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 6; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$450<MET<650$";
+  cat.histName = "h_yields"; cat.binNumber = 6; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$450<MET<650$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 7; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$MET>600$";
+  cat.histName = "h_yields"; cat.binNumber = 7; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$MET>600$";
   catList.push_back( cat );
-  tableList.push_back( catList );
+  tableList_bulk.push_back( catList );
   
   // Region C, mlb and tight bTagging
   catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 8; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$250<MET<350$";
+  cat.histName = "h_yields"; cat.binNumber = 8; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 9; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$350<MET<450$";
+  cat.histName = "h_yields"; cat.binNumber = 9; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 10; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$450<MET<550$";
+  cat.histName = "h_yields"; cat.binNumber = 10; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$450<MET<550$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 11; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$550<MET<650$";
+  cat.histName = "h_yields"; cat.binNumber = 11; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$550<MET<650$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 12; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$MET>650$";
+  cat.histName = "h_yields"; cat.binNumber = 12; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}<175$,~$MET>650$";
   catList.push_back( cat );
-  tableList.push_back( catList );
+  tableList_bulk.push_back( catList );
 
   // Region D, mlb and tight bTagging
   catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 13; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$250<MET<350$";
+  cat.histName = "h_yields"; cat.binNumber = 13; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 14; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$350<MET<450$";
+  cat.histName = "h_yields"; cat.binNumber = 14; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 15; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$450<MET<550$";
+  cat.histName = "h_yields"; cat.binNumber = 15; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$450<MET<550$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 16; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$MET>550$";
+  cat.histName = "h_yields"; cat.binNumber = 16; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$M_{lb}\\ge175$,~$MET>550$";
   catList.push_back( cat );
-  tableList.push_back( catList );
+  tableList_bulk.push_back( catList );
 
   // Region E, mlb and tight bTagging
   catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 17; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$250<MET<350$";
+  cat.histName = "h_yields"; cat.binNumber = 17; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 18; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$350<MET<550$";
+  cat.histName = "h_yields"; cat.binNumber = 18; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$350<MET<550$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 19; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$MET>550$";
+  cat.histName = "h_yields"; cat.binNumber = 19; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}<175$,~$MET>550$";
   catList.push_back( cat );
-  tableList.push_back( catList );
+  tableList_bulk.push_back( catList );
 
   // Region F, mlb and tight bTagging
   catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 20; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}\\ge175$,~$250<MET<450$";
+  cat.histName = "h_yields"; cat.binNumber = 20; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}\\ge175$,~$250<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 21; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}\\ge175$,~$MET>450$";
+  cat.histName = "h_yields"; cat.binNumber = 21; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$M_{lb}\\ge175$,~$MET>450$";
   catList.push_back( cat );
-  tableList.push_back( catList );
+  tableList_bulk.push_back( catList );
   
   // Region G, mlb and tight bTagging
   catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 22; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$250<MET<350$";
+  cat.histName = "h_yields"; cat.binNumber = 22; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 23; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$350<MET<450$";
+  cat.histName = "h_yields"; cat.binNumber = 23; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 24; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$450<MET<600$";
+  cat.histName = "h_yields"; cat.binNumber = 24; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$450<MET<600$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 25; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$MET>600$";
+  cat.histName = "h_yields"; cat.binNumber = 25; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}<175$,~$MET>600$";
   catList.push_back( cat );
-  tableList.push_back( catList );
+  tableList_bulk.push_back( catList );
 
   // Region H, mlb and tight bTagging
   catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 26; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$250<MET<450$";
+  cat.histName = "h_yields"; cat.binNumber = 26; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$250<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_mlb_v2"; cat.binNumber = 27; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$MET>450$";
+  cat.histName = "h_yields"; cat.binNumber = 27; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$M_{lb}\\ge175$,~$MET>450$";
   catList.push_back( cat );
-  tableList.push_back( catList );
-  
-  fileList.push_back( tableList );
-  tableList.clear();
+  tableList_bulk.push_back( catList );
+
 
   
-  /*
-  //
-  // Yields, dev ext30fb, lead bJet pT
-  //
-  
-  // Region A, bJetPt
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 1; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$leadBJetPt<200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 2; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$leadBJetPt<200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 3; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$leadBJetPt<200$,~$450<MET<600$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 4; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$leadBJetPt<200$,~$MET>600$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region B, bJetPt
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 5; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$leadBJetPt\\ge200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 6; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$leadBJetPt\\ge200$,~$350<MET<500$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 7; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$leadBJetPt\\ge200$,~$500<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 8; cat.tex = "$<4$jets,~modTopness$\\ge10$,~$leadBJetPt\\ge200$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region C, bJetPt
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 9; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt<200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 10; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt<200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 11; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt<200$,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 12; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt<200$,~$550<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 13; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt<200$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region D, bJetPt
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 14; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt\\ge200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 15; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt\\ge200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 16; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt\\ge200$,~$450<MET<550$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 17; cat.tex = "$\\ge4$jets,~modTopness$<0.0$,~$leadBJetPt\\ge200$,~$MET>550$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region E, bJetPt
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 18; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$leadBJetPt<200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 19; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$leadBJetPt<200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 20; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$leadBJetPt<200$,~$MET>450$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region F, bJetPt
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 21; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$leadBJetPt\\ge200$,~$250<MET<400$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 22; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$leadBJetPt\\ge200$,~$350<MET<500$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 23; cat.tex = "$\\ge4$jets,~$0.0<$modTopness$<10$,~$leadBJetPt\\ge200$,~$MET>500$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region G, bJetPt
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 24; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$leadBJetPt<200$,~$250<MET<350$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 25; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$leadBJetPt<200$,~$350<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 26; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$leadBJetPt<200$,~$450<MET<650$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 27; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$leadBJetPt<200$,~$MET>650$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  // Region H, bJetPt
-  catList.clear();
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 28; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$leadBJetPt\\ge200$,~$250<MET<450$";
-  catList.push_back( cat );
-  cat.histName = "h_yields_SR_dev_ext30fb_bJetPt_v1"; cat.binNumber = 29; cat.tex = "$\\ge4$jets,~modTopness$\\ge10$,~$leadBJetPt\\ge200$,~$MET>450$";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  fileList.push_back( tableList );
-  tableList.clear();
-  */
   
   //
   // Yields, Top Corridor
   //
   catList.clear();
-  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 1; cat.tex = "top~corridor,~$250<MET<350$";
+  cat.histName = "h_yields"; cat.binNumber = 1; cat.tex = "top~corridor,~$250<MET<350$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 2; cat.tex = "top~corridor,~$350<MET<450$";
+  cat.histName = "h_yields"; cat.binNumber = 2; cat.tex = "top~corridor,~$350<MET<450$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 3; cat.tex = "top~corridor,~$450<MET<550$";
+  cat.histName = "h_yields"; cat.binNumber = 3; cat.tex = "top~corridor,~$450<MET<550$";
   catList.push_back( cat );
-  cat.histName = "h_yields_SR_corridor"; cat.binNumber = 4; cat.tex = "top~corridor,~$MET>550$";
+  cat.histName = "h_yields"; cat.binNumber = 4; cat.tex = "top~corridor,~$MET>550$";
   catList.push_back( cat );
-  tableList.push_back( catList );
+  tableList_corridor.push_back( catList );
 
-  fileList.push_back( tableList );
-  tableList.clear();
 
+  //
+  // Signal and Control Regions
+  //
+  std::vector<std::pair<std::string,std::vector<std::vector<yieldHelper> > > > regionList;
+  regionList.push_back( std::make_pair("SR_bulk", tableList_bulk) );
+  regionList.push_back( std::make_pair("SR_corridor", tableList_corridor) );
+  regionList.push_back( std::make_pair("CR0b_bulk", tableList_bulk) );
+  regionList.push_back( std::make_pair("CR0b_highMlb_bulk", tableList_bulk) );
+  regionList.push_back( std::make_pair("CR0b_corridor", tableList_corridor) );
+  regionList.push_back( std::make_pair("CR2L_bulk", tableList_bulk) );
+  regionList.push_back( std::make_pair("CR2L_corridor", tableList_corridor) );
   
 
   //
@@ -571,20 +264,16 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
   //
   // Make yield tables
   //
-  for(int iRegion=0; iRegion<(int)regionList.size(); iRegion++){
+  for(int iRegion=0; iRegion<(int)regionList.size(); iRegion++) {
 
-    for(int iSys=0; iSys<(int)systematicList.size(); iSys++){
+    for(int iSys=0; iSys<(int)systematicList.size(); iSys++) {
 
-      for(int iFile=0; iFile<(int)fileList.size(); iFile++ ){
-	
-	std::vector< std::vector<yieldHelper> > iTableList = fileList[iFile];
+	    std::vector< std::vector<yieldHelper> > iTableList = regionList[iRegion].second;
 
 	// Open output file
 	std::string f_out_name = f_out_name_base;
-	f_out_name += "__";
-	f_out_name += iTableList[0][0].histName;
 	f_out_name += "__region_";
-	f_out_name += regionList[iRegion];
+	f_out_name += regionList[iRegion].first;
 	f_out_name += "__systematic_";
 	f_out_name += systematicList[iSys].label;
 	f_out_name += ".tex";
@@ -609,7 +298,7 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 	
 	  std::vector<yieldHelper> iCatList = iTableList[iTable];
 
-	  // Get number of collumns for table - ie categories
+	  // Get number of columns for table - ie categories
 	  int nCol = 2 + (int)iCatList.size();
 	  fprintf(f_out, "\\begin{longtable}{|l|c|"); // samples+classifications
 	  for(int iCat=0; iCat<(int)iCatList.size(); iCat++){
@@ -618,7 +307,7 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 	  fprintf(f_out, "} \n \n");
 	
 	  // Top Title
-	  TString regionListTitle = regionList[iRegion];
+	  TString regionListTitle = regionList[iRegion].first;
 	  regionListTitle.ReplaceAll("_", " ");
 
 	  std::string table_title = "";
@@ -804,7 +493,7 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 		  
 		    std::string h_name = iCatList[iCat].histName;
 		    h_name += "__";
-		    h_name += regionList[iRegion];
+		    h_name += regionList[iRegion].first;
 		    h_name += "__genClassy_";
 		    h_name += genClassy.label;
 		    h_name += "__systematic_";
@@ -866,7 +555,7 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 		
 		  std::string h_name = iCatList[iCat].histName;
 		  h_name += "__";
-		  h_name += regionList[iRegion];
+		  h_name += regionList[iRegion].first;
 		  h_name += "__genClassy_";
 		  h_name += genClassy.label;
 		  h_name += "__systematic_";
@@ -921,8 +610,6 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 
 	fprintf(f_out, "\\end{document} \n");
 	fclose(f_out);
-
-      } // end loop over file list
       
     } // end loop over systematic list
     
