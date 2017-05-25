@@ -42,9 +42,9 @@ public:
 	int GetJesType();
 	std::string GetLabel();
 	bool GetUseMetTTbarWeights();
-	TH1D* GetYieldHistogram( int idx );
-	TH3D* GetYieldHistogramSig( int idx );
+	TH1* GetYieldHistogram( int idx );
 	TH1D* GetYieldTemplate();
+	TH3D* GetYieldTemplateSignal();
 
 	bool PassSelections();
 
@@ -57,8 +57,9 @@ public:
 	void SetJesType( int jestype );
 	void SetUseMetTTbarWeights( bool use_metttbar );
 	void SetUseTightTagHighMlb( bool use_tighttag );
-	void SetYieldHistogram( int idx, TH1D* histo );
+	void SetYieldHistogram( int idx, TH1* histo );
 	void SetYieldTemplate( TH1D* yield_template );
+	void SetYieldTemplateSignal( TH3D* yield_template );
 
 private:
 	std::vector<genClassyInfo::Util> classifications;
@@ -76,10 +77,9 @@ private:
 	bool useTightTagHighMlb;
 	
 	TH1D *h_yield_template;
-	TH3D *h_yield_template_sigScan;
+	TH3D *h_yield_template_signal;
 	
-	TH1D *h_yield[nYieldBins_];
-	TH3D *h_yield_sig[nYieldBins_];
+	TH1 *h_yield[nYieldBins_];
 	
 };
 

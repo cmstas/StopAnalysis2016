@@ -63,9 +63,9 @@ int analyzer::GetJesType() { return jesType; }
 std::string analyzer::GetLabel() { return label; }
 bool analyzer::GetUseMetTTbarWeights() { return useMetTTbarWgts; }
 
-TH1D* analyzer::GetYieldHistogram( int idx ) { return h_yield[idx]; }
-TH3D* analyzer::GetYieldHistogramSig( int idx ) { return h_yield_sig[idx]; }
+TH1* analyzer::GetYieldHistogram( int idx ) { return h_yield[idx]; }
 TH1D* analyzer::GetYieldTemplate() { return h_yield_template; }
+TH3D* analyzer::GetYieldTemplateSignal() { return h_yield_template_signal; }
 
 bool analyzer::PassSelections() {
 	selectionInfo::SetAdd2ndLep( add2ndLep );
@@ -86,6 +86,7 @@ void analyzer::SetIsCorridor( bool is_corridor ) {isCorridor = is_corridor; }
 void analyzer::SetJesType( int jestype ) { jesType = jestype; }
 void analyzer::SetUseMetTTbarWeights( bool use_metttbar ) { useMetTTbarWgts = use_metttbar; }
 void analyzer::SetUseTightTagHighMlb( bool use_tighttag ) { useTightTagHighMlb = use_tighttag; }
-void analyzer::SetYieldHistogram( int idx, TH1D* histo ) { h_yield[idx] = histo; }
+void analyzer::SetYieldHistogram( int idx, TH1* histo ) { h_yield[idx] = histo; }
 void analyzer::SetYieldTemplate( TH1D* yield_template ) { h_yield_template = yield_template; }
+void analyzer::SetYieldTemplateSignal( TH3D* yield_template ) { h_yield_template_signal = yield_template; }
 

@@ -104,6 +104,9 @@ int stopBabyLooper() {
 	TH1D* h_template_MlbBinned = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2();
 	TH1D* h_template_corridor  = categoryInfo::getYieldHistoTemplate_SR_corridor();
 
+	TH3D* h_template_MlbBinned_signal = categoryInfo::getYieldHistoTemplate_signal_SR_dev_ext30fb_mlb_v2();
+	TH3D* h_template_corridor_signal  = categoryInfo::getYieldHistoTemplate_signal_SR_corridor();
+
 	SR_MlbBinned.SetYieldTemplate(   h_template_MlbBinned );
 	SR_corridor.SetYieldTemplate(    h_template_corridor );
 	CR2L_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
@@ -111,6 +114,14 @@ int stopBabyLooper() {
 	CR0b_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
 	CR0b_tightBTagHighMlb.SetYieldTemplate(h_template_MlbBinned );
 	CR0b_corridor.SetYieldTemplate(  h_template_corridor );
+
+	SR_MlbBinned.SetYieldTemplateSignal(   h_template_MlbBinned_signal );
+	SR_corridor.SetYieldTemplateSignal(    h_template_corridor_signal );
+	CR2L_MlbBinned.SetYieldTemplateSignal( h_template_MlbBinned_signal );
+	CR2L_corridor.SetYieldTemplateSignal(  h_template_corridor_signal );
+	CR0b_MlbBinned.SetYieldTemplateSignal( h_template_MlbBinned_signal );
+	CR0b_tightBTagHighMlb.SetYieldTemplateSignal(h_template_MlbBinned_signal );
+	CR0b_corridor.SetYieldTemplateSignal(  h_template_corridor_signal );
 
 
   //
@@ -324,6 +335,10 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 	//
   f_output->cd(); // All yield histos will belong to the output file
 	for( analyzer* thisAnalyzer : analyzers ) {
+
+		TH1D* h_template = thisAnalyzer->GetYieldTemplate();
+		TH3D* h_template_signal = thisAnalyzer->GetYieldTemplateSignal();
+
 		for( int iClassy=0; iClassy<nGenClassy; iClassy++ ) {
 			for( int iSys=0; iSys<nSystematics; iSys++ ) {
 
@@ -337,16 +352,13 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 				reg_gen_sys_name += "__systematic_";
 				reg_gen_sys_name += systematicList[iSys].label;
 
-				TH1D* h_template = thisAnalyzer->GetYieldTemplate();
-				TH1D* h_tmp = 0;
+				TH1* h_tmp = 0;
 
-				// TString yieldname = h_template->GetName();
 				TString yieldname = "h_yields";
 				yieldname += reg_gen_sys_name;
-				h_tmp = (TH1D*)h_template->Clone( yieldname );
+				if( sample.isSignalScan ) h_tmp = (TH3D*)h_template_signal->Clone( yieldname );
+				else                      h_tmp = (TH1D*)h_template->Clone( yieldname );
 				thisAnalyzer->SetYieldHistogram( histIndex, h_tmp );
-
-				// Need to do signal yield histograms too
 
 			} // End loop over systematics
 		} // End loop over genClassys
@@ -785,12 +797,6 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 		h_cutflow[iAna] = selectionInfo::get_cutflowHistoTemplate( thisAnalyzer->GetSelections(), histName, histTitle );
 	}
 
- 
-  //FILE* f_evtList;
-  //TString f_evtList_name = "evtList_CR2l_";
-  //f_evtList_name += sample.label;
-  //f_evtList_name += ".txt";
-  //f_evtList = fopen(f_evtList_name.Data(), "w");
 
   //////////////////////
   //                  //
@@ -1083,7 +1089,11 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 
 						// Fill yield histograms
 						for( int category : categories_passed ) {
-							thisAnalyzer->GetYieldHistogram( histIndex )->Fill( category, weight );
+							if( sample.isSignalScan ) {
+								TH3D* yieldHisto = (TH3D*)thisAnalyzer->GetYieldHistogram( histIndex );
+								yieldHisto->Fill( mStop, mLSP, category, weight );
+							}
+							else thisAnalyzer->GetYieldHistogram( histIndex )->Fill( category, weight );
 						}
 
 						/////////////////////////////////////
