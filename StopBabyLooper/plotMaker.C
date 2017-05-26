@@ -1720,6 +1720,7 @@ void plotMaker( bool plotByGenDecay ){
       std::vector<TFile*> sig_files;
       std::vector<TH1F*> sig_histos;
       std::vector<std::string> sig_titles;
+      bool isYield = (var_list_label[iVar] == "h_yields");
       for(int iSig=0; iSig<(int)sigList.size(); iSig++){
 	
 	      sampleInfo::sampleUtil signal( sigList[iSig].first );
@@ -1740,37 +1741,54 @@ void plotMaker( bool plotByGenDecay ){
 	      hName += "__systematic_";
 	      hName += sys_nominal.label;
 	
-	      if( signal.isSignalScan ){
-	  
+	      if( signal.isSignalScan ) {
+
 		      std::vector< std::pair< double, double > > massPtList;
 		      if( signal.id==sampleInfo::k_T2tt ) massPtList = T2tt_list;
-	  
-		      for(int iMassPt=0; iMassPt<(int)massPtList.size(); iMassPt++){
-	    
+		      TString hName_sig, masspt;
+
+		      for(int iMassPt=0; iMassPt<(int)massPtList.size(); iMassPt++) {
+
 			      int mStop = massPtList[iMassPt].first;
 			      int mLSP  = massPtList[iMassPt].second;
-	    
+
+			      hName_sig   = hName;
 			      hName_clone = hName;
-			      hName_clone += "__mStop_";
-			      hName_clone += mStop;
-			      hName_clone += "__mLSP_";
-			      hName_clone += mLSP;
-	    
-			      h3_temp = (TH3D*)f_sig->Get(hName);
-			      if(!h3_temp) cout << "BAD SIG HISTO: " << hName << endl;
-	    
-			      int binX = h3_temp->GetXaxis()->FindBin( mStop );
-			      int binY = h3_temp->GetYaxis()->FindBin( mLSP );
-			      h3_temp->GetXaxis()->SetRange( binX, binX );
-			      h3_temp->GetYaxis()->SetRange( binY, binY );
-			      h3_temp->GetZaxis()->SetRange( 1, h3_temp->GetNbinsZ() );
-			      TH1D *h1_temp = (TH1D*)h3_temp->Project3D( "z" );
-	    
-			      if(!h1_temp) cout << "BAD SIG HISTO: " << hName << endl;
-	    
+			      hName_clone += "__";
+			      hName_clone += signal.label;
+
+			      masspt =  "__mStop_";
+			      masspt += mStop;
+			      masspt += "__mLSP_";
+			      masspt += mLSP;
+
+			      hName_clone += masspt;
+
+			      TH1D* h1_temp;
+
+			      // If we're plotting a yield histogram, then use a Z-projection from the TH3D.
+			      // If not, grab the standard 1D histogram, with mass point selection already applied at looper level
+			      if( isYield ) {
+				      h3_temp = (TH3D*)f_sig->Get(hName_sig);
+				      if(!h3_temp) cout << "BAD SIG HISTO: " << hName_sig << endl;
+
+				      int binX = h3_temp->GetXaxis()->FindBin( mStop );
+				      int binY = h3_temp->GetYaxis()->FindBin( mLSP );
+				      h3_temp->GetXaxis()->SetRange( binX, binX );
+				      h3_temp->GetYaxis()->SetRange( binY, binY );
+				      h3_temp->GetZaxis()->SetRange( 1, h3_temp->GetNbinsZ() );
+				      h1_temp = (TH1D*)h3_temp->Project3D( "z" );
+			      }
+			      else {
+				      hName_sig += masspt;
+				      h1_temp = (TH1D*)f_sig->Get(hName_sig);
+			      }
+
+			      if(!h1_temp) cout << "BAD SIG HISTO: " << hName_sig << endl;
+
 			      // Do rebin
-			      if( var_doRebin[iVar] ){
-				      h_clone = (TH1F*)h_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
+			      if( var_doRebin[iVar] ) {
+				      h_clone = (TH1F*)h1_temp->Rebin( var_rebin_nBins[iVar], hName_clone, var_rebin_xBins[iVar]);
 				      if(rescaleBinsAfterRebin){
 					      for(int iBin=1; iBin<=(int)h_clone->GetNbinsX(); iBin++){
 						      h_clone->SetBinContent( iBin, h_clone->GetBinContent(iBin)*var_rebin_xBinsSF[iVar][iBin-1] );
@@ -1778,8 +1796,8 @@ void plotMaker( bool plotByGenDecay ){
 					      }
 				      }
 			      }
-			      else{
-				      h_clone = (TH1F*)h_temp->Clone(hName_clone);
+			      else {
+				      h_clone = (TH1F*)h1_temp->Clone(hName_clone);
 			      }
 
 			      h_clone->Scale(sig_SF);
@@ -1798,7 +1816,7 @@ void plotMaker( bool plotByGenDecay ){
 		      } // end loop over mass points
 	  
 	      } // end if signal scan
-	      else{
+	      else {
 	  
 		      hName_clone = hName;
 		      hName_clone += "__";
