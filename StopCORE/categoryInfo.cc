@@ -868,7 +868,7 @@ TH1D* categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2(){
 TH3D* categoryInfo::getYieldHistoTemplate_signal_SR_dev_ext30fb_mlb_v2() {
 
   int nBins_dev_ext30fb_mlb_v2_ = 77;
-  TH3D *result = new TH3D("h_yields_SR_dev_ext30fb_mlb_v2", "Yields, Signal Regions, extnded to 30fb, binned with Mlb, and using tight bTagging", 37, 99, 1024, 19, -1, 474, nBins_dev_ext30fb_mlb_v2_, 1.0, (double)nBins_dev_ext30fb_mlb_v2_+1.0);
+  TH3D *result = new TH3D("h_yields_SR_dev_ext30fb_mlb_v2__signal", "Yields, Signal Regions, extnded to 30fb, binned with Mlb, and using tight bTagging", 37, 99, 1024, 19, -1, 474, nBins_dev_ext30fb_mlb_v2_, 1.0, (double)nBins_dev_ext30fb_mlb_v2_+1.0);
 
   SetAxisLabels_SR_dev_ext30fb_mlb_v2( result->GetZaxis() );
 
@@ -1515,7 +1515,7 @@ TH1D* categoryInfo::getYieldHistoTemplate_SR_corridor(){
 TH3D* categoryInfo::getYieldHistoTemplate_signal_SR_corridor() {
 
 	int nBins_SR_corridor_ = 7;
-  TH3D *result = new TH3D("h_yields_SR_corridor", "Yields, SR Top Corridor", 37, 99, 1024, 19, -1, 474, nBins_SR_corridor_, 1.0, (double)nBins_SR_corridor_+1.0);
+  TH3D *result = new TH3D("h_yields_SR_corridor__signal", "Yields, SR Top Corridor", 37, 99, 1024, 19, -1, 474, nBins_SR_corridor_, 1.0, (double)nBins_SR_corridor_+1.0);
 
   SetAxisLabels_SR_corridor( result->GetZaxis() );
 
