@@ -327,7 +327,7 @@ int bkgEstimate_1lepFromW(){
     // Get yield histo base name
     TString hNameBase = v_bkgEst[iBkgEst].hName_base;
 
-    // Get appropriate names for SR and CR2L histograms
+    // Get appropriate names for SR and CR0b histograms
     TString regionName_SR = v_bkgEst.at(iBkgEst).name_SR;
     TString regionName_CR = v_bkgEst.at(iBkgEst).name_CR;
 
@@ -593,9 +593,9 @@ int bkgEstimate_1lepFromW(){
       fprintf(f_uncFile_fullCalc, "\\caption{ 1lW Background Estimate Uncertainties, for %s } \n", catName.Data());
       fprintf(f_uncFile_fullCalc, "\\scalebox{0.6}{ \n");
       fprintf(f_uncFile_fullCalc, "\\begin{tabular}{|l|c|c|"); // Systematic; Data Yield CR; MC Yield Incl. genClassy CR
-      if(useFraction) fprintf(f_uncFile_fullCalc, "c|c|");     // MC Yield 2lep CR; MC Fraction to apply to data
-      fprintf(f_uncFile_fullCalc, "c|c|");                     // MC Yield 2lep SR; TF_cr2sr
-      if(!oneTF) fprintf(f_uncFile_fullCalc, "c|c|c|");        // if >1 TF, then SR bin, MC Yield 2lep SR bin; TF_srBin; TF_tot
+      if(useFraction) fprintf(f_uncFile_fullCalc, "c|c|");     // MC Yield 0b CR; MC Fraction to apply to data
+      fprintf(f_uncFile_fullCalc, "c|c|");                     // MC Yield 1lW SR; TF_cr2sr
+      if(!oneTF) fprintf(f_uncFile_fullCalc, "c|c|c|");        // if >1 TF, then SR bin, MC Yield 1lW SR bin; TF_srBin; TF_tot
       fprintf(f_uncFile_fullCalc, "c|");                       // SR Estimate
       fprintf(f_uncFile_fullCalc, "} \\hline \n");
 

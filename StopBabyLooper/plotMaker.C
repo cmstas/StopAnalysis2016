@@ -38,8 +38,8 @@ void plotMaker( bool plotByGenDecay ){
   regionList.push_back("CR0b_bulk");
   regionList.push_back("CR0b_highMlb_bulk");
   regionList.push_back("CR0b_corridor");
-  regionList.push_back("CR2L_bulk");
-  regionList.push_back("CR2L_corridor");
+  regionList.push_back("CR2l_bulk");
+  regionList.push_back("CR2l_corridor");
   const int nRegions = regionList.size();
 
   //

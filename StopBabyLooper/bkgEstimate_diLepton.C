@@ -111,7 +111,7 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2.forceOneTF = false;
   bkgEst_ext30fb_mlb_v2.useFractionInCR = false;
   bkgEst_ext30fb_mlb_v2.name_SR = "SR_bulk";
-  bkgEst_ext30fb_mlb_v2.name_CR = "CR2L_bulk";
+  bkgEst_ext30fb_mlb_v2.name_CR = "CR2l_bulk";
 
   // Region A
   bkgEst_ext30fb_mlb_v2.SR_bins.push_back(1);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(1);  
@@ -270,7 +270,7 @@ int bkgEstimate_diLepton(){
   bkgEst_ext30fb_mlb_v2_useCRfrac.forceOneTF = false;
   bkgEst_ext30fb_mlb_v2_useCRfrac.useFractionInCR = true;
   bkgEst_ext30fb_mlb_v2_useCRfrac.name_SR = "SR_bulk";
-  bkgEst_ext30fb_mlb_v2_useCRfrac.name_CR = "CR2L_bulk";
+  bkgEst_ext30fb_mlb_v2_useCRfrac.name_CR = "CR2l_bulk";
 
   // Region A
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(1);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(1);  
@@ -431,7 +431,7 @@ int bkgEstimate_diLepton(){
   bkgEst_corridor.forceOneTF = false;
   bkgEst_corridor.useFractionInCR = false;
   bkgEst_corridor.name_SR = "SR_corridor";
-  bkgEst_corridor.name_CR = "CR2L_corridor";
+  bkgEst_corridor.name_CR = "CR2l_corridor";
 
   bkgEst_corridor.SR_bins.push_back(1);  bkgEst_corridor.CR_bins.push_back(1);  
   bkgEst_corridor.regionName.push_back("top~corridor"); 
@@ -469,7 +469,7 @@ int bkgEstimate_diLepton(){
     // Get yield histo base name
     TString hNameBase = v_bkgEst[iBkgEst].hName_base;
 
-    // Get appropriate names for SR and CR2L histograms
+    // Get appropriate names for SR and CR2l histograms
     TString regionName_SR = v_bkgEst.at(iBkgEst).name_SR;
     TString regionName_CR = v_bkgEst.at(iBkgEst).name_CR;
 

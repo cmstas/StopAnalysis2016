@@ -63,40 +63,40 @@ int stopBabyLooper() {
 	//
 	analyzer SR_MlbBinned( "SR_bulk" );
 	analyzer SR_corridor( "SR_corridor" );
-	analyzer CR2L_MlbBinned( "CR2L_bulk" );
-	analyzer CR2L_corridor( "CR2L_corridor" );
+	analyzer CR2l_MlbBinned( "CR2l_bulk" );
+	analyzer CR2l_corridor( "CR2l_corridor" );
 	analyzer CR0b_MlbBinned( "CR0b_bulk" );
 	analyzer CR0b_tightBTagHighMlb( "CR0b_highMlb_bulk" );
 	analyzer CR0b_corridor( "CR0b_corridor" );
 
-	std::vector<analyzer*> analyzer_list = {&SR_MlbBinned, &SR_corridor, &CR2L_MlbBinned, &CR2L_corridor, &CR0b_MlbBinned, &CR0b_tightBTagHighMlb, &CR0b_corridor};
+	std::vector<analyzer*> analyzer_list = {&SR_MlbBinned, &SR_corridor, &CR2l_MlbBinned, &CR2l_corridor, &CR0b_MlbBinned, &CR0b_tightBTagHighMlb, &CR0b_corridor};
 
 	// Set the attributes for each analyzer
-	CR2L_MlbBinned.SetAdd2ndLep( true );
-	CR2L_corridor.SetAdd2ndLep( true );
+	CR2l_MlbBinned.SetAdd2ndLep( true );
+	CR2l_corridor.SetAdd2ndLep( true );
 
 	SR_corridor.SetIsCorridor( true );
-	CR2L_corridor.SetIsCorridor( true );
+	CR2l_corridor.SetIsCorridor( true );
 	CR0b_corridor.SetIsCorridor( true );
 
 	SR_MlbBinned.SetUseMetTTbarWeights( true );
 
 	SR_MlbBinned.SetUseTightTagHighMlb( true );
-	CR2L_MlbBinned.SetUseTightTagHighMlb( true );
+	CR2l_MlbBinned.SetUseTightTagHighMlb( true );
 
 	// Set selections and categories for the analyzers
 	SR_MlbBinned.AddSelections(   selectionInfo::get_selection_SR() );
 	SR_corridor.AddSelections(    selectionInfo::get_selection_SR_corridor() );
-	CR2L_MlbBinned.AddSelections( selectionInfo::get_selection_CR2l() );
-	CR2L_corridor.AddSelections(  selectionInfo::get_selection_CR2l_corridor() );
+	CR2l_MlbBinned.AddSelections( selectionInfo::get_selection_CR2l() );
+	CR2l_corridor.AddSelections(  selectionInfo::get_selection_CR2l_corridor() );
 	CR0b_MlbBinned.AddSelections( selectionInfo::get_selection_CR0b() );
 	CR0b_tightBTagHighMlb.AddSelections( selectionInfo::get_selection_CR0b_tightBTagHighMlb() );
 	CR0b_corridor.AddSelections(  selectionInfo::get_selection_CR0b_corridor() );
 
 	SR_MlbBinned.AddCategories(   categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
 	SR_corridor.AddCategories(    categoryInfo::passCategory_SR_corridor);
-	CR2L_MlbBinned.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
-	CR2L_corridor.AddCategories(  categoryInfo::passCategory_SR_corridor);
+	CR2l_MlbBinned.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
+	CR2l_corridor.AddCategories(  categoryInfo::passCategory_SR_corridor);
 	CR0b_MlbBinned.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
 	CR0b_tightBTagHighMlb.AddCategories(categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
 	CR0b_corridor.AddCategories(  categoryInfo::passCategory_SR_corridor);
@@ -109,16 +109,16 @@ int stopBabyLooper() {
 
 	SR_MlbBinned.SetYieldTemplate(   h_template_MlbBinned );
 	SR_corridor.SetYieldTemplate(    h_template_corridor );
-	CR2L_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
-	CR2L_corridor.SetYieldTemplate(  h_template_corridor );
+	CR2l_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
+	CR2l_corridor.SetYieldTemplate(  h_template_corridor );
 	CR0b_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
 	CR0b_tightBTagHighMlb.SetYieldTemplate(h_template_MlbBinned );
 	CR0b_corridor.SetYieldTemplate(  h_template_corridor );
 
 	SR_MlbBinned.SetYieldTemplateSignal(   h_template_MlbBinned_signal );
 	SR_corridor.SetYieldTemplateSignal(    h_template_corridor_signal );
-	CR2L_MlbBinned.SetYieldTemplateSignal( h_template_MlbBinned_signal );
-	CR2L_corridor.SetYieldTemplateSignal(  h_template_corridor_signal );
+	CR2l_MlbBinned.SetYieldTemplateSignal( h_template_MlbBinned_signal );
+	CR2l_corridor.SetYieldTemplateSignal(  h_template_corridor_signal );
 	CR0b_MlbBinned.SetYieldTemplateSignal( h_template_MlbBinned_signal );
 	CR0b_tightBTagHighMlb.SetYieldTemplateSignal(h_template_MlbBinned_signal );
 	CR0b_corridor.SetYieldTemplateSignal(  h_template_corridor_signal );

@@ -67,21 +67,21 @@ int stopBabyLooper__CR2l_bulkTTbar(){
   CR2l_bulkTTbar_emu.SetYieldTemplate(  categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
 
 
-  // analyzer CR2L_bulkTTbar_ee( "CR2l_bulkTTbar_ee" );
+  // analyzer CR2l_bulkTTbar_ee( "CR2l_bulkTTbar_ee" );
   // CR2l_bulkTTbar_ee.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
   // CR2l_bulkTTbar_ee.AddSelection( "eeFlavor", selectionInfo::pass_ee_diLepFlavor );
   // CR2l_bulkTTbar_ee.AddCategories( categoryInfo::passCategory_CR2l_bulkTTbar );
   // CR2l_bulkTTbar_ee.SetYieldTemplate( categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
 
 
-  // analyzer CR2L_bulkTTbar_mumu( "CR2l_bulkTTbar_mumu" );
+  // analyzer CR2l_bulkTTbar_mumu( "CR2l_bulkTTbar_mumu" );
   // CR2l_bulkTTbar_mumu.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
   // CR2l_bulkTTbar_mumu.AddSelection( "mumuFlavor", selectionInfo::pass_mumu_diLepFlavor );
   // CR2l_bulkTTbar_mumu.AddCategories( categoryInfo::passCategory_CR2l_bulkTTbar );
   // CR2l_bulkTTbar_mumu.SetYieldTemplate( categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );
 
 
-  // analyzer CR2L_bulkTTbar_incl( "CR2l_bulkTTbar_incl" );
+  // analyzer CR2l_bulkTTbar_incl( "CR2l_bulkTTbar_incl" );
   // CR2l_bulkTTbar_incl.AddSelections( selectionInfo::get_selection_CR2l_bulkTTbar() );
   // CR2l_bulkTTbar_incl.AddCategories( categoryInfo::passCategory_CR2l_bulkTTbar );
   // CR2l_bulkTTbar_incl.SetYieldTemplate( categoryInfo::getYieldHistoTemplate_CR2l_bulkTTbar() );

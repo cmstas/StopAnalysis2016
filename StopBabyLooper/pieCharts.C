@@ -236,8 +236,8 @@ int pieCharts( std::string f_input_dir, std::string f_out_name_base, bool useZer
   regionList.push_back( std::make_pair("CR0b_bulk", tableList_bulk) );
   regionList.push_back( std::make_pair("CR0b_highMlb_bulk", tableList_bulk) );
   regionList.push_back( std::make_pair("CR0b_corridor", tableList_corridor) );
-  regionList.push_back( std::make_pair("CR2L_bulk", tableList_bulk) );
-  regionList.push_back( std::make_pair("CR2L_corridor", tableList_corridor) );
+  regionList.push_back( std::make_pair("CR2l_bulk", tableList_bulk) );
+  regionList.push_back( std::make_pair("CR2l_corridor", tableList_corridor) );
 
 
   //

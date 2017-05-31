@@ -336,8 +336,8 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
   regionList.push_back( std::make_pair("CR0b_bulk", tableList_bulk) );
   regionList.push_back( std::make_pair("CR0b_highMlb_bulk", tableList_bulk) );
 	regionList.push_back( std::make_pair("CR0b_corridor", tableList_corridor) );
-  regionList.push_back( std::make_pair("CR2L_bulk", tableList_bulk) );
-	regionList.push_back( std::make_pair("CR2L_corridor", tableList_corridor) );
+  regionList.push_back( std::make_pair("CR2l_bulk", tableList_bulk) );
+	regionList.push_back( std::make_pair("CR2l_corridor", tableList_corridor) );
 
 
 
@@ -387,8 +387,6 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
 
 	// Open output file
 	std::string f_out_name = f_out_name_base;
-	// f_out_name += "__";
-	// f_out_name += iTableList[0][0].histName;
 	f_out_name += "__region_";
 	f_out_name += regionList.at(iRegion).first;
 	f_out_name += "__systematic_";
