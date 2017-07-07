@@ -1727,3 +1727,114 @@ vector<int> categoryInfo::passCategory_CR2l_bulkTTbar( int jesType, bool add2ndL
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TH1D* categoryInfo::getYieldHistoTemplate_nuPt() {
+
+	int nBins_nuPt = 28;
+	TH1D *result = new TH1D( "h_yields_nuPt", "Yields, neutrino pT categories", nBins_nuPt, 1.0, (double)nBins_nuPt+1. );
+
+	TAxis* axis = result->GetXaxis();
+
+	// Bulk regions
+	axis->SetBinLabel( 1,  "23j_MT120" );
+	axis->SetBinLabel( 2,   "4j_MT120" );
+	axis->SetBinLabel( 3,  "23j_MT150" );
+	axis->SetBinLabel( 4,   "4j_MT150" );
+	axis->SetBinLabel( 5,  "23j_MT120_tmodle0" );
+	axis->SetBinLabel( 6,   "4j_MT120_tmodle0" );
+	axis->SetBinLabel( 7,  "23j_MT150_tmodle0" );
+	axis->SetBinLabel( 8,   "4j_MT150_tmodle0" );
+	axis->SetBinLabel( 9,  "23j_MT120_tmodgt0" );
+	axis->SetBinLabel( 10,  "4j_MT120_tmodgt0" );
+	axis->SetBinLabel( 11, "23j_MT150_tmodgt0" );
+	axis->SetBinLabel( 12,  "4j_MT150_tmodgt0" );
+	axis->SetBinLabel( 13, "23j_MT120_Mlble175" );
+	axis->SetBinLabel( 14,  "4j_MT120_Mlble175" );
+	axis->SetBinLabel( 15, "23j_MT150_Mlble175" );
+	axis->SetBinLabel( 16,  "4j_MT150_Mlble175" );
+	axis->SetBinLabel( 17, "23j_MT120_Mlbgt175" );
+	axis->SetBinLabel( 18,  "4j_MT120_Mlbgt175" );
+	axis->SetBinLabel( 19, "23j_MT150_Mlbgt175" );
+	axis->SetBinLabel( 20,  "4j_MT150_Mlbgt175" );
+
+	// Corridor regions
+	axis->SetBinLabel( 21, "5j_MT120" );
+	axis->SetBinLabel( 22, "5j_MT150" );
+	axis->SetBinLabel( 23, "5j_MT120_lepptlt150" );
+	axis->SetBinLabel( 24, "5j_MT150_lepptlt150" );
+	axis->SetBinLabel( 25, "5j_MT120_dphilmlt2" );
+	axis->SetBinLabel( 26, "5j_MT150_dphilmlt2" );
+	axis->SetBinLabel( 27, "5j_MT120_dphilmlt2_lepptlt150" );
+	axis->SetBinLabel( 28, "5j_MT150_dphilmlt2_lepptlt150" );
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+vector<int> categoryInfo::passCategory_nuPt_bulk( int jesType, bool add2ndLepToMet ) {
+
+	// Note: right now, the two arguments are dummies and don't do anything
+
+	vector<int> result;
+
+	int njets = babyAnalyzer.ngoodjets();
+	double mt = babyAnalyzer.mt_met_lep();
+	double tmod = babyAnalyzer.topnessMod();
+	double mlb = babyAnalyzer.Mlb_closestb();
+	if( mlb < 0 ) mlb = babyAnalyzer.Mlb_lead_bdiscr();
+
+	int offset_nj = 0;
+	vector<int> offset_mt = {0};
+	vector<int> offset_other = {0};
+
+	if( njets >= 4 ) offset_nj = 1;
+	if( mt >= 150. ) offset_mt.push_back(2);
+
+	if( tmod <= 0 ) offset_other.push_back(4);
+	else            offset_other.push_back(8);
+	if( mlb <= 175. ) offset_other.push_back(12);
+	else              offset_other.push_back(16);
+
+	for( int oo : offset_other ) {
+		for( int omt : offset_mt ) {
+			result.push_back( 1 + oo + offset_nj + omt );
+		}
+	}
+	// 20 different categories, numbered 1-20
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+vector<int> categoryInfo::passCategory_nuPt_corridor( int jesType, bool add2ndLepToMet ) {
+
+	// Note: right now, the two arguments are dummies and don't do anything
+
+	vector<int> result;
+
+	double mt = babyAnalyzer.mt_met_lep();
+	double ptlep = babyAnalyzer.lep1_p4().Pt();
+	double dphi = babyAnalyzer.lep1_dphiMET();
+
+	vector<int> offset_mt = {0};
+	if( mt >= 150. ) offset_mt.push_back(1);
+
+	vector<int> offset_other = {0};
+	if( ptlep < 150. ) offset_other.push_back(2);
+	if( dphi < 2. )    offset_other.push_back(4);
+	if( ptlep < 150. && dphi < 2. ) offset_other.push_back(6);
+
+	for( int oo : offset_other ) {
+		for( int omt : offset_mt ) {
+			result.push_back( 21 + oo + omt );
+		}
+	}
+	// 8 different categories, numbered 21-28
+
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////

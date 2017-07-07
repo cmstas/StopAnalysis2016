@@ -52,7 +52,11 @@ namespace categoryInfo{
 
   TH1D* getYieldHistoTemplate_CR2l_bulkTTbar();
   vector<int> passCategory_CR2l_bulkTTbar( int jesType=0, bool add2ndLepToMet=false );
-  
+
+	TH1D* getYieldHistoTemplate_nuPt();
+	vector<int> passCategory_nuPt_bulk( int jesType=0, bool add2ndLepToMet=false ); // These parameters are dummies for compatibility, and don't do anything right now
+	vector<int> passCategory_nuPt_corridor( int jesType=0, bool add2ndLepToMet=false );
+
 }; // end class def
 
 
