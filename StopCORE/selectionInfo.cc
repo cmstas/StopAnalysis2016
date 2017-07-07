@@ -126,6 +126,22 @@ bool selectionInfo::pass_tauVeto(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ge1_veto_lep() {
+	bool result = false;
+	if( babyAnalyzer.nvetoleps()>=1 ) result = true;
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ge1_sel_lep() {
+	bool result = false;
+	if( babyAnalyzer.ngoodleps()>=1 ) result = true;
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 bool selectionInfo::pass_diLep(){
   bool result = false;
   if( localIncludeTaus ){
@@ -309,6 +325,8 @@ bool selectionInfo::pass_geX_met(double cut_met, int jesType, bool add2ndLepToMe
 }
 
 //////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ge120_mt(){ return selectionInfo::pass_geX_mt( 120.0, localJesType, localAddLep2 ); }
 
 bool selectionInfo::pass_ge150_mt(){ return selectionInfo::pass_geX_mt( 150.0, localJesType, localAddLep2 ); }
 

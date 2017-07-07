@@ -93,6 +93,7 @@ namespace sampleInfo{
 	   k_t_sch_4f_amcnlo_pythia8,
 	   k_t_tch_4f_powheg_pythia8,
 	   k_tbar_tch_4f_powheg_pythia8,
+     k_tbar_tch_4f_powheg_pythia8_inclDecays,
 	   k_singleT_tW,
 	   k_singleT_non_tW,
 	   k_t_tW_5f_powheg_pythia8,
@@ -192,6 +193,7 @@ namespace sampleInfo{
   vect_id getSampleList_SR();
   vect_id getSampleList_CR2l_bulkTTbar();
   vect_id getSampleList_CRGammaJets();
+	vect_id getSampleList_nuPt();
 
   int scaleSample(std::string f_in_name, std::string f_out_name, double SF);
 

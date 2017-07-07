@@ -611,6 +611,13 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     inputBabies.push_back("tbar_tch_4f_powheg_pythia8_25ns*.root");
     break;
 
+  case( k_tbar_tch_4f_powheg_pythia8_inclDecays ):
+	  label = "tbar_tch_4f_powheg_pythia8_inclDecays_25ns";
+    title = "single tbar, t-channel, powheg pythia8, inclusive decays";
+    tex   = "single $\\bar{t}$,~t-channel,~powheg~pythia8,~inclusive~decays";
+    inputBabies.push_back("tbar_tch_4f_powheg_pythia8_inclDecays_25ns*.root");
+    break;
+
   case( k_singleT_tW ):
     label = "singleT_tW_25ns";
     title = "single t, tW-channel";
@@ -1168,6 +1175,26 @@ sampleInfo::vect_id sampleInfo::getSampleList_CRGammaJets(){
   result.push_back( sampleInfo::k_GJets_HT400To600_madgraph_pythia8 );
   result.push_back( sampleInfo::k_GJets_HT600ToInf_madgraph_pythia8 );
   
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+sampleInfo::vect_id sampleInfo::getSampleList_nuPt() {
+
+  vect_id result;
+
+  result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_ttbar_singleLeptFromTbar_madgraph_pythia8_ext1 );
+  result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_ttbar_singleLeptFromT_madgraph_pythia8_ext1 );
+  result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8 );
+  result.push_back( sampleInfo::k_ttbar_diLept_madgraph_pythia8_ext1 );
+  result.push_back( sampleInfo::k_t_tbarW_5f_powheg_pythia8_noHadDecays );
+  result.push_back( sampleInfo::k_t_tW_5f_powheg_pythia8_noHadDecays );
+  result.push_back( sampleInfo::k_t_sch_4f_amcnlo_pythia8 );
+  result.push_back( sampleInfo::k_tbar_tch_4f_powheg_pythia8_inclDecays );
+
   return result;
 }
 

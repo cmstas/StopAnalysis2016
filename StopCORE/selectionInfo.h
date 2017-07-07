@@ -49,6 +49,10 @@ namespace selectionInfo{
   bool pass_trackVeto();
   bool pass_tauVeto();
 
+	// Single Lepton Selection, for studies
+	bool pass_ge1_veto_lep();
+	bool pass_ge1_sel_lep();
+
   // DiLepton Selection
   bool pass_diLep();
 
@@ -85,6 +89,7 @@ namespace selectionInfo{
   
   // MT Selection
   bool pass_geX_mt(double cut_mt=150.0, int jesType=0, bool add2ndLepToMet=false);
+	bool pass_ge120_mt();
   bool pass_ge150_mt();
 
   // min DeltaPhi (MET, (j1, j2))
