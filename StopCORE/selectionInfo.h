@@ -153,6 +153,10 @@ namespace selectionInfo{
   bool pass_CR2l_bulkTTbar(int jesType=0, bool add2ndLepToMet=false );
   bool pass_CR2l_bulkTTbar(int jesType=0);
 	std::vector<cut> get_selection_CR2l_bulkTTbar();
+
+	std::vector<cut> get_selection_nupt();
+
+	std::vector<cut> get_selection_nupt_corridor();
   
 }; // end namespace def
 

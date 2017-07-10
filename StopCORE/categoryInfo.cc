@@ -1783,6 +1783,7 @@ vector<int> categoryInfo::passCategory_nuPt_bulk( int jesType, bool add2ndLepToM
 	double tmod = babyAnalyzer.topnessMod();
 	double mlb = babyAnalyzer.Mlb_closestb();
 	if( mlb < 0 ) mlb = babyAnalyzer.Mlb_lead_bdiscr();
+	// Known discrepancy with HJ's code. He calculates Mlb_lead_bdiscr himself using available ak4 pfjet branches.
 
 	int offset_nj = 0;
 	vector<int> offset_mt = {0};

@@ -883,3 +883,38 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_SR_loose() {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_nupt() {
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "goodVertex",   (*pass_goodVtx) ));       // 1) Good Vertex
+	result.push_back( cut( "pass1vetolep", (*pass_ge1_veto_lep) ));  // 2) At least 1 good lepton
+	result.push_back( cut( "pass1goodlep", (*pass_ge1_sel_lep) ));   // 3) At least 1 veto lepton
+	result.push_back( cut( "ge2Jets",      (*pass_ge2_jets) ));      // 4) nGoodJets>=2
+	result.push_back( cut( "ge150met",     (*pass_ge150_met) ));     // 5) met>150.0
+	result.push_back( cut( "ge120MT",      (*pass_ge120_mt) ));      // 6) mt>120
+	result.push_back( cut( "ge0p8minDPhi", (*pass_ge0p8_minDPhi) )); // 7) minDPhi(met,j1/j2)>0.8
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_nupt_corridor() {
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "goodVertex",   (*pass_goodVtx) ));       // 1) Good Vertex
+	result.push_back( cut( "pass1vetolep", (*pass_ge1_veto_lep) ));  // 2) At least 1 good lepton
+	result.push_back( cut( "pass1goodlep", (*pass_ge1_sel_lep) ));   // 3) At least 1 veto lepton
+	result.push_back( cut( "ge5Jets",      (*pass_ge5_jets) ));      // 4) nGoodJets>=5
+	result.push_back( cut( "ge150met",     (*pass_ge150_met) ));     // 5) met>150.0
+	result.push_back( cut( "ge120MT",      (*pass_ge120_mt) ));      // 6) mt>150
+	result.push_back( cut( "ge0p5minDPhi", (*pass_ge0p5_minDPhi) )); // 7) minDPhi(met,j1/j2)>0.5
+	result.push_back( cut( "j1noBtag",     (*pass_j1NotBtag) ));     // 8) Leading jet is not b-tagged
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
