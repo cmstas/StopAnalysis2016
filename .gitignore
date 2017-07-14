@@ -8,6 +8,7 @@
 runBabyMaker
 runBabyLooper
 runBabyLooper__CR2l_bulkTTbar
+runLooper
 
 # Ignore looper output directories
 Output
