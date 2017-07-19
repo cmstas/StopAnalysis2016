@@ -39,6 +39,7 @@ namespace selectionInfo{
   bool pass_trigger_SR();
   bool pass_trigger_CR2l();
   bool pass_trigger_CR2l_bulkTTbar();
+	bool pass_trigger_phoPt();
 
   // Good Vertex
   bool pass_goodVtx();
@@ -115,6 +116,16 @@ namespace selectionInfo{
 	bool pass_lt2_dPhiLepMet();
 	bool pass_geX_dPhiLepMet( double cut_phi=0., int jesType=0, bool add2ndLepToMet=false );
 
+	// Photon selections
+	bool pass_ee0_lep();
+	bool pass_ge2_ph_jets();
+	bool pass_ge5_ph_jets();
+	bool pass_ee0_ph_bJets();
+	bool pass_ge150_ph_met();
+	bool pass_ge0p8_ph_minDPhi();
+	bool pass_ge0p5_ph_minDPhi();
+	bool pass_selected_photon();
+
 
   // Utility Functions to help with selection
   TH1D* get_cutflowHistoTemplate( v_cut cutList );
@@ -157,6 +168,10 @@ namespace selectionInfo{
 	std::vector<cut> get_selection_nupt();
 
 	std::vector<cut> get_selection_nupt_corridor();
+
+	std::vector<cut> get_selection_phopt();
+
+	std::vector<cut> get_selection_phopt_corridor();
   
 }; // end namespace def
 

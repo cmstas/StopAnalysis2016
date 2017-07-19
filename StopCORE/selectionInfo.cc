@@ -86,6 +86,27 @@ bool selectionInfo::pass_trigger_CR2l_bulkTTbar(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_trigger_phoPt() {
+	bool result = false;
+	// Only applies to data
+	if( !babyAnalyzer.is_data() ) result = true;
+	else{
+		if( babyAnalyzer.HLT_Photon120() ||
+		    babyAnalyzer.HLT_Photon50_R9Id90_HE10_IsoM() ||
+		    babyAnalyzer.HLT_Photon75_R9Id90_HE10_IsoM() ||
+		    babyAnalyzer.HLT_Photon90_R9Id90_HE10_IsoM() ||
+		    babyAnalyzer.HLT_Photon120_R9Id90_HE10_IsoM() ||
+		    babyAnalyzer.HLT_Photon165_R9Id90_HE10_IsoM() ||
+		    babyAnalyzer.HLT_Photon165_HE10() ||
+		    babyAnalyzer.HLT_Photon175() ||
+		    babyAnalyzer.HLT_Photon250_NoHE() ||
+		    babyAnalyzer.HLT_CaloJet500_NoJetID() ) result = true;
+	}
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 bool selectionInfo::pass_goodVtx(){
   bool result = false;
   if( babyAnalyzer.nvtxs()>=1 ) result = true;
@@ -438,6 +459,93 @@ bool selectionInfo::pass_geX_dPhiLepMet( double cut_phi, int jesType, bool add2n
 		else if( jesType==-1 ) return babyAnalyzer.lep1_dphiMET_jdown() >= cut_phi;
 	}
 	return babyAnalyzer.lep1_dphiMET() >= cut_phi;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ee0_lep() {
+	bool result = true;
+	if( babyAnalyzer.ngoodleps() != 0 ) result = false;
+	if( babyAnalyzer.nvetoleps() != 0 ) result = false;
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ge2_ph_jets() { return babyAnalyzer.ph_ngoodjets() >= 2; }
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ge5_ph_jets() { return babyAnalyzer.ph_ngoodjets() >= 5; }
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ee0_ph_bJets() { return babyAnalyzer.ph_ngoodbtags() == 0; }
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ge150_ph_met() { return babyAnalyzer.ph_met() >= 150.; }
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ge0p8_ph_minDPhi() { return babyAnalyzer.ph_mindphi_met_j1_j2() >= 0.8; }
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ge0p5_ph_minDPhi() { return babyAnalyzer.ph_mindphi_met_j1_j2() >= 0.5; }
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_selected_photon() {
+
+	int goodidx = babyAnalyzer.ph_selectedidx();
+	if( goodidx < 0 ) return false;
+
+	double pho_pt = babyAnalyzer.ph_pt().at(goodidx);
+	if( pho_pt < 55. ) return false;
+
+	//
+	// Check also to see if photon passes tight ID
+	//
+
+	// Check eta
+	double abs_eta = fabs( babyAnalyzer.ph_eta().at(goodidx) );
+	if( abs_eta > 2.5 ) return false;
+	if( abs_eta > 1.44 && abs_eta < 1.56 ) return false;
+
+	// Compute effective areas.    Order is:   CH,    NH,    EM
+	std::vector<double>        photon_ea03 = {-999., -999., -999. };
+	if(      abs_eta < 1.0   ) photon_ea03 = {0.0360, 0.0597, 0.1210};
+	else if( abs_eta < 1.479 ) photon_ea03 = {0.0377, 0.0807, 0.1107};
+	else if( abs_eta < 2.0   ) photon_ea03 = {0.0306, 0.0629, 0.1699};
+	else if( abs_eta < 2.2   ) photon_ea03 = {0.0283, 0.0197, 0.1056};
+	else if( abs_eta < 2.3   ) photon_ea03 = {0.0254, 0.0184, 0.1457};
+	else if( abs_eta < 2.4   ) photon_ea03 = {0.0217, 0.0284, 0.1719};
+	else if( abs_eta >= 2.4  ) photon_ea03 = {0.0167, 0.0591, 0.1998};
+
+	// Compute isolation
+	double CH_iso = std::max( 0., babyAnalyzer.ph_chiso().at(goodidx) - photon_ea03[0]*babyAnalyzer.EA_fixgridfastjet_all_rho() );
+	double NH_iso = std::max( 0., babyAnalyzer.ph_nhiso().at(goodidx) - photon_ea03[1]*babyAnalyzer.EA_fixgridfastjet_all_rho() );
+	double PH_iso = std::max( 0., babyAnalyzer.ph_phiso().at(goodidx) - photon_ea03[2]*babyAnalyzer.EA_fixgridfastjet_all_rho() );
+
+	// Eta-dependent cuts
+	if( abs_eta < 1.44 ) {
+		if( babyAnalyzer.ph_hOverE().at(goodidx) > 0.0269 ) return false;
+		if( babyAnalyzer.ph_sigmaIEtaEta_fill5x5().at(goodidx) > 0.00994 ) return false;
+		if( CH_iso > 0.202 ) return false;
+		if( PH_iso > (2.362 + 0.0047*pho_pt) ) return false;
+		if( NH_iso > (0.264 + 0.0148*pho_pt + 0.000017*pho_pt*pho_pt ) ) return false;
+	}
+	else {
+		if( babyAnalyzer.ph_hOverE().at(goodidx) > 0.0213 ) return false;
+		if( babyAnalyzer.ph_sigmaIEtaEta_fill5x5().at(goodidx) > 0.03 ) return false;
+		if( CH_iso > 0.034 ) return false;
+		if( PH_iso > (2.617 + 0.0034*pho_pt) ) return false;
+		if( NH_iso > (0.586 + 0.0163*pho_pt + 0.000014*pho_pt*pho_pt ) ) return false;
+	}
+
+
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -913,6 +1021,48 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_nupt_corridor() {
 	result.push_back( cut( "ge120MT",      (*pass_ge120_mt) ));      // 6) mt>150
 	result.push_back( cut( "ge0p5minDPhi", (*pass_ge0p5_minDPhi) )); // 7) minDPhi(met,j1/j2)>0.5
 	result.push_back( cut( "j1noBtag",     (*pass_j1NotBtag) ));     // 8) Leading jet is not b-tagged
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_phopt() {
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",   (*pass_metFilter) ));     // 1) Data Filter ///?///
+	result.push_back( cut( "trigger",      (*pass_trigger_phoPt) )); // 2) Trigger
+	result.push_back( cut( "goodVertex",   (*pass_goodVtx) ));       // 3) Good Vertex
+	result.push_back( cut( "pass0lep",     (*pass_ee0_lep) ));       // 4) Exactly 0 leptons
+	result.push_back( cut( "isoTrackVeto", (*pass_trackVeto) ));     // 5) Track Veto
+	result.push_back( cut( "tauVeto",      (*pass_tauVeto) ));       // 6) Tau Veto
+	result.push_back( cut( "ge2Jets",      (*pass_ge2_ph_jets) ));   // 7) nGoodJets>=2
+	result.push_back( cut( "ee0BJets",     (*pass_ee0_ph_bJets) ));  // 8) nMediumBtags==0
+	result.push_back( cut( "ge150met",     (*pass_ge150_ph_met) ));  // 9) met>150.0
+	result.push_back( cut( "ge0p8minDPhi", (*pass_ge0p8_ph_minDPhi) )); // 10) minDPhi(met,j1/j2)>0.8
+	result.push_back( cut( "goodPhoton",   (*pass_selected_photon) ));  // 11) At least 1 good photon
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_phopt_corridor() {
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",   (*pass_metFilter) ));     // 1) Data Filter ///?///
+	result.push_back( cut( "trigger",      (*pass_trigger_phoPt) )); // 2) Trigger
+	result.push_back( cut( "goodVertex",   (*pass_goodVtx) ));       // 3) Good Vertex
+	result.push_back( cut( "pass0lep",     (*pass_ee0_lep) ));       // 4) Exactly 0 leptons
+	result.push_back( cut( "isoTrackVeto", (*pass_trackVeto) ));     // 5) Track Veto
+	result.push_back( cut( "tauVeto",      (*pass_tauVeto) ));       // 6) Tau Veto
+	result.push_back( cut( "ge5Jets",      (*pass_ge5_ph_jets) ));   // 7) nGoodJets>=5
+	result.push_back( cut( "ee0BJets",     (*pass_ee0_ph_bJets) ));  // 8) nMediumBtags==0
+	result.push_back( cut( "ge150met",     (*pass_ge150_ph_met) ));  // 9) met>150.0
+	result.push_back( cut( "ge0p5minDPhi", (*pass_ge0p5_ph_minDPhi) )); // 10) minDPhi(met,j1/j2)>0.5
+	result.push_back( cut( "goodPhoton",   (*pass_selected_photon) ));  // 11) At least 1 good photon
 
 	return result;
 }
