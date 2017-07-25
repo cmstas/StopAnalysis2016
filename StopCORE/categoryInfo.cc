@@ -1839,3 +1839,76 @@ vector<int> categoryInfo::passCategory_nuPt_corridor( int jesType, bool add2ndLe
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TH1D* categoryInfo::getYieldHistoTemplate_phPt() {
+
+	int nBins_phPt = 28;
+	TH1D *result = new TH1D( "h_yields_phPt", "Yields, photon pT categories", nBins_phPt, 1.0, (double)nBins_phPt+1. );
+
+	TAxis* axis = result->GetXaxis();
+
+	// Bulk regions
+	axis->SetBinLabel( 1,  "23j_MET30" );
+	axis->SetBinLabel( 2,   "4j_MET30" );
+	axis->SetBinLabel( 3,  "23j_MET60" );
+	axis->SetBinLabel( 4,   "4j_MET60" );
+	axis->SetBinLabel( 5,  "23j_MET100" );
+	axis->SetBinLabel( 6,   "4j_MET100" );
+	axis->SetBinLabel( 7,  "23j_MET150" );
+	axis->SetBinLabel( 8,   "4j_MET150" );
+
+	// Corridor regions
+	axis->SetBinLabel( 9,   "5j_MET30" );
+	axis->SetBinLabel( 10,  "5j_MET60" );
+	axis->SetBinLabel( 11,  "5j_MET100" );
+	axis->SetBinLabel( 12,  "5j_MET150" );
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+vector<int> categoryInfo::passCategory_phPt_bulk( int jesType, bool add2ndLepToMet ) {
+
+	// Note: right now, the two arguments are dummies and don't do anything
+
+	vector<int> result;
+
+	int njets  = babyAnalyzer.ph_ngoodjets();
+	double met = babyAnalyzer.pfmet();
+
+	int offset_nj = 0;
+	vector<int> offset_met;
+
+	if( njets >= 4 ) offset_nj = 1;
+	if( met >= 30. ) offset_met.push_back(0);
+	if( met >= 60. ) offset_met.push_back(2);
+	if( met >= 100.) offset_met.push_back(4);
+	if( met >= 150.) offset_met.push_back(6);
+
+	for( int omet : offset_met ) result.push_back( 1 + offset_nj + omet );
+	// 8 different categories, numbered 1-8
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+vector<int> categoryInfo::passCategory_phPt_corridor( int jesType, bool add2ndLepToMet ) {
+
+	// Note: right now, the two arguments are dummies and don't do anything
+
+	vector<int> result;
+
+	double met = babyAnalyzer.pfmet();
+	if( met >= 30. ) result.push_back(9);
+	if( met >= 60. ) result.push_back(10);
+	if( met >= 100.) result.push_back(11);
+	if( met >= 150.) result.push_back(12);
+
+	// 4 different categories, numbered 9-12
+
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////

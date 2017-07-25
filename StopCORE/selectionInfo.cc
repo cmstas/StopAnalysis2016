@@ -37,6 +37,23 @@ bool selectionInfo::pass_metFilter(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool pass_metFilter_photons() {
+  bool result = false;
+  // Only applies to data
+  if( !babyAnalyzer.is_data() ) result = true;
+  else {
+	  if( babyAnalyzer.filt_met() &&
+	      babyAnalyzer.filt_badChargedCandidateFilter() &&
+	      babyAnalyzer.filt_jetWithBadMuon() &&
+	      babyAnalyzer.filt_pfovercalomet() &&
+	      babyAnalyzer.filt_badMuonFilter() &&
+	      babyAnalyzer.filt_hcallaser()    ) result = true;
+  }
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 bool selectionInfo::pass_trigger_SR(){
   bool result = false;
   // Only applies to data
@@ -1031,7 +1048,7 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_phopt() {
 
 	std::vector<cut> result;
 
-	result.push_back( cut( "dataFilter",   (*pass_metFilter) ));     // 1) Data Filter ///?///
+	result.push_back( cut( "dataFilter",   (*pass_metFilter_photons) )); // 1) Data Filter
 	result.push_back( cut( "trigger",      (*pass_trigger_phoPt) )); // 2) Trigger
 	result.push_back( cut( "goodVertex",   (*pass_goodVtx) ));       // 3) Good Vertex
 	result.push_back( cut( "pass0lep",     (*pass_ee0_lep) ));       // 4) Exactly 0 leptons
@@ -1052,7 +1069,7 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_phopt_corridor() {
 
 	std::vector<cut> result;
 
-	result.push_back( cut( "dataFilter",   (*pass_metFilter) ));     // 1) Data Filter ///?///
+	result.push_back( cut( "dataFilter",   (*pass_metFilter_photons) )); // 1) Data Filter
 	result.push_back( cut( "trigger",      (*pass_trigger_phoPt) )); // 2) Trigger
 	result.push_back( cut( "goodVertex",   (*pass_goodVtx) ));       // 3) Good Vertex
 	result.push_back( cut( "pass0lep",     (*pass_ee0_lep) ));       // 4) Exactly 0 leptons

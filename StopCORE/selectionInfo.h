@@ -34,6 +34,7 @@ namespace selectionInfo{
 
   // Met filters
   bool pass_metFilter();
+	bool pass_metFilter_photons();
 
   // Triggers
   bool pass_trigger_SR();

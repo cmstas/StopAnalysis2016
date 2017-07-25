@@ -57,6 +57,10 @@ namespace categoryInfo{
 	vector<int> passCategory_nuPt_bulk( int jesType=0, bool add2ndLepToMet=false ); // These parameters are dummies for compatibility, and don't do anything right now
 	vector<int> passCategory_nuPt_corridor( int jesType=0, bool add2ndLepToMet=false );
 
+	TH1D* getYieldHistoTemplate_phPt();
+	vector<int> passCategory_phPt_bulk( int jesType=0, bool add2ndLepToMet=false ); // More dummy parameters
+	vector<int> passCategory_phPt_corridor( int jesType=0, bool add2ndLepToMet=false );
+
 }; // end class def
 
 
