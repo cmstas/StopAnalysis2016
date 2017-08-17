@@ -99,9 +99,9 @@ void EventTree::FillCommon (const std::string &root_file_name)
       filt_trkPOG_tms = filt_trkPOG_toomanystripclus53X();
       filt_hbhenoise = filt_hbheNoise(); // hbheNoiseFilter_25ns();
       filt_hbheisonoise = filt_hbheNoiseIso();//hbheIsoNoiseFilter();
-      if(is_data) filt_badmuons = filt_badMuons();
-      if(is_data) filt_duplicatemuons = filt_duplicateMuons();
-      if(is_data) filt_nobadmuons = filt_noBadMuons();
+      // if(is_data) filt_badmuons = filt_badMuons();
+      // if(is_data) filt_duplicatemuons = filt_duplicateMuons();
+      // if(is_data) filt_nobadmuons = filt_noBadMuons();
    }
     
     if (!is_data)
