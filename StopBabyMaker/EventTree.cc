@@ -415,7 +415,9 @@ void EventTree::Reset ()
     HLT_Photon165_HE10 = -9999.;
 
     HLT_Photon120 = -9999.;
+    HLT_Photon200 = -9999.;
     HLT_Photon250_NoHE = -9999.;
+    HLT_Photon300_NoHE = -9999.;
     HLT_CaloJet500_NoJetID = -9999.;
 
     EA_fixgridfastjet_all_rho = -9999.;
@@ -848,7 +850,9 @@ void EventTree::SetPhotonBranches (TTree* tree)
     tree->Branch("HLT_Photon175", &HLT_Photon175);
     tree->Branch("HLT_Photon165_HE10", &HLT_Photon165_HE10);
     tree->Branch("HLT_Photon120", &HLT_Photon120);
+    tree->Branch("HLT_Photon200", &HLT_Photon200);
     tree->Branch("HLT_Photon250_NoHE", &HLT_Photon250_NoHE);
+    tree->Branch("HLT_Photon300_NoHE", &HLT_Photon300_NoHE);
     tree->Branch("HLT_CaloJet500_NoJetID", &HLT_CaloJet500_NoJetID);
 }
 

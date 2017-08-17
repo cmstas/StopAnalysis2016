@@ -2783,46 +2783,73 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       // Trigger Information
       //
       //std::cout << "[babymaker::looper]: filling HLT vars" << std::endl;
-      //////////////// 2015 Run II  //////////////////////
+      //////////////// 2017 triggers //////////////////////
       if(!isSignalFromFileName){
-	StopEvt.HLT_MET = passHLTTriggerPattern("HLT_PFMET170_NoiseCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_JetIdCleaned_v") || passHLTTriggerPattern("HLT_PFMET170_HBHECleaned_v") || passHLTTriggerPattern("HLT_PFMET170_NotCleaned_v"); 
-        StopEvt.HLT_MET_MHT = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v") || passHLTTriggerPattern("HLT_PFMET110_PFMHT110_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v") || passHLTTriggerPattern("HLT_PFMET110_PFMHT110_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v") || passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v");
-	StopEvt.HLT_MET100_MHT100 = passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v");
-	StopEvt.HLT_MET110_MHT110 = passHLTTriggerPattern("HLT_PFMET110_PFMHT110_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v");
-	StopEvt.HLT_MET120_MHT120 = passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight_v") || passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v");
-	StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele25_eta2p1_WPTight_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_WP85_Gsf_v") ||passHLTTriggerPattern("HLT_Ele27_eta2p1_WPLoose_Gsf_v") || passHLTTriggerPattern("HLT_Ele27_eta2p1_WPTight_Gsf_v");
-	StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu20_v") || passHLTTriggerPattern("HLT_IsoTkMu20_v") || passHLTTriggerPattern("HLT_IsoMu22_v") || passHLTTriggerPattern("HLT_IsoTkMu22_v") || passHLTTriggerPattern("HLT_IsoMu24_v") || passHLTTriggerPattern("HLT_IsoTkMu24_v");
-	StopEvt.HLT_DiEl =  passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
-	StopEvt.HLT_DiMu =  passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v");
-	StopEvt.HLT_MuE = passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v") || passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") || passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v");
-	//photons more complicated because of prescales - follow Vince's code
-	//StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v" ));
-	StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon22_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon22_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v"));
-	StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon30_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon30_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v"));
-	StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon36_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon36_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v"));
-	StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon50_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon50_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v"));
-	StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon75_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon75_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v"));
-	StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon90_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon90_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v"));
-	StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon120_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon120_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"));
-	StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon165_R9Id90_HE10_IsoM_v") > HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v")) ?  passHLTTriggerPattern("HLT_Photon165_R9Id90_HE10_IsoM_v") : HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"));
-	StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v") > HLT_prescale(triggerName("HLT_Photon175_v")) ?  passHLTTriggerPattern("HLT_Photon175_v") : HLT_prescale(triggerName("HLT_Photon175_v"));
-	StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v") > HLT_prescale(triggerName("HLT_Photon165_HE10_v")) ?  passHLTTriggerPattern("HLT_Photon165_HE10_v") : HLT_prescale(triggerName("HLT_Photon165_HE10_v"));
-	StopEvt.HLT_Photon120 = passHLTTriggerPattern("HLT_Photon120_v") > HLT_prescale(triggerName("HLT_Photon120_v")) ?  passHLTTriggerPattern("HLT_Photon120_v") : HLT_prescale(triggerName("HLT_Photon120_v"));
-	StopEvt.HLT_Photon250_NoHE = passHLTTriggerPattern("HLT_Photon250_NoHE_v") > HLT_prescale(triggerName("HLT_Photon250_NoHE_v")) ?  passHLTTriggerPattern("HLT_Photon250_NoHE_v") : HLT_prescale(triggerName("HLT_Photon250_NoHE_v"));	
-	StopEvt.HLT_CaloJet500_NoJetID = passHLTTriggerPattern("HLT_CaloJet500_NoJetID_v") > HLT_prescale(triggerName("HLT_CaloJet500_NoJetID_v")) ?  passHLTTriggerPattern("HLT_CaloJet500_NoJetID_v") : HLT_prescale(triggerName("HLT_CaloJet500_NoJetID_v"));
-	// HT triggers for trigger efficiency - from MT2
-	StopEvt.HLT_PFHT_unprescaled = passHLTTriggerPattern("HLT_PFHT800_v") || passHLTTriggerPattern("HLT_PFHT900_v");
-	int HT125 = passHLTTriggerPattern("HLT_PFHT125_v") ? HLT_prescale(triggerName("HLT_PFHT125_v")) : 0;
-	int HT200 = passHLTTriggerPattern("HLT_PFHT200_v") ? HLT_prescale(triggerName("HLT_PFHT200_v")) : 0;
-	int HT300 = passHLTTriggerPattern("HLT_PFHT300_v") ? HLT_prescale(triggerName("HLT_PFHT300_v")) : 0;
-	int HT350 = passHLTTriggerPattern("HLT_PFHT350_v") ? HLT_prescale(triggerName("HLT_PFHT350_v")) : 0;
-	int HT475 = passHLTTriggerPattern("HLT_PFHT475_v") ? HLT_prescale(triggerName("HLT_PFHT475_v")) : 0;
-	int HT600 = passHLTTriggerPattern("HLT_PFHT600_v") ? HLT_prescale(triggerName("HLT_PFHT600_v")) : 0;
-	//as we use those only for trigger efficiency measurements, we actually don't care about the exact prescale ...
-	if(HT125>0 || HT200>0 || HT300>0 || HT350>0 || HT475>0 || HT600>0)
-	  StopEvt.HLT_PFHT_prescaled = 1;
-	else
-	  StopEvt.HLT_PFHT_prescaled = 0;
+	      StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele35_WPTight_Gsf_v");
+	      StopEvt.HLT_DiEl =   ( passHLTTriggerPattern("HLT_DoubleEle33_CaloIdL_MW_v") ||
+	                             passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL") );
+        StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu27_v");
+        StopEvt.HLT_DiMu =   ( passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8_v") ||
+                               passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8_v") );
+        StopEvt.HLT_MuE =    ( passHLTTriggerPattern("HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v") ||
+                               passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") ||
+                               passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") );
+        StopEvt.HLT_MET_MHT = ( passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_HFCleaned_v") ||
+                                passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_v") ||
+                                passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v") ||
+                                passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_HFCleaned_v") ||
+                                passHLTTriggerPattern("HLT_PFMETTypeOne120_PFMHT120_IDTight_HFCleaned_v") ||
+                                passHLTTriggerPattern("HLT_PFMETTypeOne120_PFMHT120_IDTight_v") ||
+                                passHLTTriggerPattern("HLT_PFMET130_PFMHT130_IDTight_v") ||
+                                passHLTTriggerPattern("HLT_PFMETNoMu130_PFMHTNoMu130_IDTight_v") ||
+                                passHLTTriggerPattern("HLT_PFMETTypeOne130_PFMHT130_IDTight_v") );
+        StopEvt.HLT_MET100_MHT100 = ( passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_v") ||
+                                      passHLTTriggerPattern("HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v") );
+        StopEvt.HLT_MET110_MHT110 = ( passHLTTriggerPattern("HLT_PFMET110_PFMHT110_IDTight_v") ||
+                                      passHLTTriggerPattern("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v") ||
+                                      passHLTTriggerPattern("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v") ); //prescaled
+        StopEvt.HLT_MET120_MHT120 = ( passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_HFCleaned_v") ||
+                                      passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_v") ||
+                                      passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v") ||
+                                      passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_HFCleaned_v") ||
+                                      passHLTTriggerPattern("HLT_PFMETTypeOne120_PFMHT120_IDTight_HFCleaned_v") ||
+                                      passHLTTriggerPattern("HLT_PFMETTypeOne120_PFMHT120_IDTight_v") );
+        StopEvt.HLT_MET =    ( passHLTTriggerPattern("HLT_PFMET250_HBHECleaned_v") ||
+                               passHLTTriggerPattern("HLT_PFMET300_HBHECleaned_v") ||
+                               passHLTTriggerPattern("HLT_PFMETTypeOne200_HBHE_BeamHaloCleaned_v") );
+
+        StopEvt.HLT_Photon22_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon22_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon22_R9Id90_HE10_IsoM_v")) : 0;  // Holdover from 2016
+        StopEvt.HLT_Photon30_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon30_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon30_R9Id90_HE10_IsoM_v")) : 0;  // Holdover from 2016
+        StopEvt.HLT_Photon36_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon36_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon36_R9Id90_HE10_IsoM_v")) : 0;  // Holdover from 2016
+        StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon50_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v")) : 0;
+        StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon75_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v")) : 0;
+        StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon90_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v")) : 0;
+        StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon120_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v")) : 0;
+        StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon165_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v")) : 0;
+        StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v") ? HLT_prescale(triggerName("HLT_Photon175_v")) : 0;
+        StopEvt.HLT_Photon165_HE10 = passHLTTriggerPattern("HLT_Photon165_HE10_v") ? HLT_prescale(triggerName("HLT_Photon165_HE10_v")) : 0;  // Holdover from 2016
+        StopEvt.HLT_Photon120 = passHLTTriggerPattern("HLT_Photon120_v") ? HLT_prescale(triggerName("HLT_Photon120_v")) : 0;
+        StopEvt.HLT_Photon200 = passHLTTriggerPattern("HLT_Photon200_v") ? HLT_prescale(triggerName("HLT_Photon200_v")) : 0;
+        StopEvt.HLT_Photon250_NoHE = passHLTTriggerPattern("HLT_Photon250_NoHE_v") ? HLT_prescale(triggerName("HLT_Photon250_NoHE_v")) : 0;  // Holdover from 2016
+        StopEvt.HLT_Photon300_NoHE = passHLTTriggerPattern("HLT_Photon300_NoHE_v") ? HLT_prescale(triggerName("HLT_Photon300_NoHE_v")) : 0;
+        StopEvt.HLT_CaloJet500_NoJetID = passHLTTriggerPattern("HLT_CaloJet500_NoJetID_v") ? HLT_prescale(triggerName("HLT_CaloJet500_NoJetID_v")) : 0;
+
+        StopEvt.HLT_PFHT_unprescaled = passHLTTriggerPattern("HLT_PFHT1050_v");
+        int HT180 = passHLTTriggerPattern("HLT_PFHT180_v") ? HLT_prescale(triggerName("HLT_PFHT180_v")) : 0;
+        int HT250 = passHLTTriggerPattern("HLT_PFHT250_v") ? HLT_prescale(triggerName("HLT_PFHT250_v")) : 0;
+        int HT350 = passHLTTriggerPattern("HLT_PFHT350_v") ? HLT_prescale(triggerName("HLT_PFHT350_v")) : 0;
+        int HT370 = passHLTTriggerPattern("HLT_PFHT370_v") ? HLT_prescale(triggerName("HLT_PFHT370_v")) : 0;
+        int HT430 = passHLTTriggerPattern("HLT_PFHT430_v") ? HLT_prescale(triggerName("HLT_PFHT430_v")) : 0;
+        int HT510 = passHLTTriggerPattern("HLT_PFHT510_v") ? HLT_prescale(triggerName("HLT_PFHT510_v")) : 0;
+        int HT590 = passHLTTriggerPattern("HLT_PFHT590_v") ? HLT_prescale(triggerName("HLT_PFHT590_v")) : 0;
+        int HT680 = passHLTTriggerPattern("HLT_PFHT680_v") ? HLT_prescale(triggerName("HLT_PFHT680_v")) : 0;
+        int HT780 = passHLTTriggerPattern("HLT_PFHT780_v") ? HLT_prescale(triggerName("HLT_PFHT780_v")) : 0;
+        int HT890 = passHLTTriggerPattern("HLT_PFHT890_v") ? HLT_prescale(triggerName("HLT_PFHT890_v")) : 0;
+        //as we use those only for trigger efficiency measurements, we actually don't care about the exact prescale ...
+        if(HT180>0 || HT250>0 || HT350>0 || HT370>0 || HT430>0 || HT510>0 || HT590>0 || HT680>0 || HT780>0 || HT890>0)
+          StopEvt.HLT_PFHT_prescaled = 1;
+        else
+          StopEvt.HLT_PFHT_prescaled = 0;
       }
       
      ///////////////////////////////////////////////////////////

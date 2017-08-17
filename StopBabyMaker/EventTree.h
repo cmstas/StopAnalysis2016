@@ -298,7 +298,9 @@ public:
     int HLT_Photon175;
     int HLT_Photon165_HE10;
     int HLT_Photon120;//from MT2
+    int HLT_Photon200;
     int HLT_Photon250_NoHE;//from MT2
+    int HLT_Photon300_NoHE;
     int HLT_CaloJet500_NoJetID;//from Vince's code
 
     float EA_fixgridfastjet_all_rho;//to do photon EA on the fly
