@@ -7,7 +7,7 @@
 #include <vector>
 #include <memory>
 
-// #include "TH1.h"
+#include "TH1.h"
 
 class SR {
 
@@ -33,9 +33,9 @@ public:
   void Clear();
 
   // used for plotting
-  // std::map<std::string, TH1*> hists;
+  std::map<std::string, TH1*> histMap;
 
-protected:
+private:
 
   std::string srName_;
   std::map<std::string,std::pair<float,float>> bins_;
