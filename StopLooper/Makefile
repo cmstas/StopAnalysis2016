@@ -25,8 +25,6 @@ CMSROOT = ../
 INCLUDE = $(shell root-config --cflags) -I$(CMSROOT) -I$(CMSROOT)/CORE
 CFLAGS = -Wall -Wno-unused-function -g -O3 -fPIC $(INCLUDE) $(EXTRACFLAGS)
 ROOTLIBS = $(shell root-config --ldflags --cflags --libs) -lTMVA #-lEG -lGenVector
-COREDIR = CORE
-
 DICTINCLUDE = $(ROOTSYS)/include/Math/QuantFuncMathCore.h $(ROOTSYS)/include/TLorentzVector.h $(ROOTSYS)/include/Math/Vector4D.h
 
 LINKER = g++
@@ -38,14 +36,14 @@ SOURCES = $(wildcard *.cc)
 OBJECTS = $(SOURCES:.cc=.o)
 LIB = libStopLooper.so
 
-CORESOURCES = $(wildcard ../StopCORE/*.cc)
+COREDIR = ../StopCORE
+CORESOURCES = $(wildcard $(COREDIR)/*.cc)
 COREOBJECTS = $(CORESOURCES:.cc=.o)
-CORELIB = $(wildcard ../StopCORE/*.so)
+CORELIB = $(COREDIR)/stopCORE.so
 
-TOOLSSOURCES = $(wildcard ../CORE/Tools/*.cc) $(wildcard ../CORE/Tools/dorky/*.cc)
+TOOLSSOURCES = ../CORE/Tools/goodrun.cc ../CORE/Tools/dorky/dorky.cc
 TOOLSOBJECTS = $(TOOLSSOURCES:.cc=.o)
-TOOLSLIB = libStopLooperTools.so
-# TOOLSLIB = $(wildcard ../CORE/Tools/*.o) $(wildcard ../CORE/Tools/dorky/*.o)
+TOOLSLIB = libCORETools.so
 
 LIBS = $(LIB) $(CORELIB) $(TOOLSLIB)
 
@@ -55,10 +53,10 @@ EXE = runStopLooper
 # how to make it
 #
 
-# $(CORELIB): $(DICT) $(COREOBJECTS)
-# 	$(QUIET) echo "Linking $@"; \
-# 	echo "$(LINKER) -shared -o $@ $(COREOBJECTS) $(DICT) $(LINKERFLAGS)"; \
-# 	$(LINKER) -shared -o $@ $(COREOBJECTS) $(DICT) $(LINKERFLAGS)
+$(CORELIB): $(DICT) $(CORESOURCES)
+	$(QUIET) echo "Linking $@"; \
+	echo "Using Makefile from StopCORE using $(MAKE) -j12"; \
+	cd $(COREDIR) && $(MAKE) -j12 && cd $(DIR);
 
 $(TOOLSLIB): $(DICT) $(TOOLSOBJECTS)
 	$(QUIET) echo "Linking $@"; \
@@ -108,11 +106,13 @@ clean:
 	*.so \
 	$(EXE)
 
-.PHONY: cleanall
-cleanall:
+.PHONY: clear cleanlibs
+
+cleanlibs:
 	rm -f \
 	$(LIBS) \
 	../StopCORE/*.o \
+	../StopCORE/*.d \
 	../StopCORE/*.so \
 	../CORE/Tools/*.o \
 	../CORE/Tools/*.d \
@@ -120,5 +120,7 @@ cleanall:
 	../CORE/Tools/dorky/*.o \
 	../CORE/Tools/dorky/*.d \
 	../CORE/Tools/dorky/*.so
+
+clear: clean cleanlibs
 
 endif

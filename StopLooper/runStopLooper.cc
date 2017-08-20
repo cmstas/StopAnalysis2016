@@ -31,8 +31,5 @@ int main(int argc, char** argv)
   StopLooper stop;
   stop.looper(ch, sample, output_dir); 
 
-  cout << __FILE__ << ':' << __LINE__ << ": Fine until here! " << endl;
-  throw std::range_error("Why there's an annoying segmentation fault here!!!");
-  
   return 0;
 }
