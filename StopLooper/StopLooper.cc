@@ -121,7 +121,7 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
   }
   
   // sampleInfo::sampleUtil sample( sampleInfo::ID::k_single_mu );
-  TFile dummy("dummy.root", "RECREATE");
+  TFile dummy( (output_dir+"/dummy.root").c_str(), "RECREATE" );
   SetSignalRegions();
 
   int nDuplicates = 0;
@@ -147,7 +147,7 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
     if (nEventsTotal >= nEventsChain) continue;
     unsigned int nEventsTree = tree->GetEntriesFast();
     for (unsigned int event = 0; event < nEventsTree; ++event) {
-    // for (unsigned int event = 0; event < 3; ++event) {
+      // if (event > 3) break;
 
       // Read Tree
       if (nEventsTotal >= nEventsChain) continue;
@@ -176,27 +176,28 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
       
       map<string,float> vals;
 
-      vals["mt"] = MT2W();
+      // vals["mt"] = MT2W();
       vals["met"] = pfmet();
-      vals["mlb"] = 1; // just here for demonstration purpose for now.
+      vals["mt2w"] = MT2W();
+      vals["mlb"] = Mlb_closestb();
       vals["tmod"] = (topnessMod() < 0)? 0 : 1;
       vals["nlep"] = 1; // just here for demonstration purpose for now.
-      vals["njet"] = ak4pfjets_p4().size();
-      vals["nbjet"] = 1; // just here for demonstration purpose for now.
+      vals["njet"] = ngoodjets();
+      vals["nbjet"] = ngoodbtags();
+      vals["dphijmet"]= mindphi_met_j1_j2();
 
-      string suf = "";
-      float evtweight_ = 1.0; // just here for demonstration purpose for now.
-
+      evtweight_ = 1.0; // just here for demonstration purpose for now.
 
       ++nPassedTotal;
 
-      for (auto& cr : CRVec) {
-        if ( cr.PassesSelection(vals) ) {
-          // cout << "Passed selections!: " << cr.GetName() << endl;
-          plot1D("h_met"+suf, pfmet(), evtweight_, cr.histMap, ";E_{T}^{miss} [GeV]", 150, 0, 1500);
-        }
-      }
-    }
+      fillHistosForCR(vals);
+      // Easy to add sets of plots for modified condition
+
+      auto vals_3j = vals;
+      vals_3j["njet"]--;        // effectively go down to requiring 3 jet
+      fillHistosForCR(vals_3j, "_3j");
+
+    } // end of event loop
 
     delete tree;
     file.Close();
@@ -234,3 +235,34 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
 
   return;
 }
+
+void StopLooper::fillHistosForSR(map<string,float>& vals, string suf) {
+  for (auto& sr : SRVec) {
+    if ( sr.PassesSelection(vals) ) {
+      // This plot function port from MT2 demonstrate the simpleness of adding extra plots anywhere in the code
+      // and this functionality is great for quick checks
+      plot1D("h_met"+suf, pfmet(), evtweight_, sr.histMap, ";E_{T}^{miss} [GeV]", 150, 0, 1500);
+      plot1D("h_njet"+suf, ngoodjets(), evtweight_, sr.histMap, ";n jets", 20, 0, 20);
+
+      // The following skim is under development, can be used to fill standard set of plots
+      // for (string v : {"njet", "nbjet", "mt2w"})
+      //   plot1d("h_"+v +suf, vals[v], evtweight_, sr.histMap);
+    }
+  }
+}
+
+void StopLooper::fillHistosForCR(map<string,float>& vals, string suf) {
+  for (auto& cr : CRVec) {
+    if ( cr.PassesSelection(vals) ) {
+      // This plot function port from MT2 demonstrate the simpleness of adding extra plots anywhere in the code
+      // and this functionality is great for quick checks
+      plot1D("h_met"+suf, pfmet(), evtweight_, cr.histMap, ";E_{T}^{miss} [GeV]", 150, 0, 1500);
+      plot1D("h_njet"+suf, ngoodjets(), evtweight_, cr.histMap, ";n jets", 20, 0, 20);
+
+      // The following skim is under development, can be used to fill standard set of plots
+      // for (string v : {"njet", "nbjet", "mt2w"})
+      //   plot1d("h_"+v +suf, vals[v], evtweigh  t_, cr.histMap);
+    }
+  }
+}
+

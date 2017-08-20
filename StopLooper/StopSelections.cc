@@ -5,13 +5,14 @@ std::vector<SR> getStopControlRegions() {
   SR base;
   
   SR crbase;
-  crbase.SetVar("mt", 100, -1);
   crbase.SetVar("met", 50, -1);
+  crbase.SetVar("mt2w", 100, -1);
   crbase.SetVar("mlb", 0, -1);
   crbase.SetVar("tmod", 0, 2);
   crbase.SetVar("nlep", 1, 2);
   crbase.SetVar("njet", 2, -1);
   crbase.SetVar("nbjet", 0, -1);
+  crbase.SetVar("dphijmet", 0.8, 3.14);
 
   SR cr;
   std::vector<SR> CRvec;
