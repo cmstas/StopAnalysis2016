@@ -5,6 +5,8 @@
 #include "TChain.h"
 #include "SR.h"
 
+stop_1l_babyAnalyzer babyAnalyzer;
+
 class StopLooper {
 public:
   StopLooper() {}

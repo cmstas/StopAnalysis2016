@@ -22,6 +22,14 @@
 #include "../CORE/Tools/dorky/dorky.h"
 #include "../CORE/Tools/badEventFilter.h"
 
+// Stop CORE
+#include "../StopCORE/stop_1l_babyAnalyzer.h"
+#include "../StopCORE/sampleInfo.h"
+#include "../StopCORE/genClassyInfo.h"
+#include "../StopCORE/categoryInfo.h"
+#include "../StopCORE/selectionInfo.h"
+#include "../StopCORE/sysInfo.h"
+
 #include "SR.h"
 #include "sigSelections.h"
 #include "StopLooper.h"
@@ -29,6 +37,7 @@
 
 using namespace std;
 using namespace duplicate_removal;
+using namespace stop_1l;
 
 class SR;
 
@@ -98,11 +107,11 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
 
   // gROOT->cd();
   TString output_name = Form("%s/%s.root",output_dir.c_str(),sample.c_str());
-  cout << "[looper] creating output file: " << output_name << endl;  outfile_ = new TFile(output_name.Data(),"RECREATE") ; 
+  cout << "[StopLooper::looper] creating output file: " << output_name << endl;  outfile_ = new TFile(output_name.Data(),"RECREATE") ; 
 
   // full 2016 dataset json, 36.26/fb:
-  const char* json_file = "../jsons/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON_snt.txt";
-  // to reproduce ICHEP, 12.9/fb:
+  // const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt";
+  const char* json_file = "../StopCORE/inputs/json_files/Cert_294927-300575_13TeV_PromptReco_Collisions17_JSON_snt.txt";  // 2017 dataset json 
   if (applyJSON) {
     cout << "Loading json file: " << json_file << endl;
     set_goodrun_file(json_file);
@@ -111,7 +120,7 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
   int nDuplicates = 0;
   int nEvents = chain->GetEntries();
   unsigned int nEventsChain = nEvents;
-  cout << "[MT2Looper::loop] running on " << nEventsChain << " events" << endl;
+  cout << "[StopLooper::looper] running on " << nEventsChain << " events" << endl;
   unsigned int nEventsTotal = 0;
 
   TObjArray *listOfFiles = chain->GetListOfFiles();
@@ -119,10 +128,31 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
   TFile *currentFile = 0;
   while ( (currentFile = (TFile*)fileIter.Next()) ) {
 
+    TFile file( currentFile->GetTitle(), "READ" );
+    TTree *tree = (TTree*) file.Get("t");
+    TTreeCache::SetLearnEntries(10);
+    tree->SetCacheSize(128*1024*1024);
+    babyAnalyzer.Init(tree);
 
+    // Loop over Events in current file
+    if (nEventsTotal >= nEventsChain) continue;
+    unsigned int nEventsTree = tree->GetEntriesFast();
+    for (unsigned int event = 0; event < nEventsTree; ++event) {
+
+      // Read Tree
+      if (nEventsTotal >= nEventsChain) continue;
+      tree->LoadTree(event);
+      babyAnalyzer.GetEntry(event);
+      ++nEventsTotal;
+
+
+    }
+
+    delete tree;
+    file.Close();
   } // end of file loop
 
-  cout << "[looper] processed " << nEventsTotal << " events" << endl;
+  cout << "[StopLooper::looper] processed " << nEventsTotal << " events" << endl;
   if ( nEventsChain != nEventsTotal )
     std::cout << "WARNING: number of events from files is not equal to total number of events" << std::endl;
 

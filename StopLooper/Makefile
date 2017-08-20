@@ -21,7 +21,7 @@ endif
 #endif
 
 CC = g++
-CMSROOT = ./
+CMSROOT = ../
 INCLUDE = $(shell root-config --cflags) -I$(CMSROOT) -I$(CMSROOT)/CORE
 CFLAGS = -Wall -Wno-unused-function -g -O3 -fPIC $(INCLUDE) $(EXTRACFLAGS)
 ROOTLIBS = $(shell root-config --ldflags --cflags --libs) -lTMVA #-lEG -lGenVector
