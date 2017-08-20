@@ -16,7 +16,7 @@
 #include "TLorentzVector.h"
 #include "TF1.h"
 
-// Tools
+// CORE
 #include "../CORE/Tools/utils.h"
 #include "../CORE/Tools/goodrun.h"
 #include "../CORE/Tools/dorky/dorky.h"
@@ -31,15 +31,16 @@
 #include "../StopCORE/sysInfo.h"
 
 #include "SR.h"
-#include "sigSelections.h"
+#include "StopSelections.h"
 #include "StopLooper.h"
 #include "PlotUtilities.h"
 
 using namespace std;
-using namespace duplicate_removal;
 using namespace stop_1l;
+using namespace selectionInfo;
 
 class SR;
+extern stop_1l_babyAnalyzer babyAnalyzer;
 
 const bool verbose = false;
 // turn on to apply weights to central value
@@ -67,7 +68,7 @@ const bool doNvtxReweight = false;
 // turn on to apply nTrueInt reweighting to MC
 const bool doNTrueIntReweight = true;
 // turn on to apply json file to data
-const bool applyJSON = true;
+const bool applyjson = true;
 // ignore scale1fb to run over test samples
 const bool ignoreScale1fb = false;
 // to test synchronization with the standard Analysis
@@ -86,14 +87,14 @@ void StopLooper::SetSignalRegions() {
       cout << it-CRVec.begin() << "  "<< it->GetName() << endl;
   }
 
-  for (unsigned int i = 0; i < CRVec.size(); i++) {
-    vector<string> vars = CRVec.at(i).GetListOfVariables();
-    TDirectory * dir = (TDirectory*) outfile_->Get(("sr"+CRVec.at(i).GetName()).c_str());
-    if (dir == 0) dir = outfile_->mkdir(("sr"+CRVec.at(i).GetName()).c_str());
-    dir->cd();
-    for (unsigned int j = 0; j < vars.size(); j++) {
-      plot1D("h_"+vars.at(j)+"_"+"LOW",  1, CRVec.at(i).GetLowerBound(vars.at(j)), CRVec.at(i).histMap, "", 1, 0, 2);
-      plot1D("h_"+vars.at(j)+"_"+"HI",   1, CRVec.at(i).GetUpperBound(vars.at(j)), CRVec.at(i).histMap, "", 1, 0, 2);
+  for (auto& cr : CRVec) {
+    vector<string> vars = cr.GetListOfVariables();
+    TDirectory * dir = (TDirectory*) outfile_->Get((cr.GetName() + "/ranges").c_str());
+    if (dir == 0) dir = outfile_->mkdir((cr.GetName() + "/ranges").c_str());
+    dir->cd("ranges");
+    for (auto& var : vars) {
+      plot1D("h_"+var+"_"+"LOW",  1, cr.GetLowerBound(var), cr.histMap, "", 1, 0, 2);
+      plot1D("h_"+var+"_"+"HI",   1, cr.GetUpperBound(var), cr.histMap, "", 1, 0, 2);
     }
   }
 }
@@ -109,19 +110,26 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
   TString output_name = Form("%s/%s.root",output_dir.c_str(),sample.c_str());
   cout << "[StopLooper::looper] creating output file: " << output_name << endl;  outfile_ = new TFile(output_name.Data(),"RECREATE") ; 
 
+  outfile_ = new TFile(output_name.Data(), "RECREATE") ; 
+
   // full 2016 dataset json, 36.26/fb:
   // const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt";
   const char* json_file = "../StopCORE/inputs/json_files/Cert_294927-300575_13TeV_PromptReco_Collisions17_JSON_snt.txt";  // 2017 dataset json 
-  if (applyJSON) {
+  if (applyjson) {
     cout << "Loading json file: " << json_file << endl;
     set_goodrun_file(json_file);
   }
   
+  // sampleInfo::sampleUtil sample( sampleInfo::ID::k_single_mu );
+  TFile dummy("dummy.root", "RECREATE");
+  SetSignalRegions();
+
   int nDuplicates = 0;
   int nEvents = chain->GetEntries();
   unsigned int nEventsChain = nEvents;
   cout << "[StopLooper::looper] running on " << nEventsChain << " events" << endl;
   unsigned int nEventsTotal = 0;
+  unsigned int nPassedTotal = 0;
 
   TObjArray *listOfFiles = chain->GetListOfFiles();
   TIter fileIter(listOfFiles);
@@ -134,10 +142,12 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
     tree->SetCacheSize(128*1024*1024);
     babyAnalyzer.Init(tree);
 
+    dummy.cd();
     // Loop over Events in current file
     if (nEventsTotal >= nEventsChain) continue;
     unsigned int nEventsTree = tree->GetEntriesFast();
     for (unsigned int event = 0; event < nEventsTree; ++event) {
+    // for (unsigned int event = 0; event < 3; ++event) {
 
       // Read Tree
       if (nEventsTotal >= nEventsChain) continue;
@@ -145,17 +155,68 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
       babyAnalyzer.GetEntry(event);
       ++nEventsTotal;
 
+      // if (sample.isData) {
+      if (true) {
+        if ( applyjson && !goodrun(run(), ls()) ) continue;
+	duplicate_removal::DorkyEventIdentifier id(run(), evt(), ls());
+	if ( is_duplicate(id) ) continue;
+      }
 
+      // apply filters
+      // if (!filt_globalTightHalo2016()) continue; // problematic
+      if ( !filt_globalsupertighthalo2016() ) continue;
+      if ( !filt_hbhenoise() ) continue;
+      if ( !filt_hbheisonoise() )   continue;
+      if ( !filt_ecaltp() ) continue;
+      if ( !filt_eebadsc() ) continue;
+      if ( !filt_goodvtx() ) continue;
+      if ( firstGoodVtxIdx() == -1 ) continue;
+      if ( !filt_badMuonFilter() ) continue;
+      if ( !filt_badChargedCandidateFilter() ) continue;
+      
+      map<string,float> vals;
+
+      vals["mt"] = MT2W();
+      vals["met"] = pfmet();
+      vals["mlb"] = 1; // just here for demonstration purpose for now.
+      vals["tmod"] = (topnessMod() < 0)? 0 : 1;
+      vals["nlep"] = 1; // just here for demonstration purpose for now.
+      vals["njet"] = ak4pfjets_p4().size();
+      vals["nbjet"] = 1; // just here for demonstration purpose for now.
+
+      string suf = "";
+      float evtweight_ = 1.0; // just here for demonstration purpose for now.
+
+
+      ++nPassedTotal;
+
+      for (auto& cr : CRVec) {
+        if ( cr.PassesSelection(vals) ) {
+          // cout << "Passed selections!: " << cr.GetName() << endl;
+          plot1D("h_met"+suf, pfmet(), evtweight_, cr.histMap, ";E_{T}^{miss} [GeV]", 150, 0, 1500);
+        }
+      }
     }
 
     delete tree;
     file.Close();
   } // end of file loop
 
-  cout << "[StopLooper::looper] processed " << nEventsTotal << " events" << endl;
+  cout << "[StopLooper::looper] processed  " << nEventsTotal << " events" << endl;
   if ( nEventsChain != nEventsTotal )
     std::cout << "WARNING: number of events from files is not equal to total number of events" << std::endl;
 
+  outfile_->cd();
+
+  for (auto& cr : CRVec) {
+    TDirectory * dir = (TDirectory*) outfile_->Get(cr.GetName().c_str());
+    if (dir == 0) dir = outfile_->mkdir(cr.GetName().c_str()); // shouldn't happen
+    dir->cd();
+    for (auto& h : cr.histMap) {
+      if (h.first.find("HI") != string::npos || h.first.find("LOW") != string::npos) continue;
+      h.second->Write();
+    }
+  }
 
   outfile_->Write();
   outfile_->Close();
@@ -163,7 +224,8 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
   bmark->Stop("benchmark");
 
   cout << endl;
-  cout << nEventsTotal << " Events Processed, where " << nDuplicates << " duplicates were skipped" << endl;
+  cout << nEventsTotal << " Events Processed, where " << nDuplicates << " duplicates were skipped, and ";
+  cout << nPassedTotal << " Events passed all selections." << endl;
   cout << "------------------------------" << endl;
   cout << "CPU  Time:	" << Form( "%.01f s", bmark->GetCpuTime("benchmark")  ) << endl;
   cout << "Real Time:	" << Form( "%.01f s", bmark->GetRealTime("benchmark") ) << endl;

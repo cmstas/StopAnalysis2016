@@ -40,7 +40,7 @@ LIB = libStopLooper.so
 
 CORESOURCES = $(wildcard ../StopCORE/*.cc)
 COREOBJECTS = $(CORESOURCES:.cc=.o)
-CORELIB = $(wildcard ../StopCORE/libStopCORE.so)
+CORELIB = $(wildcard ../StopCORE/*.so)
 
 TOOLSSOURCES = $(wildcard ../CORE/Tools/*.cc) $(wildcard ../CORE/Tools/dorky/*.cc)
 TOOLSOBJECTS = $(TOOLSSOURCES:.cc=.o)
@@ -104,15 +104,21 @@ b: build
 
 clean:
 	rm -f \
-	LinkDef_out* \
 	*.o \
+	*.so \
+	$(EXE)
+
+.PHONY: cleanall
+cleanall:
+	rm -f \
 	$(LIBS) \
-	$(EXE) \
-        ../CORE/Tools/*.o \
+	../StopCORE/*.o \
+	../StopCORE/*.so \
+	../CORE/Tools/*.o \
 	../CORE/Tools/*.d \
-        ../CORE/Tools/*.so \
-        ../CORE/Tools/dorky/*.o \
+	../CORE/Tools/*.so \
+	../CORE/Tools/dorky/*.o \
 	../CORE/Tools/dorky/*.d \
-        ../CORE/Tools/dorky/*.so
+	../CORE/Tools/dorky/*.so
 
 endif

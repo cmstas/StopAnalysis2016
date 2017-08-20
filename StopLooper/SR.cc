@@ -55,8 +55,8 @@ bool SR::PassesSelection(map<string, float> values) const {
       float value = values[it->first];
       float cut_lower = (it->second).first;
       float cut_upper = (it->second).second;
-      if(value < cut_lower) return false;
-      if(( abs(cut_upper + 1.0) > ep ) && (value >= cut_upper)) return false;
+      if (value < cut_lower) return false;
+      if (( abs(cut_upper + 1.0) > ep ) && (value >= cut_upper)) return false;
     }
     else if(!kAllowDummyVars_) {
       throw invalid_argument("Cut variable " + it->first + " not found in values");

@@ -1,13 +1,13 @@
-#include "sigSelections.h"
+#include "StopSelections.h"
 
 
 std::vector<SR> getStopControlRegions() {
   SR base;
   
   SR crbase;
-  crbase.SetVar("mt", 150, -1);
-  crbase.SetVar("met", 200, -1);
-  crbase.SetVar("mlb", 200, -1);
+  crbase.SetVar("mt", 100, -1);
+  crbase.SetVar("met", 50, -1);
+  crbase.SetVar("mlb", 0, -1);
   crbase.SetVar("tmod", 0, 2);
   crbase.SetVar("nlep", 1, 2);
   crbase.SetVar("njet", 2, -1);
