@@ -9,26 +9,31 @@
 
 #include "TH1.h"
 
+// class: SR [Stop Region]
+// some more descriptions here...
+
 class SR {
 
 public:
 
-  SR() {}
-  SR(std::string s) : srName_(s) {}
+  SR() : yield_(0) {}
+  SR(std::string name) : yield_(0), srname_(name) {}
+  SR(const SR& sr) = default;
+
   ~SR() {}
 
   void SetName(std::string sr_name);
   void SetVar(std::string var_name, float lower_bound, float upper_bound);
-  void SetAllowingDummyVars(bool val);
+  void CheckNumOfVarsMatch(bool val);
 
   std::string GetName() const;
-
+  unsigned int GetYield() const;
   float GetLowerBound(std::string var_name) const;
   float GetUpperBound(std::string var_name) const;
   unsigned int GetNumberOfVariables() const;
   std::vector<std::string> GetListOfVariables() const;
 
-  bool PassesSelection(std::map<std::string, float> values) const;
+  bool PassesSelection(std::map<std::string, float> values);
   void RemoveVar(std::string var_name);
   void Clear();
 
@@ -37,22 +42,24 @@ public:
 
 private:
 
-  std::string srName_;
+  unsigned int yield_;
+  std::string srname_;
   std::map<std::string,std::pair<float,float>> bins_;
+  std::vector<std::string> defaultplots_;
   bool kAllowDummyVars_;
 
 };
 
 
-struct SRsets {
+struct SRptrSet {
   std::vector<float> bins;
   std::vector<std::set<SR*>> sets;
 };
 
 // Helper Functions
-std::map<std::string,SRsets> generateSRsets(const std::vector<SR>& SRvec);
+std::map<std::string,SRptrSet> generateSRptrSet(const std::vector<SR*>& SRptrVec);
 
-std::vector<SR*> findSatisfiedSRset(const std::map<std::string,float>& vars, const std::map<std::string,SRsets>& setsMap);
+std::vector<SR*> findSatisfiedSRset(const std::map<std::string,float>& vars, const std::map<std::string,SRptrSet>& setsMap);
 
 
 #endif

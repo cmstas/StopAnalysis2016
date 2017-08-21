@@ -9,19 +9,23 @@
 using namespace std;
 
 void SR::SetName(string sr_name) {
-  srName_ = sr_name;
+  srname_ = sr_name;
 }
 
 void SR::SetVar(string var_name, float lower_bound, float upper_bound) {
   bins_[var_name] = pair<float,float>(lower_bound, upper_bound);
 }
 
-void SR::SetAllowingDummyVars(bool val) {
+void SR::CheckNumOfVarsMatch(bool val) {
   kAllowDummyVars_ = val;
 }
 
 string SR::GetName() const {
-  return srName_;
+  return srname_;
+}
+
+unsigned int SR::GetYield() const {
+  return yield_;
 }
 
 float SR::GetLowerBound(string var_name) const {
@@ -44,13 +48,13 @@ vector<string> SR::GetListOfVariables() const {
   return vars;
 }
 
-bool SR::PassesSelection(map<string, float> values) const {
+bool SR::PassesSelection(map<string, float> values) {
   float ep = 0.000001;
-  if((kAllowDummyVars_)? GetNumberOfVariables() < values.size() : GetNumberOfVariables() != values.size()) {
+  if ((kAllowDummyVars_)? GetNumberOfVariables() < values.size() : GetNumberOfVariables() != values.size()) {
     cout << "Number of variables to cut on != number of variables in signal region. Passed " << values.size() << ", expected " << GetNumberOfVariables() << endl;
-    throw invalid_argument(srName_ + ": Number of variables to cut on != number of variables in signal region");
+    throw invalid_argument(srname_ + ": Number of variables to cut on != number of variables in signal region");
   }
-  for(auto it = bins_.begin(); it != bins_.end(); it++) {
+  for (auto it = bins_.begin(); it != bins_.end(); it++) {
     if(values.find(it->first) != values.end()) { //check that we actually have bounds set for this variable
       float value = values[it->first];
       float cut_lower = (it->second).first;
@@ -58,10 +62,11 @@ bool SR::PassesSelection(map<string, float> values) const {
       if (value < cut_lower) return false;
       if (( abs(cut_upper + 1.0) > ep ) && (value >= cut_upper)) return false;
     }
-    else if(!kAllowDummyVars_) {
+    else if (!kAllowDummyVars_) {
       throw invalid_argument("Cut variable " + it->first + " not found in values");
     }
   }
+  ++yield_;
   return true;
 }
 
@@ -71,46 +76,52 @@ void SR::RemoveVar(string var_name) {
 }
 
 void SR::Clear() {
-  srName_ = "";
+  srname_ = "";
   bins_.clear();
+  defaultplots_.clear();
   kAllowDummyVars_ = false;
 }
 
 
 // --------------------------------------------------------------------------------
-//                             Helper Functions                                   
+//                             Helper Functions
 // --------------------------------------------------------------------------------
 
-map<string,SRsets> generateSRsets(const vector<SR>& SRvec)
+map<string,SRptrSet> generateSRptrSet(const vector<SR*>& SRptrVec)
 {
-  map<string,SRsets> var_to_SRset;
+  map<string,SRptrSet> var_to_SRset;
   map<string,set<tuple<float,float,SR*>>> master_map;
 
-  for (const auto& sr : SRvec) {
-    auto varlist = sr.GetListOfVariables();
+  cout << __FILE__ << __LINE__ << ": SRptrVec.size(): " << SRptrVec.size() << endl;
+  for (const auto& isr : SRptrVec) {
+    auto varlist = isr->GetListOfVariables();
     for (auto& var : varlist) {
-      float lower = sr.GetLowerBound(var), upper = sr.GetUpperBound(var);
+      // cout << __FILE__ << __LINE__ << ": var: " << var << endl;
+      float lower = isr->GetLowerBound(var), upper = isr->GetUpperBound(var);
       if (!master_map.count(var))
-        master_map[var] = { {lower, upper, (SR*) &sr} };
-      else 
-        master_map[var].emplace(lower, upper, (SR*) &sr);
+        master_map[var] = { {lower, upper, isr} };
+      else
+        master_map[var].emplace(lower, upper, isr);
     }
   }
 
+  cout << __FILE__ << __LINE__ << ": master_map.size(): " << master_map.size() << endl;
+  return var_to_SRset;
+
   for (auto it = master_map.begin(); it != master_map.end(); ++it) {
-    set<float> edges; 
+    set<float> edges;
     for (auto vlist : it->second) {
       edges.insert(get<0>(vlist));
       edges.insert(get<1>(vlist));
     }
-    
+
     if (edges.erase(-1)) edges.insert(numeric_limits<float>::max());
     vector<float> bins(edges.begin(),edges.end());
     vector<set<SR*>> srsets(edges.size()-1);
 
     auto ib = bins.begin(), ie = bins.end();
     // sort(ib, ie);
-   
+
     for (auto vlist : it->second) {
       auto il = lower_bound(ib, ie, get<0>(vlist));
       auto ir = lower_bound(ib, ie, get<1>(vlist));
@@ -125,7 +136,7 @@ map<string,SRsets> generateSRsets(const vector<SR>& SRvec)
 }
 
 
-vector<SR*> findSatisfiedSRset(const map<string,float>& vars, const map<string,SRsets>& setsMap)
+vector<SR*> findSatisfiedSRset(const map<string,float>& vars, const map<string,SRptrSet>& setsMap)
 {
   vector<SR*> srset;
   bool firstvar = true;
