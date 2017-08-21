@@ -79,15 +79,16 @@ const bool fasterRuntime = true;
 
 void StopLooper::SetSignalRegions() {
 
-  CRVec = getStopControlRegions();
+  CR2lVec = getStopControlRegionsDilepton();
+  CR0bVec = getStopControlRegionsNoBTags();
 
   if (verbose) {
-    cout << "CRVec.size = " << CRVec.size() << ", including the following:" << endl;
-    for (auto it = CRVec.begin(); it != CRVec.end(); ++it)
-      cout << it-CRVec.begin() << "  "<< it->GetName() << endl;
+    cout << "CR2lVec.size = " << CR2lVec.size() << ", including the following:" << endl;
+    for (auto it = CR2lVec.begin(); it != CR2lVec.end(); ++it)
+      cout << it-CR2lVec.begin() << "  "<< it->GetName() << endl;
   }
 
-  for (auto& cr : CRVec) {
+  for (auto& cr : CR2lVec) {
     vector<string> vars = cr.GetListOfVariables();
     TDirectory * dir = (TDirectory*) outfile_->Get((cr.GetName() + "/ranges").c_str());
     if (dir == 0) dir = outfile_->mkdir((cr.GetName() + "/ranges").c_str());
@@ -100,6 +101,20 @@ void StopLooper::SetSignalRegions() {
 }
 
 
+void StopLooper::GenerateAllSRptrSets() {
+  allSRptrSets.clear();
+
+  vector<SR*> all_SRptrs;
+  // all_SRptrs.reserve(SRVec.size() + CRVec.size());
+  for (auto& sr : SRVec) all_SRptrs.push_back(&sr);
+  for (auto& cr : CR2lVec) all_SRptrs.push_back(&cr);
+  for (auto& cr : CR0bVec) all_SRptrs.push_back(&cr);
+
+  // cout << __FILE__ << __LINE__ << ": all_SRptrs.size(): " << all_SRptrs.size() << endl;
+  // for (auto a : all_SRptrs) cout << __FILE__ << ':' << __LINE__ << ": a= " << a << endl;
+  // allSRptrSets = generateSRptrSet(all_SRptrs);
+}
+
 void StopLooper::looper(TChain* chain, string sample, string output_dir) {
 
   // Benchmark
@@ -108,21 +123,22 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
 
   // gROOT->cd();
   TString output_name = Form("%s/%s.root",output_dir.c_str(),sample.c_str());
-  cout << "[StopLooper::looper] creating output file: " << output_name << endl;  outfile_ = new TFile(output_name.Data(),"RECREATE") ; 
+  cout << "[StopLooper::looper] creating output file: " << output_name << endl;  outfile_ = new TFile(output_name.Data(),"RECREATE") ;
 
-  outfile_ = new TFile(output_name.Data(), "RECREATE") ; 
+  outfile_ = new TFile(output_name.Data(), "RECREATE") ;
 
   // full 2016 dataset json, 36.26/fb:
   // const char* json_file = "../StopCORE/inputs/json_files/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt";
-  const char* json_file = "../StopCORE/inputs/json_files/Cert_294927-300575_13TeV_PromptReco_Collisions17_JSON_snt.txt";  // 2017 dataset json 
+  const char* json_file = "../StopCORE/inputs/json_files/Cert_294927-300575_13TeV_PromptReco_Collisions17_JSON_snt.txt";  // 2017 dataset json
   if (applyjson) {
     cout << "Loading json file: " << json_file << endl;
     set_goodrun_file(json_file);
   }
-  
+
   // sampleInfo::sampleUtil sample( sampleInfo::ID::k_single_mu );
   TFile dummy( (output_dir+"/dummy.root").c_str(), "RECREATE" );
   SetSignalRegions();
+  GenerateAllSRptrSets();
 
   int nDuplicates = 0;
   int nEvents = chain->GetEntries();
@@ -147,7 +163,6 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
     if (nEventsTotal >= nEventsChain) continue;
     unsigned int nEventsTree = tree->GetEntriesFast();
     for (unsigned int event = 0; event < nEventsTree; ++event) {
-      // if (event > 3) break;
 
       // Read Tree
       if (nEventsTotal >= nEventsChain) continue;
@@ -155,14 +170,13 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
       babyAnalyzer.GetEntry(event);
       ++nEventsTotal;
 
-      // if (sample.isData) {
-      if (true) {
+      if ( is_data() ) {
         if ( applyjson && !goodrun(run(), ls()) ) continue;
 	duplicate_removal::DorkyEventIdentifier id(run(), evt(), ls());
 	if ( is_duplicate(id) ) continue;
       }
 
-      // apply filters
+      // Apply filters
       // if (!filt_globalTightHalo2016()) continue; // problematic
       if ( !filt_globalsupertighthalo2016() ) continue;
       if ( !filt_hbhenoise() ) continue;
@@ -173,30 +187,62 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
       if ( firstGoodVtxIdx() == -1 ) continue;
       if ( !filt_badMuonFilter() ) continue;
       if ( !filt_badChargedCandidateFilter() ) continue;
-      
+
+      // Place for some vetos
+      // if ( therecolepveto && nvetoleps()!=1 ) continue;
+      // if ( theisotrackveto && !PassTrackVeto() ) continue;
+      // if ( thetauveto && !PassTauVeto() ) continue;
+
+
+      ++nPassedTotal;
+
       map<string,float> vals;
 
-      // vals["mt"] = MT2W();
+      vals["mt"] = mt_met_lep();
       vals["met"] = pfmet();
       vals["mt2w"] = MT2W();
       vals["mlb"] = Mlb_closestb();
       vals["tmod"] = (topnessMod() < 0)? 0 : 1;
-      vals["nlep"] = 1; // just here for demonstration purpose for now.
+      vals["nlep"] = ngoodleps();
       vals["njet"] = ngoodjets();
       vals["nbjet"] = ngoodbtags();
       vals["dphijmet"]= mindphi_met_j1_j2();
 
       evtweight_ = 1.0; // just here for demonstration purpose for now.
 
-      ++nPassedTotal;
+      // Some stuff to do with MC
+      if ( !is_data() ) {
+        vector<float> jet_pt;
+        vector<float> jet_eta;
+        vector<float> jet_CSV;
+        vector<int>   jet_flavour;
 
-      fillHistosForCR(vals);
+        for (unsigned iJet=0; iJet < ak4pfjets_p4().size(); iJet++) {
+          jet_pt.push_back( ak4pfjets_p4().at(iJet).Pt() );
+          jet_eta.push_back( ak4pfjets_p4().at(iJet).Eta() );
+          jet_CSV.push_back( ak4pfjets_CSV().at(iJet) );
+          jet_flavour.push_back( abs(ak4pfjets_hadron_flavor().at(iJet)) );
+        }
+      }
+
+      // Filling histograms
+      // fillHistosForSR(vals);
+
+      if (ngoodleps() == 1 && nvetoleps() >= 2 && lep2_p4().Pt()>10) vals["nlep"] = 2;
+      vals["mt"] = mt_met_lep_rl();
+      vals["mt2w"] = MT2W_rl();
+      vals["met"] = pfmet_rl();
+      vals["dphijmet"]= mindphi_met_j1_j2_rl();
+      vals["tmod"] = (topnessMod_rl() < 0)? 0 : 1;
+
+      fillHistosForCR2l(vals);
+
       // Easy to add sets of plots for modified condition
-
       auto vals_3j = vals;
       vals_3j["njet"]--;        // effectively go down to requiring 3 jet
-      fillHistosForCR(vals_3j, "_3j");
+      fillHistosForCR0b(vals_3j, "_3j");
 
+      if (event > 1000) break;  // for debug purpose
     } // end of event loop
 
     delete tree;
@@ -209,7 +255,7 @@ void StopLooper::looper(TChain* chain, string sample, string output_dir) {
 
   outfile_->cd();
 
-  for (auto& cr : CRVec) {
+  for (auto& cr : CR2lVec) {
     TDirectory * dir = (TDirectory*) outfile_->Get(cr.GetName().c_str());
     if (dir == 0) dir = outfile_->mkdir(cr.GetName().c_str()); // shouldn't happen
     dir->cd();
@@ -251,8 +297,8 @@ void StopLooper::fillHistosForSR(map<string,float>& vals, string suf) {
   }
 }
 
-void StopLooper::fillHistosForCR(map<string,float>& vals, string suf) {
-  for (auto& cr : CRVec) {
+void StopLooper::fillHistosForCR2l(map<string,float>& vals, string suf) {
+  for (auto& cr : CR2lVec) {
     if ( cr.PassesSelection(vals) ) {
       // This plot function port from MT2 demonstrate the simpleness of adding extra plots anywhere in the code
       // and this functionality is great for quick checks
@@ -266,3 +312,17 @@ void StopLooper::fillHistosForCR(map<string,float>& vals, string suf) {
   }
 }
 
+void StopLooper::fillHistosForCR0b(map<string,float>& vals, string suf) {
+  for (auto& cr : CR0bVec) {
+    if ( cr.PassesSelection(vals) ) {
+      // This plot function port from MT2 demonstrate the simpleness of adding extra plots anywhere in the code
+      // and this functionality is great for quick checks
+      plot1D("h_met"+suf, pfmet(), evtweight_, cr.histMap, ";E_{T}^{miss} [GeV]", 150, 0, 1500);
+      plot1D("h_njet"+suf, ngoodjets(), evtweight_, cr.histMap, ";n jets", 20, 0, 20);
+
+      // The following skim is under development, can be used to fill standard set of plots
+      // for (string v : {"njet", "nbjet", "mt2w"})
+      //   plot1d("h_"+v +suf, vals[v], evtweigh  t_, cr.histMap);
+    }
+  }
+}

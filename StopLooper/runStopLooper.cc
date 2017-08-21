@@ -15,8 +15,8 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  string input_dir(argv[1]); 
-  string sample(argv[2]); 
+  string input_dir(argv[1]);
+  string sample(argv[2]);
   string output_dir(argv[3]);
 
   TChain *ch = new TChain("t");
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
   }
 
   StopLooper stop;
-  stop.looper(ch, sample, output_dir); 
+  stop.looper(ch, sample, output_dir);
 
   return 0;
 }
