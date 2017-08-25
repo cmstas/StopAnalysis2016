@@ -24,7 +24,8 @@ clean` first).
 
 ## Running the babymaker
 
-The main exectuable is `runBabyMaker`. To run it, you need to provide a minimum of one argument, and a maximum of six.
+The main exectuable is `runBabyMaker`. To run it, you need to provide at least the first argument, and a maximum of six arguments.
+
 `./runBabyMaker sample_name nevents file_number outpath sampleList isFastsim`
 
 - **sample\_name**: This is the compact name for the sample you want to run on. These sample names are defined in the various sample\*.dat files.
