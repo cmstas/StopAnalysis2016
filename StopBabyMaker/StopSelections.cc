@@ -54,12 +54,16 @@ bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,
           // get uncorrected jet p4 to use as input for corrections
         LorentzVector pfjet_p4_uncor = pfjets_p4().at(jetIdx) * cms3.pfjets_undoJEC().at(jetIdx);
 
+	double corr = 1;
+	//cout << __LINE__ << " " << JES_type << " " << applynewcorr << endl;
+	if(applynewcorr){
           // get L1FastL2L3Residual total correction
           corrector->setRho   ( cms3.evt_fixgridfastjet_all_rho() );
           corrector->setJetA  ( cms3.pfjets_area().at(jetIdx)       );
           corrector->setJetPt ( pfjet_p4_uncor.pt()               );
           corrector->setJetEta( pfjet_p4_uncor.eta()              );
-          double corr = corrector->getCorrection();
+          corr = corrector->getCorrection();
+	}
 
           // check for negative correction
           if (corr < 0. && fabs(pfjet_p4_uncor.eta()) < 4.7) {
@@ -175,6 +179,8 @@ int getOverlappingJetIndex(LorentzVector& lep_, vector<LorentzVector> jets_, dou
   int closestjet_idx = 0;
   
   if(jets_.size()==0) return -999;
+  //cout << __LINE__ << " " << JES_type << " " << applynewcorr << endl;
+
   
 	for(unsigned int iJet=1; iJet<jets_.size(); iJet++){
 	  if(!PassJetPreSelections(iJet,pt,eta,passjid,corrector,applynewcorr,jetcorr_uncertainty,JES_type,isFastsim)) continue;
