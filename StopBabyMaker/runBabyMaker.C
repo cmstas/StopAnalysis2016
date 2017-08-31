@@ -89,7 +89,7 @@ int main(int argc, char **argv){
   //
   int nVtx              = 1;
 
-  float met             = 50;
+  float met             = 100;
 
   int nGoodLeptons      = 1;
   float goodLep_el_pt   = 20.0;
@@ -113,8 +113,9 @@ int main(int argc, char **argv){
 
   int nBJets            = 0; 
 
-  bool applyJECfromFile = true;
-  int JES_central_up_down = 0;  //0 cetranl, 1 up, -1 down;
+  //temporarily set to false in order to take JECs from miniAOD directly for 2017 early data
+  bool applyJECfromFile = false; //THIS FLAG DECIDES NOW TOO IF JESUP/DOWN VALUES ARE CALCULATED
+  int JES_central_up_down = 0;  //0 central, 1 up, -1 down; // not needed anymore
   bool applyBtagSFs = true; 
   bool applyLeptonSFs = true;
   bool applyVetoLeptonSFs = true;

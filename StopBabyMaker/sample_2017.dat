@@ -18,6 +18,10 @@ SAMPLE
 Name data_met_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/MET_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
 
+SAMPLE
+Name data_met_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/MET_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
+
 
 #######################################################
 ## 2017 Single Electron data
@@ -38,6 +42,10 @@ Path /hadoop/cms/store/user/namin/ProjectMetis/SingleElectron_Run2017C-PromptRec
 SAMPLE
 Name data_single-electron_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/SingleElectron_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
+
+SAMPLE
+Name data_single-electron_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/SingleElectron_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
 
 
 #######################################################
@@ -60,6 +68,10 @@ SAMPLE
 Name data_single_muon_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/SingleMuon_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
 
+SAMPLE
+Name data_single_muon_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/SingleMuon_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
+
 
 #######################################################
 ## 2017 Double Electron data
@@ -80,6 +92,10 @@ Path /hadoop/cms/store/user/namin/ProjectMetis/DoubleEG_Run2017C-PromptReco-v1_M
 SAMPLE
 Name data_double_eg_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/DoubleEG_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
+
+SAMPLE
+Name data_double_eg_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/DoubleEG_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
 
 
 #######################################################
@@ -102,6 +118,10 @@ SAMPLE
 Name data_double_mu_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/DoubleMuon_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
 
+SAMPLE
+Name data_double_mu_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/DoubleMuon_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
+
 
 #######################################################
 ## 2017 MuonEG data
@@ -122,6 +142,10 @@ Path /hadoop/cms/store/user/namin/ProjectMetis/MuonEG_Run2017C-PromptReco-v1_MIN
 SAMPLE
 Name data_muon_eg_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/MuonEG_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
+
+SAMPLE
+Name data_muon_eg_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/MuonEG_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
 
 
 #######################################################
@@ -144,6 +168,10 @@ SAMPLE
 Name data_htmht_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/HTMHT_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
 
+SAMPLE
+Name data_htmht_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/HTMHT_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
+
 
 #######################################################
 ## 2017 Jet-HT data
@@ -165,6 +193,10 @@ SAMPLE
 Name data_jetht_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/JetHT_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
 
+SAMPLE
+Name data_jetht_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/JetHT_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
+
 
 #######################################################
 ## 2017 Single Photon data
@@ -185,6 +217,10 @@ Path /hadoop/cms/store/user/namin/ProjectMetis/SinglePhoton_Run2017C-PromptReco-
 SAMPLE
 Name data_single_photon_Run2017C_MINIAOD_PromptReco-v2
 Path /hadoop/cms/store/user/namin/ProjectMetis/SinglePhoton_Run2017C-PromptReco-v2_MINIAOD_CMS4_V00-00-06/
+
+SAMPLE
+Name data_single_photon_Run2017C_MINIAOD_PromptReco-v3
+Path /hadoop/cms/store/user/namin/ProjectMetis/SinglePhoton_Run2017C-PromptReco-v3_MINIAOD_CMS4_V00-00-06/
 
 
 #######################################################

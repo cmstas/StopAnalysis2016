@@ -157,7 +157,7 @@ void babyMaker::setSkimVariables(int nvtx, float met, int nGoodLep, float goodLe
   skim_ph_pt           = phs_pt;
   skim_ph_eta          = phs_eta;
   skim_2ndlepveto      = apply2ndlepveto; 
-  applyJECfromFile     = applyJEC;
+  applyJECfromFile     = applyJEC;//THIS FLAG DECIDES NOW TOO IF JESUP/DOWN VALUES ARE CALCULATED
   JES_type 	       = JES_type_central_up_down;
   skim_applyLeptonSFs  = applyLeptonSFs;
   skim_applyVetoLeptonSFs  = applyVetoLeptonSFs;
@@ -921,6 +921,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L2L3Residual_AK4PFchs.txt");
       jetcorr_uncertainty_filename = "jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_Uncertainty_AK4PFchs.txt";
     }
+    if(filestr.find("2017") != std::string::npos){//this is currently a dummy if someone sets a wrong flag in runBabyMaker
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L2Relative_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L3Absolute_AK4PFchs.txt");
+      jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_L2L3Residual_AK4PFchs.txt");
+      jetcorr_uncertainty_filename = "jecfiles/Summer16_23Sep2016HV3_DATA/Summer16_23Sep2016HV3_DATA_Uncertainty_AK4PFchs.txt";
+    }
 
     // Run independent from ICHEP
     //jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jecfiles/Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
@@ -1480,13 +1487,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //fill lep-dphi
       if( nVetoLeptons > 0 ) {
 	lep1.dphiMET = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi);
-	lep1.dphiMET_jup = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_jup);
-	lep1.dphiMET_jdown = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_jdown);
+	if(applyJECfromFile){
+	  lep1.dphiMET_jup = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_jup);
+	  lep1.dphiMET_jdown = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_jdown);
+	}
       }
       if( nVetoLeptons > 1 ) {
 	lep2.dphiMET = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi);
-	lep2.dphiMET_jup = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_jup);
-	lep2.dphiMET_jdown = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_jdown);
+	if(applyJECfromFile){
+	  lep2.dphiMET_jup = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_jup);
+	  lep2.dphiMET_jdown = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_jdown);
+	}
       }
       // Lepton SFs
       float lepSF_pt_cutoff = 99.999;
@@ -1890,8 +1901,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	  if(jets_jdown.ak4pfjets_p4[jdx].Pt()>200 && jets_jdown.dphi_ak4pfjet_met[jdx]>(TMath::Pi()-0.4) && jets_jdown.ak4pfjets_muf[jdx]>0.5) isbadmuonjet = true;
 	}
 	StopEvt.filt_jetWithBadMuon_jdown = !isbadmuonjet;
-	
       }
+      
       if (!evt_isRealData()){
 	int NISRjets = 0;
 	int nonISRjets = 0;
@@ -2066,7 +2077,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	break;
       }
       StopEvt.filt_fastsimjets_jup = !fastsimfilt_jup;
-
+	
       // FastSim filter, JESdn Jets
       bool fastsimfilt_jdown = false;
       for(unsigned int jix = 0; jix<jets_jdown.ak4pfjets_p4.size();++jix){
@@ -2082,7 +2093,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	break;
       }
       StopEvt.filt_fastsimjets_jdown = !fastsimfilt_jdown;
-
       //
       // Photon Selection
       //
@@ -2107,9 +2117,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       
       // MET & Leptons
       if(nVetoLeptons>0) StopEvt.mt_met_lep = calculateMt(lep1.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
-      if(nVetoLeptons>0) StopEvt.mt_met_lep_jup = calculateMt(lep1.p4, StopEvt.pfmet_jup, StopEvt.pfmet_phi_jup);
-      if(nVetoLeptons>0) StopEvt.mt_met_lep_jdown = calculateMt(lep1.p4, StopEvt.pfmet_jdown, StopEvt.pfmet_phi_jdown);
-
+      if(applyJECfromFile){
+	if(nVetoLeptons>0) StopEvt.mt_met_lep_jup = calculateMt(lep1.p4, StopEvt.pfmet_jup, StopEvt.pfmet_phi_jup);
+	if(nVetoLeptons>0) StopEvt.mt_met_lep_jdown = calculateMt(lep1.p4, StopEvt.pfmet_jdown, StopEvt.pfmet_phi_jdown);
+      }
       if(nVetoLeptons>1) StopEvt.mt_met_lep2 = calculateMt(lep2.p4, StopEvt.pfmet, StopEvt.pfmet_phi);
       if(nVetoLeptons>0) StopEvt.dphi_Wlep = DPhi_W_lep(StopEvt.pfmet, StopEvt.pfmet_phi, lep1.p4);
       if(jets.ak4pfjets_p4.size()> 0) StopEvt.MET_over_sqrtHT = StopEvt.pfmet/TMath::Sqrt(jets.ak4_HT);
@@ -2126,24 +2137,25 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       }
 
       vector<int> jetIndexSortedCSV_jup;
-      if(skim_isFastsim) jetIndexSortedCSV_jup = JetUtil::JetIndexCSVsorted(jets_jup.ak4pfjets_CSV, jets_jup.ak4pfjets_p4, jets_jup.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, false);
-      else jetIndexSortedCSV_jup = JetUtil::JetIndexCSVsorted(jets_jup.ak4pfjets_CSV, jets_jup.ak4pfjets_p4, jets_jup.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, true);
-      vector<LorentzVector> mybjets_jup; vector<LorentzVector> myaddjets_jup;
-      for(unsigned int idx = 0; idx<jetIndexSortedCSV_jup.size(); ++idx){
-        if(jets_jup.ak4pfjets_passMEDbtag.at(jetIndexSortedCSV_jup[idx])==true) mybjets_jup.push_back(jets_jup.ak4pfjets_p4.at(jetIndexSortedCSV_jup[idx]) );
-        else if(mybjets_jup.size()<=1 && (mybjets_jup.size()+myaddjets_jup.size())<3) myaddjets_jup.push_back(jets_jup.ak4pfjets_p4.at(jetIndexSortedCSV_jup[idx]) );
-      }
-
       vector<int> jetIndexSortedCSV_jdown;
-      if(skim_isFastsim) jetIndexSortedCSV_jdown = JetUtil::JetIndexCSVsorted(jets_jdown.ak4pfjets_CSV, jets_jdown.ak4pfjets_p4, jets_jdown.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, false);
-      else jetIndexSortedCSV_jdown = JetUtil::JetIndexCSVsorted(jets_jdown.ak4pfjets_CSV, jets_jdown.ak4pfjets_p4, jets_jdown.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, true);
+      vector<LorentzVector> mybjets_jup; vector<LorentzVector> myaddjets_jup;
       vector<LorentzVector> mybjets_jdown; vector<LorentzVector> myaddjets_jdown;
-      for(unsigned int idx = 0; idx<jetIndexSortedCSV_jdown.size(); ++idx){
-        if(jets_jdown.ak4pfjets_passMEDbtag.at(jetIndexSortedCSV_jdown[idx])==true) mybjets_jdown.push_back(jets_jdown.ak4pfjets_p4.at(jetIndexSortedCSV_jdown[idx]) );
-        else if(mybjets_jdown.size()<=1 && (mybjets_jdown.size()+myaddjets_jdown.size())<3) myaddjets_jdown.push_back(jets_jdown.ak4pfjets_p4.at(jetIndexSortedCSV_jdown[idx]) );
+      if(applyJECfromFile){
+	if(skim_isFastsim) jetIndexSortedCSV_jup = JetUtil::JetIndexCSVsorted(jets_jup.ak4pfjets_CSV, jets_jup.ak4pfjets_p4, jets_jup.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, false);
+	else jetIndexSortedCSV_jup = JetUtil::JetIndexCSVsorted(jets_jup.ak4pfjets_CSV, jets_jup.ak4pfjets_p4, jets_jup.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, true);
+	for(unsigned int idx = 0; idx<jetIndexSortedCSV_jup.size(); ++idx){
+	  if(jets_jup.ak4pfjets_passMEDbtag.at(jetIndexSortedCSV_jup[idx])==true) mybjets_jup.push_back(jets_jup.ak4pfjets_p4.at(jetIndexSortedCSV_jup[idx]) );
+	  else if(mybjets_jup.size()<=1 && (mybjets_jup.size()+myaddjets_jup.size())<3) myaddjets_jup.push_back(jets_jup.ak4pfjets_p4.at(jetIndexSortedCSV_jup[idx]) );
+	}
+	
+	if(skim_isFastsim) jetIndexSortedCSV_jdown = JetUtil::JetIndexCSVsorted(jets_jdown.ak4pfjets_CSV, jets_jdown.ak4pfjets_p4, jets_jdown.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, false);
+	else jetIndexSortedCSV_jdown = JetUtil::JetIndexCSVsorted(jets_jdown.ak4pfjets_CSV, jets_jdown.ak4pfjets_p4, jets_jdown.ak4pfjets_loose_pfid, skim_jet_pt, skim_jet_eta, true);
+	for(unsigned int idx = 0; idx<jetIndexSortedCSV_jdown.size(); ++idx){
+	  if(jets_jdown.ak4pfjets_passMEDbtag.at(jetIndexSortedCSV_jdown[idx])==true) mybjets_jdown.push_back(jets_jdown.ak4pfjets_p4.at(jetIndexSortedCSV_jdown[idx]) );
+	  else if(mybjets_jdown.size()<=1 && (mybjets_jdown.size()+myaddjets_jdown.size())<3) myaddjets_jdown.push_back(jets_jdown.ak4pfjets_p4.at(jetIndexSortedCSV_jdown[idx]) );
+	}
       }
-
-     // looks like all the following variables need jets to be calculated. 
+      // looks like all the following variables need jets to be calculated. 
       //   add protection for skim settings of njets<2
       vector<float> dummy_sigma; dummy_sigma.clear(); //move outside of if-clause to be able to copy for photon selection
       for (size_t idx = 0; idx < jets.ak4pfjets_p4.size(); ++idx){
@@ -2746,39 +2758,44 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       if(jets.ak4pfjets_p4.size()>1) StopEvt.mindphi_met_j1_j2_rl = getMinDphi(StopEvt.pfmet_phi_rl,jets.ak4pfjets_p4.at(0),jets.ak4pfjets_p4.at(1));
      
       //JEC up
-      StopEvt.pfmet_rl_jup     = std::sqrt(new_pfmet_x_jup*new_pfmet_x_jup + new_pfmet_y_jup*new_pfmet_y_jup);
-      StopEvt.pfmet_phi_rl_jup = std::atan2(new_pfmet_y_jup, new_pfmet_x_jup);
+      if(applyJECfromFile){
+	StopEvt.pfmet_rl_jup     = std::sqrt(new_pfmet_x_jup*new_pfmet_x_jup + new_pfmet_y_jup*new_pfmet_y_jup);
+	StopEvt.pfmet_phi_rl_jup = std::atan2(new_pfmet_y_jup, new_pfmet_x_jup);
+	
+	if (nVetoLeptons > 0) {
+	  StopEvt.mt_met_lep_rl_jup = calculateMt(lep1.p4, StopEvt.pfmet_rl_jup, StopEvt.pfmet_phi_rl_jup);
+	  StopEvt.MT2W_rl_jup = CalcMT2W_(mybjets_jup,myaddjets_jup,lep1.p4,StopEvt.pfmet_rl_jup, StopEvt.pfmet_phi_rl_jup);
+	  StopEvt.topnessMod_rl_jup = CalcTopness_(1,StopEvt.pfmet_rl_jup,StopEvt.pfmet_phi_rl_jup,lep1.p4,mybjets_jup,myaddjets_jup);
+	}
+	
+	if(jets_jup.ak4pfjets_p4.size()>1) StopEvt.mindphi_met_j1_j2_rl_jup = getMinDphi(StopEvt.pfmet_phi_rl_jup,jets_jup.ak4pfjets_p4.at(0),jets_jup.ak4pfjets_p4.at(1));
+	
+	//JEC down
+	StopEvt.pfmet_rl_jdown     = std::sqrt(new_pfmet_x_jdown*new_pfmet_x_jdown + new_pfmet_y_jdown*new_pfmet_y_jdown);
+	StopEvt.pfmet_phi_rl_jdown = std::atan2(new_pfmet_y_jdown, new_pfmet_x_jdown);
+	
+	if (nVetoLeptons > 0) {
+	  StopEvt.mt_met_lep_rl_jdown = calculateMt(lep1.p4, StopEvt.pfmet_rl_jdown, StopEvt.pfmet_phi_rl_jdown);
+	  StopEvt.MT2W_rl_jdown = CalcMT2W_(mybjets_jdown,myaddjets_jdown,lep1.p4,StopEvt.pfmet_rl_jdown, StopEvt.pfmet_phi_rl_jdown);
+	  StopEvt.topnessMod_rl_jdown = CalcTopness_(1,StopEvt.pfmet_rl_jdown,StopEvt.pfmet_phi_rl_jdown,lep1.p4,mybjets_jdown,myaddjets_jdown);
+	}
 
-      if (nVetoLeptons > 0) {
-        StopEvt.mt_met_lep_rl_jup = calculateMt(lep1.p4, StopEvt.pfmet_rl_jup, StopEvt.pfmet_phi_rl_jup);
-        StopEvt.MT2W_rl_jup = CalcMT2W_(mybjets_jup,myaddjets_jup,lep1.p4,StopEvt.pfmet_rl_jup, StopEvt.pfmet_phi_rl_jup);
-        StopEvt.topnessMod_rl_jup = CalcTopness_(1,StopEvt.pfmet_rl_jup,StopEvt.pfmet_phi_rl_jup,lep1.p4,mybjets_jup,myaddjets_jup);
+	if(jets_jdown.ak4pfjets_p4.size()>1) StopEvt.mindphi_met_j1_j2_rl_jdown = getMinDphi(StopEvt.pfmet_phi_rl_jdown,jets_jdown.ak4pfjets_p4.at(0),jets_jdown.ak4pfjets_p4.at(1));
       }
-
-      if(jets_jup.ak4pfjets_p4.size()>1) StopEvt.mindphi_met_j1_j2_rl_jup = getMinDphi(StopEvt.pfmet_phi_rl_jup,jets_jup.ak4pfjets_p4.at(0),jets_jup.ak4pfjets_p4.at(1));
-
-      //JEC down
-      StopEvt.pfmet_rl_jdown     = std::sqrt(new_pfmet_x_jdown*new_pfmet_x_jdown + new_pfmet_y_jdown*new_pfmet_y_jdown);
-      StopEvt.pfmet_phi_rl_jdown = std::atan2(new_pfmet_y_jdown, new_pfmet_x_jdown);
-      
-      if (nVetoLeptons > 0) {
-        StopEvt.mt_met_lep_rl_jdown = calculateMt(lep1.p4, StopEvt.pfmet_rl_jdown, StopEvt.pfmet_phi_rl_jdown);
-        StopEvt.MT2W_rl_jdown = CalcMT2W_(mybjets_jdown,myaddjets_jdown,lep1.p4,StopEvt.pfmet_rl_jdown, StopEvt.pfmet_phi_rl_jdown);
-        StopEvt.topnessMod_rl_jdown = CalcTopness_(1,StopEvt.pfmet_rl_jdown,StopEvt.pfmet_phi_rl_jdown,lep1.p4,mybjets_jdown,myaddjets_jdown);
-      }
-
-      if(jets_jdown.ak4pfjets_p4.size()>1) StopEvt.mindphi_met_j1_j2_rl_jdown = getMinDphi(StopEvt.pfmet_phi_rl_jdown,jets_jdown.ak4pfjets_p4.at(0),jets_jdown.ak4pfjets_p4.at(1));
-
       //fill lepDPhi _rl
       if( nVetoLeptons > 0 ) {
 	lep1.dphiMET_rl = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_rl);
-	lep1.dphiMET_rl_jup = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_rl_jup);
-	lep1.dphiMET_rl_jdown = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_rl_jdown);
+	if(applyJECfromFile){
+	  lep1.dphiMET_rl_jup = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_rl_jup);
+	  lep1.dphiMET_rl_jdown = getdphi(lep1.p4.Phi(),StopEvt.pfmet_phi_rl_jdown);
+	}
       }
       if( nVetoLeptons > 1 ) {
 	lep2.dphiMET_rl = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_rl);
-	lep2.dphiMET_rl_jup = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_rl_jup);
-	lep2.dphiMET_rl_jdown = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_rl_jdown);
+	if(applyJECfromFile){
+	  lep2.dphiMET_rl_jup = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_rl_jup);
+	  lep2.dphiMET_rl_jdown = getdphi(lep2.p4.Phi(),StopEvt.pfmet_phi_rl_jdown);
+	}
       }
       
 
@@ -2823,27 +2840,27 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
                                passHLTTriggerPattern("HLT_PFMET300_HBHECleaned_v") ||
                                passHLTTriggerPattern("HLT_PFMETTypeOne200_HBHE_BeamHaloCleaned_v") );
 
-        StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon50_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v")) : 0;
-        StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon75_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v")) : 0;
-        StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon90_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v")) : 0;
-        StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon120_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v")) : 0;
-        StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon165_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v")) : 0;
-        StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v") ? HLT_prescale(triggerName("HLT_Photon175_v")) : 0;
-        StopEvt.HLT_Photon200 = passHLTTriggerPattern("HLT_Photon200_v") ? HLT_prescale(triggerName("HLT_Photon200_v")) : 0;
-        StopEvt.HLT_Photon300_NoHE = passHLTTriggerPattern("HLT_Photon300_NoHE_v") ? HLT_prescale(triggerName("HLT_Photon300_NoHE_v")) : 0;
-        StopEvt.HLT_CaloJet500_NoJetID = passHLTTriggerPattern("HLT_CaloJet500_NoJetID_v") ? HLT_prescale(triggerName("HLT_CaloJet500_NoJetID_v")) : 0;
+        StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon50_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v"),true) : 0;
+        StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon75_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v"),true) : 0;
+        StopEvt.HLT_Photon90_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon90_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon90_R9Id90_HE10_IsoM_v"),true) : 0;
+        StopEvt.HLT_Photon120_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon120_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon120_R9Id90_HE10_IsoM_v"),true) : 0;
+        StopEvt.HLT_Photon165_R9Id90_HE10_IsoM = passHLTTriggerPattern("HLT_Photon165_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon165_R9Id90_HE10_IsoM_v"),true) : 0;
+        StopEvt.HLT_Photon175 = passHLTTriggerPattern("HLT_Photon175_v") ? HLT_prescale(triggerName("HLT_Photon175_v"),true) : 0;
+        StopEvt.HLT_Photon200 = passHLTTriggerPattern("HLT_Photon200_v") ? HLT_prescale(triggerName("HLT_Photon200_v"),true) : 0;
+        StopEvt.HLT_Photon300_NoHE = passHLTTriggerPattern("HLT_Photon300_NoHE_v") ? HLT_prescale(triggerName("HLT_Photon300_NoHE_v"),true) : 0;
+        StopEvt.HLT_CaloJet500_NoJetID = passHLTTriggerPattern("HLT_CaloJet500_NoJetID_v") ? HLT_prescale(triggerName("HLT_CaloJet500_NoJetID_v"),true) : 0;
 
         StopEvt.HLT_PFHT_unprescaled = passHLTTriggerPattern("HLT_PFHT1050_v");
-        int HT180 = passHLTTriggerPattern("HLT_PFHT180_v") ? HLT_prescale(triggerName("HLT_PFHT180_v")) : 0;
-        int HT250 = passHLTTriggerPattern("HLT_PFHT250_v") ? HLT_prescale(triggerName("HLT_PFHT250_v")) : 0;
-        int HT350 = passHLTTriggerPattern("HLT_PFHT350_v") ? HLT_prescale(triggerName("HLT_PFHT350_v")) : 0;
-        int HT370 = passHLTTriggerPattern("HLT_PFHT370_v") ? HLT_prescale(triggerName("HLT_PFHT370_v")) : 0;
-        int HT430 = passHLTTriggerPattern("HLT_PFHT430_v") ? HLT_prescale(triggerName("HLT_PFHT430_v")) : 0;
-        int HT510 = passHLTTriggerPattern("HLT_PFHT510_v") ? HLT_prescale(triggerName("HLT_PFHT510_v")) : 0;
-        int HT590 = passHLTTriggerPattern("HLT_PFHT590_v") ? HLT_prescale(triggerName("HLT_PFHT590_v")) : 0;
-        int HT680 = passHLTTriggerPattern("HLT_PFHT680_v") ? HLT_prescale(triggerName("HLT_PFHT680_v")) : 0;
-        int HT780 = passHLTTriggerPattern("HLT_PFHT780_v") ? HLT_prescale(triggerName("HLT_PFHT780_v")) : 0;
-        int HT890 = passHLTTriggerPattern("HLT_PFHT890_v") ? HLT_prescale(triggerName("HLT_PFHT890_v")) : 0;
+        int HT180 = passHLTTriggerPattern("HLT_PFHT180_v") ? HLT_prescale(triggerName("HLT_PFHT180_v"),true) : 0;
+        int HT250 = passHLTTriggerPattern("HLT_PFHT250_v") ? HLT_prescale(triggerName("HLT_PFHT250_v"),true) : 0;
+        int HT350 = passHLTTriggerPattern("HLT_PFHT350_v") ? HLT_prescale(triggerName("HLT_PFHT350_v"),true) : 0;
+        int HT370 = passHLTTriggerPattern("HLT_PFHT370_v") ? HLT_prescale(triggerName("HLT_PFHT370_v"),true) : 0;
+        int HT430 = passHLTTriggerPattern("HLT_PFHT430_v") ? HLT_prescale(triggerName("HLT_PFHT430_v"),true) : 0;
+        int HT510 = passHLTTriggerPattern("HLT_PFHT510_v") ? HLT_prescale(triggerName("HLT_PFHT510_v"),true) : 0;
+        int HT590 = passHLTTriggerPattern("HLT_PFHT590_v") ? HLT_prescale(triggerName("HLT_PFHT590_v"),true) : 0;
+        int HT680 = passHLTTriggerPattern("HLT_PFHT680_v") ? HLT_prescale(triggerName("HLT_PFHT680_v"),true) : 0;
+        int HT780 = passHLTTriggerPattern("HLT_PFHT780_v") ? HLT_prescale(triggerName("HLT_PFHT780_v"),true) : 0;
+        int HT890 = passHLTTriggerPattern("HLT_PFHT890_v") ? HLT_prescale(triggerName("HLT_PFHT890_v"),true) : 0;
         //as we use those only for trigger efficiency measurements, we actually don't care about the exact prescale ...
         if(HT180>0 || HT250>0 || HT350>0 || HT370>0 || HT430>0 || HT510>0 || HT590>0 || HT680>0 || HT780>0 || HT890>0)
           StopEvt.HLT_PFHT_prescaled = 1;
