@@ -2,6 +2,10 @@
 
 //////////////////////////////////////////////////////////////////////
 
+sysInfo::evtWgtInfo wgtInfo;
+
+//////////////////////////////////////////////////////////////////////
+
 sysInfo::Util::Util( sysInfo::ID systematic ){
   
   switch( systematic ){
@@ -381,21 +385,23 @@ sysInfo::Util::Util( sysInfo::ID systematic ){
 
 //////////////////////////////////////////////////////////////////////
 
-sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool useLepSFUtils, bool use2ndLepToMet ){
-  
-  // Get sample info from enum
-  sample_info = new sampleInfo::sampleUtil( sample );
+double sysInfo::GetEventWeight( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts[whichSyst]; }
 
+double sysInfo::GetEventWeight_corridor( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_corridor[whichSyst]; }
+
+double sysInfo::GetEventWeight_SRbulk( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_SRbulk[whichSyst]; }
+
+double sysInfo::GetEventWeight_CR2lbulk( sysInfo::ID whichSyst ) { return wgtInfo.sys_wgts_CR2lbulk[whichSyst]; }
+
+//////////////////////////////////////////////////////////////////////
+
+sysInfo::evtWgtInfo::evtWgtInfo(){
+  
   // Utilty Var Constants
   dr_matched = 0.1;
-  lumi       = 35.867; // Current lumi
-  //lumi       = 36.814; // Current lumi
-  //lumi       = 36.46; // Pre-approval, frozen lumi
-  //lumi       = 29.53; // lumi for intermediate status update
-  //lumi       = 12.9; // ICHEP lumi
+  lumi       = 35.867;     // Current lumi
   lumi_err   = lumi*0.026; // 2.6% uncertainty for Moriond17 
-  //lumi_err   = lumi*0.062; // 6.2% for ICHEP lumi uncertainty
-
+  
   // Initialize Switches for additional SFs
   apply_diLepTrigger_sf = false;
   apply_cr2lTrigger_sf  = false;
@@ -412,33 +418,42 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   apply_pu_sf           = false;
   apply_sample_sf       = false;
 
-  // Decision to use Utilities vs direct from baby for bTag and lep SFs
-  useBTagSFs_fromUtils = useBTagUtils;
-  useLepSFs_fromUtils  = useLepSFUtils;
-  
-  // Decision to use met with 2nd lepton removed (for lost lepton)
-  add2ndLepToMet = use2ndLepToMet;
-
   // Initialize event weights and related variables
   initializeWeights();
 
   // Initialize baby weights histograms
-  h_sig_counter = NULL;
+  h_sig_counter         = NULL;
   h_sig_counter_nEvents = NULL;
-  h_bkg_counter = NULL;
-  h_cr2lTrigger_sf_el = NULL;
-  h_cr2lTrigger_sf_mu = NULL;
-  h_pu_wgt = NULL;
-  h_pu_wgt_up = NULL;
-  h_pu_wgt_dn = NULL;
-  h_recoEff_tau = NULL;
+  h_bkg_counter         = NULL;
+  h_cr2lTrigger_sf_el   = NULL;
+  h_cr2lTrigger_sf_mu   = NULL;
+  h_pu_wgt              = NULL;
+  h_pu_wgt_up           = NULL;
+  h_pu_wgt_dn           = NULL;
+  h_recoEff_tau         = NULL;
+  
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void sysInfo::evtWgtInfo::setUp( sampleInfo::ID sample, bool useBTagUtils, bool useLepSFUtils, bool use2ndLepToMet ){
+  
+  // Get sample info from enum
+  sample_info = new sampleInfo::sampleUtil( sample );
+  
+  // Decision to use Utilities vs direct from baby for bTag and lep SFs
+  useBTagSFs_fromFiles = useBTagUtils;
+  useLepSFs_fromFiles  = useLepSFUtils;
+  
+  // Decision to use met with 2nd lepton removed (for lost lepton)
+  add2ndLepToMet = use2ndLepToMet;
 
   // Get Signal XSection File
   if( sample_info->isSignal ){
     f_sig_xsec = new TFile("../StopCORE/inputs/signal_xsec/xsec_stop_13TeV.root","read");
     h_sig_xsec = (TH1D*)f_sig_xsec->Get("stop");
   }
-
+  
   // Get SR trigger histos
   if( !sample_info->isData ){
     f_cr2lTrigger_sf = new TFile("../StopCORE/inputs/trigger/TriggerEff_2016.root","read");
@@ -447,13 +462,13 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
   }
 
   // Initialize bTag SF machinery
-  if( !sample_info->isData && useBTagSFs_fromUtils ){
+  if( !sample_info->isData && useBTagSFs_fromFiles ){
     bTagSFUtil = new eventWeight_bTagSF( sample_info->isFastsim );
   }
 
   
   // Initialize Lepton Scale Factors
-  if( !sample_info->isData && useLepSFs_fromUtils ){
+  if( !sample_info->isData && useLepSFs_fromFiles ){
     lepSFUtil  = new eventWeight_lepSF( sample_info->isFastsim );
   }
 
@@ -475,15 +490,15 @@ sysInfo::evtWgtInfo::evtWgtInfo( sampleInfo::ID sample, bool useBTagUtils, bool 
 
 //////////////////////////////////////////////////////////////////////
 
-sysInfo::evtWgtInfo::~evtWgtInfo(){
+void sysInfo::evtWgtInfo::cleanUp(){
   
   sample_info->~sampleUtil();
   
-  if( !sample_info->isData && useBTagSFs_fromUtils){
+  if( !sample_info->isData && useBTagSFs_fromFiles){
     delete bTagSFUtil;
   }
   
-  if( !sample_info->isData && useLepSFs_fromUtils){
+  if( !sample_info->isData && useLepSFs_fromFiles){
     delete lepSFUtil;
   }
 
@@ -578,6 +593,9 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_metRes = 1.0;
   sf_metRes_up = 1.0;
   sf_metRes_dn = 1.0;
+	sf_metRes_corridor = 1.0;
+	sf_metRes_corridor_up = 1.0;
+	sf_metRes_corridor_dn = 1.0;
   
   sf_metTTbar = 1.0;
   sf_metTTbar_up = 1.0;
@@ -623,6 +641,9 @@ void sysInfo::evtWgtInfo::initializeWeights(){
   sf_sample = 1.0;
 
   for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts[iSys]=1.0;
+  for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_corridor[iSys]=1.0;
+  for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_SRbulk[iSys]=1.0;
+  for(int iSys=0; iSys<sysInfo::k_nSys; iSys++) sys_wgts_CR2lbulk[iSys]=1.0;
   
   return;
 }
@@ -671,10 +692,11 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   getTopPtWeight( sf_topPt, sf_topPt_up, sf_topPt_dn );
 
   // MET resolution scale factors 
-  //getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
+  getMetResWeight( sf_metRes, sf_metRes_up, sf_metRes_dn );
+	getMetResWeight_corridor( sf_metRes_corridor, sf_metRes_corridor_up, sf_metRes_corridor_dn );
   
   // MET ttbar scale factors 
-  //getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
+  getMetTTbarWeight( sf_metTTbar, sf_metTTbar_up, sf_metTTbar_dn );
   
   // ttbar system pT scale factor 
   getTTbarSysPtSF( sf_ttbarSysPt, sf_ttbarSysPt_up, sf_ttbarSysPt_dn );
@@ -752,12 +774,8 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
   evt_wgt *= wgt_topPt;
   
   // Apply met resolution sf
-  //double wgt_metRes = sf_metRes;
-  //evt_wgt *= wgt_metRes;
-    
-  // Apply met ttbar sf
-  //double wgt_metTTbar = sf_metTTbar;
-  //evt_wgt *= wgt_metTTbar;
+  double wgt_metRes = sf_metRes;
+  evt_wgt *= wgt_metRes;
 
   // Apply ttbar system pT SF (will be 1 if not ttbar/tW 2l) 
   double wgt_ttbarSysPt = sf_ttbarSysPt;
@@ -876,22 +894,12 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
 
     // MetRes SF Up
     else if( iSys==k_metResUp ){
-      //sys_wgt *= sf_metRes_up/wgt_metRes;
+      sys_wgt *= sf_metRes_up/wgt_metRes;
     }
 
     // MetRes SF Dn
     else if( iSys==k_metResDown ){
-      //sys_wgt *= sf_metRes_dn/wgt_metRes;
-    }
-
-    // MetTTbar SF Up
-    else if( iSys==k_metTTbarUp ){
-      //sys_wgt *= sf_metTTbar_up/wgt_metTTbar;
-    }
-
-    // MetTTbar SF Dn
-    else if( iSys==k_metTTbarDown ){
-      //sys_wgt *= sf_metTTbar_dn/wgt_metTTbar;
+      sys_wgt *= sf_metRes_dn/wgt_metRes;
     }
 
     // TTbar/tW System pT Up
@@ -1003,10 +1011,55 @@ void sysInfo::evtWgtInfo::getEventWeights(bool nominalOnly){
     else if( iSys==k_puDown ){
       sys_wgt *= (sf_pu_dn/wgt_pu);
     }
-    
+
+
+		// Corridor regions use alternate MET resolution weights
+		double wgt_corridor = sys_wgt;
+		if(      iSys==k_metResUp   ) wgt_corridor *= sf_metRes_corridor_up / sf_metRes_up;
+		else if( iSys==k_metResDown ) wgt_corridor *= sf_metRes_corridor_dn / sf_metRes_dn;
+		else wgt_corridor *= sf_metRes_corridor / sf_metRes;
+
+		// Bulk SR uses MET TTbar weights
+		double wgt_SRbulk = sys_wgt;
+		if(      iSys==k_metTTbarUp   ) wgt_SRbulk *= sf_metTTbar;
+		else if( iSys==k_metTTbarDown ) wgt_SRbulk *= sf_metTTbar_up;
+		else wgt_SRbulk *= sf_metTTbar;
+
+		// Bulk SR and CR2L both use tight btag SFs in high-Mlb regions
+		// Factor in JES when counting tight tags, but NOT when calculating Mlb!
+		double wgt_CR2lbulk = sys_wgt;
+		double ntighttags = babyAnalyzer.ntightbtags();
+		if(      iSys==k_JESUp   ) ntighttags = babyAnalyzer.jup_ntightbtags();
+		else if( iSys==k_JESDown ) ntighttags = babyAnalyzer.jdown_ntightbtags();
+
+		if( babyAnalyzer.Mlb_closestb() >= 175. && ntighttags >= 1 ) {
+			if( iSys==k_bTagEffHFUp ) {
+				wgt_SRbulk   *= sf_bTagEffHF_tight_up / sf_bTagEffHF_up;
+				wgt_CR2lbulk *= sf_bTagEffHF_tight_up / sf_bTagEffHF_up;
+			}
+			else if( iSys==k_bTagEffHFDown ) {
+				wgt_SRbulk   *= sf_bTagEffHF_tight_dn / sf_bTagEffHF_dn;
+				wgt_CR2lbulk *= sf_bTagEffHF_tight_dn / sf_bTagEffHF_dn;
+			}
+			else if( iSys==k_bTagEffLFUp ) {
+				wgt_SRbulk   *= sf_bTagEffLF_tight_up / sf_bTagEffLF_up;
+				wgt_CR2lbulk *= sf_bTagEffLF_tight_up / sf_bTagEffLF_up;
+			}
+			else if( iSys==k_bTagEffLFDown ) {
+				wgt_SRbulk   *= sf_bTagEffLF_tight_dn / sf_bTagEffLF_dn;
+				wgt_CR2lbulk *= sf_bTagEffLF_tight_dn / sf_bTagEffLF_dn;
+			}
+			else {
+				wgt_SRbulk   *= sf_bTag_tight / sf_bTag;
+				wgt_CR2lbulk *= sf_bTag_tight / sf_bTag;
+			}
+		}
 
     // Fill Array Element
     sys_wgts[iSys] = sys_wgt;
+		sys_wgts_corridor[iSys] = wgt_corridor;
+		sys_wgts_SRbulk[iSys] = wgt_SRbulk;
+		sys_wgts_CR2lbulk[iSys] = wgt_CR2lbulk;
 
 
     // Break if only filling nominal
@@ -1279,8 +1332,8 @@ void sysInfo::evtWgtInfo::getBTagWeight( int WP, double &wgt_btagsf, double &wgt
   if( WP<0 || WP>2 ) return;
 
   // IF deriving SFs on the Looper level
-  if( useBTagSFs_fromUtils ){
-    getBTagWeight_fromUtils( WP, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn ); 
+  if( useBTagSFs_fromFiles ){
+    getBTagWeight_fromFiles( WP, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn ); 
   }
 
   // Else if taking SFs from babies
@@ -1446,8 +1499,8 @@ void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, doubl
 
   if( !apply_bTag_sf ) return;
 
-  if( useBTagSFs_fromUtils ){
-    getBTagWeight_fromUtils( 2, wgt_btagsf_tight, wgt_btagsf_hf_tight_up, wgt_btagsf_hf_tight_dn, wgt_btagsf_lf_tight_up, wgt_btagsf_lf_tight_dn, wgt_btagsf_tight_fs_up, wgt_btagsf_tight_fs_dn ); 
+  if( useBTagSFs_fromFiles ){
+    getBTagWeight_fromFiles( 2, wgt_btagsf_tight, wgt_btagsf_hf_tight_up, wgt_btagsf_hf_tight_dn, wgt_btagsf_lf_tight_up, wgt_btagsf_lf_tight_dn, wgt_btagsf_tight_fs_up, wgt_btagsf_tight_fs_dn ); 
   }
   else{
     wgt_btagsf_tight       = babyAnalyzer.weight_tightbtagsf();
@@ -1496,7 +1549,7 @@ void sysInfo::evtWgtInfo::getBTagWeight_tightWP( double &wgt_btagsf_tight, doubl
 
 //////////////////////////////////////////////////////////////////////
 
-void sysInfo::evtWgtInfo::getBTagWeight_fromUtils( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
+void sysInfo::evtWgtInfo::getBTagWeight_fromFiles( int WP, double &wgt_btagsf, double &wgt_btagsf_hf_up, double &wgt_btagsf_hf_dn, double &wgt_btagsf_lf_up, double &wgt_btagsf_lf_dn, double &wgt_btagsf_fs_up, double &wgt_btagsf_fs_dn ){
 
   vector< double > jet_pt;
   vector< double > jet_eta;
@@ -1533,8 +1586,8 @@ void sysInfo::evtWgtInfo::getLepSFWeight( double &weight_lepSF, double &weight_l
 
   if( !apply_lep_sf && !apply_vetoLep_sf && !apply_lepFS_sf ) return;
   
-  if( useLepSFs_fromUtils ){
-    getLepSFWeight_fromUtils( weight_lepSF, weight_lepSF_Up, weight_lepSF_Dn, weight_lepFSSF, weight_lepFSSF_Up, weight_lepFSSF_Dn, weight_vetoLepSF, weight_vetoLepSF_Up, weight_vetoLepSF_Dn );
+  if( useLepSFs_fromFiles ){
+    getLepSFWeight_fromFiles( weight_lepSF, weight_lepSF_Up, weight_lepSF_Dn, weight_lepFSSF, weight_lepFSSF_Up, weight_lepFSSF_Dn, weight_vetoLepSF, weight_vetoLepSF_Up, weight_vetoLepSF_Dn );
   }
   else{
     weight_lepSF = babyAnalyzer.weight_lepSF();
@@ -1611,7 +1664,7 @@ void sysInfo::evtWgtInfo::getLepSFWeight( double &weight_lepSF, double &weight_l
 
 //////////////////////////////////////////////////////////////////////
 
-void sysInfo::evtWgtInfo::getLepSFWeight_fromUtils( double &weight_lepSF, double &weight_lepSF_Up, double &weight_lepSF_Dn, double &weight_lepFSSF, double &weight_lepFSSF_Up, double &weight_lepFSSF_Dn, double &weight_vetoLepSF, double &weight_vetoLepSF_Up, double &weight_vetoLepSF_Dn ){
+void sysInfo::evtWgtInfo::getLepSFWeight_fromFiles( double &weight_lepSF, double &weight_lepSF_Up, double &weight_lepSF_Dn, double &weight_lepFSSF, double &weight_lepFSSF_Up, double &weight_lepFSSF_Dn, double &weight_vetoLepSF, double &weight_vetoLepSF_Up, double &weight_vetoLepSF_Dn ){
 
   weight_lepSF = 1.0;
   weight_lepSF_Up = 1.0;

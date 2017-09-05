@@ -50,10 +50,10 @@ int ttbarSystemPt_analyzer(){
 
   // Region List
   std::vector<std::string> regionList;
-  //regionList.push_back("ee");
-  regionList.push_back("emu");
-  //regionList.push_back("mumu");
-  //regionList.push_back("incl");
+  //regionList.push_back("CR2l_bulkTTbar_ee");
+  regionList.push_back("CR2l_bulkTTbar_emu");
+  //regionList.push_back("CR2l_bulkTTbar_mumu");
+  //regionList.push_back("CR2l_bulkTTbar_incl");
 
   std::vector<std::string> regionList_tex;
   //regionList_tex.push_back("$ee$");
@@ -113,7 +113,7 @@ int ttbarSystemPt_analyzer(){
       TString h_name = h_name_base;
       h_name += "__";
       h_name += catList[iCat];
-      h_name += "__lepFlav_";
+      h_name += "__";
       h_name += regionList[iReg];
       h_name += "__genClassy_";
       h_name += genClassy.label;
@@ -282,7 +282,7 @@ int ttbarSystemPt_analyzer(){
       TString h_name = h_name_base;
       h_name += "__";
       h_name += catList[iCat];
-      h_name += "__lepFlav_";
+      h_name += "__";
       h_name += regionList[iReg];
       h_name += "__genClassy_";
       h_name += genClassy.label;
@@ -444,7 +444,7 @@ int ttbarSystemPt_analyzer(){
       TString h_name = h_name_base;
       h_name += "__";
       h_name += catList[iCat];
-      h_name += "__lepFlav_";
+      h_name += "__";
       h_name += regionList[iReg];
       h_name += "__genClassy_";
       h_name += genClassy.label;
@@ -605,7 +605,7 @@ int ttbarSystemPt_analyzer(){
       TString h_name = h_name_base;
       h_name += "__";
       h_name += catList[iCat];
-      h_name += "__lepFlav_";
+      h_name += "__";
       h_name += regionList[iReg];
       h_name += "__genClassy_";
       h_name += genClassy.label;

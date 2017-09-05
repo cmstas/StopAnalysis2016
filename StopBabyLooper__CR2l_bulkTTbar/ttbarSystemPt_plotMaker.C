@@ -34,10 +34,10 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
   // Signal and Control Regions
   //
   std::vector<std::string> regionList;
-  //regionList.push_back("ee");
-  regionList.push_back("emu");
-  //regionList.push_back("mumu");
-  //regionList.push_back("incl");
+  //regionList.push_back("CR2l_bulkTTbar_ee");
+  regionList.push_back("CR2l_bulkTTbar_emu");
+  //regionList.push_back("CR2l_bulkTTbar_mumu");
+  //regionList.push_back("CR2l_bulkTTbar_incl");
 
 
   //
@@ -768,7 +768,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
 	f_data = new TFile( f_name.Data(), "read" );
 	
 	hName = var_list_label[iVar];
-	hName += "__lepFlav_";
+	hName += "__";
 	hName += regionList[iReg];
 	hName += "__genClassy_";
 	hName += data_genClassy.label;
@@ -818,7 +818,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
 	bkg_files.push_back(f_bkg);
 	
 	hName = var_list_label[iVar];
-	hName += "__lepFlav_";
+	hName += "__";
 	hName += regionList[iReg];
 	hName += "__genClassy_";
 	hName += genClassification.label;
@@ -863,7 +863,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
 	    
 	    // Get Up Variation
 	    hName = var_list_label[iVar];
-	    hName += "__lepFlav_";
+	    hName += "__";
 	    hName += regionList[iReg];
 	    hName += "__genClassy_";
 	    hName += genClassification.label;
@@ -899,7 +899,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
 	    
 	    // Get Down Variation
 	    hName = var_list_label[iVar];
-	    hName += "__lepFlav_";
+	    hName += "__";
 	    hName += regionList[iReg];
 	    hName += "__genClassy_";
 	    hName += genClassification.label;
@@ -1002,7 +1002,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
 	sig_files.push_back(f_sig);
 
 	hName = var_list_label[iVar];
-	hName += "__lepFlav_";
+	hName += "__";
 	hName += regionList[iReg];
 	hName += "__genClassy_";
 	hName += genClassification.label;
@@ -1085,8 +1085,6 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
 	
       } // end loop over signal samples
       
-      TFile *f_dummy = new TFile("Output/Plots/f_dummy.root", "recreate");
-      
       // Option String, Log Scale Plot
       std::string options = "";
       
@@ -1096,7 +1094,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
       if(plotByGenDecay) options  += "__byGenDecayMode__";
       else                options += "__byProductionMode__";
       options += var_list_label[iVar];
-      options += "__lepFlav_";
+      options += "__";
       options += regionList[iReg];
       options += "__logScale";
       if( var_doRebin[iVar] ) options += Form("__%s", var_rebin_labels[iVar].Data());
@@ -1142,7 +1140,7 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
       if(plotByGenDecay) options  += "__byGenDecayMode__";
       else                options += "__byProductionMode__";
       options += var_list_label[iVar];
-      options += "__lepFlav_";
+      options += "__";
       options += regionList[iReg];
       options += "__linScale";
       if( var_doRebin[iVar] ) options += Form("__%s", var_rebin_labels[iVar].Data());
@@ -1201,8 +1199,6 @@ void ttbarSystemPt_plotMaker( bool plotByGenDecay, bool scaleToData ){
 	sig_files[iSig]->Close();
 	sig_files[iSig]->~TFile();
       }
-      
-      f_dummy->Close();
       
       
     } // end loop over regions

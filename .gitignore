@@ -1,8 +1,25 @@
+# Ignore compiled code
 *.o
 *.so
 *.d
 *.pcm
+
+# Ignore executables
+runBabyMaker
+runBabyLooper
+runBabyLooper__CR2l_bulkTTbar
+
+# Ignore looper output directories
+Output
+
+# Ignore linkdef files
+LinkDef.cc
+LinkDef_out.*
+
+# Ignore screen files
+.display.screen
+
+# Misc other stuff
 *.cxx
 *.in
 *.out
-Output

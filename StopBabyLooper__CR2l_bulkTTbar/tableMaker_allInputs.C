@@ -110,10 +110,10 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
   // Signal and Control Regions
   //
   std::vector<std::string> regionList;
-  //regionList.push_back("ee");
-  regionList.push_back("emu");
-  //regionList.push_back("mumu");
-  //regionList.push_back("incl");
+  //regionList.push_back("CR2l_bulkTTbar_ee");
+  regionList.push_back("CR2l_bulkTTbar_emu");
+  //regionList.push_back("CR2l_bulkTTbar_mumu");
+  //regionList.push_back("CR2l_bulkTTbar_incl");
 
 
   //
@@ -129,50 +129,50 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
   // Yields, CR2l bulk TTbar
   //
   
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 1; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge50$MET";
+  cat.histName = "h_yields"; cat.binNumber = 1; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge50$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 6; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge50$MET";
+  cat.histName = "h_yields"; cat.binNumber = 6; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge50$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 11; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge50$MET";
-  catList.push_back( cat );
-  tableList.push_back( catList );
-
-  catList.clear();
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 1; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge50$MET";
-  catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 2; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge100$MET";
-  catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 3; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge150$MET";
-  catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 4; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge200$MET";
-  catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 5; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge250$MET";
+  cat.histName = "h_yields"; cat.binNumber = 11; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge50$MET";
   catList.push_back( cat );
   tableList.push_back( catList );
 
   catList.clear();
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 6; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge50$MET";
+  cat.histName = "h_yields"; cat.binNumber = 1; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge50$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 7; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge100$MET";
+  cat.histName = "h_yields"; cat.binNumber = 2; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge100$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 8; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge150$MET";
+  cat.histName = "h_yields"; cat.binNumber = 3; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge150$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 9; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge200$MET";
+  cat.histName = "h_yields"; cat.binNumber = 4; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge200$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 10; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge250$MET";
+  cat.histName = "h_yields"; cat.binNumber = 5; cat.tex = "$\\ge0b-$Tagged~Jets,~$\\ge250$MET";
   catList.push_back( cat );
   tableList.push_back( catList );
 
   catList.clear();
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 11; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge50$MET";
+  cat.histName = "h_yields"; cat.binNumber = 6; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge50$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 12; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge100$MET";
+  cat.histName = "h_yields"; cat.binNumber = 7; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge100$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 13; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge150$MET";
+  cat.histName = "h_yields"; cat.binNumber = 8; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge150$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 14; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge200$MET";
+  cat.histName = "h_yields"; cat.binNumber = 9; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge200$MET";
   catList.push_back( cat );
-  cat.histName = "h_yields_CR2l_bulkTTbar"; cat.binNumber = 15; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge250$MET";
+  cat.histName = "h_yields"; cat.binNumber = 10; cat.tex = "$\\ge1b-$Tagged~Jets,~$\\ge250$MET";
+  catList.push_back( cat );
+  tableList.push_back( catList );
+
+  catList.clear();
+  cat.histName = "h_yields"; cat.binNumber = 11; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge50$MET";
+  catList.push_back( cat );
+  cat.histName = "h_yields"; cat.binNumber = 12; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge100$MET";
+  catList.push_back( cat );
+  cat.histName = "h_yields"; cat.binNumber = 13; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge150$MET";
+  catList.push_back( cat );
+  cat.histName = "h_yields"; cat.binNumber = 14; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge200$MET";
+  catList.push_back( cat );
+  cat.histName = "h_yields"; cat.binNumber = 15; cat.tex = "$\\ge2b-$Tagged~Jets,~$\\ge250$MET";
   catList.push_back( cat );
   tableList.push_back( catList );
 
@@ -218,7 +218,7 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 	std::string f_out_name = f_out_name_base;
 	f_out_name += "__";
 	f_out_name += iTableList[0][0].histName;
-	f_out_name += "__lepFlav_";
+	f_out_name += "__";
 	f_out_name += regionList[iRegion];
 	f_out_name += "__systematic_";
 	f_out_name += systematicList[iSys].label;
@@ -244,7 +244,7 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 	
 	  std::vector<yieldHelper> iCatList = iTableList[iTable];
 
-	  // Get number of collumns for table - ie categories
+	  // Get number of columns for table - ie categories
 	  int nCol = 2 + (int)iCatList.size();
 	  fprintf(f_out, "\\begin{longtable}{|l|c|"); // samples+classifications
 	  for(int iCat=0; iCat<(int)iCatList.size(); iCat++){
@@ -254,7 +254,9 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 	
 	  // Top Title
 	  std::string table_title = "";
-	  table_title += regionList[iRegion];
+	  TString regionTitle = regionList.at(iRegion);
+	  regionTitle.ReplaceAll("_"," ");
+	  table_title += regionTitle;
 	  table_title += ", ";
 	  table_title += systematicList[iSys].tex;
 	  table_title += " Systematic, Yield Table for Input Samples";
@@ -435,7 +437,7 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 		  for(int iCat=0; iCat<(int)iCatList.size(); iCat++){
 		  
 		    std::string h_name = iCatList[iCat].histName;
-		    h_name += "__lepFlav_";
+		    h_name += "__";
 		    h_name += regionList[iRegion];
 		    h_name += "__genClassy_";
 		    h_name += genClassy.label;
@@ -497,7 +499,7 @@ void tableMaker_allInputs( std::string f_input_dir, std::string f_out_name_base,
 		for(int iCat=0; iCat<(int)iCatList.size(); iCat++){
 		
 		  std::string h_name = iCatList[iCat].histName;
-		  h_name += "__lepFlav_";
+		  h_name += "__";
 		  h_name += regionList[iRegion];
 		  h_name += "__genClassy_";
 		  h_name += genClassy.label;

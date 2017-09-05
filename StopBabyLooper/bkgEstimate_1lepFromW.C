@@ -15,8 +15,6 @@ int bkgEstimate_1lepFromW(){
   double rescale     = 1.0; // use lumi from stopCORE
   //double rescale     = 40.0/35.867; // rescale to new lumi
 
-  TString regionName_SR = "SR";
-  TString regionName_CR = "CR0b";
   
    
   //
@@ -90,718 +88,7 @@ int bkgEstimate_1lepFromW(){
   //
   std::vector<bkgEstUtil> v_bkgEst;
   
-  /*
-  //
-  // ICHEP results
-  //
-  bkgEstUtil bkgEst_ICHEP;
 
-  bkgEst_ICHEP.outName_base = "bkgEst_1lepFromW__ICHEP_bins";
-  bkgEst_ICHEP.hName_base = "h_yields_SR_ICHEP";
-  bkgEst_ICHEP.forceOneTF = false;
-  bkgEst_ICHEP.useFractionInCR = false;
-
-  // 2jet, modTopness
-  bkgEst_ICHEP.SR_bins.push_back(1);  bkgEst_ICHEP.CR_bins.push_back(1);  
-  bkgEst_ICHEP.regionName.push_back("$2$jets,~tmod$\\ge6.4$"); 
-  bkgEst_ICHEP.regionName_short.push_back("$2$jets"); 
-  bkgEst_ICHEP.binName.push_back("$250<MET<350$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(2);  bkgEst_ICHEP.CR_bins.push_back(2);  
-  bkgEst_ICHEP.regionName.push_back("$2$jets,~tmod$\\ge6.4$");
-  bkgEst_ICHEP.regionName_short.push_back("$2$jets"); 
-  bkgEst_ICHEP.binName.push_back("$350<MET<450$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(3);  bkgEst_ICHEP.CR_bins.push_back(3);  
-  bkgEst_ICHEP.regionName.push_back("$2$jets,~tmod$\\ge6.4$");  
-  bkgEst_ICHEP.regionName_short.push_back("$2$jets"); 
-  bkgEst_ICHEP.binName.push_back("$MET>450$");
-
-  // 3jet, mt2w
-  bkgEst_ICHEP.SR_bins.push_back(4);  bkgEst_ICHEP.CR_bins.push_back(4);  
-  bkgEst_ICHEP.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP.binName.push_back("$250<MET<350$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(5);  bkgEst_ICHEP.CR_bins.push_back(5);  
-  bkgEst_ICHEP.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP.binName.push_back("$350<MET<450$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(6);  bkgEst_ICHEP.CR_bins.push_back(23); // Extrapolate
-  bkgEst_ICHEP.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP.binName.push_back("$450<MET<550$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(7);  bkgEst_ICHEP.CR_bins.push_back(23); // Extrapolate
-  bkgEst_ICHEP.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP.binName.push_back("$MET>550$");
-  
-  // 4jet, low mt2w
-  bkgEst_ICHEP.SR_bins.push_back(8);  bkgEst_ICHEP.CR_bins.push_back(8);  
-  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP.binName.push_back("$250<MET<350$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(9);  bkgEst_ICHEP.CR_bins.push_back(9);  
-  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP.binName.push_back("$350<MET<450$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(10);  bkgEst_ICHEP.CR_bins.push_back(10);  
-  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP.binName.push_back("$MET>450$");
-  
-  // 4jet, low mt2w
-  bkgEst_ICHEP.SR_bins.push_back(11);  bkgEst_ICHEP.CR_bins.push_back(11);  
-  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP.binName.push_back("$250<MET<350$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(12);  bkgEst_ICHEP.CR_bins.push_back(12);  
-  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP.binName.push_back("$350<MET<450$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(13);  bkgEst_ICHEP.CR_bins.push_back(13);  
-  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP.binName.push_back("$450<MET<550$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(14);  bkgEst_ICHEP.CR_bins.push_back(29);  // Extrapolate
-  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP.binName.push_back("$550<MET<650$");
-  
-  bkgEst_ICHEP.SR_bins.push_back(15);  bkgEst_ICHEP.CR_bins.push_back(29);  // Extrapolate
-  bkgEst_ICHEP.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP.binName.push_back("$MET>650$");
-  
-  
-  v_bkgEst.push_back( bkgEst_ICHEP );
-
-
-  //
-  // ICHEP results, extended to 30fb
-  //
-  bkgEstUtil bkgEst_ICHEP_ext30fb;
-
-  bkgEst_ICHEP_ext30fb.outName_base = "bkgEst_1lepFromW__ICHEP_ext30fb_bins";
-  bkgEst_ICHEP_ext30fb.hName_base = "h_yields_SR_ICHEP_ext30fb";
-  bkgEst_ICHEP_ext30fb.forceOneTF = false;
-  bkgEst_ICHEP_ext30fb.useFractionInCR = false;
-
-  // 2jet, modTopness
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(1);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(1);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~tmod$\\ge6.4$"); 
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$250<MET<350$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(2);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(2);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~tmod$\\ge6.4$");
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$350<MET<450$");
-
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(3);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(3);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~tmod$\\ge6.4$");
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(4);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(22);  // Extrapolate
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~tmod$\\ge6.4$");
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(5);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(22);  // Extrapolate  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$2$jets,~tmod$\\ge6.4$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$2$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$MET>650$");
-
-  // 3jet, mt2w
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(6);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(6);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$250<MET<350$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(7);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(7);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$350<MET<450$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(8);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(8); 
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(9);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(9); // No Extrapolation, but if so bin=23
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
-    
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(10);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(10); // No Extrapolation, but if so bin=23
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$3$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$3$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$MET>650$");
-  
-  // 4jet, low mt2w
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(11);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(11);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$250<MET<350$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(12);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(12);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$350<MET<450$");
-
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(13);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(13);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
-
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(14);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(24);  // Extrapolate
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(15);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(24);  // Extrapolate
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$<200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$MET>450$");
-  
-  // 4jet, high mt2w
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(16);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(16);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$250<MET<350$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(17);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(17);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$350<MET<450$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(18);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(18);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$450<MET<550$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(19);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(19);  
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$550<MET<650$");
-
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(20);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(25);  // Extrapolate
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$650<MET<800$");
-  
-  bkgEst_ICHEP_ext30fb.SR_bins.push_back(21);  bkgEst_ICHEP_ext30fb.CR_bins.push_back(25);  // Extrapolate
-  bkgEst_ICHEP_ext30fb.regionName.push_back("$\\ge4$jets,~MT2W$\\ge200$");  
-  bkgEst_ICHEP_ext30fb.regionName_short.push_back("$4$jets"); 
-  bkgEst_ICHEP_ext30fb.binName.push_back("$MET>800$");
-  
-  
-  v_bkgEst.push_back( bkgEst_ICHEP_ext30fb );
-  
-
-
-  //
-  // Dev, ext30fb,  mlb
-  //
-  bkgEstUtil bkgEst_ext30fb_mlb;
- 
-  // met extrapolation
-  bkgEst_ext30fb_mlb.outName_base = "bkgEst_1lepFromW__mlb_v1_bins";
-  bkgEst_ext30fb_mlb.hName_base = "h_yields_SR_dev_ext30fb_mlb_v1";
-  bkgEst_ext30fb_mlb.forceOneTF = false;
-  bkgEst_ext30fb_mlb.useFractionInCR = false;
-
-  // Region A
-  bkgEst_ext30fb_mlb.SR_bins.push_back(1);  bkgEst_ext30fb_mlb.CR_bins.push_back(1);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(2);  bkgEst_ext30fb_mlb.CR_bins.push_back(2);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<500$");
-  
-  bkgEst_ext30fb_mlb.SR_bins.push_back(3);  bkgEst_ext30fb_mlb.CR_bins.push_back(3);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$MET>500$");
-  
-  // Region B
-  bkgEst_ext30fb_mlb.SR_bins.push_back(4);  bkgEst_ext30fb_mlb.CR_bins.push_back(4);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(5);  bkgEst_ext30fb_mlb.CR_bins.push_back(5);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(6);  bkgEst_ext30fb_mlb.CR_bins.push_back(6);  // No Extrapolation, if so bin=30
-  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<650$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(7);  bkgEst_ext30fb_mlb.CR_bins.push_back(7);  // No Extrapolation, if so bin=30
-  bkgEst_ext30fb_mlb.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
-
-  // Region C
-  bkgEst_ext30fb_mlb.SR_bins.push_back(8);  bkgEst_ext30fb_mlb.CR_bins.push_back(8);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(9);  bkgEst_ext30fb_mlb.CR_bins.push_back(9);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(10);  bkgEst_ext30fb_mlb.CR_bins.push_back(10);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(11);  bkgEst_ext30fb_mlb.CR_bins.push_back(31); // Extrapolate  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$550<MET<650$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(12);  bkgEst_ext30fb_mlb.CR_bins.push_back(31); // Extrapolate  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
-
-  // Region D
-  bkgEst_ext30fb_mlb.SR_bins.push_back(13);  bkgEst_ext30fb_mlb.CR_bins.push_back(13);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(14);  bkgEst_ext30fb_mlb.CR_bins.push_back(14);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(15);  bkgEst_ext30fb_mlb.CR_bins.push_back(15); // No Extrapolation, if so bin=32
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(16);  bkgEst_ext30fb_mlb.CR_bins.push_back(16); // No Extrapolation, if so bin=32
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
-
-  // Region E
-  bkgEst_ext30fb_mlb.SR_bins.push_back(17);  bkgEst_ext30fb_mlb.CR_bins.push_back(17);  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(18);  bkgEst_ext30fb_mlb.CR_bins.push_back(33); // Extrapolation, if so, bin=33
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<550$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(19);  bkgEst_ext30fb_mlb.CR_bins.push_back(33); // Extrapolattion, if so, bin=33
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$MET>550$");
-  
-  // Region F
-  bkgEst_ext30fb_mlb.SR_bins.push_back(20);  bkgEst_ext30fb_mlb.CR_bins.push_back(20); 
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(21);  bkgEst_ext30fb_mlb.CR_bins.push_back(34);  // Extrapolation, if so, bin=34 
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<500$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(22);  bkgEst_ext30fb_mlb.CR_bins.push_back(34); // Extrapolation, if so, bin=34  
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$MET>500$");
-
-  // Region G
-  bkgEst_ext30fb_mlb.SR_bins.push_back(23);  bkgEst_ext30fb_mlb.CR_bins.push_back(23);
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(24);  bkgEst_ext30fb_mlb.CR_bins.push_back(24);
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(25);  bkgEst_ext30fb_mlb.CR_bins.push_back(25); // No Extrapolation, if so, bin=35
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$450<MET<600$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(26);  bkgEst_ext30fb_mlb.CR_bins.push_back(26); // No Extrapolation, if so, bin=35
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$MET>600$");
-  
-  // Region H
-  bkgEst_ext30fb_mlb.SR_bins.push_back(27);  bkgEst_ext30fb_mlb.CR_bins.push_back(27);
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$250<MET<350$");
- 
-  bkgEst_ext30fb_mlb.SR_bins.push_back(28);  bkgEst_ext30fb_mlb.CR_bins.push_back(36); // Extrapolate
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$350<MET<650$");
-
-  bkgEst_ext30fb_mlb.SR_bins.push_back(29);  bkgEst_ext30fb_mlb.CR_bins.push_back(36); // Extrapolate
-  bkgEst_ext30fb_mlb.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb.binName.push_back("$MET>650$");
- 
-  
-  v_bkgEst.push_back( bkgEst_ext30fb_mlb );
-
-  
-
-  //
-  // Dev, ext30fb,  mlb, using inclusive mlb bins
-  //
-  bkgEstUtil bkgEst_ext30fb_mlb_inclMlbBins;
- 
-  // mlb extrapolation
-  bkgEst_ext30fb_mlb_inclMlbBins.outName_base = "bkgEst_1lepFromW__mlb_v1_inclMlb_bins";
-  bkgEst_ext30fb_mlb_inclMlbBins.hName_base = "h_yields_SR_dev_ext30fb_mlb_v1";
-  bkgEst_ext30fb_mlb_inclMlbBins.forceOneTF = false;
-  bkgEst_ext30fb_mlb_inclMlbBins.useFractionInCR = false;
-
-  // Region A
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(1);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(44);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(2);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(45);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$350<MET<500$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(3);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(46);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$MET>500$");
-  
-  // Region B
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(4);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(44);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(47);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(6);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(48);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$450<MET<650$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(7);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(49);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$MET>650$");
-
-  // Region C
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(8);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(51);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(9);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(52);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(10);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(53);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(11);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(54);   
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$550<MET<650$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(12);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(55);   
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$MET>650$");
-
-  // Region D
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(13);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(51);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(14);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(52);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(15);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(53); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(16);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(56); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$MET>550$");
-
-  // Region E
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(17);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(58);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(18);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(59); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$350<MET<550$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(19);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(60); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$MET>550$");
-
-  // Region F
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(20);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(58);   
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(21);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(61);   
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$350<MET<500$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(22);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(62);  
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$MET>500$");
-
-  // Region G
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(23);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(64);
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(24);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(65);
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(25);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(66); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$450<MET<600$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(26);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(67); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$MET>600$");
-
-  // Region H
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(27);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(64);
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$250<MET<350$");
- 
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(28);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(68); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$350<MET<650$");
-
-  bkgEst_ext30fb_mlb_inclMlbBins.SR_bins.push_back(29);  bkgEst_ext30fb_mlb_inclMlbBins.CR_bins.push_back(69); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb_inclMlbBins.binName.push_back("$MET>650$");
- 
-  
-  v_bkgEst.push_back( bkgEst_ext30fb_mlb_inclMlbBins );
-  */
-
-  /*
-  //
-  // Dev, ext30fb,  mlb with tight bTagging
-  //
-  bkgEstUtil bkgEst_ext30fb_mlb_v2;
- 
-  // met extrapolation
-  bkgEst_ext30fb_mlb_v2.outName_base = "bkgEst_1lepFromW__mlb_v2_bins";
-  bkgEst_ext30fb_mlb_v2.hName_base = "h_yields_SR_dev_ext30fb_mlb_v2";
-  bkgEst_ext30fb_mlb_v2.forceOneTF = false;
-  bkgEst_ext30fb_mlb_v2.useFractionInCR = false;
-
-  // Region A
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(1);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(1);  
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(2);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(2);  
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$350<MET<450$");
-  
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(3);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(3);  // No Extrapolation, if so bin=28
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$450<MET<600$");
-  
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(4);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(4);  // No Extrapolation, if so bin=28
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>600$");
-  
-  // Region B
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(5);  // No Extrapolation, if so bin=29
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(6);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(6);  // Yes Extrapolation, if so bin=29
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$450<MET<600$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(7);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(7);  // Yes Extrapolation, if so bin=29
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>600$");
-
-  // Region C
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(8);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(8);  
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(9);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(9);  
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(10);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(10);  
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("C");   bkgEst_ext30fb_mlb_v2.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(11);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(11); // No Extrapolation, if so bin=30
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$550<MET<650$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(12);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(12); // No Extrapolation, if so bin=30
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>650$");
-
-  // Region D
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(13);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(13);  
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(14);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(14);  
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(15);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(15); // No Extrapolation, if so bin=31
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(16);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(16); // No Extrapolation, if so bin=31
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>550$");
-
-  // Region E
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(17);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(17);  
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(18);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(18); // Yes Extrapolation, if so, bin=32
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$350<MET<550$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(19);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(19); // Yes Extrapolation, if so, bin=32
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>550$");
-
-  // Region F
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(20);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(20); // Yes Extrapolation, if so, bin=33 
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(21);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(21); // Yes Extrapolation, if so, bin=33 
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>450$");
-
-  // Region G
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(22);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(22);
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(23);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(23);
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(24);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(24); // No Extrapolation, if so, bin=34
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$450<MET<600$");
-
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(25);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(25); // No Extrapolation, if so, bin=34
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>600$");
-
-  // Region H
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(26);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(26);  // Yes Extrapolation, if so, bin=35
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$250<MET<450$");
- 
-  bkgEst_ext30fb_mlb_v2.SR_bins.push_back(27);  bkgEst_ext30fb_mlb_v2.CR_bins.push_back(27); // Yes Extrapolation, if, bin=35
-  bkgEst_ext30fb_mlb_v2.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb_v2.binName.push_back("$MET>450$");
- 
-  
-  v_bkgEst.push_back( bkgEst_ext30fb_mlb_v2 );
-  */
 
   //
   // Dev, ext30fb,  mlb with tight bTagging
@@ -810,650 +97,186 @@ int bkgEstimate_1lepFromW(){
  
   // met extrapolation
   bkgEst_ext30fb_mlb_v2_useCRfrac.outName_base = "bkgEst_1lepFromW__mlb_v2_bins_useCRfraction";
-  bkgEst_ext30fb_mlb_v2_useCRfrac.hName_base = "h_yields_SR_dev_ext30fb_mlb_v2";
+  bkgEst_ext30fb_mlb_v2_useCRfrac.hName_base = "h_yields";
   bkgEst_ext30fb_mlb_v2_useCRfrac.forceOneTF = false;
   bkgEst_ext30fb_mlb_v2_useCRfrac.useFractionInCR = true;
+  bkgEst_ext30fb_mlb_v2_useCRfrac.name_SR = "SR_bulk";
+  bkgEst_ext30fb_mlb_v2_useCRfrac.name_CR = "";
 
   // Region A
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(1);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(1);  
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("A"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<350$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(2);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(2);  
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("A"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$350<MET<450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
   
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(3);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(3);  // No Extrapolation, if so bin=28
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("A"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$450<MET<600$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
   
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(4);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(4);  // No Extrapolation, if so bin=28
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("A"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>600$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
   
   // Region B
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(5);  // No Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(6);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(6);  // Yes Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$450<MET<600$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(7);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(7);  // Yes Extrapolation, if so bin=29
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("B"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>600$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   // Region C
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(8);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(8);  
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<350$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(9);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(9);  
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$350<MET<450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(10);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(10);  
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("C");   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$450<MET<550$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(11);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(11); // No Extrapolation, if so bin=30
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$550<MET<650$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(12);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(12); // No Extrapolation, if so bin=30
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("C"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>650$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   // Region D
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(13);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(13);  
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("D"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<350$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(14);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(14);  
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("D"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$350<MET<450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(15);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(15); // No Extrapolation, if so bin=31
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("D"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$450<MET<550$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(16);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(16); // No Extrapolation, if so bin=31
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("D"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>550$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   // Region E
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(17);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(17);  
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<350$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(18);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(18); // Yes Extrapolation, if so, bin=32
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$350<MET<550$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(19);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(19); // Yes Extrapolattion, if so, bin=32
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("E"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>550$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   // Region F
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(20);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(20); // Yes Extrapolation, if so, bin=33 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("F"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(21);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(21); // Yes Extrapolation, if so, bin=33 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("F"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
 
   // Region G
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(22);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(22);
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("G"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<350$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(23);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(23);
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("G"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$350<MET<450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(24);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(24); // No Extrapolation, if so, bin=34
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("G"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$450<MET<600$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(25);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(25); // No Extrapolation, if so, bin=34
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("G"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>600$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_bulk");
 
   // Region H
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(26);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(26);  // Yes Extrapolation, if so, bin=35
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$250<MET<450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
  
   bkgEst_ext30fb_mlb_v2_useCRfrac.SR_bins.push_back(27);  bkgEst_ext30fb_mlb_v2_useCRfrac.CR_bins.push_back(27); // Yes Extrapolation, if, bin=35
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.regionName_short.push_back("H"); 
   bkgEst_ext30fb_mlb_v2_useCRfrac.binName.push_back("$MET>450$");
+  bkgEst_ext30fb_mlb_v2_useCRfrac.names_CR.push_back("CR0b_highMlb_bulk");
  
   
   v_bkgEst.push_back( bkgEst_ext30fb_mlb_v2_useCRfrac );
 
 
-  /*
-  //
-  // Dev, ext30fb,  mlb with tight bTagging
-  //
-  bkgEstUtil bkgEst_ext30fb_mlb_v2_inclMlbBins;
- 
-  // mlb extrapolation
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.outName_base = "bkgEst_1lepFromW__mlb_v2_inclMlb_bins";
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.hName_base = "h_yields_SR_dev_ext30fb_mlb_v2";
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.forceOneTF = true;
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.useFractionInCR = false;
 
-  // Region A
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(1);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(43);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(2);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(44);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$350<MET<450$");
-  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(3);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(45);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$450<MET<600$");
-  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(4);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(46); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$MET>600$");
-  
-  // Region B
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(5);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(47);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$250<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(6);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(48); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$450<MET<600$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(7);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(49);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$MET>600$");
-
-  // Region C
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(8);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(51);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(9);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(52);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(10);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(53);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("C");   bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(11);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(54); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$550<MET<650$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(12);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(55); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$MET>650$");
-
-  // Region D
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(13);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(51);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(14);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(52);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(15);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(53); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(16);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(56); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$MET>550$");
-
-  // Region E
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(17);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(58);  
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(18);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(59); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$350<MET<550$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(19);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(60); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$MET>550$");
-
-  // Region F
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(20);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(61); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$250<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(21);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(62); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$MET>450$");
-
-  // Region G
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(22);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(64);
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(23);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(65);
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(24);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(66); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$450<MET<600$");
-
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(25);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(67); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb<175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$MET>600$");
-
-  // Region H
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(26);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(68); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$250<MET<450$");
- 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.SR_bins.push_back(27);  bkgEst_ext30fb_mlb_v2_inclMlbBins.CR_bins.push_back(69); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$mlb\\ge175$"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_mlb_v2_inclMlbBins.binName.push_back("$MET>450$");
- 
-  
-  v_bkgEst.push_back( bkgEst_ext30fb_mlb_v2_inclMlbBins );
-
-
-
-  //
-  // Dev, ext30fb,  bJetPt
-  //
-  bkgEstUtil bkgEst_ext30fb_bJetPt;
- 
-  bkgEst_ext30fb_bJetPt.outName_base = "bkgEst_1lepFromW__bJetPt_v1_bins";
-  bkgEst_ext30fb_bJetPt.hName_base = "h_yields_SR_dev_ext30fb_bJetPt_v1";
-  bkgEst_ext30fb_bJetPt.forceOneTF = false;
-  bkgEst_ext30fb_bJetPt.useFractionInCR = false;
-
-  // Region A
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(1);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(1);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(2);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(2);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(3);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(3);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<600$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(4);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(4);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>600$");
-  
-  // Region B
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(5);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(5);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(6);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(6);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<500$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(7);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(30);  // Extrapolation, if so bin=30
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$500<MET<650$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(8);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(30);  // Extrapolation  , if so bin=30
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
-
-  // Region C
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(9);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(9);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(10);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(10);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(11);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(11);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(12);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(12); // No Extrapolation, if so bin=31
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$550<MET<650$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(13);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(13); // No Extrapolation, if so bin=31
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
-
-  // Region D
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(14);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(14);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(15);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(15);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(16);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(32); // Extrapolate  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(17);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(32); // Extrapolate  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>550$");
-
-  // Region E
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(18);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(18);  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(19);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(19); // No Extrapolation, if so bin=33
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(20);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(20); // No Extrapolation, if so bin=33
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>450$");
-
-  // Region F
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(21);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(21);   
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(22);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(34); // Extrapolate  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<500$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(23);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(34); // Extrapolate  
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>500$");
-
-  // Region G
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(24);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(24);
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(25);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(25);
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(26);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(35); // Extrapolate
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$450<MET<650$");
-
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(27);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(35); // Extrapolate
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>650$");
-  
-  // Region H
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(28);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(28); // No Extrapolation, if so, bin=36
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$250<MET<450$");
- 
-  bkgEst_ext30fb_bJetPt.SR_bins.push_back(29);  bkgEst_ext30fb_bJetPt.CR_bins.push_back(29);  // No Extrapolation, if so, bin=36
-  bkgEst_ext30fb_bJetPt.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_bJetPt.binName.push_back("$MET>450$");
- 
-  
-  v_bkgEst.push_back( bkgEst_ext30fb_bJetPt );
-  
-
-
-  //
-  // Dev, ext30fb,  bJetPt, using inclusive bJetPt bins
-  //
-  bkgEstUtil bkgEst_ext30fb_bJetPt_inclBJetPtBins;
- 
-  // bJetPt Extrapolation
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.outName_base = "bkgEst_1lepFromW__bJetPt_v1_inclBJetPt_bins";
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.hName_base = "h_yields_SR_dev_ext30fb_bJetPt_v1";
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.forceOneTF = true;
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.useFractionInCR = false;
-
-  // Region A
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(1);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(44);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(2);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(45);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(3);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(46);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$450<MET<600$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(4);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(47);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("A"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$MET>600$");
-  
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(5);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(44);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(6);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(48);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$350<MET<500$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(7);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(49);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$500<MET<650$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(8);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(50);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$<4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("B"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$MET>650$");
-
-  // Region C
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(9);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(52);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(10);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(53);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(11);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(54);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(12);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(55); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$550<MET<650$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(13);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(56); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("C"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$MET>650$");
-
-  // Region D
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(14);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(52);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(15);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(53);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(16);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(54);   
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$450<MET<550$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(17);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(57);   
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$<0.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("D"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$MET>550$");
-
-  // Region E
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(18);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(59);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(19);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(60); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(20);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(61); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("E"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$MET>450$");
-
-  // Region F
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(21);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(59);   
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(22);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(62);   
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$350<MET<500$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(23);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(63);  
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~$0.0<$tmod$<10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("F"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$MET>500$");
-
-  // Region G
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(24);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(65);
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$250<MET<350$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(25);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(66);
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$350<MET<450$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(26);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(67); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$450<MET<650$");
-
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(27);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(68); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt<200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("G"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$MET>650$");
-  
-  // Region H
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(28);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(69);
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$250<MET<450$");
- 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.SR_bins.push_back(29);  bkgEst_ext30fb_bJetPt_inclBJetPtBins.CR_bins.push_back(70); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName.push_back("$\\ge4$jets,~tmod$\\ge10.0$,~$bJetPt\\ge200$"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.regionName_short.push_back("H"); 
-  bkgEst_ext30fb_bJetPt_inclBJetPtBins.binName.push_back("$MET>650$");
- 
-  
-  v_bkgEst.push_back( bkgEst_ext30fb_bJetPt_inclBJetPtBins );
-  */
 
 
   //
@@ -1462,9 +285,11 @@ int bkgEstimate_1lepFromW(){
   bkgEstUtil bkgEst_corridor;
 
   bkgEst_corridor.outName_base = "bkgEst_1lepFromW__corridor_bins";
-  bkgEst_corridor.hName_base = "h_yields_SR_corridor";
+  bkgEst_corridor.hName_base = "h_yields";
   bkgEst_corridor.forceOneTF = false;
   bkgEst_corridor.useFractionInCR = true;
+  bkgEst_corridor.name_SR = "SR_corridor";
+  bkgEst_corridor.name_CR = "CR0b_corridor";
 
   bkgEst_corridor.SR_bins.push_back(1);  bkgEst_corridor.CR_bins.push_back(1);  
   bkgEst_corridor.regionName.push_back("top~corridor"); 
@@ -1502,6 +327,10 @@ int bkgEstimate_1lepFromW(){
     // Get yield histo base name
     TString hNameBase = v_bkgEst[iBkgEst].hName_base;
 
+    // Get appropriate names for SR and CR0b histograms
+    TString regionName_SR = v_bkgEst.at(iBkgEst).name_SR;
+    TString regionName_CR = v_bkgEst.at(iBkgEst).name_CR;
+
     // Bool to use fraction of data
     bool useFraction = v_bkgEst[iBkgEst].useFractionInCR;
 
@@ -1528,7 +357,7 @@ int bkgEstimate_1lepFromW(){
     TFile  *f_out = new TFile(root_fileName.Data(), "recreate");
     
     // Count Additional Systematics
-    int additional_sys = 4; // +2 for data stats up/down, +2 for mc status up/down
+    int additional_sys = 4; // +2 for data stats up/down, +2 for mc stats up/down
     if(useFraction) additional_sys += 2; // +2 for impurity 
 
     // Total Systematics
@@ -1596,20 +425,20 @@ int bkgEstimate_1lepFromW(){
     //
 
     // Results, 1 table for all categories
-    //   ROW=Categories, COL=Lost Lepton Estimate and Components
+    //   ROW=Categories, COL=1-lep-from-W Estimate and Components
     FILE *f_results;
     TString f_results_name = outDir;
     f_results_name += outNameBase;
     f_results_name += "__resultsTable.tex";
     f_results = fopen(f_results_name.Data(), "w");
     
-    cout << "Writing Table of Lost Lepton Estimates to file; " << endl;
+    cout << "Writing Table of 1l-from-W Estimates to file; " << endl;
     cout << "    " << f_results_name << endl;
 
     printLatexHeader(f_results);
     fprintf(f_results, "\\tiny \n");  
     fprintf(f_results, "\\begin{table} \n");
-    fprintf(f_results, "\\caption{ Lost Lepton Background Estimate, for each Signal Region } \n");
+    fprintf(f_results, "\\caption{ 1l-from-W Background Estimate, for each Signal Region } \n");
     fprintf(f_results, "\\scalebox{1.0}{ \n");
 
     fprintf(f_results, "\\begin{tabular}{|l|c|c|"); // Region, MET bin, Data Yield CR
@@ -1620,8 +449,8 @@ int bkgEstimate_1lepFromW(){
     fprintf(f_results, "} \\hline \n");
 
     fprintf(f_results, "Region & MET bin & $Observed_{CR}$");
-    if(useFraction) fprintf(f_results, " & $MC_{CR}^{2\\ell~frac}$");
-    fprintf(f_results, " & $TF_{lepton}$");
+    if(useFraction) fprintf(f_results, " & $MC_{CR}^{1\\ell~W~frac}$");
+    fprintf(f_results, " & $TF_{btag}$");
     if(!oneTF) fprintf(f_results, " & $TF_{SR~bin}$ & $TF_{Total}$");
     fprintf(f_results, " & $SR~Estimate$");
     fprintf(f_results, " \\"); fprintf(f_results, "\\ \\hline \\hline \n");
@@ -1629,14 +458,14 @@ int bkgEstimate_1lepFromW(){
 
 
     // Uncertainty table, with full details of calculation, one table per category
-    //   ROW=Uncertainties, COL=DiLepton Estimate and Components
+    //   ROW=Uncertainties, COL=1lW Estimate and Components
     FILE *f_uncFile_fullCalc = NULL;
     TString f_uncFile_fullCalc_name = outDir;
     f_uncFile_fullCalc_name += outNameBase;
     f_uncFile_fullCalc_name += "__uncertaintyTable__fullCalculation.tex";
     f_uncFile_fullCalc = fopen(f_uncFile_fullCalc_name.Data(), "w");
     
-    cout << "Writing table of diLepton uncertainties to: " << endl;
+    cout << "Writing table of 1l-from-W uncertainties to: " << endl;
     cout << "    " << f_uncFile_fullCalc_name << endl;
 
     printLatexHeader(f_uncFile_fullCalc);
@@ -1644,19 +473,19 @@ int bkgEstimate_1lepFromW(){
 
     
     // Uncertainty Table, Summary of components over all Categories
-    //   ROW=Uncertainty ranges by %, over all cateogries, COL=DiLepton Estimate and Components
+    //   ROW=Uncertainty ranges by %, over all cateogries, COL=1lW Estimate and Components
     FILE *f_uncFile_summary;
     TString f_uncFile_summary_name = outDir;
     f_uncFile_summary_name += outNameBase;
     f_uncFile_summary_name += "__uncertaintyTable__summary.tex";
     f_uncFile_summary = fopen(f_uncFile_summary_name.Data(), "w");
     
-    cout << "Writing Summary Table of Lost Lepton Uncertainties to: " << endl;
+    cout << "Writing Summary Table of 1l-from-W Uncertainties to: " << endl;
     cout << "    " << f_uncFile_summary_name << endl;
     
     printLatexHeader(f_uncFile_summary);
     fprintf(f_uncFile_summary, "\\begin{table} \n");
-    fprintf(f_uncFile_summary, "\\caption{ Summary of Lost Lepton Background Estimate Uncertainties } \n");
+    fprintf(f_uncFile_summary, "\\caption{ Summary of 1l-from-W Background Estimate Uncertainties } \n");
     fprintf(f_uncFile_summary, "\\scalebox{0.7}{ \n");
 
     fprintf(f_uncFile_summary, "\\begin{tabular}{|l|c|"); // Systematic, Data Yield CR
@@ -1667,8 +496,8 @@ int bkgEstimate_1lepFromW(){
     fprintf(f_uncFile_summary, "} \\hline \n");
     
     fprintf(f_uncFile_summary, "Systematic & $Observed_{CR},~(\\%%)$");
-    if(useFraction) fprintf(f_uncFile_summary, "& $MC_{CR}^{2\\ell~frac},~(\\%%)$");
-    fprintf(f_uncFile_summary, " & $TF_{lepton},~(\\%%)$");
+    if(useFraction) fprintf(f_uncFile_summary, "& $MC_{CR}^{1\\ell~W~frac},~(\\%%)$");
+    fprintf(f_uncFile_summary, " & $TF_{btag},~(\\%%)$");
     if(!oneTF) fprintf(f_uncFile_summary, " & $TF_{SR~Bin},~(\\%%)$ & $TF_{Total},~(\\%%)$");
     fprintf(f_uncFile_summary, " & $SR~Estimate,~(\\%%)$");
     fprintf(f_uncFile_summary, " \\"); fprintf(f_uncFile_summary, "\\ \\hline \\hline \n");
@@ -1720,7 +549,7 @@ int bkgEstimate_1lepFromW(){
     f_uncFile_summaryByCat_name += "__uncertaintyTable__summary_byCategory.tex";
     f_uncFile_summaryByCat = fopen(f_uncFile_summaryByCat_name.Data(), "w");
     
-    cout << "Writing table of diLepton uncertainties summary by cats to: " << endl;
+    cout << "Writing table of 1l-from-W uncertainties summary by cats to: " << endl;
     cout << "    " << f_uncFile_summaryByCat_name << endl;
     
     printLatexHeader(f_uncFile_summaryByCat);
@@ -1759,21 +588,21 @@ int bkgEstimate_1lepFromW(){
       catName += ",~";
       catName += v_bkgEst[iBkgEst].binName[iSR];
 
-      // Cateogry info for uncertainty table, for each category
+      // Category info for uncertainty table, for each category
       fprintf(f_uncFile_fullCalc, "\\begin{table} \n");
-      fprintf(f_uncFile_fullCalc, "\\caption{ diLepton Background Estimate Uncertainties, for %s } \n", catName.Data());
+      fprintf(f_uncFile_fullCalc, "\\caption{ 1lW Background Estimate Uncertainties, for %s } \n", catName.Data());
       fprintf(f_uncFile_fullCalc, "\\scalebox{0.6}{ \n");
       fprintf(f_uncFile_fullCalc, "\\begin{tabular}{|l|c|c|"); // Systematic; Data Yield CR; MC Yield Incl. genClassy CR
-      if(useFraction) fprintf(f_uncFile_fullCalc, "c|c|");     // MC Yield 2lep CR; MC Fraction to apply to data
-      fprintf(f_uncFile_fullCalc, "c|c|");                     // MC Yield 2lep SR; TF_cr2sr
-      if(!oneTF) fprintf(f_uncFile_fullCalc, "c|c|c|");        // if >1 TF, then SR bin, MC Yield 2lep SR bin; TF_srBin; TF_tot
+      if(useFraction) fprintf(f_uncFile_fullCalc, "c|c|");     // MC Yield 0b CR; MC Fraction to apply to data
+      fprintf(f_uncFile_fullCalc, "c|c|");                     // MC Yield 1lW SR; TF_cr2sr
+      if(!oneTF) fprintf(f_uncFile_fullCalc, "c|c|c|");        // if >1 TF, then SR bin, MC Yield 1lW SR bin; TF_srBin; TF_tot
       fprintf(f_uncFile_fullCalc, "c|");                       // SR Estimate
       fprintf(f_uncFile_fullCalc, "} \\hline \n");
 
       fprintf(f_uncFile_fullCalc, "Systematic & $Observed_{CR},~(\\%%)$ & $MC_{Incl}^{CR},~(\\%%)$");
       if(useFraction) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{CR},~(\\%%)$ & $MC_{CR}^{1\\ell~frac},~(\\%%)$");
-      if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR~bin},~(\\%%)$ & $TF_{lepton},~(\\%%)$");
-      else                             fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR},~(\\%%)$ & $TF_{lepton},~(\\%%)$");
+      if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR~bin},~(\\%%)$ & $TF_{btag},~(\\%%)$");
+      else                             fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR},~(\\%%)$ & $TF_{btag},~(\\%%)$");
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & $MC_{1\\ell}^{SR~bin},~(\\%%)$ & $TF_{SR~Bin},~(\\%%)$ & $TF_{Total},~(\\%%)$");
       fprintf(f_uncFile_fullCalc, " & $SR~Estimate$");
       fprintf(f_uncFile_fullCalc, " \\"); fprintf(f_uncFile_fullCalc, "\\ \\hline \\hline \n");
@@ -1781,10 +610,14 @@ int bkgEstimate_1lepFromW(){
 
       
       //
-      // Get yields, begin calculation for this cateogry
+      // Get yields, begin calculation for this category
       //
       int SR_bin = v_bkgEst[iBkgEst].SR_bins[iSR];
       int CR_bin = v_bkgEst[iBkgEst].CR_bins[iSR];
+
+      // In case we're drawing from multiple analyzers here, get the SR and CR histogram names for the individual category
+      if( v_bkgEst.at(iBkgEst).name_SR == "" ) regionName_SR = v_bkgEst.at(iBkgEst).names_SR.at(iSR);
+      if( v_bkgEst.at(iBkgEst).name_CR == "" ) regionName_CR = v_bkgEst.at(iBkgEst).names_CR.at(iSR);
       
 
       //
@@ -1834,7 +667,7 @@ int bkgEstimate_1lepFromW(){
       
       
       //
-      // CR, mc, cr2sr bin, ge2lep genClassy
+      // CR, mc, cr2sr bin, 1lW genClassy
       //
       hName = hNameBase;
       hName += "__";
@@ -1845,14 +678,14 @@ int bkgEstimate_1lepFromW(){
       hName += nominal_sys.label;
       
       h_temp = (TH1D*)f_CR_mc->Get(hName);
-      if(!h_temp) cout << "BAD MC CR, ge2lep genClassy, CRtoSR bin HISTO: " << hName << endl;
+      if(!h_temp) cout << "BAD MC CR, 1lW genClassy, CRtoSR bin HISTO: " << hName << endl;
       
-      double MC_CR_cr2sr_ge2lep_yield = h_temp->GetBinContent( CR_bin);
-      double MC_CR_cr2sr_ge2lep_error = h_temp->GetBinError( CR_bin );
+      double MC_CR_cr2sr_1lW_yield = h_temp->GetBinContent( CR_bin);
+      double MC_CR_cr2sr_1lW_error = h_temp->GetBinError( CR_bin );
     
       if(doRescale){
-	MC_CR_cr2sr_ge2lep_error *= rescale;
-	MC_CR_cr2sr_ge2lep_yield *= rescale;
+	MC_CR_cr2sr_1lW_error *= rescale;
+	MC_CR_cr2sr_1lW_yield *= rescale;
       }
 
 
@@ -1905,13 +738,13 @@ int bkgEstimate_1lepFromW(){
       
       
       //
-      // CR, mc, cr2sr bin, non-ge2lep genClassy
+      // CR, mc, cr2sr bin, non-1lW genClassy
       //
-      double MC_CR_cr2sr_non_ge2lep_yield = 0.0;
+      double MC_CR_cr2sr_non_1lW_yield = 0.0;
       
       
       //
-      // CR, mc, cr2sr bin, fraction of ge2lep
+      // CR, mc, cr2sr bin, fraction of 1lW
       //
       double MC_CR_fraction             = 1.0;
       double MC_CR_fraction_statErr     = 0.0;
@@ -1964,24 +797,24 @@ int bkgEstimate_1lepFromW(){
 	//
 	if(useFraction){
 	  
-	  // If using fraction, get ge2lep CR MC yield
-	  if(MC_CR_cr2sr_ge2lep_yield>0.0 && MC_SR_bin_yield>0.0){
+	  // If using fraction, get 1lW CR MC yield
+	  if(MC_CR_cr2sr_1lW_yield>0.0 && MC_SR_bin_yield>0.0){
 
-	    // Get MC Non-ge2lep Yield
-	    MC_CR_cr2sr_non_ge2lep_yield = MC_CR_cr2sr_incl_yield - MC_CR_cr2sr_ge2lep_yield;
+	    // Get MC Non-1lW Yield
+	    MC_CR_cr2sr_non_1lW_yield = MC_CR_cr2sr_incl_yield - MC_CR_cr2sr_1lW_yield;
 	    
-	    // Get MC Fraction of ge2lep
-	    MC_CR_fraction             = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + MC_CR_cr2sr_non_ge2lep_yield );
-	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
+	    // Get MC Fraction of 1lW
+	    MC_CR_fraction             = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + MC_CR_cr2sr_non_1lW_yield );
+	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_1lW_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
 	    MC_CR_fraction_err         = MC_CR_fraction_statErr;
 
 	    // Get MC Fraction, varying impurity
-	    MC_CR_fraction_impurity_up = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + ((1.0+impurity_sys)*MC_CR_cr2sr_non_ge2lep_yield) );
-	    MC_CR_fraction_impurity_dn = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + ((1.0-impurity_sys)*MC_CR_cr2sr_non_ge2lep_yield) );
+	    MC_CR_fraction_impurity_up = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + ((1.0+impurity_sys)*MC_CR_cr2sr_non_1lW_yield) );
+	    MC_CR_fraction_impurity_dn = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + ((1.0-impurity_sys)*MC_CR_cr2sr_non_1lW_yield) );
 	    
 	    // Get Transfer Factor SR/CR
-	    tf_cr2sr = MC_SR_bin_yield/MC_CR_cr2sr_ge2lep_yield;
-	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield,2) + pow(MC_SR_bin_error/MC_SR_bin_yield,2) );  // Gaussian Errors for each component
+	    tf_cr2sr = MC_SR_bin_yield/MC_CR_cr2sr_1lW_yield;
+	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_1lW_error/MC_CR_cr2sr_1lW_yield,2) + pow(MC_SR_bin_error/MC_SR_bin_yield,2) );  // Gaussian Errors for each component
 	    tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_SR_bin_error/MC_SR_bin_yield,2) );  // Gausisan Errors for MC_SR_bin_yield only to avoid double counting , since MC_CR_cr2sr_error is included in MC fraction error 
 	    tf_cr2sr_err = tf_cr2sr_statErr;
 
@@ -2043,24 +876,24 @@ int bkgEstimate_1lepFromW(){
 	//
 	if(useFraction){
 	  
-	  // If using fraction, get ge2lep CR MC yield
-	  if(MC_CR_cr2sr_ge2lep_yield>0.0 && MC_SR_cr2sr_yield>0.0 && MC_SR_bin_yield>0.0){
+	  // If using fraction, get 1lW CR MC yield
+	  if(MC_CR_cr2sr_1lW_yield>0.0 && MC_SR_cr2sr_yield>0.0 && MC_SR_bin_yield>0.0){
 
-	    // Get MC Non-ge2lep Yield
-	    MC_CR_cr2sr_non_ge2lep_yield = MC_CR_cr2sr_incl_yield - MC_CR_cr2sr_ge2lep_yield;
+	    // Get MC Non-1lW Yield
+	    MC_CR_cr2sr_non_1lW_yield = MC_CR_cr2sr_incl_yield - MC_CR_cr2sr_1lW_yield;
 	    
-	    // Get MC Fraction of ge2lep
-	    MC_CR_fraction             = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + MC_CR_cr2sr_non_ge2lep_yield );
-	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_ge2lep_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
+	    // Get MC Fraction of 1lW
+	    MC_CR_fraction             = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + MC_CR_cr2sr_non_1lW_yield );
+	    MC_CR_fraction_statErr     = sqrt( ( ((1-2*MC_CR_fraction)*pow(MC_CR_cr2sr_1lW_error,2)) + (pow(MC_CR_fraction,2)*pow(MC_CR_cr2sr_incl_error,2)) ) / (pow(MC_CR_cr2sr_incl_yield,2)) ); // binomial uncertainty for multiple samples
 	    MC_CR_fraction_err         = MC_CR_fraction_statErr;
 
 	    // Get MC Fraction, varying impurity
-	    MC_CR_fraction_impurity_up = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + ((1.0+impurity_sys)*MC_CR_cr2sr_non_ge2lep_yield) );
-	    MC_CR_fraction_impurity_dn = ( MC_CR_cr2sr_ge2lep_yield ) / ( MC_CR_cr2sr_ge2lep_yield + ((1.0-impurity_sys)*MC_CR_cr2sr_non_ge2lep_yield) );
+	    MC_CR_fraction_impurity_up = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + ((1.0+impurity_sys)*MC_CR_cr2sr_non_1lW_yield) );
+	    MC_CR_fraction_impurity_dn = ( MC_CR_cr2sr_1lW_yield ) / ( MC_CR_cr2sr_1lW_yield + ((1.0-impurity_sys)*MC_CR_cr2sr_non_1lW_yield) );
 	    
 	    // Get Transfer Factor SR/CR
-	    tf_cr2sr = MC_SR_cr2sr_yield/MC_CR_cr2sr_ge2lep_yield;
-	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield,2) + pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Gaussian Errors for all components
+	    tf_cr2sr = MC_SR_cr2sr_yield/MC_CR_cr2sr_1lW_yield;
+	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_CR_cr2sr_1lW_error/MC_CR_cr2sr_1lW_yield,2) + pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Gaussian Errors for all components
 	    //tf_cr2sr_statErr = tf_cr2sr*sqrt( pow(MC_SR_cr2sr_error/MC_SR_cr2sr_yield,2) );  // Removed MC_SR_cr2sr_error since it is included MC fraction
 	    tf_cr2sr_statErr = 0.0;  // Removed MC_SR_cr2sr_error since it is included in tf_srBin error
 	    tf_cr2sr_err = tf_cr2sr_statErr;
@@ -2137,7 +970,7 @@ int bkgEstimate_1lepFromW(){
       
       // Uncertainty File, for each category, Nominal Values
       fprintf(f_uncFile_fullCalc, "Nominal & %.2f & %.2f", Data_CR_cr2sr_yield, MC_CR_cr2sr_incl_yield);
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f & %.2f", MC_CR_cr2sr_ge2lep_yield, MC_CR_fraction);
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f & %.2f", MC_CR_cr2sr_1lW_yield, MC_CR_fraction);
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f & %.2f", MC_SR_bin_yield, tf_cr2sr);
       else                             fprintf(f_uncFile_fullCalc, " & %.2f & %.2f", MC_SR_cr2sr_yield, tf_cr2sr);
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f & %.2f & %.2f", MC_SR_bin_yield, tf_srBin, tf_tot);
@@ -2158,7 +991,7 @@ int bkgEstimate_1lepFromW(){
 
       // Uncertainty File, for each category, Data Stats Up
       fprintf(f_uncFile_fullCalc, "Data Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield+Data_CR_cr2sr_error, (100*Data_CR_cr2sr_error/Data_CR_cr2sr_yield), MC_CR_cr2sr_incl_yield, 0.0);
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield, 0.0, MC_CR_fraction, 0.0);
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield, 0.0, MC_CR_fraction, 0.0);
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_cr2sr, 0.0);
       else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield, 0.0, tf_cr2sr, 0.0);
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_srBin, 0.0, tf_tot, 0.0);
@@ -2168,7 +1001,7 @@ int bkgEstimate_1lepFromW(){
       
       // Uncertainty File, for each category, Data Stats Down
       fprintf(f_uncFile_fullCalc, "Data Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield-Data_CR_cr2sr_error, (100*Data_CR_cr2sr_error/Data_CR_cr2sr_yield), MC_CR_cr2sr_incl_yield, 0.0);
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield, 0.0, MC_CR_fraction, 0.0);
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield, 0.0, MC_CR_fraction, 0.0);
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_cr2sr, 0.0);
       else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield, 0.0, tf_cr2sr, 0.0);
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_srBin, 0.0, tf_tot, 0.0);
@@ -2213,7 +1046,7 @@ int bkgEstimate_1lepFromW(){
       
       // Uncertainty File, per category, MC Stats Up
       fprintf(f_uncFile_fullCalc, "MC Stats Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield+MC_CR_cr2sr_incl_error, (100.0*MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield) );
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield+MC_CR_cr2sr_ge2lep_error, (100.0*MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield), MC_CR_fraction+MC_CR_fraction_statErr, (100.0*MC_CR_fraction_statErr/MC_CR_fraction) );
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield+MC_CR_cr2sr_1lW_error, (100.0*MC_CR_cr2sr_1lW_error/MC_CR_cr2sr_1lW_yield), MC_CR_fraction+MC_CR_fraction_statErr, (100.0*MC_CR_fraction_statErr/MC_CR_fraction) );
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield+MC_SR_bin_error, (100.0*MC_SR_bin_error/MC_SR_bin_yield), tf_cr2sr+tf_cr2sr_statErr, (100.0*tf_cr2sr_statErr/tf_cr2sr) );
       else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield+MC_SR_cr2sr_error, (100.0*MC_SR_cr2sr_error/MC_SR_cr2sr_yield), tf_cr2sr+tf_cr2sr_statErr, (100.0*tf_cr2sr_statErr/tf_cr2sr) );
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield+MC_SR_bin_error, (100.0*MC_SR_bin_error/MC_SR_bin_yield), tf_srBin+tf_srBin_statErr, (100.0*tf_srBin_statErr/tf_srBin), tf_tot+tf_tot_statErr, (100.0*tf_tot_statErr/tf_tot) );
@@ -2223,7 +1056,7 @@ int bkgEstimate_1lepFromW(){
       
       // Uncertainty File, per category, MC Stats Down
       fprintf(f_uncFile_fullCalc, "MC Stats Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield-MC_CR_cr2sr_incl_error, (100.0*MC_CR_cr2sr_incl_error/MC_CR_cr2sr_incl_yield) );
-      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield-MC_CR_cr2sr_ge2lep_error, (100.0*MC_CR_cr2sr_ge2lep_error/MC_CR_cr2sr_ge2lep_yield), MC_CR_fraction-MC_CR_fraction_statErr, (100.0*MC_CR_fraction_statErr/MC_CR_fraction) );
+      if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield-MC_CR_cr2sr_1lW_error, (100.0*MC_CR_cr2sr_1lW_error/MC_CR_cr2sr_1lW_yield), MC_CR_fraction-MC_CR_fraction_statErr, (100.0*MC_CR_fraction_statErr/MC_CR_fraction) );
       if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield-MC_SR_bin_error, (100.0*MC_SR_bin_error/MC_SR_bin_yield), tf_cr2sr-tf_cr2sr_statErr, (100.0*tf_cr2sr_statErr/tf_cr2sr) );
       else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield-MC_SR_cr2sr_error, (100.0*MC_SR_cr2sr_error/MC_SR_cr2sr_yield), tf_cr2sr-tf_cr2sr_statErr, (100.0*tf_cr2sr_statErr/tf_cr2sr) );
       if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield-MC_SR_bin_error, (100.0*MC_SR_bin_error/MC_SR_bin_yield), tf_srBin-tf_srBin_statErr, (100.0*tf_srBin_statErr/tf_srBin), tf_tot-tf_tot_statErr, (100.0*tf_tot_statErr/tf_tot) );
@@ -2276,7 +1109,7 @@ int bkgEstimate_1lepFromW(){
       
 	// Uncertainty File, per category, MC CR Purity Up
 	fprintf(f_uncFile_fullCalc, "CR Impurity Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield, 0.0 );
-	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield, 0.0, MC_CR_fraction_impurity_up, (100.0*(MC_CR_fraction_impurity_up-MC_CR_fraction)/MC_CR_fraction) );
+	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield, 0.0, MC_CR_fraction_impurity_up, (100.0*(MC_CR_fraction_impurity_up-MC_CR_fraction)/MC_CR_fraction) );
 	if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_cr2sr, 0.0 );
 	else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield, 0.0, tf_cr2sr, 0.0 );
 	if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_srBin, 0.0, tf_tot, 0.0 );
@@ -2286,7 +1119,7 @@ int bkgEstimate_1lepFromW(){
 	
 	// Uncertainty File, per category, MC CR Purity Down
 	fprintf(f_uncFile_fullCalc, "CR Impurity Down & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield, 0.0 );
-	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield, 0.0, MC_CR_fraction_impurity_dn, (100.0*(MC_CR_fraction_impurity_dn-MC_CR_fraction)/MC_CR_fraction) );
+	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield, 0.0, MC_CR_fraction_impurity_dn, (100.0*(MC_CR_fraction_impurity_dn-MC_CR_fraction)/MC_CR_fraction) );
 	if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_cr2sr, 0.0 );
 	else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield, 0.0, tf_cr2sr, 0.0 );
 	if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield, 0.0, tf_srBin, 0.0, tf_tot, 0.0 );
@@ -2379,7 +1212,7 @@ int bkgEstimate_1lepFromW(){
 
 
 	//
-	// CR, MC, cr2sr bin, ge2lep genClassy, sys up
+	// CR, MC, cr2sr bin, 1lW genClassy, sys up
 	//
 	hName = hNameBase;
 	hName += "__";
@@ -2392,12 +1225,12 @@ int bkgEstimate_1lepFromW(){
 	h_temp = (TH1D*)f_CR_mc->Get(hName);
 	if(!h_temp) cout << "BAD CR CRtoSR UP MC HISTO: " << hName << endl;
 	
-	double MC_CR_cr2sr_ge2lep_yield_up = h_temp->GetBinContent( CR_bin );
-	double MC_CR_cr2sr_ge2lep_error_up = h_temp->GetBinError( CR_bin );
+	double MC_CR_cr2sr_1lW_yield_up = h_temp->GetBinContent( CR_bin );
+	double MC_CR_cr2sr_1lW_error_up = h_temp->GetBinError( CR_bin );
       
 	if(doRescale){
-	  MC_CR_cr2sr_ge2lep_error_up *= rescale;
-	  MC_CR_cr2sr_ge2lep_yield_up *= rescale;
+	  MC_CR_cr2sr_1lW_error_up *= rescale;
+	  MC_CR_cr2sr_1lW_yield_up *= rescale;
 	}
 
 
@@ -2425,10 +1258,10 @@ int bkgEstimate_1lepFromW(){
 
 		
 
-	// CR, mc, cr2sr bin, non-ge2lep genClassy
-	double MC_CR_cr2sr_non_ge2lep_yield_up = 0.0;
+	// CR, mc, cr2sr bin, non-1lW genClassy
+	double MC_CR_cr2sr_non_1lW_yield_up = 0.0;
             
-	// CR, mc, cr2sr bin, fraction of ge2lep
+	// CR, mc, cr2sr bin, fraction of 1lW
 	double MC_CR_fraction_up = 1.0;
 	double MC_CR_fraction_up_statErr = 0.0;
 	
@@ -2459,20 +1292,20 @@ int bkgEstimate_1lepFromW(){
 	  //
 	  if(useFraction){
 	  
-	    // If using fraction, get ge2lep CR MC yield
-	    if(MC_CR_cr2sr_ge2lep_yield_up>0.0 && MC_SR_bin_yield_up>0.0){
+	    // If using fraction, get 1lW CR MC yield
+	    if(MC_CR_cr2sr_1lW_yield_up>0.0 && MC_SR_bin_yield_up>0.0){
 
-	      // Get MC Non-ge2lep Yield
-	      MC_CR_cr2sr_non_ge2lep_yield_up = MC_CR_cr2sr_incl_yield_up - MC_CR_cr2sr_ge2lep_yield_up;
+	      // Get MC Non-1lW Yield
+	      MC_CR_cr2sr_non_1lW_yield_up = MC_CR_cr2sr_incl_yield_up - MC_CR_cr2sr_1lW_yield_up;
 	    
-	      // Get MC Fraction of ge2lep
-	      MC_CR_fraction_up          = ( MC_CR_cr2sr_ge2lep_yield_up ) / ( MC_CR_cr2sr_ge2lep_yield_up + MC_CR_cr2sr_non_ge2lep_yield_up );
-	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
+	      // Get MC Fraction of 1lW
+	      MC_CR_fraction_up          = ( MC_CR_cr2sr_1lW_yield_up ) / ( MC_CR_cr2sr_1lW_yield_up + MC_CR_cr2sr_non_1lW_yield_up );
+	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_1lW_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
 	    
 	      // Get Transfer Factor SR/CR
-	      tf_cr2sr_up = MC_SR_bin_yield_up/MC_CR_cr2sr_ge2lep_yield_up;
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_ge2lep_error_up/MC_CR_cr2sr_ge2lep_yield_up,2) + pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) );  // Gaussian errors for all components
-	      tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) ); // Avoid double counting MC_CR_cr2sr_ge2lep_error, since it is included in MC_CR_fraction_up_statErr
+	      tf_cr2sr_up = MC_SR_bin_yield_up/MC_CR_cr2sr_1lW_yield_up;
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_1lW_error_up/MC_CR_cr2sr_1lW_yield_up,2) + pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) );  // Gaussian errors for all components
+	      tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_bin_error_up/MC_SR_bin_yield_up,2) ); // Avoid double counting MC_CR_cr2sr_1lW_error, since it is included in MC_CR_fraction_up_statErr
 	    
 	      // In This Case tf_tot=tf_cr2sr
 	      tf_tot_up = tf_cr2sr_up;
@@ -2521,20 +1354,20 @@ int bkgEstimate_1lepFromW(){
 	  //
 	  if(useFraction){
 	  
-	    // If using fraction, get ge2lep CR MC yield
-	    if(MC_CR_cr2sr_ge2lep_yield_up>0.0 && MC_SR_cr2sr_yield_up>0.0 && MC_SR_bin_yield_up>0.0){
+	    // If using fraction, get 1lW CR MC yield
+	    if(MC_CR_cr2sr_1lW_yield_up>0.0 && MC_SR_cr2sr_yield_up>0.0 && MC_SR_bin_yield_up>0.0){
 
-	      // Get MC Non-ge2lep Yield
-	      MC_CR_cr2sr_non_ge2lep_yield_up = MC_CR_cr2sr_incl_yield_up - MC_CR_cr2sr_ge2lep_yield_up;
+	      // Get MC Non-1lW Yield
+	      MC_CR_cr2sr_non_1lW_yield_up = MC_CR_cr2sr_incl_yield_up - MC_CR_cr2sr_1lW_yield_up;
 	    
-	      // Get MC Fraction of ge2lep
-	      MC_CR_fraction_up         = ( MC_CR_cr2sr_ge2lep_yield_up ) / ( MC_CR_cr2sr_ge2lep_yield_up + MC_CR_cr2sr_non_ge2lep_yield_up );
-	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_ge2lep_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
+	      // Get MC Fraction of 1lW
+	      MC_CR_fraction_up         = ( MC_CR_cr2sr_1lW_yield_up ) / ( MC_CR_cr2sr_1lW_yield_up + MC_CR_cr2sr_non_1lW_yield_up );
+	      MC_CR_fraction_up_statErr  = sqrt( ( ((1-2*MC_CR_fraction_up)*pow(MC_CR_cr2sr_1lW_error_up,2)) + (pow(MC_CR_fraction_up,2)*pow(MC_CR_cr2sr_incl_error_up,2)) ) / (pow(MC_CR_cr2sr_incl_yield_up,2)) ); // binomial uncertainty for multiple samples
 	    
 	      // Get Transfer Factor SR/CR
-	      tf_cr2sr_up = MC_SR_cr2sr_yield_up/MC_CR_cr2sr_ge2lep_yield_up;
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_ge2lep_error_up/MC_CR_cr2sr_ge2lep_yield_up,2) + pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Gaussian errors for all components 
-	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Avoid touble counting MC_CR_cr2sr_ge2lep_yield_up, since its error is included in MC_CR_fraction_up
+	      tf_cr2sr_up = MC_SR_cr2sr_yield_up/MC_CR_cr2sr_1lW_yield_up;
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_CR_cr2sr_1lW_error_up/MC_CR_cr2sr_1lW_yield_up,2) + pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Gaussian errors for all components 
+	      //tf_cr2sr_up_statErr = tf_cr2sr_up*sqrt( pow(MC_SR_cr2sr_error_up/MC_SR_cr2sr_yield_up,2) );  // Avoid double counting MC_CR_cr2sr_1lW_yield_up, since its error is included in MC_CR_fraction_up
 	      tf_cr2sr_up_statErr = 0.0;  // Avoid double counting MC_SR_cr2sr_error_up since it is included in tf_srBin_err
 	    
 	      // Get Transfer Factor of SR_bin/SR
@@ -2639,7 +1472,7 @@ int bkgEstimate_1lepFromW(){
 	
       
 	//
-	// CR, MC, CRtoSR bin, ge2lep genClassy dn
+	// CR, MC, CRtoSR bin, 1lW genClassy dn
 	//
 	hName = hNameBase;
 	hName += "__";
@@ -2652,12 +1485,12 @@ int bkgEstimate_1lepFromW(){
 	h_temp = (TH1D*)f_CR_mc->Get(hName);
 	if(!h_temp) cout << "BAD CR CRtoSR DN MC HISTO: " << hName << endl;
 	
-	double MC_CR_cr2sr_ge2lep_yield_dn = h_temp->GetBinContent( CR_bin );
-	double MC_CR_cr2sr_ge2lep_error_dn = h_temp->GetBinError( CR_bin );
+	double MC_CR_cr2sr_1lW_yield_dn = h_temp->GetBinContent( CR_bin );
+	double MC_CR_cr2sr_1lW_error_dn = h_temp->GetBinError( CR_bin );
 	
 	if(doRescale){
-	  MC_CR_cr2sr_ge2lep_error_dn *= rescale;
-	  MC_CR_cr2sr_ge2lep_yield_dn *= rescale;
+	  MC_CR_cr2sr_1lW_error_dn *= rescale;
+	  MC_CR_cr2sr_1lW_yield_dn *= rescale;
 	}
 
 
@@ -2686,10 +1519,10 @@ int bkgEstimate_1lepFromW(){
 	
 
 
-	// CR, mc, cr2sr bin, non-ge2lep genClassy
-	double MC_CR_cr2sr_non_ge2lep_yield_dn = 0.0;
+	// CR, mc, cr2sr bin, non-1lW genClassy
+	double MC_CR_cr2sr_non_1lW_yield_dn = 0.0;
             
-	// CR, mc, cr2sr bin, fraction of ge2lep
+	// CR, mc, cr2sr bin, fraction of 1lW
 	double MC_CR_fraction_dn = 1.0;
 	double MC_CR_fraction_dn_statErr = 0.0;
 	
@@ -2720,19 +1553,19 @@ int bkgEstimate_1lepFromW(){
 	  //
 	  if(useFraction){
 	  
-	    // If using fraction, get ge2lep CR MC yield
-	    if(MC_CR_cr2sr_ge2lep_yield_dn>0.0 && MC_SR_bin_yield_dn>0.0){
+	    // If using fraction, get 1lW CR MC yield
+	    if(MC_CR_cr2sr_1lW_yield_dn>0.0 && MC_SR_bin_yield_dn>0.0){
 
-	      // Get MC Non-ge2lep Yield
-	      MC_CR_cr2sr_non_ge2lep_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_ge2lep_yield_dn;
+	      // Get MC Non-1lW Yield
+	      MC_CR_cr2sr_non_1lW_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_1lW_yield_dn;
 	      
-	      // Get MC Fraction of ge2lep
-	      MC_CR_fraction_dn          = ( MC_CR_cr2sr_ge2lep_yield_dn ) / ( MC_CR_cr2sr_ge2lep_yield_dn + MC_CR_cr2sr_non_ge2lep_yield_dn );
-	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
+	      // Get MC Fraction of 1lW
+	      MC_CR_fraction_dn          = ( MC_CR_cr2sr_1lW_yield_dn ) / ( MC_CR_cr2sr_1lW_yield_dn + MC_CR_cr2sr_non_1lW_yield_dn );
+	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_1lW_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
 
 	      // Get Transfer Factor SR/CR
-	      tf_cr2sr_dn = MC_SR_bin_yield_dn/MC_CR_cr2sr_ge2lep_yield_dn;
-	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_ge2lep_error_dn/MC_CR_cr2sr_ge2lep_yield_dn,2) + pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) ); 
+	      tf_cr2sr_dn = MC_SR_bin_yield_dn/MC_CR_cr2sr_1lW_yield_dn;
+	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_1lW_error_dn/MC_CR_cr2sr_1lW_yield_dn,2) + pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) ); 
 	      tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_SR_bin_error_dn/MC_SR_bin_yield_dn,2) );  // Avoid double counting MC_CR_bin_error sinc eit is inlcuded in MC_CR_fraction_dn
 	    
 	      // In This Case tf_tot=tf_cr2sr
@@ -2782,19 +1615,19 @@ int bkgEstimate_1lepFromW(){
 	  //
 	  if(useFraction){
 	  
-	    // If using fraction, get ge2lep CR MC yield
-	    if(MC_CR_cr2sr_ge2lep_yield_dn>0.0 && MC_SR_cr2sr_yield_dn>0.0 && MC_SR_bin_yield_dn>0.0){
+	    // If using fraction, get 1lW CR MC yield
+	    if(MC_CR_cr2sr_1lW_yield_dn>0.0 && MC_SR_cr2sr_yield_dn>0.0 && MC_SR_bin_yield_dn>0.0){
 
-	      // Get MC Non-ge2lep Yield
-	      MC_CR_cr2sr_non_ge2lep_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_ge2lep_yield_dn;
+	      // Get MC Non-1lW Yield
+	      MC_CR_cr2sr_non_1lW_yield_dn = MC_CR_cr2sr_incl_yield_dn - MC_CR_cr2sr_1lW_yield_dn;
 	    
-	      // Get MC Fraction of ge2lep
-	      MC_CR_fraction_dn         = ( MC_CR_cr2sr_ge2lep_yield_dn ) / ( MC_CR_cr2sr_ge2lep_yield_dn + MC_CR_cr2sr_non_ge2lep_yield_dn );
-	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_ge2lep_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
+	      // Get MC Fraction of 1lW
+	      MC_CR_fraction_dn         = ( MC_CR_cr2sr_1lW_yield_dn ) / ( MC_CR_cr2sr_1lW_yield_dn + MC_CR_cr2sr_non_1lW_yield_dn );
+	      MC_CR_fraction_dn_statErr  = sqrt( ( ((1-2*MC_CR_fraction_dn)*pow(MC_CR_cr2sr_1lW_error_dn,2)) + (pow(MC_CR_fraction_dn,2)*pow(MC_CR_cr2sr_incl_error_dn,2)) ) / (pow(MC_CR_cr2sr_incl_yield_dn,2)) ); // binomial uncertainty for multiple samples
 
 	      // Get Transfer Factor SR/CR
-	      tf_cr2sr_dn = MC_SR_cr2sr_yield_dn/MC_CR_cr2sr_ge2lep_yield_dn;
-	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_ge2lep_error_dn/MC_CR_cr2sr_ge2lep_yield_dn,2) + pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) );  // Gaussian errors for each component
+	      tf_cr2sr_dn = MC_SR_cr2sr_yield_dn/MC_CR_cr2sr_1lW_yield_dn;
+	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_CR_cr2sr_1lW_error_dn/MC_CR_cr2sr_1lW_yield_dn,2) + pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) );  // Gaussian errors for each component
 	      //tf_cr2sr_dn_statErr = tf_cr2sr_dn*sqrt( pow(MC_SR_cr2sr_error_dn/MC_SR_cr2sr_yield_dn,2) );  // Avoid double counting MC_CR_cr2sr_error since it is included in MC_CR_fraction
 	      tf_cr2sr_dn_statErr = 0.0;  // Avoid double counting MC_SR_cr2sr_error_dn since it is included in tf_srBin_dn
 	    
@@ -2915,7 +1748,7 @@ int bkgEstimate_1lepFromW(){
 
 	// Uncertainty File, per category, Sys Variation Up
 	fprintf(f_uncFile_fullCalc, "%s,~Up & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", systematicList[iSys].tex.c_str(), Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield_up, (100.0*(MC_CR_cr2sr_incl_yield_up-MC_CR_cr2sr_incl_yield)/MC_CR_cr2sr_incl_yield) );
-	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield_up, (100.0*(MC_CR_cr2sr_ge2lep_yield_up-MC_CR_cr2sr_ge2lep_yield)/MC_CR_cr2sr_ge2lep_yield), MC_CR_fraction_up, (100.0*(MC_CR_fraction_up-MC_CR_fraction)/MC_CR_fraction) );
+	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield_up, (100.0*(MC_CR_cr2sr_1lW_yield_up-MC_CR_cr2sr_1lW_yield)/MC_CR_cr2sr_1lW_yield), MC_CR_fraction_up, (100.0*(MC_CR_fraction_up-MC_CR_fraction)/MC_CR_fraction) );
 	if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield_up, (100.0*(MC_SR_bin_yield_up-MC_SR_bin_yield)/MC_SR_bin_yield), tf_cr2sr_up, (100.0*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr) );
 	else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield_up, (100.0*(MC_SR_cr2sr_yield_up-MC_SR_cr2sr_yield)/MC_SR_cr2sr_yield), tf_cr2sr_up, (100.0*(tf_cr2sr_up-tf_cr2sr)/tf_cr2sr) );
 	if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield_up, (100.0*(MC_SR_bin_yield_up-MC_SR_bin_yield)/MC_SR_bin_yield), tf_srBin_up, (100.0*(tf_srBin_up-tf_srBin)/tf_srBin), tf_tot_up, (100.0*(tf_tot_up-tf_tot)/tf_tot) );
@@ -2925,7 +1758,7 @@ int bkgEstimate_1lepFromW(){
 	
 	// Uncertainty File, per category, Sys Variation Dn
 	fprintf(f_uncFile_fullCalc, "%s,~Dn & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", systematicList[iSys].tex.c_str(), Data_CR_cr2sr_yield, 0.0, MC_CR_cr2sr_incl_yield_dn, (100.0*(MC_CR_cr2sr_incl_yield_dn-MC_CR_cr2sr_incl_yield)/MC_CR_cr2sr_incl_yield) );
-	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_ge2lep_yield_dn, (100.0*(MC_CR_cr2sr_ge2lep_yield_dn-MC_CR_cr2sr_ge2lep_yield)/MC_CR_cr2sr_ge2lep_yield), MC_CR_fraction_dn, (100.0*(MC_CR_fraction_dn-MC_CR_fraction)/MC_CR_fraction) );
+	if(useFraction) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_CR_cr2sr_1lW_yield_dn, (100.0*(MC_CR_cr2sr_1lW_yield_dn-MC_CR_cr2sr_1lW_yield)/MC_CR_cr2sr_1lW_yield), MC_CR_fraction_dn, (100.0*(MC_CR_fraction_dn-MC_CR_fraction)/MC_CR_fraction) );
 	if(v_bkgEst[iBkgEst].forceOneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield_dn, (100.0*(MC_SR_bin_yield_dn-MC_SR_bin_yield)/MC_SR_bin_yield), tf_cr2sr_dn, (100.0*(tf_cr2sr_dn-tf_cr2sr)/tf_cr2sr) );
 	else                             fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_cr2sr_yield_dn, (100.0*(MC_SR_cr2sr_yield_dn-MC_SR_cr2sr_yield)/MC_SR_cr2sr_yield), tf_cr2sr_dn, (100.0*(tf_cr2sr_dn-tf_cr2sr)/tf_cr2sr) );
 	if(!oneTF) fprintf(f_uncFile_fullCalc, " & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%) & %.2f ~(%.2f\\%%)", MC_SR_bin_yield_dn, (100.0*(MC_SR_bin_yield_dn-MC_SR_bin_yield)/MC_SR_bin_yield), tf_srBin_dn, (100.0*(tf_srBin_dn-tf_srBin)/tf_srBin), tf_tot_dn, (100.0*(tf_tot_dn-tf_tot)/tf_tot) );
@@ -3165,6 +1998,8 @@ int bkgEstimate_1lepFromW(){
   f_SR_mc->Close();
   f_CR_mc->Close();
   f_CR_data->Close();
+
+  cout << endl;
 
   return 0;
 }

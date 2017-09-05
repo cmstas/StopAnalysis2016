@@ -47,6 +47,7 @@
 #include "../StopCORE/categoryInfo.h"
 #include "../StopCORE/selectionInfo.h"
 #include "../StopCORE/sysInfo.h"
+#include "../StopCORE/analyzer.h"
 
 
 ////////////////
@@ -123,7 +124,7 @@ public:
 
 // Looper 
 int stopBabyLooper__CR2l_bulkTTbar();
-int looper( sampleInfo::ID sample, int nEvents=-1, bool readFast=true );
+int looper( sampleInfo::ID sample, std::vector<analyzer*> analyzers, int nEvents=-1, bool readFast=true );
 void fillHistos( TH1D *histo, vector<int> passCats, double wgt );
 void fillHistosScan( TH3D *histo, vector<int> passCats, int mStop, int mLSP, double wgt );
 

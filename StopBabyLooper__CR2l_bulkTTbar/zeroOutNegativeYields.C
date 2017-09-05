@@ -9,17 +9,17 @@ int zeroOutNegativeYields(std::string f_input_dir){
   sampleInfo::vect_id sampleList;
   sampleList.push_back( sampleInfo::k_DYJetsToLL_m10To50_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_DYJetsToLL_m50_amcnlo_pythia8 );
-  sampleList.push_back( sampleInfo::k_WJetsToLNu_amcnlo_pythia8 );
+  // sampleList.push_back( sampleInfo::k_WJetsToLNu_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_t_sch_4f_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_WZTo2L2Q_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_WZTo1LNu2Q_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_WZTo1L3Nu_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_ZZTo2L2Q_amcnlo_pythia8 );
   sampleList.push_back( sampleInfo::k_ZZTo2Q2Nu_amcnlo_pythia8 );
-  sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
-  sampleList.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
-  sampleList.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
-  sampleList.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
+  // sampleList.push_back( sampleInfo::k_TTWJetsToLNu_amcnlo_pythia8 );
+  // sampleList.push_back( sampleInfo::k_TTWJetsToQQ_amcnlo_pythia8 );
+  // sampleList.push_back( sampleInfo::k_TTZToQQ_amcnlo_pythia8 );
+  // sampleList.push_back( sampleInfo::k_TTZToLLNuNu_m10_amcnlo_pythia8 );
   //sampleList.push_back( sampleInfo::k_tZq_ll_4f_amcnlo_pythia8 );
   //sampleList.push_back( sampleInfo::k_tZq_nunu_4f_amcnlo_pythia8 );
 

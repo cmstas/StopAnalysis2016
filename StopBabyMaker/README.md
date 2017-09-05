@@ -1,9 +1,17 @@
-#Stop Analysis
+# StopBabyMaker
 
-Please check if CORE and Software from common TAS repository are up-to-date,
-and that the directory matches the one in the makefile
+This code makes stop babies from CMS3 or CMS4 ntuples.
 
-then do:
+## Setup
+
+Check out the [CORE](https://github.com/cmstas/CORE) repository somewhere. If you
+already have it checked out, make sure your local copy is up to
+date. Compile CORE.
+
+Edit the `Makefile` so that the variable `COREPATH` points to your local
+CORE instance.
+
+Then do:
 ```
 cd stop_variables
 make
@@ -11,33 +19,19 @@ cd ..
 make
 ```
 
-(don't forget make clean if you have compiled code)
+(If you already have some compiled code, you may wish to run `make
+clean` first).
 
-runBabyMaker takes four arguments: ./runBabyMaker sample_name nevents file_number outpath sampledat
+## Running the babymaker
 
-The sampledat contains the directory to the CMS3 ntuples.
+The main exectuable is `runBabyMaker`. To run it, you need to provide at least the first argument, and a maximum of six arguments.
 
-Need to provide at least sample_name; nevents=-1 (-1=all events), file_number=0 (0=merged_ntuple_*.root),output=/nfs-7/userdata/stopRun2/, sampledat=sample.dat  by default
+`./runBabyMaker sample_name nevents file_number outpath sampleList isFastsim`
 
-samplenames are hardcoded to
-* ttbar
-* stop_850_100
-* stop_650_325
-* stop_500_325
-* stop_425_325
-* ttwjets
-* ttzjets
-* dyjets
-* tbar_sch
-* tbar_tch
-* t_sch
-* t_tch
-* t_tW
-* tbar_tW
-* wjets
-* wjetsHT100
-* wjetsHT200
-* wjetsHT400
-* wjetsHT600
-* wzjets
-* zz
+- **sample\_name**: This is the compact name for the sample you want to run on. These sample names are defined in the various sample\*.dat files.
+- **nevents**: This is how many events you want to run over. A value of -1 means all events in the ntuple. If you don't provide a value, -1 is used automatically.
+- **file\_number**: This number specifies which file you want to run over (i.e. merged\_ntuple\_X.root). The default value is -1, which means all files.
+- **outpath**: This is the path where you want the stop babies to be written. The default value is `/nfs-7/userdata/stopRun2`.
+- **sampleList**: This parameter tells the babyMaker which .dat file contains the sample\_name you want to run on. The default value is sample_2017.dat.
+- **isFastsim**: Put a 1 if your desired sample is a fastSim sample. The default value is 0 (not fastSim).
+

@@ -45,6 +45,7 @@
 #include "../StopCORE/categoryInfo.h"
 #include "../StopCORE/selectionInfo.h"
 #include "../StopCORE/sysInfo.h"
+#include "../StopCORE/analyzer.h"
 
 
 ////////////////
@@ -95,6 +96,9 @@ public:
   TString outName_base;
   TString hName_base;
 
+	TString name_SR;
+	TString name_CR;
+
   bool forceOneTF;
   bool useFractionInCR;
   
@@ -107,6 +111,9 @@ public:
   vector<TString> regionName;
   vector<TString> regionName_short;
   vector<TString> binName;
+
+	vector<TString> names_SR;
+	vector<TString> names_CR;
 
   bkgEstUtil(){};
   ~bkgEstUtil(){};
@@ -121,7 +128,7 @@ public:
 
 // Looper 
 int stopBabyLooper ();
-int looper( sampleInfo::ID sample, int nEvents=-1, bool readFast=true );
+int looper( sampleInfo::ID sample, std::vector<analyzer*> analyzers, int nEvents=-1, bool readFast=true );
 void fillHistos( TH1D *histo, vector<int> passCats, double wgt );
 void fillHistosScan( TH3D *histo, vector<int> passCats, int mStop, int mLSP, double wgt );
 

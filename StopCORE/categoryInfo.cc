@@ -1,5 +1,15 @@
 #include "categoryInfo.h"
 
+// These variables can only be used within categoryInfo.cc, but they can be set from outside using the functions below                                                             
+static int  localJesType = 0;
+static bool localAddLep2 = false;
+static bool localTightTagHighMlb = false;
+
+void categoryInfo::SetJesType( int type ) { localJesType = type; }
+void categoryInfo::SetAdd2ndLep( bool addlep2 ) { localAddLep2 = addlep2; }
+void categoryInfo::SetTightTagHighMlb( bool usetight ) { localTightTagHighMlb = usetight; }
+
+
 //////////////////////////////////////////////////////////////////////
 
 TH1D* categoryInfo::getYieldHistoTemplate_SR_ICHEP(){
@@ -729,121 +739,141 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v1( int jesType, bool 
 
 //////////////////////////////////////////////////////////////////////
 
+void categoryInfo::SetAxisLabels_SR_dev_ext30fb_mlb_v2( TAxis* axis ) {
+
+  // Region A, nJets<4, modTop>=10, mlb<175
+  axis->SetBinLabel(1, "lt4jets_ge10modTop_lt175mlb_250to350met");
+  axis->SetBinLabel(2, "lt4jets_ge10modTop_lt175mlb_350to450met");
+  axis->SetBinLabel(3, "lt4jets_ge10modTop_lt175mlb_450to600met");
+  axis->SetBinLabel(4, "lt4jets_ge10modTop_lt175mlb_600toInfmet");
+
+  // Region B, nJets<4, modTop>=10, mlb>=175, nTightTags>=1
+  axis->SetBinLabel(5, "lt4jets_ge10modTop_ge175mlb_250to450met");
+  axis->SetBinLabel(6, "lt4jets_ge10modTop_ge175mlb_450to600met");
+  axis->SetBinLabel(7, "lt4jets_ge10modTop_ge175mlb_600toInfmet");
+
+  // Region C, nJets>=4, modTop<0, mlb<175
+  axis->SetBinLabel(8, "ge4jets_lt0modTop_lt175mlb_250to350met");
+  axis->SetBinLabel(9, "ge4jets_lt0modTop_lt175mlb_350to450met");
+  axis->SetBinLabel(10, "ge4jets_lt0modTop_lt175mlb_450to550met");
+  axis->SetBinLabel(11, "ge4jets_lt0modTop_lt175mlb_550to650met");
+  axis->SetBinLabel(12, "ge4jets_lt0modTop_lt175mlb_650toInfmet");
+
+  // Region D, nJets>=4, modTop<0, mlb>=175, nTightTags>=1 
+  axis->SetBinLabel(13, "ge4jets_lt0modTop_ge175mlb_250to350met");
+  axis->SetBinLabel(14, "ge4jets_lt0modTop_ge175mlb_350to450met");
+  axis->SetBinLabel(15, "ge4jets_lt0modTop_ge175mlb_450to550met");
+  axis->SetBinLabel(16, "ge4jets_lt0modTop_ge175mlb_550toInfmet");
+
+  // Region E, nJets>=4, 0<=modTop<10, mlb<175
+  axis->SetBinLabel(17, "ge4jets_0to10modTop_lt175mlb_250to350met");
+  axis->SetBinLabel(18, "ge4jets_0to10modTop_lt175mlb_350to550met");
+  axis->SetBinLabel(19, "ge4jets_0to10modTop_lt175mlb_550toInfmet");
+
+  // Region F, nJets>=4, 0<=modTop<10, mlb>=175, nTightTags>=1
+  axis->SetBinLabel(20, "ge4jets_0to10modTop_ge175mlb_250to450met");
+  axis->SetBinLabel(21, "ge4jets_0to10modTop_ge175mlb_450toInfmet");
+
+  // Region G, nJets>=4, modTop>=10, mlb<175
+  axis->SetBinLabel(22, "ge4jets_ge10modTop_lt175mlb_250to350met");
+  axis->SetBinLabel(23, "ge4jets_ge10modTop_lt175mlb_350to450met");
+  axis->SetBinLabel(24, "ge4jets_ge10modTop_lt175mlb_450to600met");
+  axis->SetBinLabel(25, "ge4jets_ge10modTop_lt175mlb_600toInfmet");
+
+  // Region H, nJets>=4, modTop>=10, mlb>=175, nTightTags>=1
+  axis->SetBinLabel(26, "ge4jets_ge10modTop_ge175mlb_250to450met");
+  axis->SetBinLabel(27, "ge4jets_ge10modTop_ge175mlb_450toInfmet");
+
+
+  // Coarser MET bins for bkg estimates
+  axis->SetBinLabel(28, "lt4jets_ge10modTop_lt175mlb_450toInfmet");
+  axis->SetBinLabel(29, "lt4jets_ge10modTop_ge175mlb_450toInfmet");
+  axis->SetBinLabel(30, "ge4jets_lt0modTop_lt175mlb_550toInfmet");
+  axis->SetBinLabel(31, "ge4jets_lt0modTop_ge175mlb_450toInfmet");
+  axis->SetBinLabel(32, "ge4jets_0to10modTop_lt175mlb_350toInfmet");
+  axis->SetBinLabel(33, "ge4jets_0to10modTop_ge175mlb_250toInfmet");
+  axis->SetBinLabel(34, "ge4jets_ge10modTop_lt175mlb_450toInfmet");
+  axis->SetBinLabel(35, "ge4jets_ge10modTop_ge175mlb_250toInfmet");
+  
+  // nJet Bins 
+  axis->SetBinLabel(36, "lt4jets");
+  axis->SetBinLabel(37, "ge4jets");
+  
+  // nJet, modTopness Bins
+  axis->SetBinLabel(38, "lt4jets_ge10modTop");
+  axis->SetBinLabel(39, "ge4jets_lt0modTop");
+  axis->SetBinLabel(40, "ge4jets_0to10modTop");
+  axis->SetBinLabel(41, "ge4jets_ge10modTop");
+  
+  // nJet, modTopness, met Bins, Inclusive in Mlb
+  axis->SetBinLabel(42, "lt4jets_ge10modTop_150to250met");
+  axis->SetBinLabel(43, "lt4jets_ge10modTop_250to350met");
+  axis->SetBinLabel(44, "lt4jets_ge10modTop_350to450met");
+  axis->SetBinLabel(45, "lt4jets_ge10modTop_450to600met");
+  axis->SetBinLabel(46, "lt4jets_ge10modTop_600toInfmet");
+  axis->SetBinLabel(47, "lt4jets_ge10modTop_250to450met");
+  axis->SetBinLabel(48, "lt4jets_ge10modTop_450to600met_");
+  axis->SetBinLabel(49, "lt4jets_ge10modTop_600toInfmet_");
+
+  axis->SetBinLabel(50, "ge4jets_lt0modTop_150to250met");
+  axis->SetBinLabel(51, "ge4jets_lt0modTop_250to350met");
+  axis->SetBinLabel(52, "ge4jets_lt0modTop_350to450met");
+  axis->SetBinLabel(53, "ge4jets_lt0modTop_450to550met");
+  axis->SetBinLabel(54, "ge4jets_lt0modTop_550to650met");
+  axis->SetBinLabel(55, "ge4jets_lt0modTop_650toInfmet");
+  axis->SetBinLabel(56, "ge4jets_lt0modTop_550toInfmet");
+  
+  axis->SetBinLabel(57, "ge4jets_0to10modTop_150to250met");
+  axis->SetBinLabel(58, "ge4jets_0to10modTop_250to350met");
+  axis->SetBinLabel(59, "ge4jets_0to10modTop_350to550met");
+  axis->SetBinLabel(60, "ge4jets_0to10modTop_550toInfmet");
+  axis->SetBinLabel(61, "ge4jets_0to10modTop_250to450met");
+  axis->SetBinLabel(62, "ge4jets_0to10modTop_450toInfmet");
+  
+  axis->SetBinLabel(63, "ge4jets_ge10modTop_150to250met");
+  axis->SetBinLabel(64, "ge4jets_ge10modTop_250to350met");
+  axis->SetBinLabel(65, "ge4jets_ge10modTop_350to450met");
+  axis->SetBinLabel(66, "ge4jets_ge10modTop_450to600met");
+  axis->SetBinLabel(67, "ge4jets_ge10modTop_600toInfmet");
+  axis->SetBinLabel(68, "ge4jets_ge10modTop_250to450met");
+  axis->SetBinLabel(69, "ge4jets_ge10modTop_450toInfmet");
+  
+  // 150<met<250 CR bins
+  axis->SetBinLabel(70, "lt4jets_ge10modTop_lt175mlb_150to250met");
+  axis->SetBinLabel(71, "lt4jets_ge10modTop_ge175mlb_150to250met");
+  axis->SetBinLabel(72, "ge4jets_lt0modTop_lt175mlb_150to250met");
+  axis->SetBinLabel(73, "ge4jets_lt0modTop_ge175mlb_150to250met");
+  axis->SetBinLabel(74, "ge4jets_0to10modTop_lt175mlb_150to250met");
+  axis->SetBinLabel(75, "ge4jets_0to10modTop_ge175mlb_150to250met");
+  axis->SetBinLabel(76, "ge4jets_ge10modTop_lt175mlb_150to250met");
+  axis->SetBinLabel(77, "ge4jets_ge10modTop_ge175mlb_150to250met");
+
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TH1D* categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2(){
 
   int nBins_dev_ext30fb_mlb_v2_ = 77;
   TH1D *result = new TH1D("h_yields_SR_dev_ext30fb_mlb_v2", "Yields, Signal Regions, extnded to 30fb, binned with Mlb, and using tight bTagging", nBins_dev_ext30fb_mlb_v2_, 1.0, (double)nBins_dev_ext30fb_mlb_v2_+1.0);
 
-  // Region A, nJets<4, modTop>=10, mlb<175
-  result->GetXaxis()->SetBinLabel(1, "lt4jets_ge10modTop_lt175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(2, "lt4jets_ge10modTop_lt175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(3, "lt4jets_ge10modTop_lt175mlb_450to600met");
-  result->GetXaxis()->SetBinLabel(4, "lt4jets_ge10modTop_lt175mlb_600toInfmet");
-
-  // Region B, nJets<4, modTop>=10, mlb>=175, nTightTags>=1
-  result->GetXaxis()->SetBinLabel(5, "lt4jets_ge10modTop_ge175mlb_250to450met");
-  result->GetXaxis()->SetBinLabel(6, "lt4jets_ge10modTop_ge175mlb_450to600met");
-  result->GetXaxis()->SetBinLabel(7, "lt4jets_ge10modTop_ge175mlb_600toInfmet");
-
-  // Region C, nJets>=4, modTop<0, mlb<175
-  result->GetXaxis()->SetBinLabel(8, "ge4jets_lt0modTop_lt175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(9, "ge4jets_lt0modTop_lt175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(10, "ge4jets_lt0modTop_lt175mlb_450to550met");
-  result->GetXaxis()->SetBinLabel(11, "ge4jets_lt0modTop_lt175mlb_550to650met");
-  result->GetXaxis()->SetBinLabel(12, "ge4jets_lt0modTop_lt175mlb_650toInfmet");
-
-  // Region D, nJets>=4, modTop<0, mlb>=175, nTightTags>=1 
-  result->GetXaxis()->SetBinLabel(13, "ge4jets_lt0modTop_ge175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(14, "ge4jets_lt0modTop_ge175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(15, "ge4jets_lt0modTop_ge175mlb_450to550met");
-  result->GetXaxis()->SetBinLabel(16, "ge4jets_lt0modTop_ge175mlb_550toInfmet");
-
-  // Region E, nJets>=4, 0<=modTop<10, mlb<175
-  result->GetXaxis()->SetBinLabel(17, "ge4jets_0to10modTop_lt175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(18, "ge4jets_0to10modTop_lt175mlb_350to550met");
-  result->GetXaxis()->SetBinLabel(19, "ge4jets_0to10modTop_lt175mlb_550toInfmet");
-
-  // Region F, nJets>=4, 0<=modTop<10, mlb>=175, nTightTags>=1
-  result->GetXaxis()->SetBinLabel(20, "ge4jets_0to10modTop_ge175mlb_250to450met");
-  result->GetXaxis()->SetBinLabel(21, "ge4jets_0to10modTop_ge175mlb_450toInfmet");
-
-  // Region G, nJets>=4, modTop>=10, mlb<175
-  result->GetXaxis()->SetBinLabel(22, "ge4jets_ge10modTop_lt175mlb_250to350met");
-  result->GetXaxis()->SetBinLabel(23, "ge4jets_ge10modTop_lt175mlb_350to450met");
-  result->GetXaxis()->SetBinLabel(24, "ge4jets_ge10modTop_lt175mlb_450to600met");
-  result->GetXaxis()->SetBinLabel(25, "ge4jets_ge10modTop_lt175mlb_600toInfmet");
-
-  // Region H, nJets>=4, modTop>=10, mlb>=175, nTightTags>=1
-  result->GetXaxis()->SetBinLabel(26, "ge4jets_ge10modTop_ge175mlb_250to450met");
-  result->GetXaxis()->SetBinLabel(27, "ge4jets_ge10modTop_ge175mlb_450toInfmet");
-
-
-  // Coarser MET bins for bkg estimates
-  result->GetXaxis()->SetBinLabel(28, "lt4jets_ge10modTop_lt175mlb_450toInfmet");
-  result->GetXaxis()->SetBinLabel(29, "lt4jets_ge10modTop_ge175mlb_450toInfmet");
-  result->GetXaxis()->SetBinLabel(30, "ge4jets_lt0modTop_lt175mlb_550toInfmet");
-  result->GetXaxis()->SetBinLabel(31, "ge4jets_lt0modTop_ge175mlb_450toInfmet");
-  result->GetXaxis()->SetBinLabel(32, "ge4jets_0to10modTop_lt175mlb_350toInfmet");
-  result->GetXaxis()->SetBinLabel(33, "ge4jets_0to10modTop_ge175mlb_250toInfmet");
-  result->GetXaxis()->SetBinLabel(34, "ge4jets_ge10modTop_lt175mlb_450toInfmet");
-  result->GetXaxis()->SetBinLabel(35, "ge4jets_ge10modTop_ge175mlb_250toInfmet");
-  
-  // nJet Bins 
-  result->GetXaxis()->SetBinLabel(36, "lt4jets");
-  result->GetXaxis()->SetBinLabel(37, "ge4jets");
-  
-  // nJet, modTopness Bins
-  result->GetXaxis()->SetBinLabel(38, "lt4jets_ge10modTop");
-  result->GetXaxis()->SetBinLabel(39, "ge4jets_lt0modTop");
-  result->GetXaxis()->SetBinLabel(40, "ge4jets_0to10modTop");
-  result->GetXaxis()->SetBinLabel(41, "ge4jets_ge10modTop");
-  
-  // nJet, modTopness, met Bins, Inclusive in Mlb
-  result->GetXaxis()->SetBinLabel(42, "lt4jets_ge10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(43, "lt4jets_ge10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(44, "lt4jets_ge10modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(45, "lt4jets_ge10modTop_450to600met");
-  result->GetXaxis()->SetBinLabel(46, "lt4jets_ge10modTop_600toInfmet");
-  result->GetXaxis()->SetBinLabel(47, "lt4jets_ge10modTop_250to450met");
-  result->GetXaxis()->SetBinLabel(48, "lt4jets_ge10modTop_450to600met_");
-  result->GetXaxis()->SetBinLabel(49, "lt4jets_ge10modTop_600toInfmet_");
-
-  result->GetXaxis()->SetBinLabel(50, "ge4jets_lt0modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(51, "ge4jets_lt0modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(52, "ge4jets_lt0modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(53, "ge4jets_lt0modTop_450to550met");
-  result->GetXaxis()->SetBinLabel(54, "ge4jets_lt0modTop_550to650met");
-  result->GetXaxis()->SetBinLabel(55, "ge4jets_lt0modTop_650toInfmet");
-  result->GetXaxis()->SetBinLabel(56, "ge4jets_lt0modTop_550toInfmet");
-  
-  result->GetXaxis()->SetBinLabel(57, "ge4jets_0to10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(58, "ge4jets_0to10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(59, "ge4jets_0to10modTop_350to550met");
-  result->GetXaxis()->SetBinLabel(60, "ge4jets_0to10modTop_550toInfmet");
-  result->GetXaxis()->SetBinLabel(61, "ge4jets_0to10modTop_250to450met");
-  result->GetXaxis()->SetBinLabel(62, "ge4jets_0to10modTop_450toInfmet");
-  
-  result->GetXaxis()->SetBinLabel(63, "ge4jets_ge10modTop_150to250met");
-  result->GetXaxis()->SetBinLabel(64, "ge4jets_ge10modTop_250to350met");
-  result->GetXaxis()->SetBinLabel(65, "ge4jets_ge10modTop_350to450met");
-  result->GetXaxis()->SetBinLabel(66, "ge4jets_ge10modTop_450to600met");
-  result->GetXaxis()->SetBinLabel(67, "ge4jets_ge10modTop_600toInfmet");
-  result->GetXaxis()->SetBinLabel(68, "ge4jets_ge10modTop_250to450met");
-  result->GetXaxis()->SetBinLabel(69, "ge4jets_ge10modTop_450toInfmet");
-  
-  // 150<met<250 CR bins
-  result->GetXaxis()->SetBinLabel(70, "lt4jets_ge10modTop_lt175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(71, "lt4jets_ge10modTop_ge175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(72, "ge4jets_lt0modTop_lt175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(73, "ge4jets_lt0modTop_ge175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(74, "ge4jets_0to10modTop_lt175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(75, "ge4jets_0to10modTop_ge175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(76, "ge4jets_ge10modTop_lt175mlb_150to250met");
-  result->GetXaxis()->SetBinLabel(77, "ge4jets_ge10modTop_ge175mlb_150to250met");
-  
+  SetAxisLabels_SR_dev_ext30fb_mlb_v2( result->GetXaxis() );
 
   return result;
   
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TH3D* categoryInfo::getYieldHistoTemplate_signal_SR_dev_ext30fb_mlb_v2() {
+
+  int nBins_dev_ext30fb_mlb_v2_ = 77;
+  TH3D *result = new TH3D("h_yields_SR_dev_ext30fb_mlb_v2__signal", "Yields, Signal Regions, extnded to 30fb, binned with Mlb, and using tight bTagging", 37, 99, 1024, 19, -1, 474, nBins_dev_ext30fb_mlb_v2_, 1.0, (double)nBins_dev_ext30fb_mlb_v2_+1.0);
+
+  SetAxisLabels_SR_dev_ext30fb_mlb_v2( result->GetZaxis() );
+
+  return result;
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -921,6 +951,8 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
   }
   
   if( dPhiMetJet<0.8 ) return result;
+
+  if( localTightTagHighMlb && babyAnalyzer.Mlb_closestb()>=175. && nTightTags<1 ) return result;
 
 
   //
@@ -1450,24 +1482,45 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_bJetPt_v1( int jesType, bo
 
 //////////////////////////////////////////////////////////////////////
 
+void categoryInfo::SetAxisLabels_SR_corridor( TAxis* axis ) {
+
+  axis->SetBinLabel(1, "top_corridor_250to350met");
+  axis->SetBinLabel(2, "top_corridor_350to450met");
+  axis->SetBinLabel(3, "top_corridor_450to550met");
+  axis->SetBinLabel(4, "top_corridor_550toInfmet");
+
+  // Region for background estimate
+  axis->SetBinLabel(5, "top_corridor_450toInfmet");
+  
+  // Inclusive
+  axis->SetBinLabel(6, "top_corridor");
+  axis->SetBinLabel(7, "top_corridor_150to250met");
+
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TH1D* categoryInfo::getYieldHistoTemplate_SR_corridor(){
   
   int nBins_SR_corridor_ = 7;
   TH1D *result = new TH1D("h_yields_SR_corridor", "Yields, SR Top Corridor", nBins_SR_corridor_, 1.0, (double)nBins_SR_corridor_+1.0);
-  
-  result->GetXaxis()->SetBinLabel(1, "top_corridor_250to350met");
-  result->GetXaxis()->SetBinLabel(2, "top_corridor_350to450met");
-  result->GetXaxis()->SetBinLabel(3, "top_corridor_450to550met");
-  result->GetXaxis()->SetBinLabel(4, "top_corridor_550toInfmet");
 
-  // Region for background estimate
-  result->GetXaxis()->SetBinLabel(5, "top_corridor_450toInfmet");
-  
-  // Inclusive
-  result->GetXaxis()->SetBinLabel(6, "top_corridor");
-  result->GetXaxis()->SetBinLabel(7, "top_corridor_150to250met");
+  SetAxisLabels_SR_corridor( result->GetXaxis() );
 
   return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TH3D* categoryInfo::getYieldHistoTemplate_signal_SR_corridor() {
+
+	int nBins_SR_corridor_ = 7;
+  TH3D *result = new TH3D("h_yields_SR_corridor__signal", "Yields, SR Top Corridor", 37, 99, 1024, 19, -1, 474, nBins_SR_corridor_, 1.0, (double)nBins_SR_corridor_+1.0);
+
+  SetAxisLabels_SR_corridor( result->GetZaxis() );
+
+  return result;
+
 }
 
 //////////////////////////////////////////////////////////////////////
