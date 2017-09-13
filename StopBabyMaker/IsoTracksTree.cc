@@ -17,7 +17,7 @@ void IsoTracksTree::FillCommon (int idx)
      //if electron or muon, iso < 0.2
       isoTracks_charge.push_back( pfcands_charge().at(idx)    );
       isoTracks_p4.push_back    ( pfcands_p4().at(idx)        );
-      isoTracks_absIso.push_back( TrackIso(idx,0.3,0.1)       );
+      isoTracks_absIso.push_back( pfcands_trackIso().at(idx)  );
       isoTracks_dz.push_back    ( pfcands_dz().at(idx)        );
       isoTracks_pdgId.push_back ( pfcands_particleId().at(idx));
 }

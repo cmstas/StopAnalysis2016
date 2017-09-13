@@ -95,11 +95,11 @@ bool isVetoTrack(int ipf, LorentzVector lepp4_, int charge){
       //if not electron or muon
       if(abs(pfcands_particleId().at(ipf))!=11 && abs(pfcands_particleId().at(ipf))!=13){
           if(pfcands_p4().at(ipf).pt() < 10.) return false;
-          if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt() >0.1) return false;
+          if(pfcands_trackIso().at(ipf)/pfcands_p4().at(ipf).pt() >0.1) return false;
           if(pfcands_charge().at(ipf) * charge > 0) return false;
       }else{
           if(pfcands_p4().at(ipf).pt() < 5.) return false;
-          if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt()  >0.2) return false;
+          if(pfcands_trackIso().at(ipf)/pfcands_p4().at(ipf).pt()  >0.2) return false;
       }
       return true;
 }
@@ -110,29 +110,29 @@ bool isVetoTrack_v2(int ipf, LorentzVector lepp4_, int charge){
       if(abs(pfcands_particleId().at(ipf))!=11 && abs(pfcands_particleId().at(ipf))!=13){
           if(pfcands_p4().at(ipf).pt() < 10.) return false;
 	  if(pfcands_p4().at(ipf).pt() > 60. ){
-	    if(TrackIso(ipf,0.3,0.1) > 6.0 ) return false;
+	    if(pfcands_trackIso().at(ipf) > 6.0 ) return false;
 	  }
 	  else{
-	    if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt() > 0.1) return false;
+	    if(pfcands_trackIso().at(ipf)/pfcands_p4().at(ipf).pt() > 0.1) return false;
 	  }
           if(pfcands_charge().at(ipf) * charge > 0) return false;
       }
       else if(abs(pfcands_particleId().at(ipf))==11 ){
 	if(pfcands_p4().at(ipf).pt() < 5.) return false;
 	if(pfcands_p4().at(ipf).pt() > 60.0 ){
-	  if(TrackIso(ipf,0.3,0.1) > 6.0 ) return false;
+	  if(pfcands_trackIso().at(ipf) > 6.0 ) return false;
 	}
 	else{
-	  if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt() > 0.1) return false;
+	  if(pfcands_trackIso().at(ipf)/pfcands_p4().at(ipf).pt() > 0.1) return false;
 	}
       }
       else if(abs(pfcands_particleId().at(ipf))==13 ){
 	if(pfcands_p4().at(ipf).pt() < 5.) return false;
 	if(pfcands_p4().at(ipf).pt() > 30.0 ){
-	  if(TrackIso(ipf,0.3,0.1) > 6.0 ) return false;
+	  if(pfcands_trackIso().at(ipf) > 6.0 ) return false;
 	}
 	else{
-	  if(TrackIso(ipf,0.3,0.1)/pfcands_p4().at(ipf).pt() > 0.2) return false;
+	  if(pfcands_trackIso().at(ipf)/pfcands_p4().at(ipf).pt() > 0.2) return false;
 	}
       }
       return true;
