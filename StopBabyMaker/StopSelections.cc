@@ -302,7 +302,7 @@ float getdphi( float phi1 , float phi2 ){
 }
 
 float dRbetweenVectors(LorentzVector& vec1,LorentzVector& vec2 ){                                                                                                              
-  float dphi = std::min(::fabs(vec1.Phi() - vec2.Phi()), 2 * M_PI - fabs(vec1.Phi() - vec2.Phi()));
+  float dphi = std::min(fabs(vec1.Phi() - vec2.Phi()), 2 * float(M_PI) - fabs(vec1.Phi() - vec2.Phi()));
   float deta = vec1.Eta() - vec2.Eta();
 
   return sqrt(dphi*dphi + deta*deta);

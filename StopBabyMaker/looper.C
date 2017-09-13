@@ -26,6 +26,7 @@
 #include "stop_variables/topness.cc"
 #include "stop_variables/MT2_implementations.cc"
 #include "JetCorrector.h"
+#include "Tools/datasetinfo/getDatasetInfo.h"
 //#include "btagsf/BTagCalibrationStandalone.h"
 
 #include "PhotonSelections.h"
@@ -875,6 +876,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   set_goodrun_file_json(json_file);
   
   //
+  // Set scale1fb file
+  //
+  DatasetInfoFromFile df;
+  df.loadFromFile("../CORE/Tools/datasetinfo/scale1fbs.txt");
+
+  //
   // JEC files
   //
   std::vector<std::string> jetcorr_filenames_pfL1FastJetL2L3;
@@ -1097,6 +1104,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.weight_PU     = hPU    ->GetBinContent(hPU    ->FindBin(StopEvt.pu_ntrue));
 	StopEvt.weight_PUup   = hPUup  ->GetBinContent(hPUup  ->FindBin(StopEvt.pu_ntrue));
 	StopEvt.weight_PUdown = hPUdown->GetBinContent(hPUdown->FindBin(StopEvt.pu_ntrue));
+
+        float sgnMCweight = (genps_weight() > 0)? 1 : -1;
+        StopEvt.scale1fb = sgnMCweight * df.getScale1fbFromFile(StopEvt.dataset, StopEvt.cms3tag);
+        StopEvt.xsec     = sgnMCweight * df.getXsecFromFile(StopEvt.dataset, StopEvt.cms3tag);
       }
       
       //This must come before any continue affecting signal scans
