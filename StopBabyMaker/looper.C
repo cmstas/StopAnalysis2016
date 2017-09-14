@@ -1105,9 +1105,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 	StopEvt.weight_PUup   = hPUup  ->GetBinContent(hPUup  ->FindBin(StopEvt.pu_ntrue));
 	StopEvt.weight_PUdown = hPUdown->GetBinContent(hPUdown->FindBin(StopEvt.pu_ntrue));
 
-        float sgnMCweight = (genps_weight() > 0)? 1 : -1;
-        StopEvt.scale1fb = sgnMCweight * df.getScale1fbFromFile(StopEvt.dataset, StopEvt.cms3tag);
-        StopEvt.xsec     = sgnMCweight * df.getXsecFromFile(StopEvt.dataset, StopEvt.cms3tag);
+        if (StopEvt.cms3tag.find("CMS4") == 0) {
+          float sgnMCweight = (genps_weight() > 0)? 1 : -1;
+          StopEvt.scale1fb = sgnMCweight * df.getScale1fbFromFile(StopEvt.dataset, StopEvt.cms3tag);
+          StopEvt.xsec     = sgnMCweight * df.getXsecFromFile(StopEvt.dataset, StopEvt.cms3tag);
+        }
       }
       
       //This must come before any continue affecting signal scans
