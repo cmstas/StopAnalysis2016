@@ -879,7 +879,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // Set scale1fb file
   //
   DatasetInfoFromFile df;
-  df.loadFromFile("../CORE/Tools/datasetinfo/scale1fbs.txt");
+  df.loadFromFile("scale1fbfiles/scale1fbs.txt");
 
   //
   // JEC files
