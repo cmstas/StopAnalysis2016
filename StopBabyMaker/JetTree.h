@@ -86,6 +86,7 @@ public:
     LorentzVector ak4pfjets_leadMEDbjet_p4;
     vecd ak4pfjets_qg_disc;    
     vecd ak4pfjets_CSV;
+	  vecd ak4pfjets_deepCSV;
     vecd ak4pfjets_mva;
     vecd ak4pfjets_puid;
     veci ak4pfjets_parton_flavor;
@@ -115,6 +116,7 @@ public:
    //overlaps for selected leptons only
     LorentzVector ak4pfjet_overlep1_p4;
     float ak4pfjet_overlep1_CSV;
+    float ak4pfjet_overlep1_deepCSV;
     float ak4pfjet_overlep1_pu_id;
     float ak4pfjet_overlep1_chf;       
     float ak4pfjet_overlep1_nhf;
@@ -126,6 +128,7 @@ public:
 
     LorentzVector ak4pfjet_overlep2_p4;
     float ak4pfjet_overlep2_CSV;
+    float ak4pfjet_overlep2_deepCSV;
     float ak4pfjet_overlep2_pu_id;
     float ak4pfjet_overlep2_chf;
     float ak4pfjet_overlep2_nhf;

@@ -97,7 +97,7 @@ namespace JetUtil
   }
 
   //sort vector 'jets' acording to 'btagvalues' - sorting done by hand - a smarter sorting could be implemented
-  vector<int> JetIndexCSVsorted(vector<float> btagvalues, vector<LorentzVector > jets, vector<bool> jid, float minpt, float maxeta, bool passjid){
+  vector<int> JetIndexBdiscSorted(vector<float> btagvalues, vector<LorentzVector> jets, vector<bool> jid, float minpt, float maxeta, bool passjid){
 
     vector<int> b;
     if(btagvalues.size()!=jets.size()) return b;

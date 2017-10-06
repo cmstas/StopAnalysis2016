@@ -22,8 +22,8 @@ namespace JetUtil
   float  DeltaR(float phi1, float phi2, float eta1, float eta2);
   float  deltaR(LorentzVector jet1, LorentzVector jet2);
 
-  vector<LorentzVector> BJetSelector(vector<LorentzVector > jets, vector<float> btagvalues, float bjetdiscr=0.890, unsigned int minbjets=2, unsigned int minaddbjets=2, int versionAddjets=2);
-  vector<int>           JetIndexCSVsorted(vector<float> btagvalues, vector<LorentzVector > jets, vector<bool> jid, float minpt=30., float maxeta=2.5, bool passjid=true);
+  vector<LorentzVector> BJetSelector(vector<LorentzVector > jets, vector<float> btagvalues, float bjetdiscr=0.6324, unsigned int minbjets=2, unsigned int minaddbjets=2, int versionAddjets=2);
+  vector<int>           JetIndexBdiscSorted(vector<float> btagvalues, vector<LorentzVector > jets, vector<bool> jid, float minpt=30., float maxeta=2.5, bool passjid=true);
 
 }//end namespace 
 

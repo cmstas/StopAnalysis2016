@@ -224,7 +224,7 @@ double topnessFunctionV1(double pwx_, double pwy_, double pwz_, double pnz_,
   return TopnessVersion(version,metlv,lep,jets,jet_bdiscr,btagdiscr,addnjets,addjets);
 }*/
 
-//wrapper function to get topness using correct jets as input - full calculation needs JetUtil CSV ordering, see looper
+//wrapper function to get topness using correct jets as input - full calculation needs JetUtil b-discriminator ordering, see looper
 //version: ==1: reduced topness (recommended), else: full topness
 float CalcTopness(int version, LorentzVector MET, LorentzVector lep, vector<LorentzVector> bjets,  vector<LorentzVector> addjets){
 

@@ -172,14 +172,14 @@ double mt2wWrapper(LorentzVector& lep, LorentzVector& jet_o, LorentzVector& jet_
   return CalculateMT2W_(bjet,lep,met,metphi);
 }*/
 
-// 13 TeV implementation - full calculation needs JetUtil CSV ordering, see looper
+// 13 TeV implementation - full calculation needs JetUtil b-discriminator ordering, see looper
 float CalcMT2W(vector<LorentzVector> bjets, vector<LorentzVector> addjets,  LorentzVector lep, LorentzVector metlv){
   float met = metlv.Pt();
   float metphi = metlv.Phi();
   return CalcMT2W_(bjets,addjets,lep,met,metphi);
 }
 
-// 13 TeV implementation - full calculation needs JetUtil CSV ordering, see looper
+// 13 TeV implementation - full calculation needs JetUtil b-discriminator ordering, see looper
 float CalcMT2W_(vector<LorentzVector> bjets, vector<LorentzVector> addjets,  LorentzVector lep, float met, float metphi){
   if((bjets.size()+addjets.size())<2) return -999.;
   float min_mt2w = 9999;
