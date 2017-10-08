@@ -38,9 +38,9 @@ public:
     void SetAK8Branches (TTree* tree);
     void SetAK4Branches (TTree* tree);
     void SetAliases (TTree* tree);
-    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float & btagprob_heavy_DN, float & btagprob_light_UP, float & btagprob_light_DN, float & btagprob_FS_UP, float & btagprob_FS_DN, float& loosebtagprob_data, float &loosebtagprob_mc, float &loosebtagprob_heavy_UP, float & loosebtagprob_heavy_DN, float & loosebtagprob_light_UP, float & loosebtagprob_light_DN, float & loosebtagprob_FS_UP, float & loosebtagprob_FS_DN, float& tightbtagprob_data, float &tightbtagprob_mc, float &tightbtagprob_heavy_UP, float & tightbtagprob_heavy_DN, float & tightbtagprob_light_UP, float & tightbtagprob_light_DN, float & tightbtagprob_FS_UP, float & tightbtagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim);
+    void FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float& btagprob_heavy_DN, float& btagprob_light_UP, float& btagprob_light_DN, float& btagprob_FS_UP, float& btagprob_FS_DN, float& loosebtagprob_data, float &loosebtagprob_mc, float &loosebtagprob_heavy_UP, float& loosebtagprob_heavy_DN, float& loosebtagprob_light_UP, float& loosebtagprob_light_DN, float& loosebtagprob_FS_UP, float& loosebtagprob_FS_DN, float& tightbtagprob_data, float &tightbtagprob_mc, float &tightbtagprob_heavy_UP, float& tightbtagprob_heavy_DN, float& tightbtagprob_light_UP, float& tightbtagprob_light_DN, float& tightbtagprob_FS_UP, float& tightbtagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim);
+    void FillAK8Jets(bool applynewcorr, FactorizedJetCorrector* ak8corrector, JetCorrectionUncertainty* ak8jetcorr_uncertainty, int JES_type);
     float getBtagEffFromFile(float pt, float eta, int mcFlavour, int WP, bool isFastsim);
-//FillCommon(std::vector<unsigned int> alloverlapjets_idx, unsigned int overlep1_idx, unsigned int overlep2_idx);
     void SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id);
     void GetJetSelections (std::string cone_size = "");
 protected:
@@ -60,17 +60,6 @@ public:
     int ntightbtags;
     int nanalysisbtags;
     float ak4_HT;
-
-    //int ngoodjets_jup;
-    //int ngoodjets_jdown;
-    //int ngoodbtags_jup;
-    //int ngoodbtags_jdown;
-    //int nloosebtags_jup;
-    //int nloosebtags_jdown;
-    //int ntightbtags_jup;
-    //int ntightbtags_jdown;
-    //int nanalysisbtags_jup;
-    //int nanalysisbtags_jdown;
     
     float ak4_htssm;
     float ak4_htosm;
@@ -86,7 +75,7 @@ public:
     LorentzVector ak4pfjets_leadMEDbjet_p4;
     vecd ak4pfjets_qg_disc;    
     vecd ak4pfjets_CSV;
-	  vecd ak4pfjets_deepCSV;
+    vecd ak4pfjets_deepCSV;
     vecd ak4pfjets_mva;
     vecd ak4pfjets_puid;
     veci ak4pfjets_parton_flavor;
@@ -147,7 +136,7 @@ public:
     vecd ak8pfjets_pruned_mass;
     vecd ak8pfjets_trimmed_mass;
     vecd ak8pfjets_filtered_mass;
-    vecd ak8pfjets_pu_id;    
+    vecd ak8pfjets_pu_id;
     veci ak8pfjets_parton_flavor;
      
     // genjets    

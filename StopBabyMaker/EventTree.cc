@@ -118,7 +118,7 @@ void EventTree::FillCommon (const std::string &root_file_name)
 	sparms_values = sparm_values();
 	for ( auto name : sparm_names() )
 	  sparms_names.push_back(name.Data());
-          sparms_subProcessId     = sparm_subProcessId();	
+        sparms_subProcessId = sparm_subProcessId();
       }
       genmet = gen_met();
       genmet_phi = gen_metPhi();

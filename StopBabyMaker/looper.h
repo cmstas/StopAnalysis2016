@@ -29,115 +29,113 @@ using namespace std;
 
 class babyMaker {
 
-  public:
-    // Constructor/destructor
-    babyMaker ();
-    babyMaker (const std::string &prefix);
-    virtual ~babyMaker (){ delete BabyFile; }
+ public:
+  // Constructor/destructor
+  babyMaker ();
+  babyMaker (const std::string &prefix);
+  virtual ~babyMaker (){ delete BabyFile; }
 
-    void MakeBabyNtuple(const char* output_name);
-    void InitBabyNtuple();
-    int looper(TChain* chain, char* output_name, int nEvents = -1, char* path = "./");
-    char* babypath;
-    
-    // Variables for baby skim
-    int skim_nvtx;
-    float skim_met;
+  void MakeBabyNtuple(const char* output_name);
+  void InitBabyNtuple();
+  int looper(TChain* chain, char* output_name, int nEvents = -1, char* path = "./");
+  char* babypath;
 
-    int   skim_nGoodLep;
-    float skim_goodLep_el_pt;
-    float skim_goodLep_el_eta;
-    float skim_goodLep_mu_pt;
-    float skim_goodLep_mu_eta;
-  
-    float skim_looseLep_el_pt;
-    float skim_looseLep_el_eta;
-    float skim_looseLep_mu_pt;
-    float skim_looseLep_mu_eta;
-    
-    float skim_vetoLep_el_pt;
-    float skim_vetoLep_el_eta;
-    float skim_vetoLep_mu_pt;
-    float skim_vetoLep_mu_eta;
-  
-    int   skim_nJets;
-    float skim_jet_pt;
-    float skim_jet_eta;
+  // Variables for baby skim
+  int skim_nvtx;
+  float skim_met;
 
-    float skim_jet_ak8_pt;
-    float skim_jet_ak8_eta;
+  int   skim_nGoodLep;
+  float skim_goodLep_el_pt;
+  float skim_goodLep_el_eta;
+  float skim_goodLep_mu_pt;
+  float skim_goodLep_mu_eta;
 
-    int   skim_nPhotons;
-    float skim_ph_pt;
-    float skim_ph_eta;
+  float skim_looseLep_el_pt;
+  float skim_looseLep_el_eta;
+  float skim_looseLep_mu_pt;
+  float skim_looseLep_mu_eta;
 
-    bool applyJECfromFile;
-    int JES_type;
+  float skim_vetoLep_el_pt;
+  float skim_vetoLep_el_eta;
+  float skim_vetoLep_mu_pt;
+  float skim_vetoLep_mu_eta;
 
-    int skim_nBJets;
-    bool skim_2ndlepveto;
+  int   skim_nJets;
+  float skim_jet_pt;
+  float skim_jet_eta;
+  int   skim_nBJets;
 
-    bool skim_applyBtagSFs;
-    bool skim_applyLeptonSFs; 
-    bool skim_applyVetoLeptonSFs; 
-    bool skim_isFastsim;
+  float skim_jet_ak8_pt;
+  float skim_jet_ak8_eta;
 
-    bool filltaus;
-    bool filltracks;
-    bool fillZll;
-    bool fillPhoton;
-    bool fillMETfilt;
-    bool fill2ndlep;
-    bool fillExtraEvtVar;
+  int   skim_nPhotons;
+  float skim_ph_pt;
+  float skim_ph_eta;
 
-    bool fillAK4EF;
-    bool fillAK4_Other;
-    bool fillOverleps;
-    bool fillAK4Synch;
-    bool fillElID;
-    bool fillIso;
-    bool fillLepSynch;
+  bool applyJECfromFile;
+  int  JES_type;
 
-    void setSkimVariables(int nvtx, float met, int nGoodLep, float goodLep_el_pt, float goodLep_el_eta, float goodLep_mu_pt, float goodLep_mu_eta, float looseLep_el_pt, float looseLep_el_eta, float looseLep_mu_pt, float looseLep_mu_eta, float vetoLep_el_pt, float vetoLep_el_eta, float vetoLep_mu_pt, float vetoLep_mu_eta, bool apply2ndlepveto, int njets, float jet_pt, float jet_eta, float jet_ak8_pt, float jet_ak8_eta, int nbjets, int nphs, float phs_pt, float phs_eta, bool applyJEC, int JES_type_central_up_down, bool applyLeptonSFs, bool applyVetoLeptonSFs, bool applyBtagSFs, bool isFastsim,bool filltaus_, bool filltracks_, bool fillZll_, bool fillPhoton_,bool fillMETfilt_, bool fill2ndlep_, bool fillExtraEvtVar_, bool fillAK4EF_, bool fillAK4_Other_, bool fillOverleps_, bool fillAK4Synch_, bool fillElID_, bool fillIso_, bool fillLepSynch_);
+  bool applyBtagSFs;
+  bool applyLeptonSFs;
+  bool applyVetoLeptonSFs;
+  bool apply2ndLepVeto;
 
+  bool filltaus;
+  bool filltracks;
+  bool fillZll;
+  bool fillPhoton;
+  bool fillMETfilt;
+  bool fill2ndlep;
+  bool fillExtraEvtVar;
 
-  protected:
-    TFile* BabyFile;
-    TFile* histFile;
-    TTree* BabyTree;
-    TH1D*  histcounter;
-  private:
+  bool fillAK8;
+  bool fillAK4EF;
+  bool fillAK4_Other;
+  bool fillOverleps;
+  bool fillAK4Synch;
+  bool fillElID;
+  bool fillIso;
+  bool fillLepSynch;
 
-    // Tree Branches
-    EventTree StopEvt;
-    LeptonTree lep1;
-    LeptonTree lep2;
-    PhotonTree ph;
-    JetTree jets;
-    JetTree jets_jup;
-    JetTree jets_jdown;
-    TauTree Taus;
-    IsoTracksTree Tracks;  
-    //GenParticleTree gen_els;
-    //GenParticleTree gen_mus;
-    //GenParticleTree gen_taus;
-    GenParticleTree gen_leps;
-    GenParticleTree gen_nus;
-    //GenParticleTree gen_nuels;
-    //GenParticleTree gen_numus;
-    //GenParticleTree gen_nutaus;
-    GenParticleTree gen_tops;
-    //GenParticleTree gen_bs;
-    //GenParticleTree gen_cs;
-    GenParticleTree gen_qs;
-    //GenParticleTree gen_glus;
-    GenParticleTree gen_bosons;
-    //GenParticleTree gen_ws;
-    //GenParticleTree gen_zs;
-    //GenParticleTree gen_phs;
-    //GenParticleTree gen_hs;
-    GenParticleTree gen_susy;
-    
+  bool isFastsim;
+
+ protected:
+  TFile* BabyFile;
+  TFile* histFile;
+  TTree* BabyTree;
+  TH1D*  histcounter;
+ private:
+
+  // Tree Branches
+  EventTree StopEvt;
+  LeptonTree lep1;
+  LeptonTree lep2;
+  PhotonTree ph;
+  JetTree jets;
+  JetTree jets_jup;
+  JetTree jets_jdown;
+  TauTree Taus;
+  IsoTracksTree Tracks;
+  //GenParticleTree gen_els;
+  //GenParticleTree gen_mus;
+  //GenParticleTree gen_taus;
+  GenParticleTree gen_leps;
+  GenParticleTree gen_nus;
+  //GenParticleTree gen_nuels;
+  //GenParticleTree gen_numus;
+  //GenParticleTree gen_nutaus;
+  GenParticleTree gen_tops;
+  //GenParticleTree gen_bs;
+  //GenParticleTree gen_cs;
+  GenParticleTree gen_qs;
+  //GenParticleTree gen_glus;
+  GenParticleTree gen_bosons;
+  //GenParticleTree gen_ws;
+  //GenParticleTree gen_zs;
+  //GenParticleTree gen_phs;
+  //GenParticleTree gen_hs;
+  GenParticleTree gen_susy;
+
   // for btag SFs
   BTagCalibration* calib;
   BTagCalibrationReader* reader_heavy;
@@ -150,7 +148,7 @@ class babyMaker {
   TH2D* h_btag_eff_b;
   TH2D* h_btag_eff_c;
   TH2D* h_btag_eff_udsg;
-  
+
   BTagCalibration* calib_fastsim;
   BTagCalibrationReader* reader_fastsim;
   BTagCalibrationReader* reader_fastsim_UP;
@@ -159,7 +157,7 @@ class babyMaker {
   TH2D* h_btag_eff_b_fastsim;
   TH2D* h_btag_eff_c_fastsim;
   TH2D* h_btag_eff_udsg_fastsim;
-  
+
 };
 
 struct val_err_t { float value; float error; };

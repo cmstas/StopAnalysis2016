@@ -165,7 +165,7 @@ float JetTree::getBtagEffFromFile(float pt, float eta, int mcFlavour, int WP, bo
     return h->GetBinContent(binx,biny);
 }
 
-void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float &btagprob_heavy_UP, float & btagprob_heavy_DN,float & btagprob_light_UP, float & btagprob_light_DN, float & btagprob_FS_UP, float & btagprob_FS_DN, float& loosebtagprob_data, float &loosebtagprob_mc, float &loosebtagprob_heavy_UP, float & loosebtagprob_heavy_DN, float & loosebtagprob_light_UP, float & loosebtagprob_light_DN, float & loosebtagprob_FS_UP, float & loosebtagprob_FS_DN, float& tightbtagprob_data, float &tightbtagprob_mc, float &tightbtagprob_heavy_UP, float & tightbtagprob_heavy_DN, float & tightbtagprob_light_UP, float & tightbtagprob_light_DN, float & tightbtagprob_FS_UP, float & tightbtagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim)
+void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, FactorizedJetCorrector* corrector, float& btagprob_data, float &btagprob_mc, float& btagprob_heavy_UP, float& btagprob_heavy_DN, float& btagprob_light_UP, float& btagprob_light_DN, float& btagprob_FS_UP, float& btagprob_FS_DN, float& loosebtagprob_data, float &loosebtagprob_mc, float &loosebtagprob_heavy_UP, float& loosebtagprob_heavy_DN, float& loosebtagprob_light_UP, float& loosebtagprob_light_DN, float& loosebtagprob_FS_UP, float& loosebtagprob_FS_DN, float& tightbtagprob_data, float& tightbtagprob_mc, float& tightbtagprob_heavy_UP, float& tightbtagprob_heavy_DN, float& tightbtagprob_light_UP, float& tightbtagprob_light_DN, float& tightbtagprob_FS_UP, float& tightbtagprob_FS_DN, unsigned int overlep1_idx, unsigned int overlep2_idx, bool applynewcorr, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool applyBtagSFs, bool isFastsim)
 {
     // fill info for ak4pfjets
     int nGoodJets=0.;
@@ -215,11 +215,11 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
     newjecorr.clear();
     vector<pair <int, LorentzVector> > sortedJets_pt;
 
-      vector<LorentzVector> p4sCorrJets; // store corrected p4 for ALL jets, so indices match CMS3 ntuple
-      vector<LorentzVector> p4sUCorrJets;
-      p4sCorrJets.clear();
-      p4sUCorrJets.clear();
-      for(unsigned int iJet = 0; iJet < cms3.pfjets_p4().size(); iJet++){
+    vector<LorentzVector> p4sCorrJets; // store corrected p4 for ALL jets, so indices match CMS3 ntuple
+    vector<LorentzVector> p4sUCorrJets;
+    p4sCorrJets.clear();
+    p4sUCorrJets.clear();
+    for(unsigned int iJet = 0; iJet < cms3.pfjets_p4().size(); iJet++){
         LorentzVector pfjet_p4_cor = cms3.pfjets_p4().at(iJet);
           // get uncorrected jet p4 to use as input for corrections
         LorentzVector pfjet_p4_uncor = pfjets_p4().at(iJet) * cms3.pfjets_undoJEC().at(iJet);
@@ -234,29 +234,29 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
           corr = corrector->getCorrection();
 	}
 
-          // check for negative correction
-          if (corr < 0. && fabs(pfjet_p4_uncor.eta()) < 4.7) {
-            std::cout << "ScanChain::Looper: WARNING: negative jet correction: " << corr
-                      << ", raw jet pt: " << pfjet_p4_uncor.pt() << ", eta: " << pfjet_p4_uncor.eta() << std::endl;
-          }
+        // check for negative correction
+        if (corr < 0. && fabs(pfjet_p4_uncor.eta()) < 4.7) {
+          std::cout << "ScanChain::Looper: WARNING: negative jet correction: " << corr
+                    << ", raw jet pt: " << pfjet_p4_uncor.pt() << ", eta: " << pfjet_p4_uncor.eta() << std::endl;
+        }
 
-          // include protections here on jet kinematics to prevent rare warnings/crashes
-          double var = 1.;
-          if (!evt_isRealData() && JES_type != 0 && pfjet_p4_uncor.pt()*corr > 0. && fabs(pfjet_p4_uncor.eta()) < 5.4) {
-            jetcorr_uncertainty->setJetEta(pfjet_p4_uncor.eta());
-            jetcorr_uncertainty->setJetPt(pfjet_p4_uncor.pt() * corr); // must use CORRECTED pt
-            double unc = jetcorr_uncertainty->getUncertainty(true);
-            var = (1. + JES_type * unc);
-          }
+        // include protections here on jet kinematics to prevent rare warnings/crashes
+        double var = 1.;
+        if (!evt_isRealData() && JES_type != 0 && pfjet_p4_uncor.pt()*corr > 0. && fabs(pfjet_p4_uncor.eta()) < 5.4) {
+          jetcorr_uncertainty->setJetEta(pfjet_p4_uncor.eta());
+          jetcorr_uncertainty->setJetPt(pfjet_p4_uncor.pt() * corr); // must use CORRECTED pt
+          double unc = jetcorr_uncertainty->getUncertainty(true);
+          var = (1. + JES_type * unc);
+        }
 
-          // apply new JEC to p4
-          pfjet_p4_cor = pfjet_p4_uncor * corr*var;
-          newjecorr.push_back(corr);
-          if(applynewcorr) p4sCorrJets.push_back(pfjet_p4_cor);
-          else p4sCorrJets.push_back(pfjets_p4().at(iJet));
-          p4sUCorrJets.push_back(pfjet_p4_uncor);
-      }
-      sortedJets_pt =  sort_pt(p4sCorrJets,JET_PT);
+        // apply new JEC to p4
+        pfjet_p4_cor = pfjet_p4_uncor * corr*var;
+        newjecorr.push_back(corr);
+        if(applynewcorr) p4sCorrJets.push_back(pfjet_p4_cor);
+        else p4sCorrJets.push_back(pfjets_p4().at(iJet));
+        p4sUCorrJets.push_back(pfjet_p4_uncor);
+    }
+    sortedJets_pt =  sort_pt(p4sCorrJets,JET_PT);
 
     for (size_t idx = 0; idx < pfjets_p4().size(); ++idx)
     {
@@ -264,7 +264,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
         //deal with the overlaps
         if(jindex == overlep1_idx){
 		ak4pfjet_overlep1_p4  = p4sCorrJets.at(jindex);
-                ak4pfjet_overlep1_CSV = getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex);
+                ak4pfjet_overlep1_CSV = pfjets_pfCombinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
                 ak4pfjet_overlep1_deepCSV = getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex);
 		//ak4pfjet_overlep1_pu_id = pfjets_pileupJetId().at(jindex);
                 ak4pfjet_overlep1_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
@@ -277,7 +277,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 	}
         if(jindex == overlep2_idx){
                 ak4pfjet_overlep2_p4  = p4sCorrJets.at(jindex);
-                ak4pfjet_overlep2_CSV = getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex);
+                ak4pfjet_overlep2_CSV = pfjets_pfCombinedInclusiveSecondaryVertexV2BJetTag().at(jindex);
                 ak4pfjet_overlep2_deepCSV = getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex);
                 //ak4pfjet_overlep2_pu_id = pfjets_pileupJetId().at(jindex);
                 ak4pfjet_overlep2_chf = pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy());
@@ -314,8 +314,8 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
         ak4pfjets_mass.push_back(p4sCorrJets.at(jindex).mass());
 
         dphi_ak4pfjet_met.push_back(getdphi(p4sCorrJets.at(jindex).phi(), evt_pfmetPhi()));//this can be false - due to correction to pfmet, but it gets corrected later
-        ak4pfjets_deepCSV.push_back( getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex) );
-        ak4pfjets_CSV.push_back(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex));
+        ak4pfjets_CSV.push_back(pfjets_pfCombinedInclusiveSecondaryVertexV2BJetTag().at(jindex));
+        ak4pfjets_deepCSV.push_back(getbtagvalue("pfCombinedInclusiveSecondaryVertexV2BJetTags", jindex));
         ak4pfjets_mva.push_back(getbtagvalue("pfCombinedMVAV2BJetTags", jindex));
         ak4pfjets_puid.push_back(loosePileupJetId(jindex));
         ak4pfjets_parton_flavor.push_back(pfjets_partonFlavour().at(jindex));
@@ -456,8 +456,8 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 	      }
            }
         }//finish medium
-	if(getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex) > btagdisc) {
-		btagdisc = getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex);
+        if(getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex) > btagdisc) {
+          btagdisc = getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex);
 	  leadbtag_idx = jindex;
 	}
 	//loose btag
@@ -565,30 +565,6 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
 
    nGoodJets = 0;
 
-    // fill info for ak8pfjets
-  //   for (size_t idx = 0; idx < ak8jets_p4().size(); ++idx)
-  //   {
-  //       if(pfjets_p4().at(idx).pt() < m_ak8_pt_cut) continue;
-  //       if(fabs(pfjets_p4().at(idx).eta()) > m_ak8_eta_cut) continue;
-  //       if(!isFastsim && m_ak8_passid && !isLoosePFJetV2(idx)) continue;
-
-  //       ak8pfjets_p4.push_back(ak8jets_p4().at(idx));
-  //       ak8pfjets_tau1.push_back(ak8jets_nJettinessTau1().at(idx));
-  //       ak8pfjets_tau2.push_back(ak8jets_nJettinessTau2().at(idx));
-  //       ak8pfjets_tau3.push_back(ak8jets_nJettinessTau3().at(idx));
-  //       //ak8pfjets_top_mass.push_back(ak8jets_topJetMass().at(idx));
-  //       ak8pfjets_pruned_mass.push_back(ak8jets_prunedMass().at(idx));
-  //       ak8pfjets_trimmed_mass.push_back(ak8jets_trimmedMass().at(idx));
-  //       ak8pfjets_filtered_mass.push_back(ak8jets_filteredMass().at(idx));
-	// //ak8pfjets_pu_id.push_back(ak8jets_pileupJetId().at(idx));
-  //       ak8pfjets_parton_flavor.push_back(ak8jets_partonFlavour().at(idx));
-
-  //       nGoodJets++;
-
-  //   }
-    ak8GoodPFJets = nGoodJets;
-    nGoodJets=0;
-
     // fill info for genjets
     if (!evt_isRealData()){
       for (size_t idx = 0; idx < genjets_p4NoMuNoNu().size(); ++idx){
@@ -602,6 +578,64 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
     
 }
         
+// fill info for ak8pfjets
+void JetTree::FillAK8Jets(bool applynewcorr, FactorizedJetCorrector* corrector, JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type)
+{
+  int nGoodJets = 0;
+
+  for (size_t idx = 0; idx < ak8jets_p4().size(); ++idx) {
+    if (ak8jets_p4()[idx].pt() < m_ak8_pt_cut) continue;
+    if (fabs(ak8jets_p4()[idx].eta()) > m_ak8_eta_cut) continue;
+    if (!isFastsim && m_ak8_passid && !isLoosePFJetV2(idx)) continue;
+    nGoodJets++;
+
+    float corr = 1;
+    if(applynewcorr){
+      // get L1FastL2L3Residual total correction
+      corrector->setRho   ( evt_fixgridfastjet_all_rho() );
+      corrector->setJetA  ( ak8jets_area().at(idx)       );
+      corrector->setJetPt ( ak8jets_p4()[idx].pt()       );
+      corrector->setJetEta( ak8jets_p4()[idx].eta()      );
+      corr = corrector->getCorrection();
+
+      // check for negative correction
+      if (corr < 0. && fabs(ak8jets_p4()[idx].eta()) < 4.7) {
+        std::cout << "ScanChain::Looper: WARNING: negative ak8jet correction: " << corr
+                  << ", raw jet pt: " << ak8jets_p4()[idx].pt() << ", eta: " << ak8jets_p4()[idx].eta() << std::endl;
+      }
+
+      // include protections here on jet kinematics to prevent rare warnings/crashes
+      double var = 1.;
+      if (!evt_isRealData() && JES_type != 0 && ak8jets_p4()[idx].pt()*corr > 0. && fabs(ak8jets_p4()[idx].eta()) < 5.4) {
+        jetcorr_uncertainty->setJetPt (ak8jets_p4()[idx].pt() * corr); // must use CORRECTED pt
+        jetcorr_uncertainty->setJetEta(ak8jets_p4()[idx].eta());
+        double unc = jetcorr_uncertainty->getUncertainty(true);
+        var = (1. + JES_type * unc);
+      }
+
+      // apply new JEC to p4
+      // newjecorr.push_back(corr);
+      ak8pfjets_p4.push_back(ak8jets_p4()[idx] * corr * var);
+    } else {
+      ak8pfjets_p4.push_back(ak8jets_p4().at(idx));
+    }
+
+    ak8pfjets_tau1.push_back(ak8jets_nJettinessTau1().at(idx));
+    ak8pfjets_tau2.push_back(ak8jets_nJettinessTau2().at(idx));
+    ak8pfjets_tau3.push_back(ak8jets_nJettinessTau3().at(idx));
+    ak8pfjets_pruned_mass.push_back(ak8jets_prunedMass().at(idx));
+    ak8pfjets_parton_flavor.push_back(ak8jets_partonFlavour().at(idx));
+
+    // Branches no longer in cms4
+    // ak8pfjets_top_mass.push_back(ak8jets_topJetMass().at(idx));
+    // ak8pfjets_trimmed_mass.push_back(ak8jets_trimmedMass().at(idx));
+    // ak8pfjets_filtered_mass.push_back(ak8jets_filteredMass().at(idx));
+    // ak8pfjets_pu_id.push_back(ak8jets_pileupJetId().at(idx));
+  }
+
+  ak8GoodPFJets = nGoodJets;
+}
+
 void JetTree::SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id)
 {
   if (cone_size == "ak4") { m_ak4_pt_cut = pt_cut; m_ak4_eta_cut = eta; m_ak4_passid = id; }
@@ -795,7 +829,7 @@ void JetTree::SetAK8Branches (TTree* tree)
 
 void JetTree::SetAK4Branches_Overleps (TTree* tree)
 {
-    tree->Branch(Form("%sak4pfjet_overlep1_p4", prefix_.c_str()) , &ak4pfjet_overlep1_p4);
+    tree->Branch(Form("%sak4pfjet_overlep1_p4", prefix_.c_str()) , &ak4pfjet_overlep1_p4);                                                                                    
     tree->Branch(Form("%sak4pfjet_overlep1_deepCSV", prefix_.c_str()) , &ak4pfjet_overlep1_deepCSV);
     tree->Branch(Form("%sak4pfjet_overlep1_CSV", prefix_.c_str()) , &ak4pfjet_overlep1_CSV);
     tree->Branch(Form("%sak4pfjet_overlep1_pu_id",prefix_.c_str()) , &ak4pfjet_overlep1_pu_id);

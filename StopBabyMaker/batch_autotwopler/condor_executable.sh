@@ -25,7 +25,7 @@ echo "EXE_ARGS=${EXE_ARGS[*]}"
 # Place for user code
 #
 
-cd forCondor_stopBabyMaker_80x/StopBabyMaker/
+cd stopBabyMaker_92x/StopBabyMaker/
 
 SAMPLE_NAME=${EXE_ARGS[0]}
 ISFASTSIM=0
@@ -35,7 +35,7 @@ fi
     
 
 echo " Running BabyMaker:"
-echo "    ./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2017.dat $ISFASTSIM"
+echo " ./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2017.dat $ISFASTSIM"
 ./runBabyMaker $SAMPLE_NAME $NEVENTS $IMERGED ./ sample_2017.dat $ISFASTSIM
 
 # Perform Skim
@@ -43,10 +43,6 @@ root -l -b -q skimBaby.C++'("'${SAMPLE_NAME}_${IMERGED}.root'", "'${OUTPUT_NAMES
 
 # Format output for gfal transfer
 mv ${SAMPLE_NAME}_${IMERGED}.root ${OUTPUT_NAMES[0]}
-
-# Perform Skim
-#root -l -b -q skimBaby.C++'("'${OUTPUT_NAMES[0]}'", "'${OUTPUT_NAMES[1]}'")'
-
 
 #
 # Sweep Root

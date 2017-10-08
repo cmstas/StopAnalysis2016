@@ -7,19 +7,19 @@ ROOTGLIBS     = $(shell $(ROOTSYS)/bin/root-config --glibs)
 #######################################
 # -- DEFINE ARCH to something sensible!
 #######################################
- 
+
 #
 CXX           = g++
-CXXFLAGS      = -g -Wall -fPIC
+CXXFLAGS      = -g -Wall -fPIC -Wno-unused-but-set-variable
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -shared
 
 
 CXXFLAGS      += $(ROOTCFLAGS)
-LIBS           = $(ROOTLIBS) 
+LIBS           = $(ROOTLIBS)
 
-NGLIBS         = $(ROOTGLIBS) 
+NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
@@ -34,7 +34,7 @@ Davismt2.o: Davismt2.cc Davismt2.h
 mt2w.o: mt2w.cc mt2w.h mt2w_bisect.h JetUtil.h
 	$(CXX) $(CXXFLAGS) -c mt2w.cc
 
-mt2w_bisect.o:  mt2w_bisect.cpp mt2w_bisect.h 
+mt2w_bisect.o:  mt2w_bisect.cpp mt2w_bisect.h
 	$(CXX) $(CXXFLAGS) -c mt2w_bisect.cpp
 
 chi2.o: chi2.cc chi2.h
@@ -51,6 +51,6 @@ JetUtil.o: JetUtil.cc JetUtil.h
 
 
 .PHONY: clean
-clean:  
+clean:
 	rm -v -f \
-	*.o *.d *.so; echo "Done"
+	*.o *.d *.so

@@ -5,7 +5,7 @@ ROOTGLIBS     = $(shell $(ROOTSYS)/bin/root-config --glibs)
 #######################################
 # -- DEFINE ARCH to something sensible!
 #######################################
- 
+
 #
 CXX           = g++
 CXXFLAGS      = -g -Wall -fPIC
@@ -15,9 +15,9 @@ SOFLAGS       = -shared
 
 
 CXXFLAGS      += $(ROOTCFLAGS)
-LIBS           = $(ROOTLIBS) 
+LIBS           = $(ROOTLIBS)
 
-NGLIBS         = $(ROOTGLIBS) 
+NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
@@ -30,26 +30,40 @@ CXXFLAGS       += -I$(COREPATH)
 CXXFLAGS       += -I$(TOOLSPATH)
 CXXFLAGS       += -I$(DORKYPATH)
 
-CORELIB        = $(COREPATH)/CMS3_CORE.so
-STOPVARLIB     = stop_variables/StopVariables.so
+CORESOURCE     = $(COREPATH)/CMS3_CORE.so
+CORELIB        = ./CMS3_CORE.so
 
-runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o PhotonTree.o StopSelections.o LinkDef_out.so
+STOPVARSOURCE  = $(wildcard stop_variables/*.cc)
+STOPVARLIB     = StopVariables.so
+
+#
+# Make rules
+#
+
+runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o PhotonTree.o StopSelections.o LinkDef_out.so $(CORELIB) $(STOPVARLIB)
 	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o PhotonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) LinkDef_out.so -Wl,-rpath,./
 
-runBabyMaker.o: runBabyMaker.C looper.h 
-	$(CXX) $(CXXFLAGS) -c runBabyMaker.C 
+$(CORELIB): $(CORESOURCE)
+	cp $(CORESOURCE) .
+
+$(STOPVARLIB): $(STOPVARSOURCE) $(STOPVARSOURCE:.cc=.h)
+	cd stop_variables && $(MAKE) -j4 && cd ..; \
+	mv stop_variables/StopVariables.so .
+
+runBabyMaker.o: runBabyMaker.C looper.h
+	$(CXX) $(CXXFLAGS) -c runBabyMaker.C
 
 looper.o: looper.C looper.h EventTree.h TauTree.h IsoTracksTree.h GenParticleTree.h LeptonTree.h PhotonTree.h StopSelections.h
 	$(CXX) $(CXXFLAGS) -c looper.C
 
-EventTree.o: EventTree.cc EventTree.h StopSelections.h 
-	$(CXX) $(CXXFLAGS) -c EventTree.cc 
+EventTree.o: EventTree.cc EventTree.h StopSelections.h
+	$(CXX) $(CXXFLAGS) -c EventTree.cc
 
 LeptonTree.o: LeptonTree.cc LeptonTree.h StopSelections.h
-	$(CXX) $(CXXFLAGS) -c LeptonTree.cc 
+	$(CXX) $(CXXFLAGS) -c LeptonTree.cc
 
 PhotonTree.o: PhotonTree.cc PhotonTree.h StopSelections.h
-	$(CXX) $(CXXFLAGS) -c PhotonTree.cc 
+	$(CXX) $(CXXFLAGS) -c PhotonTree.cc
 
 JetTree.o: JetTree.cc JetTree.h StopSelections.h
 	$(CXX) $(CXXFLAGS) -c JetTree.cc
@@ -71,9 +85,9 @@ LinkDef_out.so: LinkDef.h
 	$(CXX) $(CXXFLAGS) $(SOFLAGS) LinkDef.cc -o $@
 
 .PHONY: clean
-clean:  
+clean:
 	rm -v -f \
 	runBabyMaker \
 	LinkDef.cc \
 	LinkDef_rdict.pcm \
-	*.o *.d *.so; echo "Done"
+	*.o *.d *.so
