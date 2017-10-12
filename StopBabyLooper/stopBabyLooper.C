@@ -398,11 +398,11 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
   // jet2 pT
   TH1D *h_jet2Pt_incl[nHistosVars];
   
-  // csv jet1 pT
-  TH1D *h_csvJet1Pt_incl[nHistosVars];
+  // DeepCSV jet1 pT
+  TH1D *h_deepcsvJet1Pt_incl[nHistosVars];
   
-  // csv jet2 pT
-  TH1D *h_csvJet2Pt_incl[nHistosVars];
+  // DeepCSV jet2 pT
+  TH1D *h_deepcsvJet2Pt_incl[nHistosVars];
   
   // met
   TH1D *h_met_incl[nHistosVars];
@@ -548,22 +548,22 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
       
 	
 				//
-				// csvJet1Pt
+				// DeepCSVJet1Pt
 				//
 
 				// Incl Selection
-				hName = "h_csvJet1Pt__inclSelection" + reg_gen_sys_name;
-				h_csvJet1Pt_incl[iHisto] = new TH1D( hName, "Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
+				hName = "h_deepcsvJet1Pt__inclSelection" + reg_gen_sys_name;
+				h_deepcsvJet1Pt_incl[iHisto] = new TH1D( hName, "Leading DeepCSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
       
 	
 
 				//
-				// csvJet2Pt
+				// DeepCSVJet2Pt
 				//
 
 				// Incl Selection
-				hName = "h_csvJet2Pt__inclSelection" + reg_gen_sys_name;
-				h_csvJet2Pt_incl[iHisto] = new TH1D( hName, "2nd Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
+				hName = "h_deepcsvJet2Pt__inclSelection" + reg_gen_sys_name;
+				h_deepcsvJet2Pt_incl[iHisto] = new TH1D( hName, "2nd Leading DeepCSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
       
 	
 
@@ -973,22 +973,22 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
       if(nvetoleps()>1) lep1lep2bb_TLV += lep2_p4();
       
       int jet1_idx = -1;
-      double max_csv = -99.9;
+      double max_deepcsv = -99.9;
       for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++) {
-				if( ak4pfjets_CSV().at(iJet) > max_csv ) {
+				if( ak4pfjets_deepCSV().at(iJet) > max_deepcsv ) {
 					jet1_idx = iJet;
-					max_csv  = ak4pfjets_CSV().at(iJet);
+					max_deepcsv  = ak4pfjets_deepCSV().at(iJet);
 				}
       }
       if(jet1_idx>=0) lep1lep2bb_TLV += ak4pfjets_p4().at(jet1_idx);
       
       int jet2_idx = -1;
-      max_csv = -99.9;
+      max_deepcsv = -99.9;
       for(int iJet=0; iJet<(int)ak4pfjets_p4().size(); iJet++) {
 				if( iJet==jet1_idx ) continue;
-				if( ak4pfjets_CSV().at(iJet) > max_csv ) {
+				if( ak4pfjets_deepCSV().at(iJet) > max_deepcsv ) {
 					jet2_idx = iJet;
-					max_csv = ak4pfjets_CSV().at(iJet);
+					max_deepcsv = ak4pfjets_deepCSV().at(iJet);
 				}
       }
       if(jet2_idx>=0) lep1lep2bb_TLV += ak4pfjets_p4().at(jet2_idx);
@@ -1164,11 +1164,11 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 								// jet2 pT
 								h_jet2Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(1).Pt(), weight );
 
-								// csv jet1 pT
-								if(jet1_idx>=0) h_csvJet1Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), weight );
+								// DeepCSV jet1 pT
+								if(jet1_idx>=0) h_deepcsvJet1Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet1_idx).Pt(), weight );
 
-								// csv jet2 pT
-								if(jet2_idx>=0) h_csvJet2Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), weight );
+								// DeepCSV jet2 pT
+								if(jet2_idx>=0) h_deepcsvJet2Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), weight );
 
 								// met
 								h_met_incl[iHisto]->Fill( met, weight );

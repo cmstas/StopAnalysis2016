@@ -1132,12 +1132,12 @@ void plotMaker( bool plotByGenDecay ){
   var_rebin_xBinsSF.push_back(xRebinsSF_jet2Pt_ge2bTags);
 
 
-  // Plot csvJet1Pt
+  // Plot DeepCSVJet1Pt
   
   // ge0bTags
-  var_list_label.push_back( "h_csvJet1Pt__ge0bTags" );
-  var_list_title.push_back( "csvJet1Pt, >=0 bTags" );
-  var_list_xaxis.push_back( "csvJet1Pt" );
+  var_list_label.push_back( "h_deepcsvJet1Pt__ge0bTags" );
+  var_list_title.push_back( "DeepCSVJet1Pt, >=0 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet1Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1149,27 +1149,27 @@ void plotMaker( bool plotByGenDecay ){
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
   // ge0bTags, Rebinned
-  var_list_label.push_back( "h_csvJet1Pt__ge0bTags" );
-  var_list_title.push_back( "csvJet1Pt, >=0 bTags" );
-  var_list_xaxis.push_back( "csvJet1Pt" );
+  var_list_label.push_back( "h_deepcsvJet1Pt__ge0bTags" );
+  var_list_title.push_back( "DeepCSVJet1Pt, >=0 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet1Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
-  const int nRebins_csvJet1Pt_ge0bTags = 9;
-  double xRebins_csvJet1Pt_ge0bTags[nRebins_csvJet1Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
-  double xRebinsSF_csvJet1Pt_ge0bTags[nRebins_csvJet1Pt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
+  const int nRebins_deepcsvJet1Pt_ge0bTags = 9;
+  double xRebins_deepcsvJet1Pt_ge0bTags[nRebins_deepcsvJet1Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
+  double xRebinsSF_deepcsvJet1Pt_ge0bTags[nRebins_deepcsvJet1Pt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
   var_doRebin.push_back(true);
-  var_rebin_nBins.push_back(nRebins_csvJet1Pt_ge0bTags);
-  var_rebin_xBins.push_back(xRebins_csvJet1Pt_ge0bTags);
-  var_rebin_xBinsSF.push_back(xRebinsSF_csvJet1Pt_ge0bTags);
+  var_rebin_nBins.push_back(nRebins_deepcsvJet1Pt_ge0bTags);
+  var_rebin_xBins.push_back(xRebins_deepcsvJet1Pt_ge0bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_deepcsvJet1Pt_ge0bTags);
 
 
   // ge1bTags
-  var_list_label.push_back( "h_csvJet1Pt__ge1bTags" );
-  var_list_title.push_back( "csvJet1Pt, >=1 bTags" );
-  var_list_xaxis.push_back( "csvJet1Pt" );
+  var_list_label.push_back( "h_deepcsvJet1Pt__ge1bTags" );
+  var_list_title.push_back( "DeepCSVJet1Pt, >=1 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet1Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1181,27 +1181,27 @@ void plotMaker( bool plotByGenDecay ){
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
   // ge1bTags, Rebinned
-  var_list_label.push_back( "h_csvJet1Pt__ge1bTags" );
-  var_list_title.push_back( "csvJet1Pt, >=1 bTags" );
-  var_list_xaxis.push_back( "csvJet1Pt" );
+  var_list_label.push_back( "h_deepcsvJet1Pt__ge1bTags" );
+  var_list_title.push_back( "DeepCSVJet1Pt, >=1 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet1Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
-  const int nRebins_csvJet1Pt_ge1bTags = 9;
-  double xRebins_csvJet1Pt_ge1bTags[nRebins_csvJet1Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
-  double xRebinsSF_csvJet1Pt_ge1bTags[nRebins_csvJet1Pt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
+  const int nRebins_deepcsvJet1Pt_ge1bTags = 9;
+  double xRebins_deepcsvJet1Pt_ge1bTags[nRebins_deepcsvJet1Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
+  double xRebinsSF_deepcsvJet1Pt_ge1bTags[nRebins_deepcsvJet1Pt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
   var_doRebin.push_back(true);
-  var_rebin_nBins.push_back(nRebins_csvJet1Pt_ge1bTags);
-  var_rebin_xBins.push_back(xRebins_csvJet1Pt_ge1bTags);
-  var_rebin_xBinsSF.push_back(xRebinsSF_csvJet1Pt_ge1bTags);
+  var_rebin_nBins.push_back(nRebins_deepcsvJet1Pt_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_deepcsvJet1Pt_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_deepcsvJet1Pt_ge1bTags);
 
 
   // ge2bTags
-  var_list_label.push_back( "h_csvJet1Pt__ge2bTags" );
-  var_list_title.push_back( "csvJet1Pt, >=2 bTags" );
-  var_list_xaxis.push_back( "csvJet1Pt" );
+  var_list_label.push_back( "h_deepcsvJet1Pt__ge2bTags" );
+  var_list_title.push_back( "DeepCSVJet1Pt, >=2 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet1Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1213,29 +1213,29 @@ void plotMaker( bool plotByGenDecay ){
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
   // ge2bTags, Rebinned
-  var_list_label.push_back( "h_csvJet1Pt__ge2bTags" );
-  var_list_title.push_back( "csvJet1Pt, >=2 bTags" );
-  var_list_xaxis.push_back( "csvJet1Pt" );
+  var_list_label.push_back( "h_deepcsvJet1Pt__ge2bTags" );
+  var_list_title.push_back( "DeepCSVJet1Pt, >=2 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet1Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
-  const int nRebins_csvJet1Pt_ge2bTags = 9;
-  double xRebins_csvJet1Pt_ge2bTags[nRebins_csvJet1Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
-  double xRebinsSF_csvJet1Pt_ge2bTags[nRebins_csvJet1Pt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
+  const int nRebins_deepcsvJet1Pt_ge2bTags = 9;
+  double xRebins_deepcsvJet1Pt_ge2bTags[nRebins_deepcsvJet1Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
+  double xRebinsSF_deepcsvJet1Pt_ge2bTags[nRebins_deepcsvJet1Pt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
   var_doRebin.push_back(true);
-  var_rebin_nBins.push_back(nRebins_csvJet1Pt_ge2bTags);
-  var_rebin_xBins.push_back(xRebins_csvJet1Pt_ge2bTags);
-  var_rebin_xBinsSF.push_back(xRebinsSF_csvJet1Pt_ge2bTags);
+  var_rebin_nBins.push_back(nRebins_deepcsvJet1Pt_ge2bTags);
+  var_rebin_xBins.push_back(xRebins_deepcsvJet1Pt_ge2bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_deepcsvJet1Pt_ge2bTags);
 
 
-  // Plot csvJet2Pt
+  // Plot DeepCSVJet2Pt
   
   // ge0bTags
-  var_list_label.push_back( "h_csvJet2Pt__ge0bTags" );
-  var_list_title.push_back( "csvJet2Pt, >=0 bTags" );
-  var_list_xaxis.push_back( "csvJet2Pt" );
+  var_list_label.push_back( "h_deepcsvJet2Pt__ge0bTags" );
+  var_list_title.push_back( "DeepCSVJet2Pt, >=0 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet2Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1247,27 +1247,27 @@ void plotMaker( bool plotByGenDecay ){
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
   // ge0bTags, Rebinned
-  var_list_label.push_back( "h_csvJet2Pt__ge0bTags" );
-  var_list_title.push_back( "csvJet2Pt, >=0 bTags" );
-  var_list_xaxis.push_back( "csvJet2Pt" );
+  var_list_label.push_back( "h_deepcsvJet2Pt__ge0bTags" );
+  var_list_title.push_back( "DeepCSVJet2Pt, >=0 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet2Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
-  const int nRebins_csvJet2Pt_ge0bTags = 9;
-  double xRebins_csvJet2Pt_ge0bTags[nRebins_csvJet2Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
-  double xRebinsSF_csvJet2Pt_ge0bTags[nRebins_csvJet2Pt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
+  const int nRebins_deepcsvJet2Pt_ge0bTags = 9;
+  double xRebins_deepcsvJet2Pt_ge0bTags[nRebins_deepcsvJet2Pt_ge0bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
+  double xRebinsSF_deepcsvJet2Pt_ge0bTags[nRebins_deepcsvJet2Pt_ge0bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
   var_doRebin.push_back(true);
-  var_rebin_nBins.push_back(nRebins_csvJet2Pt_ge0bTags);
-  var_rebin_xBins.push_back(xRebins_csvJet2Pt_ge0bTags);
-  var_rebin_xBinsSF.push_back(xRebinsSF_csvJet2Pt_ge0bTags);
+  var_rebin_nBins.push_back(nRebins_deepcsvJet2Pt_ge0bTags);
+  var_rebin_xBins.push_back(xRebins_deepcsvJet2Pt_ge0bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_deepcsvJet2Pt_ge0bTags);
 
 
   // ge1bTags
-  var_list_label.push_back( "h_csvJet2Pt__ge1bTags" );
-  var_list_title.push_back( "csvJet2Pt, >=1 bTags" );
-  var_list_xaxis.push_back( "csvJet2Pt" );
+  var_list_label.push_back( "h_deepcsvJet2Pt__ge1bTags" );
+  var_list_title.push_back( "DeepCSVJet2Pt, >=1 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet2Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1279,27 +1279,27 @@ void plotMaker( bool plotByGenDecay ){
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
   // ge1bTags, Rebinned
-  var_list_label.push_back( "h_csvJet2Pt__ge1bTags" );
-  var_list_title.push_back( "csvJet2Pt, >=1 bTags" );
-  var_list_xaxis.push_back( "csvJet2Pt" );
+  var_list_label.push_back( "h_deepcsvJet2Pt__ge1bTags" );
+  var_list_title.push_back( "DeepCSVJet2Pt, >=1 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet2Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
-  const int nRebins_csvJet2Pt_ge1bTags = 9;
-  double xRebins_csvJet2Pt_ge1bTags[nRebins_csvJet2Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
-  double xRebinsSF_csvJet2Pt_ge1bTags[nRebins_csvJet2Pt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
+  const int nRebins_deepcsvJet2Pt_ge1bTags = 9;
+  double xRebins_deepcsvJet2Pt_ge1bTags[nRebins_deepcsvJet2Pt_ge1bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
+  double xRebinsSF_deepcsvJet2Pt_ge1bTags[nRebins_deepcsvJet2Pt_ge1bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
   var_doRebin.push_back(true);
-  var_rebin_nBins.push_back(nRebins_csvJet2Pt_ge1bTags);
-  var_rebin_xBins.push_back(xRebins_csvJet2Pt_ge1bTags);
-  var_rebin_xBinsSF.push_back(xRebinsSF_csvJet2Pt_ge1bTags);
+  var_rebin_nBins.push_back(nRebins_deepcsvJet2Pt_ge1bTags);
+  var_rebin_xBins.push_back(xRebins_deepcsvJet2Pt_ge1bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_deepcsvJet2Pt_ge1bTags);
 
 
   // ge2bTags
-  var_list_label.push_back( "h_csvJet2Pt__ge2bTags" );
-  var_list_title.push_back( "csvJet2Pt, >=2 bTags" );
-  var_list_xaxis.push_back( "csvJet2Pt" );
+  var_list_label.push_back( "h_deepcsvJet2Pt__ge2bTags" );
+  var_list_title.push_back( "DeepCSVJet2Pt, >=2 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet2Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
@@ -1311,21 +1311,21 @@ void plotMaker( bool plotByGenDecay ){
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
   // ge2bTags, Rebinned
-  var_list_label.push_back( "h_csvJet2Pt__ge2bTags" );
-  var_list_title.push_back( "csvJet2Pt, >=2 bTags" );
-  var_list_xaxis.push_back( "csvJet2Pt" );
+  var_list_label.push_back( "h_deepcsvJet2Pt__ge2bTags" );
+  var_list_title.push_back( "DeepCSVJet2Pt, >=2 bTags" );
+  var_list_xaxis.push_back( "DeepCSVJet2Pt" );
   
   sysListPerPlot.push_back( sysInfo::Util(sysInfo::k_nominal) );
   sysList.push_back( sysListPerPlot );
   sysListPerPlot.clear();
   
-  const int nRebins_csvJet2Pt_ge2bTags = 9;
-  double xRebins_csvJet2Pt_ge2bTags[nRebins_csvJet2Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
-  double xRebinsSF_csvJet2Pt_ge2bTags[nRebins_csvJet2Pt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
+  const int nRebins_deepcsvJet2Pt_ge2bTags = 9;
+  double xRebins_deepcsvJet2Pt_ge2bTags[nRebins_deepcsvJet2Pt_ge2bTags+1]{ 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 350.0, 450.0, 600.0, 800.0 };
+  double xRebinsSF_deepcsvJet2Pt_ge2bTags[nRebins_deepcsvJet2Pt_ge2bTags]{   0.5,  0.5,   0.5,   0.5,   0.5,   0.25, 0.25, (1.0/6.0), (1.0/8.0) };
   var_doRebin.push_back(true);
-  var_rebin_nBins.push_back(nRebins_csvJet2Pt_ge2bTags);
-  var_rebin_xBins.push_back(xRebins_csvJet2Pt_ge2bTags);
-  var_rebin_xBinsSF.push_back(xRebinsSF_csvJet2Pt_ge2bTags);
+  var_rebin_nBins.push_back(nRebins_deepcsvJet2Pt_ge2bTags);
+  var_rebin_xBins.push_back(xRebins_deepcsvJet2Pt_ge2bTags);
+  var_rebin_xBinsSF.push_back(xRebinsSF_deepcsvJet2Pt_ge2bTags);
 
 
 

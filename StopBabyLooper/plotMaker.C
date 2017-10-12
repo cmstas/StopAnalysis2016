@@ -381,8 +381,8 @@ void plotMaker( bool plotByGenDecay ){
 
 
 
-  // csvJet1 pT, incl selection
-  var_list_label.push_back( "h_csvJet1Pt__inclSelection" );
+  // DeepCSVJet1 pT, incl selection
+  var_list_label.push_back( "h_deepcsvJet1Pt__inclSelection" );
   var_list_title.push_back( "Highest bTag Disc. Jet p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
@@ -398,8 +398,8 @@ void plotMaker( bool plotByGenDecay ){
 
   
 
-  // csvJet2 pT, incl selection
-  var_list_label.push_back( "h_csvJet2Pt__inclSelection" );
+  // DeepCSVJet2 pT, incl selection
+  var_list_label.push_back( "h_deepcsvJet2Pt__inclSelection" );
   var_list_title.push_back( "Lepton p_{T}, >=2 jets" );
   var_list_xaxis.push_back( "p_{T} [GeV]" );
   
