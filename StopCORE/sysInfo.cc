@@ -1553,18 +1553,18 @@ void sysInfo::evtWgtInfo::getBTagWeight_fromFiles( int WP, double &wgt_btagsf, d
 
   vector< double > jet_pt;
   vector< double > jet_eta;
-  vector< double > jet_CSV;
+  vector< double > jet_deepCSV;
   vector< int >    jet_flavour;
   
 
   for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
     jet_pt.push_back( (double)babyAnalyzer.ak4pfjets_p4().at(iJet).Pt() );
     jet_eta.push_back( (double)babyAnalyzer.ak4pfjets_p4().at(iJet).Eta() );
-    jet_CSV.push_back( (double)babyAnalyzer.ak4pfjets_CSV().at(iJet) );
+    jet_deepCSV.push_back( (double)babyAnalyzer.ak4pfjets_deepCSV().at(iJet) );
     jet_flavour.push_back( (int)abs(babyAnalyzer.ak4pfjets_hadron_flavor().at(iJet)) );
   }
   
-  bTagSFUtil->getBTagWeight( WP, jet_pt, jet_eta, jet_CSV, jet_flavour, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn );
+  bTagSFUtil->getBTagWeight( WP, jet_pt, jet_eta, jet_deepCSV, jet_flavour, wgt_btagsf, wgt_btagsf_hf_up, wgt_btagsf_hf_dn, wgt_btagsf_lf_up, wgt_btagsf_lf_dn, wgt_btagsf_fs_up, wgt_btagsf_fs_dn );
 
   return;
 
@@ -1944,14 +1944,7 @@ void sysInfo::evtWgtInfo::getMetResWeight( double &weight_metRes, double &weight
   int nMedBTags = babyAnalyzer.ngoodbtags();
   
   int nTightTags = babyAnalyzer.ntightbtags();
-  /*
-  int nTightTags = 0;
-  double tight_wp = 0.935;
-  vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
-  for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
-    if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
-  }
-  */
+
   bool is0b = ( (nMedBTags==0) || (nMedBTags>=1 && nTightTags==0 && mlb>175.0) );
   if( is0b ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_leadbtag_p4() ).M();
  
@@ -2495,25 +2488,25 @@ void sysInfo::evtWgtInfo::getTTbarSysPtSF( double &weight_ttbarSysPt, double &we
   // Lep2 LV, if available
   if( babyAnalyzer.nvetoleps()>1 ) system_LV += babyAnalyzer.lep2_p4();
 
-  // Highest CSV Jet
+  // Highest DeepCSV Jet
   int jet1_idx = -1;
-  double max_csv = -99.9;
+  double max_deepcsv = -99.9;
   for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
-    if( babyAnalyzer.ak4pfjets_CSV().at(iJet) > max_csv ){
+    if( babyAnalyzer.ak4pfjets_deepCSV().at(iJet) > max_deepcsv ){
       jet1_idx = iJet;
-      max_csv  = babyAnalyzer.ak4pfjets_CSV().at(iJet);
+      max_deepcsv  = babyAnalyzer.ak4pfjets_deepCSV().at(iJet);
     }
   }
   if(jet1_idx>=0) system_LV += babyAnalyzer.ak4pfjets_p4().at(jet1_idx);
     
-  // 2nd Highest CSV Jets
+  // 2nd Highest DeepCSV Jets
   int jet2_idx = -1;
-  max_csv = -99.9;
+  max_deepcsv = -99.9;
   for(int iJet=0; iJet<(int)babyAnalyzer.ak4pfjets_p4().size(); iJet++){
     if( iJet==jet1_idx ) continue;
-    if( babyAnalyzer.ak4pfjets_CSV().at(iJet) > max_csv ){
+    if( babyAnalyzer.ak4pfjets_deepCSV().at(iJet) > max_deepcsv ){
       jet2_idx = iJet;
-      max_csv = babyAnalyzer.ak4pfjets_CSV().at(iJet);
+      max_deepcsv = babyAnalyzer.ak4pfjets_deepCSV().at(iJet);
     }
   }
   if(jet2_idx>=0) system_LV += babyAnalyzer.ak4pfjets_p4().at(jet2_idx);
