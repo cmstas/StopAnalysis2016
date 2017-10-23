@@ -37,7 +37,7 @@ bool selectionInfo::pass_metFilter(){
 
 //////////////////////////////////////////////////////////////////////
 
-bool pass_metFilter_photons() {
+bool selectionInfo::pass_metFilter_photons() {
   bool result = false;
   // Only applies to data
   if( !babyAnalyzer.is_data() ) result = true;
