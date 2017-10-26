@@ -40,8 +40,8 @@ STOPVARLIB     = StopVariables.so
 # Make rules
 #
 
-runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o IsoTracksTree.o TauTree.o GenParticleTree.o PhotonTree.o StopSelections.o LinkDef_out.so $(CORELIB) $(STOPVARLIB)
-	$(LD) $(LDFLAGS)  -o runBabyMaker runBabyMaker.o looper.o EventTree.o JetTree.o LeptonTree.o PhotonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG $(CORELIB) $(STOPVARLIB) LinkDef_out.so -Wl,-rpath,./
+runBabyMaker: runBabyMaker.o looper.o EventTree.o LeptonTree.o JetTree.o ResolvedTopMVA.o IsoTracksTree.o TauTree.o GenParticleTree.o PhotonTree.o StopSelections.o LinkDef_out.so $(CORELIB) $(STOPVARLIB) 
+	$(LD) $(LDFLAGS) -o runBabyMaker runBabyMaker.o looper.o EventTree.o ResolvedTopMVA.o JetTree.o LeptonTree.o PhotonTree.o IsoTracksTree.o TauTree.o GenParticleTree.o StopSelections.o $(GLIBS) -lGenVector -lEG -lTMVA $(CORELIB) $(STOPVARLIB) LinkDef_out.so -Wl,-rpath,./
 
 $(CORELIB): $(CORESOURCE)
 	cp $(CORESOURCE) .
@@ -67,6 +67,9 @@ PhotonTree.o: PhotonTree.cc PhotonTree.h StopSelections.h
 
 JetTree.o: JetTree.cc JetTree.h StopSelections.h
 	$(CXX) $(CXXFLAGS) -c JetTree.cc
+
+ResolvedTopMVA.o: TopTagger/ResolvedTopMVA.h TopTagger/ResolvedTopMVA.cc TopTagger/TMVAReader.h
+	$(CXX) $(CXXFLAGS) -c TopTagger/ResolvedTopMVA.cc
 
 TauTree.o: TauTree.cc TauTree.h
 	$(CXX) $(CXXFLAGS) -c TauTree.cc

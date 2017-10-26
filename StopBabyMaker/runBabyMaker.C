@@ -137,6 +137,7 @@ int main(int argc, char **argv){
   mylooper->fillExtraEvtVar =  false;
 
   mylooper->fillAK8         =  true;
+  mylooper->fillTopTag      =  true;
   mylooper->fillAK4EF       =  false;
   mylooper->fillAK4_Other   =  false;
   mylooper->fillOverleps    =  false;

@@ -281,6 +281,7 @@ public:
     int HLT_MET100_MHT100;
     int HLT_MET110_MHT110;
     int HLT_MET120_MHT120;
+    int HLT_MET130_MHT130;
     int HLT_DiEl;
     int HLT_DiMu;
     int HLT_MuE;

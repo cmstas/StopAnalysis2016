@@ -1,0 +1,21 @@
+# Ignore compiled code
+*.o
+*.so
+*.d
+
+# Don't commit the main executable
+runBabyMaker
+
+# Ignore linkDef stuff
+LinkDef.cc
+LinkDef_out.*
+*rdict.pcm
+
+# Ignore test output
+*.root
+
+# Ignore batch generated files
+batch_metis/tasks/
+batch_metis/input*
+batch_metis/ProjectMetis
+batch_metis/*.cmd

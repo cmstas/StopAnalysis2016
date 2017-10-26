@@ -259,6 +259,10 @@ SAMPLE
 Name TTJets_amcatnlo_pythia8_92X
 Path /hadoop/cms/store/user/namin/ProjectMetis/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10-v3_MINIAODSIM_CMS4_V00-00-06/
 
+SAMPLE
+Name TTJets_V07_test
+Path /hadoop/cms/store/user/sicheng/ProjectMetis/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10-v3_MINIAODSIM_CMS4_V00-00-07_test/
+
 ## DY + Jets ##
 
 SAMPLE

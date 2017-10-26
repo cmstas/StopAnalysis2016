@@ -49,7 +49,11 @@ bool PassMuonPreSelections(unsigned int muIdx,float pt, float eta){
 }
 
 bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,FactorizedJetCorrector* corrector,bool applynewcorr,JetCorrectionUncertainty* jetcorr_uncertainty, int JES_type, bool isFastsim){
-//apply JEC
+
+  if(jetIdx>=pfjets_p4().size()) return false;//safety requirement
+  if(!isFastsim && passjid && !isLoosePFJetV2(jetIdx)) return false;
+  if(fabs(pfjets_p4().at(jetIdx).eta()) > eta) return false;
+  //apply JEC
         LorentzVector pfjet_p4_cor = cms3.pfjets_p4().at(jetIdx);
           // get uncorrected jet p4 to use as input for corrections
         LorentzVector pfjet_p4_uncor = pfjets_p4().at(jetIdx) * cms3.pfjets_undoJEC().at(jetIdx);
@@ -79,12 +83,8 @@ bool PassJetPreSelections(unsigned int jetIdx,float pt, float eta, bool passjid,
 
           // apply new JEC to p4
           if(applynewcorr) pfjet_p4_cor = pfjet_p4_uncor * corr*var;
-          else pfjet_p4_cor = pfjets_p4().at(jetIdx);
 
-  if(jetIdx>=pfjets_p4().size()) return false;//safety requirement
   if(pfjet_p4_cor.pt() < pt) return false;
-  if(fabs(pfjet_p4_cor.eta()) > eta) return false;
-  if(!isFastsim && passjid && !isLoosePFJetV2(jetIdx)) return false;
   return true;
 }
 

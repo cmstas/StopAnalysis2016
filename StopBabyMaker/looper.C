@@ -151,6 +151,11 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
     jets_jup.SetAK8Branches(BabyTree);
     jets_jdown.SetAK8Branches(BabyTree);
   }
+  if(fillTopTag){
+    jets.SetAK4Branches_TopTag(BabyTree);
+    // jets_jup.SetAK8Branches(BabyTree);
+    // jets_jdown.SetAK8Branches(BabyTree);
+  }
 
   if(filltaus)  Taus.SetBranches(BabyTree);
   if(filltracks)  Tracks.SetBranches(BabyTree);
@@ -825,8 +830,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   // Set scale1fb file
   //
-  DatasetInfoFromFile df;
-  df.loadFromFile("scale1fbfiles/scale1fbs.txt");
+  DatasetInfoFromFile df("scale1fbs.txt");
 
   //
   // JEC files
@@ -1698,7 +1702,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       StopEvt.weight_lepSF      = lepSF;
       StopEvt.weight_lepSF_up   = lepSF_Up;
       StopEvt.weight_lepSF_down = lepSF_Dn;
-      if(lepSF==0) cout << "FUCK" << endl;
+      if(lepSF==0) cout << "LepSF is 0!" << endl;
 
       StopEvt.weight_vetoLepSF      = vetoLepSF;
       StopEvt.weight_vetoLepSF_up   = vetoLepSF_Up;
@@ -2794,24 +2798,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //std::cout << "[babymaker::looper]: filling HLT vars" << std::endl;
       //////////////// 2017 triggers //////////////////////
       if(!isSignalFromFileName){
-        StopEvt.HLT_SingleEl = passHLTTriggerPattern("HLT_Ele35_WPTight_Gsf_v");
+        StopEvt.HLT_SingleEl = ( passHLTTriggerPattern("HLT_Ele35_WPTight_Gsf_v") ||
+                                 passHLTTriggerPattern("HLT_Ele32_WPTight_Gsf_v") );
+        StopEvt.HLT_SingleMu = ( passHLTTriggerPattern("HLT_IsoMu27_v") ||
+                                 passHLTTriggerPattern("HLT_IsoMu24_v") );
         StopEvt.HLT_DiEl =   ( passHLTTriggerPattern("HLT_DoubleEle33_CaloIdL_MW_v") ||
                                passHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL") );
-        StopEvt.HLT_SingleMu = passHLTTriggerPattern("HLT_IsoMu27_v");
         StopEvt.HLT_DiMu =   ( passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8_v") ||
                                passHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8_v") );
         StopEvt.HLT_MuE =    ( passHLTTriggerPattern("HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v") ||
                                passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") ||
                                passHLTTriggerPattern("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") );
-        StopEvt.HLT_MET_MHT = ( passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_HFCleaned_v") ||
-                                passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_v") ||
+        StopEvt.HLT_MET_MHT = ( passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_v") ||
                                 passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v") ||
-                                passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_HFCleaned_v") ||
-                                passHLTTriggerPattern("HLT_PFMETTypeOne120_PFMHT120_IDTight_HFCleaned_v") ||
-                                passHLTTriggerPattern("HLT_PFMETTypeOne120_PFMHT120_IDTight_v") ||
-                                passHLTTriggerPattern("HLT_PFMET130_PFMHT130_IDTight_v") ||
-                                passHLTTriggerPattern("HLT_PFMETNoMu130_PFMHTNoMu130_IDTight_v") ||
-                                passHLTTriggerPattern("HLT_PFMETTypeOne130_PFMHT130_IDTight_v") );
+                                passHLTTriggerPattern("HLT_PFMET100_PFMHT100_IDTight_PFHT60_v") ||
+                                passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_PFHT60_v") );
         StopEvt.HLT_MET110_MHT110 = ( passHLTTriggerPattern("HLT_PFMET110_PFMHT110_IDTight_v") ||
                                       passHLTTriggerPattern("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v") ); //prescaled
         StopEvt.HLT_MET120_MHT120 = ( passHLTTriggerPattern("HLT_PFMET120_PFMHT120_IDTight_HFCleaned_v") ||
@@ -2820,9 +2821,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
                                       passHLTTriggerPattern("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_HFCleaned_v") ||
                                       passHLTTriggerPattern("HLT_PFMETTypeOne120_PFMHT120_IDTight_HFCleaned_v") ||
                                       passHLTTriggerPattern("HLT_PFMETTypeOne120_PFMHT120_IDTight_v") );
-        StopEvt.HLT_MET =    ( passHLTTriggerPattern("HLT_PFMET250_HBHECleaned_v") ||
-                               passHLTTriggerPattern("HLT_PFMET300_HBHECleaned_v") ||
-                               passHLTTriggerPattern("HLT_PFMETTypeOne200_HBHE_BeamHaloCleaned_v") );
+        StopEvt.HLT_MET130_MHT130 = ( passHLTTriggerPattern("HLT_PFMET130_PFMHT130_IDTight_v") );
+        StopEvt.HLT_MET = ( passHLTTriggerPattern("HLT_PFMET250_HBHECleaned_v") ||
+                            passHLTTriggerPattern("HLT_PFMET300_HBHECleaned_v") ||
+                            passHLTTriggerPattern("HLT_PFMETTypeOne200_HBHE_BeamHaloCleaned_v") );
 
         StopEvt.HLT_Photon50_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon50_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon50_R9Id90_HE10_IsoM_v"),true) : 0;
         StopEvt.HLT_Photon75_R9Id90_HE10_IsoM  = passHLTTriggerPattern("HLT_Photon75_R9Id90_HE10_IsoM_v") ? HLT_prescale(triggerName("HLT_Photon75_R9Id90_HE10_IsoM_v"),true) : 0;

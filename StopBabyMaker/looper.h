@@ -89,6 +89,7 @@ class babyMaker {
   bool fillExtraEvtVar;
 
   bool fillAK8;
+  bool fillTopTag;
   bool fillAK4EF;
   bool fillAK4_Other;
   bool fillOverleps;

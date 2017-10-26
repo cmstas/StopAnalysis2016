@@ -397,6 +397,7 @@ void EventTree::Reset ()
     HLT_MET100_MHT100      = -9999.;
     HLT_MET110_MHT110      = -9999.;
     HLT_MET120_MHT120      = -9999.;
+    HLT_MET130_MHT130      = -9999.;
     HLT_DiEl               = -9999.;
     HLT_MuE                = -9999.;
     HLT_DiMu               = -9999.;
@@ -732,6 +733,7 @@ void EventTree::SetBranches (TTree* tree)
     tree->Branch("HLT_MET100_MHT100", &HLT_MET100_MHT100);
     tree->Branch("HLT_MET110_MHT110", &HLT_MET110_MHT110);
     tree->Branch("HLT_MET120_MHT120", &HLT_MET120_MHT120);
+    tree->Branch("HLT_MET130_MHT130", &HLT_MET130_MHT130);
     tree->Branch("HLT_PFHT_unprescaled", &HLT_PFHT_unprescaled);
     tree->Branch("HLT_PFHT_prescaled", &HLT_PFHT_prescaled);
     tree->Branch("HLT_DiEl", &HLT_DiEl );

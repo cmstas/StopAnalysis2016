@@ -5,13 +5,20 @@
 
 using namespace tas;
  
-JetTree::JetTree ()
-{
+JetTree::JetTree() : doResolveTopMVA(true) {
+  cout << __FILE__ << ':' << __LINE__ << ": prefix_= " << prefix_ << endl;
+  resTopMVA = new ResolvedTopMVA("TopTagger/resTop_xGBoost_v0.weights.xml", "BDT");
 }
 
-JetTree::JetTree (const std::string &prefix)
-  : prefix_(prefix)
-{
+JetTree::JetTree(const std::string &prefix) : prefix_(prefix), doResolveTopMVA(false) {
+  if (prefix == "") {
+    JetTree();
+    doResolveTopMVA = true;
+  }
+}
+
+JetTree::~JetTree () {
+  // delete resTopMVA;
 }
 
 void JetTree::InitBtagSFTool(bool isFastsim_) {
@@ -191,21 +198,21 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
     // and store it statically so we don't have to re-find it for every event
     static TString deepCSV_prefix = "NULL";
     if( deepCSV_prefix == "NULL" ) {
-	    for( TString discName : pfjets_bDiscriminatorNames() ) {
-		    if( discName.Contains("pfDeepCSV") ) { // 2017 convention
-			    deepCSV_prefix = "pfDeepCSV";
-			    break;
-		    }
-		    else if( discName.Contains("deepFlavour") ) { // 2016 convention
-			    deepCSV_prefix = "deepFlavour";
-			    break;
-		    }
-	    } // end loop over b discriminator names
+      for( TString discName : pfjets_bDiscriminatorNames() ) {
+        if( discName.Contains("pfDeepCSV") ) { // 2017 convention
+          deepCSV_prefix = "pfDeepCSV";
+          break;
+        }
+        else if( discName.Contains("deepFlavour") ) { // 2016 convention
+          deepCSV_prefix = "deepFlavour";
+          break;
+        }
+      } // end loop over b discriminator names
 
-	    if( deepCSV_prefix == "NULL" ) {
-		    cout << "Error in JetTree.cc: Can't find DeepCSV discriminator names!" << endl;
-		    exit(1);
-	    }
+      if( deepCSV_prefix == "NULL" ) {
+        cout << "Error in JetTree.cc: Can't find DeepCSV discriminator names!" << endl;
+        exit(1);
+      }
     } // end if prefix == "NULL"
 
     //apply JEC
@@ -313,9 +320,11 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
         ak4pfjets_phi.push_back(p4sCorrJets.at(jindex).phi());
         ak4pfjets_mass.push_back(p4sCorrJets.at(jindex).mass());
 
+        // float value_deepCSV = getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex);
+        float value_deepCSV = pfjets_pfDeepCSVJetTagsprobbPlusprobbb().at(jindex);
         dphi_ak4pfjet_met.push_back(getdphi(p4sCorrJets.at(jindex).phi(), evt_pfmetPhi()));//this can be false - due to correction to pfmet, but it gets corrected later
         ak4pfjets_CSV.push_back(pfjets_pfCombinedInclusiveSecondaryVertexV2BJetTag().at(jindex));
-        ak4pfjets_deepCSV.push_back(getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex));
+        ak4pfjets_deepCSV.push_back(value_deepCSV);
         ak4pfjets_mva.push_back(getbtagvalue("pfCombinedMVAV2BJetTags", jindex));
         ak4pfjets_puid.push_back(loosePileupJetId(jindex));
         ak4pfjets_parton_flavor.push_back(pfjets_partonFlavour().at(jindex));
@@ -324,6 +333,11 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
         ak4pfjets_loose_pfid.push_back(isLoosePFJetV2(jindex));
         //ak4pfjets_medium_pfid.push_back(isMediumPFJetV2(jindex));
         ak4pfjets_tight_pfid.push_back(isTightPFJetV2(jindex));
+
+        ak4pfjets_cvsl.push_back(getbtagvalue("pfCombinedCvsLJetTags", jindex));
+        ak4pfjets_ptD.push_back(pfjets_ptDistribution().at(jindex));
+        ak4pfjets_axis1.push_back(pfjets_axis1().at(jindex));
+        ak4pfjets_mult.push_back(pfjets_totalMultiplicity().at(jindex));
 
         ak4pfjets_chf.push_back(pfjets_chargedHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
         ak4pfjets_nhf.push_back(pfjets_neutralHadronE().at(jindex)/ (pfjets_undoJEC().at(jindex)*p4sCorrJets[jindex].energy()) );
@@ -403,7 +417,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
 	  }
 	}	
 	//medium btag
-	if( getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex) > BTAG_MED ) {
+	if (value_deepCSV > BTAG_MED) {
              ak4pfjets_passMEDbtag.push_back(true);
              nbtags_med++;
              if(nbtags_med == 1){
@@ -456,12 +470,12 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
 	      }
            }
         }//finish medium
-        if(getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex) > btagdisc) {
-          btagdisc = getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex);
+        if (value_deepCSV > btagdisc) {
+          btagdisc = value_deepCSV;
 	  leadbtag_idx = jindex;
 	}
 	//loose btag
-	if(getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex) > BTAG_LSE) {
+	if (value_deepCSV > BTAG_LSE) {
              nbtags_loose++;
               if (!evt_isRealData()&&applyBtagSFs) {
                 loosebtagprob_data *= weight_loose_cent * effloose;
@@ -504,7 +518,7 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
            }
         }//finish loose
 	//tight btag
-	if(getbtagvalue(deepCSV_prefix+"JetTags:probb",jindex) + getbtagvalue(deepCSV_prefix+"JetTags:probbb",jindex) > BTAG_TGT) {
+	if (value_deepCSV > BTAG_TGT) {
              nbtags_tight++;
               if (!evt_isRealData()&&applyBtagSFs) {
                 tightbtagprob_data *= weight_tight_cent * efftight;
@@ -525,8 +539,8 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
 		  tightbtagprob_FS_DN *= weight_tight_FS_DN * efftight;
 		}
                }
-            }else{ 
-             if (!evt_isRealData()&&applyBtagSFs) { // fail tight btag -- needed for SF event weights
+        } else { 
+          if (!evt_isRealData()&&applyBtagSFs) { // fail tight btag -- needed for SF event weights
               tightbtagprob_data *= (1. - weight_tight_cent * efftight);
               tightbtagprob_mc *= (1. - efftight);
 	      if (flavor == BTagEntry::FLAV_UDSG) {
@@ -546,24 +560,24 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
 	      }
            }
         }//finish tight
-   }
+    }
 
     ak4pfjets_leadbtag_p4 = p4sCorrJets.at(leadbtag_idx);//highest discriminator jet
 
-   ngoodjets = nGoodJets;
-   nfailjets = nFailJets;
-   ak4_HT = HT;
-   HT=0;
-   ngoodbtags = nbtags_med;
-   nloosebtags = nbtags_loose;
-   ntightbtags = nbtags_tight;
+    ngoodjets = nGoodJets;
+    nfailjets = nFailJets;
+    ak4_HT = HT;
+    HT=0;
+    ngoodbtags = nbtags_med;
+    nloosebtags = nbtags_loose;
+    ntightbtags = nbtags_tight;
 
-   ak4_htssm = htssm;
-   ak4_htosm = htosm;
-   htratiom   = htssm / (htosm + htssm);
-   ak4_htratiom = htratiom; 
+    ak4_htssm = htssm;
+    ak4_htosm = htosm;
+    htratiom   = htssm / (htosm + htssm);
+    ak4_htratiom = htratiom; 
 
-   nGoodJets = 0;
+    nGoodJets = 0;
 
     // fill info for genjets
     if (!evt_isRealData()){
@@ -575,7 +589,18 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
       }
     }
     nGoodGenJets = nGoodJets;
-    
+
+    nGoodJets = 0;
+    if (doResolveTopMVA && ngoodbtags > 0) {
+      resTopMVA->setJetVecPtrs(&ak4pfjets_p4, &ak4pfjets_CSV, &ak4pfjets_cvsl, &ak4pfjets_ptD, &ak4pfjets_axis1, &ak4pfjets_mult);
+      std::vector<TopCand> resMVATopCands = resTopMVA->getTopCandidates(-1);
+      for (auto tcand : resMVATopCands) {
+        topcands_ak4idx.emplace_back( std::vector<int>{tcand.getIdxForb(), tcand.getIdxForj2(), tcand.getIdxForj3()} );
+        topcands_disc.push_back( tcand.disc );
+        topcands_p4.push_back( tcand.topcand );
+        topcands_Wp4.push_back( tcand.wcand );
+      }
+    }
 }
         
 // fill info for ak8pfjets
@@ -624,16 +649,18 @@ void JetTree::FillAK8Jets(bool applynewcorr, FactorizedJetCorrector* corrector, 
     ak8pfjets_tau2.push_back(ak8jets_nJettinessTau2().at(idx));
     ak8pfjets_tau3.push_back(ak8jets_nJettinessTau3().at(idx));
     ak8pfjets_pruned_mass.push_back(ak8jets_prunedMass().at(idx));
+    ak8pfjets_softdrop_mass.push_back(ak8jets_softdropMass().at(idx));
     ak8pfjets_parton_flavor.push_back(ak8jets_partonFlavour().at(idx));
 
     // Branches no longer in cms4
     // ak8pfjets_top_mass.push_back(ak8jets_topJetMass().at(idx));
     // ak8pfjets_trimmed_mass.push_back(ak8jets_trimmedMass().at(idx));
     // ak8pfjets_filtered_mass.push_back(ak8jets_filteredMass().at(idx));
+
     // ak8pfjets_pu_id.push_back(ak8jets_pileupJetId().at(idx));
   }
 
-  ak8GoodPFJets = nGoodJets;
+  nGoodAK8PFJets = nGoodJets;
 }
 
 void JetTree::SetJetSelection (std::string cone_size, float pt_cut,float eta, bool id)
@@ -689,8 +716,9 @@ void JetTree::deleteBtagSFTool()
     delete reader_tight_fastsim_DN;
     
     delete feff;
-   return;
-} 
+    return;
+}
+
 void JetTree::Reset ()
 {
     ak4pfjets_p4.clear();
@@ -711,6 +739,16 @@ void JetTree::Reset ()
     ak4pfjets_loose_pfid.clear();
     ak4pfjets_medium_pfid.clear();
     ak4pfjets_tight_pfid.clear();
+
+    ak4pfjets_cvsl.clear();
+    ak4pfjets_ptD.clear();
+    ak4pfjets_axis1.clear();
+    ak4pfjets_mult.clear();
+
+    topcands_ak4idx.clear();
+    topcands_disc.clear();
+    topcands_p4.clear();
+    topcands_Wp4.clear();
 
     ak4pfjets_chf.clear();
     ak4pfjets_nhf.clear();
@@ -777,7 +815,7 @@ void JetTree::Reset ()
     ngoodjets     = -9999;  
     nfailjets     = -9999;  
     ak4_HT 	  = -9999.; 
-    ak8GoodPFJets = -9999;
+    nGoodAK8PFJets = -9999;
     nGoodGenJets  = -9999;
     ngoodbtags    = -9999;
     nloosebtags    = -9999;
@@ -822,9 +860,10 @@ void JetTree::SetAK8Branches (TTree* tree)
     tree->Branch(Form("%sak8pfjets_pruned_mass", prefix_.c_str()) , &ak8pfjets_pruned_mass);
     tree->Branch(Form("%sak8pfjets_trimmed_mass", prefix_.c_str()) , &ak8pfjets_trimmed_mass);
     tree->Branch(Form("%sak8pfjets_filtered_mass", prefix_.c_str()) , &ak8pfjets_filtered_mass);
+    tree->Branch(Form("%sak8pfjets_softdrop_mass", prefix_.c_str()) , &ak8pfjets_softdrop_mass);
     tree->Branch(Form("%sak8pfjets_pu_id", prefix_.c_str()) , &ak8pfjets_pu_id);    
     tree->Branch(Form("%sak8pfjets_parton_flavor", prefix_.c_str()) , &ak8pfjets_parton_flavor);
-    tree->Branch(Form("%sak8GoodPFJets", prefix_.c_str()) , &ak8GoodPFJets);  
+    tree->Branch(Form("%snGoodAK8PFJets", prefix_.c_str()) , &nGoodAK8PFJets);
 }
 
 void JetTree::SetAK4Branches_Overleps (TTree* tree)
@@ -871,6 +910,19 @@ void JetTree::SetAK4Branches_EF(TTree* tree)
     tree->Branch(Form("%sak4pfjets_muf", prefix_.c_str()) , &ak4pfjets_muf);
     tree->Branch(Form("%sak4pfjets_cm", prefix_.c_str()) , &ak4pfjets_cm);
     tree->Branch(Form("%sak4pfjets_nm", prefix_.c_str()) , &ak4pfjets_nm);
+}
+
+void JetTree::SetAK4Branches_TopTag(TTree* tree)
+{
+    tree->Branch(Form("%sak4pfjets_cvsl", prefix_.c_str()) , &ak4pfjets_cvsl);
+    tree->Branch(Form("%sak4pfjets_ptD", prefix_.c_str()) , &ak4pfjets_ptD);
+    tree->Branch(Form("%sak4pfjets_axis1", prefix_.c_str()) , &ak4pfjets_axis1);
+    tree->Branch(Form("%sak4pfjets_mult", prefix_.c_str()) , &ak4pfjets_mult);
+
+    tree->Branch(Form("%stopcands_ak4idx", prefix_.c_str()) , &topcands_ak4idx);
+    tree->Branch(Form("%stopcands_disc", prefix_.c_str()) , &topcands_disc);
+    tree->Branch(Form("%stopcands_p4", prefix_.c_str()) , &topcands_p4);
+    tree->Branch(Form("%stopcands_Wp4", prefix_.c_str()) , &topcands_Wp4);
 }
 
 void JetTree::SetAK4Branches_Other(TTree* tree)
