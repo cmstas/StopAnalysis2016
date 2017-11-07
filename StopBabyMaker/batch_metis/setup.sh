@@ -19,9 +19,9 @@ cd ..
 # Make the input tarfile
 
 echo "[setup] Making tarfile... This assumes that the babymaker has been compiled and tested"
-rm -r input/*
+[[ -f input/* ]] && rm -r input/*
 pushd $BABYMAKER_DIR > /dev/null
-cp -r *.so LinkDef_rdict.pcm btagsf jecfiles json_files lepsf puWeights_2016data_36p6fbinv.root runBabyMaker sample_2017.dat scale1fbfiles $BATCH_DIR/input
+cp -r *.so LinkDef_rdict.pcm btagsf jecfiles json_files lepsf puWeights_2016data_36p6fbinv.root xsec_stop_13TeV.root scale1fbfiles runBabyMaker sample_2017.dat $BATCH_DIR/input
 popd > /dev/null
 tar -czf input.tar.gz input
 
