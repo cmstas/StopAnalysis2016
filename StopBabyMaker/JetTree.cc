@@ -762,7 +762,7 @@ void JetTree::Reset ()
     ak8pfjets_top_mass.clear();
     ak8pfjets_pruned_mass.clear();
     ak8pfjets_trimmed_mass.clear();
-    ak8pfjets_softdrop_mass.clear();
+    // ak8pfjets_softdrop_mass.clear();
     ak8pfjets_filtered_mass.clear();
     ak8pfjets_pu_id.clear();    
     ak8pfjets_parton_flavor.clear();
