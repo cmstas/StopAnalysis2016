@@ -88,25 +88,24 @@ bool CompareIndexValueSmallest(const std::pair<double, int>& firstElem, const st
 //           //
 //===========//
 
-babyMaker::babyMaker(){
-
-  StopEvt = EventTree();
-  lep1 = LeptonTree("lep1_");
-  lep2 = LeptonTree("lep2_");
-  ph = PhotonTree("ph_");
-  jets = JetTree();
-  jets_jup = JetTree("jup_");
-  jets_jdown = JetTree("jdown_");
-  Taus = TauTree();
-  Tracks = IsoTracksTree();
-  gen_leps = GenParticleTree("leps_");
-  gen_nus = GenParticleTree("nus_");
-  gen_qs  = GenParticleTree("qs_");
-  gen_bosons = GenParticleTree("bosons_");
-  gen_susy = GenParticleTree("susy_");
-
+babyMaker::babyMaker() :
+    StopEvt(),
+    lep1("lep1_"),
+    lep2("lep2_"),
+    ph("ph_"),
+    jets(),
+    jets_jup("jup_"),
+    jets_jdown("jdown_"),
+    Taus(),
+    Tracks(),
+    gen_leps("leps_"),
+    gen_nus("nus_"),
+    gen_qs ("qs_"),
+    gen_bosons("bosons_"),
+    gen_susy("susy_")
+{
   //obsolete
-  //   gen_tops = GenParticleTree("ts_");  //merged into gen_qs
+  //gen_tops = GenParticleTree("ts_");  //merged into gen_qs
   //gen_els = GenParticleTree("els_");
   //gen_mus = GenParticleTree("mus_");
   //gen_taus = GenParticleTree("taus_");
@@ -120,15 +119,12 @@ babyMaker::babyMaker(){
   //gen_zs  = GenParticleTree("zs_");
   //gen_phs = GenParticleTree("phs_");
   //gen_hs  = GenParticleTree("hs_");
-
-
 }
 
 void babyMaker::MakeBabyNtuple(const char* output_name){
 
-  //histFile = new TFile(Form("%s/hist_%s", babypath, output_name), "RECREATE");
   BabyFile = new TFile(Form("%s/%s", babypath, output_name), "RECREATE");
-  BabyTree = new TTree("t", "Stop2015 Baby Ntuple");
+  BabyTree = new TTree("t", "Stop2017 Baby Ntuple");
 
   StopEvt.SetBranches(BabyTree);
   lep1.SetBranches(BabyTree);
@@ -153,8 +149,14 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   }
   if(fillTopTag){
     jets.SetAK4Branches_TopTag(BabyTree);
-    // jets_jup.SetAK8Branches(BabyTree);
-    // jets_jdown.SetAK8Branches(BabyTree);
+    jets_jup.SetAK4Branches_TopTag(BabyTree);
+    jets_jdown.SetAK4Branches_TopTag(BabyTree);
+
+    // Setup MVA Reader TopTagging for 
+    ResolvedTopMVA* resTopMVAptr =  new ResolvedTopMVA("TopTagger/resTop_xGBoost_v0.weights.xml", "BDT");
+    jets.InitTopMVA(resTopMVAptr);
+    jets_jup.InitTopMVA(resTopMVAptr);
+    jets_jdown.InitTopMVA(resTopMVAptr);
   }
 
   if(filltaus)  Taus.SetBranches(BabyTree);
@@ -231,6 +233,7 @@ void babyMaker::InitBabyNtuple(){
   //gen_lsp.Reset();
   //gen_stop.Reset();
   //gen_tops.Reset();
+
 }
 
 
@@ -284,22 +287,23 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   //
   bool isDataFromFileName;
   bool isSignalFromFileName;
-  string filestr(output_name);
+  string outfilestr(output_name);
+  string filestr(chain->GetFile()->GetName());
   cout<<"output name "<< output_name;
   if (filestr.find("data") != std::string::npos) {
     isDataFromFileName = true;
     isSignalFromFileName = false;
-    cout << ", running on DATA, based on file name: " << output_name<<endl;
+    cout << ", running on DATA, based on input file name." << endl;
   }
-  else if ((filestr.find("SMS") != std::string::npos) || (filestr.find("Signal") != std::string::npos)) {
+  else if ((filestr.find("SMS") != std::string::npos) || (outfilestr.find("Signal") != std::string::npos)) {
     isDataFromFileName = false;
     isSignalFromFileName = true;
-    cout << ", running on SIGNAL, based on file name: " << output_name<<endl;
+    cout << ", running on SIGNAL, based on input file name." << endl;
   }
   else {
     isDataFromFileName = false;
     isSignalFromFileName = false;
-    cout << ", running on MC, based on file name: " << output_name<<endl;
+    cout << ", running on MC, based on input file name." << endl;
   }
 
 
@@ -824,7 +828,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   // Set JSON file
   //
   bool applyjson = false;
-  const char* json_file = "json_files/Cert_294927-302663_13TeV_PromptReco_Collisions17_JSON.txt";
+  const char* json_file = "json_files/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt";
   set_goodrun_file_json(json_file);
 
   //
@@ -979,11 +983,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     // Get File Content
     //
     if(nEvents_processed >= nEventsToDo) continue;
-    TFile file( currentFile->GetTitle() );
-    TTree *tree = (TTree*)file.Get("Events");
+    TFile* file = TFile::Open( currentFile->GetTitle() );
+    TTree *tree = (TTree*)file->Get("Events");
     cms3.Init(tree);
-    TString thisfilename = file.GetName();
-    cout << "file name is " << file.GetName() << endl;
+    TString thisfilename = file->GetName();
+    cout << "File name is " << file->GetName() << endl;
 
     const bool isbadrawMET = false;
     // if(thisfilename.Contains("V07-04-12_miniaodv1_FS")){
@@ -1058,19 +1062,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
       //////////////////////////////////////////
       // If data, check against good run list//
       /////////////////////////////////////////
-      if(applyjson){
-        if( evt_isRealData() && !goodrun(evt_run(), evt_lumiBlock()) ) continue;
-      }
-      if( evt_isRealData() ) {
+      if ( evt_isRealData() ) {
+        if ( applyjson && !goodrun(evt_run(), evt_lumiBlock()) ) continue;
         DorkyEventIdentifier id(evt_run(), evt_event(), evt_lumiBlock());
-        if (is_duplicate(id) ) continue;
+        if ( is_duplicate(id) ) continue;
       }
 
       //
       // Fill Event Variables
       //
       //std::cout << "[babymaker::looper]: filling event vars" << std::endl;
-      StopEvt.FillCommon(file.GetName());
+      StopEvt.FillCommon(file->GetName());
       //std::cout << "[babymaker::looper]: filling event vars completed" << std::endl;
       //dumpDocLines();
       if(!StopEvt.is_data){
@@ -1078,7 +1080,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         StopEvt.weight_PUup   = hPUup  ->GetBinContent(hPUup  ->FindBin(StopEvt.pu_ntrue));
         StopEvt.weight_PUdown = hPUdown->GetBinContent(hPUdown->FindBin(StopEvt.pu_ntrue));
 
-        if (StopEvt.cms3tag.find("CMS4") == 0) {
+        if (StopEvt.cms3tag.find("CMS4") == 0 && !isSignalFromFileName) {
           float sgnMCweight = (genps_weight() > 0)? 1 : -1;
           StopEvt.scale1fb = sgnMCweight * df.getScale1fbFromFile(StopEvt.dataset, StopEvt.cms3tag);
           StopEvt.xsec     = sgnMCweight * df.getXsecFromFile(StopEvt.dataset, StopEvt.cms3tag);
@@ -2917,9 +2919,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     //
     // Close input file
     //
-    file.Close();
-    //delete file;
-
+    file->Close();
+    delete file;
   }//close file loop
 
   //

@@ -132,7 +132,7 @@ void ResolvedTopMVA::setJetVecPtrs(std::vector<LorentzVector>* in_p4vec, std::ve
   multvec = in_multvec;
 }
 
-std::vector<TopCand> ResolvedTopMVA::getTopCandidates(const double WP) {
+std::vector<TopCand> ResolvedTopMVA::getTopCandidates(const double WP, const size_t max_ntopcand) {
   // need at least three jets to form a top
   if (p4vec->size() < 3) return std::vector<TopCand>();
 
@@ -144,7 +144,7 @@ std::vector<TopCand> ResolvedTopMVA::getTopCandidates(const double WP) {
     });
 
   std::vector<TopCand> allCands;
-  for (size_t ib = 0; ib < 2; ++ib) {
+  for (size_t ib = 0; ib < max_ntopcand; ++ib) {
     // if(csvJets.at(iB)->csv() < defaults::CSV_LOOSE) break; // b must pass CSVL
     for (size_t ij2 = 0; ij2 < jetidx.size()-1; ++ij2) {
       if (ij2 == ib) continue;

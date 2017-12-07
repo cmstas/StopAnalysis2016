@@ -54,14 +54,18 @@ void EventTree::FillCommon (const std::string &root_file_name)
 {
     bool signal=false;
 
-    std::string filestr (root_file_name);
+    if(evt_dataset().size()>0) dataset = evt_dataset().at(0).Data();
+    if(evt_CMS3tag().size()>0) cms3tag = evt_CMS3tag().at(0).Data();
+    filename = root_file_name;
+
+    std::string filestr (dataset);
     string signalstr ("mStop");
     string lspstr ("mLSP");//add those for testing purpose
     string smsstr ("SMS");//add those for testing purpose
 
     if (filestr.find(signalstr) != string::npos) signal = true;
-    if (filestr.find(lspstr)    != string::npos) signal = true;
-    if (filestr.find(smsstr)    != string::npos) signal = true;
+    else if (filestr.find(lspstr) != string::npos) signal = true;
+    else if (filestr.find(smsstr) != string::npos) signal = true;
     //std::cout << "run "<<evt_run()<<" lumiblock "<<evt_lumiBlock() <<" event "<<evt_event()<<" nvtxs "<<numberOfGoodVertices()<<" pfmet "<<evt_pfmet()<<" pfmetphi "<< evt_pfmetPhi()<< std::endl;
     run = evt_run();
     ls  = evt_lumiBlock();
@@ -144,9 +148,6 @@ void EventTree::FillCommon (const std::string &root_file_name)
 
  
     }
-    if(evt_dataset().size()>0) dataset = evt_dataset().at(0).Data();
-    filename = root_file_name;
-    if(evt_CMS3tag().size()>0) cms3tag = evt_CMS3tag().at(0).Data();
 
     firstGoodVtxIdx = firstGoodVertex();   
  

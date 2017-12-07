@@ -31,6 +31,7 @@ public:
     void Reset ();
     void deleteBtagSFTool();
     void InitBtagSFTool(bool isFastsim_);
+    void InitTopMVA(ResolvedTopMVA* resTopMVAptr);
     void SetBranches (TTree* tree);
     void SetAK4Branches_Other(TTree* tree);
     void SetAK4Branches_EF(TTree* tree);
@@ -53,6 +54,10 @@ public:
    // branch objects
  
     // ak4 PF jets
+    int nskimjets;
+    int nskimbtagmed;
+    int nskimbtagtight;
+    int nskimbtagloose;
     int ngoodjets;
     int nfailjets; //jets not passing loose jid
     int nGoodAK8PFJets;

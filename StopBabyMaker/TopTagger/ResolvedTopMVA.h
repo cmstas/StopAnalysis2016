@@ -2,18 +2,15 @@
  * ResolvedTopMVA.h
  *
  *  Created on: Oct 6, 2016
- *      Author: hqu
+ *  Original author: hqu
  *  Modified on: Oct 23, 2017
  */
 
 #ifndef STOPBABYMAKER_TOPTAGGER_RESOLVEDTOPMVA_H
 #define STOPBABYMAKER_TOPTAGGER_RESOLVEDTOPMVA_H
 
-// #include "AnalysisTools/DataFormats/interface/Jet.h"
-// #include "AnalysisTools/Utilities/interface/PhysicsUtilities.h"
 #include "CMS3.h"
 #include "TMVAReader.h"
-// #include "AnalysisTools/Utilities/interface/PartonMatching.h"
 
 class TopCand {
  public:
@@ -61,7 +58,7 @@ class ResolvedTopMVA {
   static constexpr double WP_TIGHT  = 0.99;
 
   std::map<TString,float> calcTopCandVars(const TopCand& topjet);
-  std::vector<TopCand> getTopCandidates(const double WP=WP_TIGHT);
+  std::vector<TopCand> getTopCandidates(const double WP = WP_TIGHT, const size_t max_ntopcand = 2);
 
   void setJetVecPtrs(std::vector<LorentzVector>* p4vec, std::vector<float>* csvvec, std::vector<float>* cvslvec,
                      std::vector<float>* ptDvec, std::vector<float>* axis1vec, std::vector<int>* multvec);

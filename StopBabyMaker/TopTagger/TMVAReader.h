@@ -17,7 +17,7 @@ class TMVAReader{
   TMVAReader(TString weightfile, TString mvaName) : weightfile_(weightfile), mvaName_(mvaName) {
     TMVA::Tools::Instance();
     reader = new TMVA::Reader( "!Color:!Silent" );
-    std::clog << "Loading MVA from file: " << weightfile_ << std::endl;
+    std::cout << "Loading MVA from file: " << weightfile_ << std::endl;
   }
   virtual ~TMVAReader(){
     if(reader) delete reader;
