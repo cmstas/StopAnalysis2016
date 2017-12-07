@@ -754,7 +754,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
   TH2F* histNEvts;//count #evts per signal point
   if(isSignalFromFileName){//create histos only for signals
     //counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 305,-1,1524, 205,-1,1024, 50, 0.5,50.5);//3 million bins! - too much
-    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 61,-12.5,1512.5, 41,-12.5,1012.5, 50, 0.5,50.5);//125'000 bins!
+    counterhistSig = new TH3D( "h_counterSMS", "h_counterSMS", 81,-12.5,2012.5, 61,-12.5,1512.5, 50, 0.5,50.5);//250'000 bins!
     counterhistSig->Sumw2();
     counterhistSig->GetZaxis()->SetBinLabel(1,"nominal,muR=1 muF=1");
     counterhistSig->GetZaxis()->SetBinLabel(2,"muR=1 muF=2");
@@ -808,7 +808,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
     counterhistSig->GetZaxis()->SetBinLabel(50,"weight_loosebtagsf_fastsim_DN");
 
     //histNEvts = new TH2F( "histNEvts", "h_histNEvts", 305,-1,1524, 205,-1,1024);//x=mStop, y=mLSP//65000 bins
-    histNEvts = new TH2F( "histNEvts", "h_histNEvts", 61,-12.5,1512.5, 41,-12.5,1012.5);//x=mStop, y=mLSP//2500 bins
+    histNEvts = new TH2F( "histNEvts", "h_histNEvts", 81,-12.5,2012.5, 61,-12.5,1512.5);//x=mStop, y=mLSP//5000 bins
     histNEvts->Sumw2();
   }
 
@@ -1086,26 +1086,32 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
           StopEvt.xsec     = sgnMCweight * df.getXsecFromFile(StopEvt.dataset, StopEvt.cms3tag);
         }
       }
-
+      float mStop = -1;
+      float mLSP = -1;
       //This must come before any continue affecting signal scans
       if(isSignalFromFileName){
         //get stop and lsp mass from sparms
         for(unsigned int nsparm = 0; nsparm<sparm_names().size(); ++nsparm){
           //if(sparm_names().at(nsparm).Contains("mGluino")) StopEvt.mass_stop = sparm_values().at(nsparm);//dummy for testing as only T1's exist
-          if(sparm_names().at(nsparm).Contains("mStop")) StopEvt.mass_stop = sparm_values().at(nsparm);
+          if(sparm_names().at(nsparm).Contains("mStop") ) StopEvt.mass_stop     = sparm_values().at(nsparm);
           if(sparm_names().at(nsparm).Contains("mCharg")) StopEvt.mass_chargino = sparm_values().at(nsparm);
-          if(sparm_names().at(nsparm).Contains("mLSP")) StopEvt.mass_lsp = sparm_values().at(nsparm);
-          if(sparm_names().at(nsparm).Contains("mGl")) StopEvt.mass_gluino = sparm_values().at(nsparm);
+          if(sparm_names().at(nsparm).Contains("mLSP")  ) StopEvt.mass_lsp      = sparm_values().at(nsparm);
+          if(sparm_names().at(nsparm).Contains("mGl")   ) StopEvt.mass_gluino   = sparm_values().at(nsparm);
         }
-        //std::cout << "Got signal mass point mStop " << StopEvt.mass_stop << " mLSP " << StopEvt.mass_lsp << std::endl;
-        if(genps_weight()>0) histNEvts->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1);
-        else if(genps_weight()<0) histNEvts->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,-1);
-        if(genps_weight()>0) counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,36,1);
-        else if(genps_weight()<0) counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,36,-1);
-        StopEvt.xsec = hxsec->GetBinContent(hxsec->FindBin(StopEvt.mass_stop));
-        StopEvt.xsec_uncert = hxsec->GetBinError(hxsec->FindBin(StopEvt.mass_stop));
+	//this is a stupid way of doing stuff, but it should be more stable
+	mStop = StopEvt.mass_stop;
+	if(     StopEvt.mass_stop<0&&StopEvt.mass_gluino>0)   mStop = StopEvt.mass_gluino;
+	else if(StopEvt.mass_stop<0&&StopEvt.mass_chargino>0) mStop = StopEvt.mass_chargino;
+	mLSP = StopEvt.mass_lsp;
+        //std::cout << "Got signal mass point mStop " << mStop << " mLSP " << mLSP << std::endl;
+        if(genps_weight()>0)      histNEvts->Fill(mStop,mLSP,1);
+        else if(genps_weight()<0) histNEvts->Fill(mStop,mLSP,-1);
+        if(genps_weight()>0)      counterhistSig->Fill(mStop,mLSP,36,1);
+        else if(genps_weight()<0) counterhistSig->Fill(mStop,mLSP,36,-1);
+        StopEvt.xsec        = hxsec->GetBinContent(hxsec->FindBin(mStop));
+        StopEvt.xsec_uncert = hxsec->GetBinError(  hxsec->FindBin(mStop));
         //note to get correct scale1fb you need to use in your looper xsec/nevt, where nevt you get via
-        //histNEvts->GetBinContent(histNEvts->FindBin(StopEvt.mass_stop,StopEvt.mass_lsp));
+        //histNEvts->GetBinContent(histNEvts->FindBin(mStop,mLSP));
 
         //copy from Mia's code
         float SMSpdf_weight_up = 1;
@@ -1118,27 +1124,27 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
           for(int ipdf=10;ipdf<110;ipdf++){
             SMSaverage_of_weights += cms3.genweights().at(ipdf);
           }// average of weights
-          SMSaverage_of_weights =  average_of_weights/100.;
+          SMSaverage_of_weights =  SMSaverage_of_weights/100.;
           for(int ipdf=10;ipdf<110;ipdf++){
             SMSsum_of_weights += pow(cms3.genweights().at(ipdf)- SMSaverage_of_weights,2);
           }//std of weights.
-          SMSpdf_weight_up = (average_of_weights+sqrt(SMSsum_of_weights/99.));
-          SMSpdf_weight_down = (average_of_weights-sqrt(SMSsum_of_weights/99.));
+          SMSpdf_weight_up = (SMSaverage_of_weights+sqrt(SMSsum_of_weights/99.));
+          SMSpdf_weight_down = (SMSaverage_of_weights-sqrt(SMSsum_of_weights/99.));
           StopEvt.pdf_up_weight = SMSpdf_weight_up;//overwrite here, although it should not matter
           StopEvt.pdf_down_weight = SMSpdf_weight_down;//overwrite here, although it should not matter
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,1,genweights()[1]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,2,genweights()[2]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,3,genweights()[3]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,4,genweights()[4]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,5,genweights()[5]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,6,genweights()[6]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,7,genweights()[7]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,8,genweights()[8]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,9,genweights()[9]);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,10,SMSpdf_weight_up);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,11,SMSpdf_weight_down);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,12,genweights()[110]); // α_s variation.
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,13,genweights()[111]); // α_s variation.
+          counterhistSig->Fill(mStop,mLSP,1,genweights()[1]);
+          counterhistSig->Fill(mStop,mLSP,2,genweights()[2]);
+          counterhistSig->Fill(mStop,mLSP,3,genweights()[3]);
+          counterhistSig->Fill(mStop,mLSP,4,genweights()[4]);
+          counterhistSig->Fill(mStop,mLSP,5,genweights()[5]);
+          counterhistSig->Fill(mStop,mLSP,6,genweights()[6]);
+          counterhistSig->Fill(mStop,mLSP,7,genweights()[7]);
+          counterhistSig->Fill(mStop,mLSP,8,genweights()[8]);
+          counterhistSig->Fill(mStop,mLSP,9,genweights()[9]);
+          counterhistSig->Fill(mStop,mLSP,10,SMSpdf_weight_up);
+          counterhistSig->Fill(mStop,mLSP,11,SMSpdf_weight_down);
+          counterhistSig->Fill(mStop,mLSP,12,genweights()[110]); // α_s variation.
+          counterhistSig->Fill(mStop,mLSP,13,genweights()[111]); // α_s variation.
         }
       }// is signal
       //
@@ -1268,9 +1274,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         counterhist->Fill(20,StopEvt.weight_ISRup);
         counterhist->Fill(21,StopEvt.weight_ISRdown);
         if(isSignalFromFileName){
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,19,StopEvt.weight_ISR);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,20,StopEvt.weight_ISRup);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,21,StopEvt.weight_ISRdown);
+          counterhistSig->Fill(mStop,mLSP,19,StopEvt.weight_ISR);
+          counterhistSig->Fill(mStop,mLSP,20,StopEvt.weight_ISRup);
+          counterhistSig->Fill(mStop,mLSP,21,StopEvt.weight_ISRdown);
         }
       }//no data
 
@@ -1734,19 +1740,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
 
       // Signal
       if(isSignalFromFileName && !evt_isRealData() && applyLeptonSFs) {
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,27,StopEvt.weight_lepSF);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,28,StopEvt.weight_lepSF_up);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,29,StopEvt.weight_lepSF_down);
+        counterhistSig->Fill(mStop,mLSP,27,StopEvt.weight_lepSF);
+        counterhistSig->Fill(mStop,mLSP,28,StopEvt.weight_lepSF_up);
+        counterhistSig->Fill(mStop,mLSP,29,StopEvt.weight_lepSF_down);
       }
       if(isSignalFromFileName && !evt_isRealData() && applyVetoLeptonSFs){
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,30,StopEvt.weight_vetoLepSF);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,31,StopEvt.weight_vetoLepSF_up);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,32,StopEvt.weight_vetoLepSF_down);
+        counterhistSig->Fill(mStop,mLSP,30,StopEvt.weight_vetoLepSF);
+        counterhistSig->Fill(mStop,mLSP,31,StopEvt.weight_vetoLepSF_up);
+        counterhistSig->Fill(mStop,mLSP,32,StopEvt.weight_vetoLepSF_down);
       }
       if(isSignalFromFileName && !evt_isRealData() && applyLeptonSFs && isFastsim){
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,33,StopEvt.weight_lepSF_fastSim);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,34,StopEvt.weight_lepSF_fastSim_up);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,35,StopEvt.weight_lepSF_fastSim_down);
+        counterhistSig->Fill(mStop,mLSP,33,StopEvt.weight_lepSF_fastSim);
+        counterhistSig->Fill(mStop,mLSP,34,StopEvt.weight_lepSF_fastSim_up);
+        counterhistSig->Fill(mStop,mLSP,35,StopEvt.weight_lepSF_fastSim_down);
       }
 
 
@@ -1930,9 +1936,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         counterhist->Fill(26,StopEvt.weight_ISRnjets_UP);
         counterhist->Fill(27,StopEvt.weight_ISRnjets_DN);
         if(isSignalFromFileName){
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,24,StopEvt.weight_ISRnjets);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,25,StopEvt.weight_ISRnjets_UP);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,26,StopEvt.weight_ISRnjets_DN);
+          counterhistSig->Fill(mStop,mLSP,24,StopEvt.weight_ISRnjets);
+          counterhistSig->Fill(mStop,mLSP,25,StopEvt.weight_ISRnjets_UP);
+          counterhistSig->Fill(mStop,mLSP,26,StopEvt.weight_ISRnjets_DN);
         }
       }
 
@@ -1957,10 +1963,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
           StopEvt.weight_tightbtagsf_fastsim_DN = tightbtagprob_FS_DN/tightbtagprob_mc;
         }
         StopEvt.weight_loosebtagsf = loosebtagprob_data / loosebtagprob_mc;
-        StopEvt.weight_loosebtagsf_heavy_UP = loosebtagprob_heavy_UP/btagprob_mc;
-        StopEvt.weight_loosebtagsf_light_UP = loosebtagprob_light_UP/btagprob_mc;
-        StopEvt.weight_loosebtagsf_heavy_DN = loosebtagprob_heavy_DN/btagprob_mc;
-        StopEvt.weight_loosebtagsf_light_DN = loosebtagprob_light_DN/btagprob_mc;
+        StopEvt.weight_loosebtagsf_heavy_UP = loosebtagprob_heavy_UP/loosebtagprob_mc;
+        StopEvt.weight_loosebtagsf_light_UP = loosebtagprob_light_UP/loosebtagprob_mc;
+        StopEvt.weight_loosebtagsf_heavy_DN = loosebtagprob_heavy_DN/loosebtagprob_mc;
+        StopEvt.weight_loosebtagsf_light_DN = loosebtagprob_light_DN/loosebtagprob_mc;
         if(isFastsim){
           StopEvt.weight_loosebtagsf_fastsim_UP = loosebtagprob_FS_UP/loosebtagprob_mc;
           StopEvt.weight_loosebtagsf_fastsim_DN = loosebtagprob_FS_DN/loosebtagprob_mc;
@@ -1996,28 +2002,28 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, char* path)
         }
       }
       if(isSignalFromFileName && !evt_isRealData() && applyBtagSFs){
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,14,StopEvt.weight_btagsf);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,15,StopEvt.weight_btagsf_heavy_UP);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,16,StopEvt.weight_btagsf_light_UP);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,17,StopEvt.weight_btagsf_heavy_DN);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,18,StopEvt.weight_btagsf_light_DN);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,37,StopEvt.weight_tightbtagsf);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,38,StopEvt.weight_tightbtagsf_heavy_UP);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,39,StopEvt.weight_tightbtagsf_light_UP);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,40,StopEvt.weight_tightbtagsf_heavy_DN);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,41,StopEvt.weight_tightbtagsf_light_DN);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,44,StopEvt.weight_loosebtagsf);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,45,StopEvt.weight_loosebtagsf_heavy_UP);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,46,StopEvt.weight_loosebtagsf_light_UP);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,47,StopEvt.weight_loosebtagsf_heavy_DN);
-        counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,48,StopEvt.weight_loosebtagsf_light_DN);
+        counterhistSig->Fill(mStop,mLSP,14,StopEvt.weight_btagsf);
+        counterhistSig->Fill(mStop,mLSP,15,StopEvt.weight_btagsf_heavy_UP);
+        counterhistSig->Fill(mStop,mLSP,16,StopEvt.weight_btagsf_light_UP);
+        counterhistSig->Fill(mStop,mLSP,17,StopEvt.weight_btagsf_heavy_DN);
+        counterhistSig->Fill(mStop,mLSP,18,StopEvt.weight_btagsf_light_DN);
+        counterhistSig->Fill(mStop,mLSP,37,StopEvt.weight_tightbtagsf);
+        counterhistSig->Fill(mStop,mLSP,38,StopEvt.weight_tightbtagsf_heavy_UP);
+        counterhistSig->Fill(mStop,mLSP,39,StopEvt.weight_tightbtagsf_light_UP);
+        counterhistSig->Fill(mStop,mLSP,40,StopEvt.weight_tightbtagsf_heavy_DN);
+        counterhistSig->Fill(mStop,mLSP,41,StopEvt.weight_tightbtagsf_light_DN);
+        counterhistSig->Fill(mStop,mLSP,44,StopEvt.weight_loosebtagsf);
+        counterhistSig->Fill(mStop,mLSP,45,StopEvt.weight_loosebtagsf_heavy_UP);
+        counterhistSig->Fill(mStop,mLSP,46,StopEvt.weight_loosebtagsf_light_UP);
+        counterhistSig->Fill(mStop,mLSP,47,StopEvt.weight_loosebtagsf_heavy_DN);
+        counterhistSig->Fill(mStop,mLSP,48,StopEvt.weight_loosebtagsf_light_DN);
         if(isFastsim){
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,22,StopEvt.weight_btagsf_fastsim_UP);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,23,StopEvt.weight_btagsf_fastsim_DN);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,42,StopEvt.weight_tightbtagsf_fastsim_UP);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,43,StopEvt.weight_tightbtagsf_fastsim_DN);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,49,StopEvt.weight_loosebtagsf_fastsim_UP);
-          counterhistSig->Fill(StopEvt.mass_stop,StopEvt.mass_lsp,50,StopEvt.weight_loosebtagsf_fastsim_DN);
+          counterhistSig->Fill(mStop,mLSP,22,StopEvt.weight_btagsf_fastsim_UP);
+          counterhistSig->Fill(mStop,mLSP,23,StopEvt.weight_btagsf_fastsim_DN);
+          counterhistSig->Fill(mStop,mLSP,42,StopEvt.weight_tightbtagsf_fastsim_UP);
+          counterhistSig->Fill(mStop,mLSP,43,StopEvt.weight_tightbtagsf_fastsim_DN);
+          counterhistSig->Fill(mStop,mLSP,49,StopEvt.weight_loosebtagsf_fastsim_UP);
+          counterhistSig->Fill(mStop,mLSP,50,StopEvt.weight_loosebtagsf_fastsim_DN);
         }
       }
       //

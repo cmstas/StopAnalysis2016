@@ -84,8 +84,3 @@ if __name__ == "__main__":
 
         # 1 hr power nap
         time.sleep(10.*60)
-
-    # If it's complete, make a dummy sample out of the output directory
-    # in order to pick up the files. Then cat out the contents and sum
-    # them up. This should be 3*2*10 = 100
-
