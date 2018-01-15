@@ -15,7 +15,7 @@ if [ ! -d Output/BkgEstimate ]; then mkdir -p Output/BkgEstimate; fi
 if [ ! -d Output/Log ]; then mkdir -p Output/Log; fi
 
 # Compiling Looper Code
-make clean
+# make clean
 make
 
 # Running Analyzer
@@ -35,9 +35,9 @@ for x in `/bin/ls *.tex`; do echo $x; pdflatex -interaction=nonstopmode $x >& pa
 cd ../../
 
 # Clean up 
-echo "Cleaning Up..."
-echo ""
-make clean
+# echo "Cleaning Up..."
+# echo ""
+# make clean
 
 # Done!
 echo ""

@@ -14,14 +14,14 @@ SOFLAGS       = -shared
 
 
 CXXFLAGS      += $(ROOTCFLAGS)
-LIBS           = $(ROOTLIBS) 
+LIBS           = $(ROOTLIBS)
 
-NGLIBS         = $(ROOTGLIBS) 
+NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
-#COREPATH       = $(HOME)/CORE
-COREPATH       = ../../CORE
+# COREPATH       = $(HOME)/CORE
+COREPATH       = ../CORE
 TOOLSPATH      = $(COREPATH)/Tools
 DORKYPATH      = $(TOOLSPATH)/dorky
 
@@ -43,8 +43,8 @@ sysInfo.o: sysInfo.h sysInfo.cc stop_1l_babyAnalyzer.h stop_1l_babyAnalyzer.cc e
 	$(CXX) $(CXXFLAGS) -c sysInfo.cc
 
 
-eventWeight_bTagSF.o: eventWeight_bTagSF.cc eventWeight_bTagSF.h 
-	$(CXX) $(CXXFLAGS) -c eventWeight_bTagSF.cc 
+eventWeight_bTagSF.o: eventWeight_bTagSF.cc eventWeight_bTagSF.h
+	$(CXX) $(CXXFLAGS) -c eventWeight_bTagSF.cc
 
 
 eventWeight_lepSF.o: eventWeight_lepSF.cc eventWeight_lepSF.h
@@ -74,6 +74,6 @@ stop_1l_babyAnalyzer.o: stop_1l_babyAnalyzer.cc stop_1l_babyAnalyzer.h
 	$(CXX) $(CXXFLAGS) -c stop_1l_babyAnalyzer.cc
 
 .PHONY: clean
-clean:  
+clean:
 	rm -v -f \
 	*.o *.d *.so *.pcm *~; echo "Done"

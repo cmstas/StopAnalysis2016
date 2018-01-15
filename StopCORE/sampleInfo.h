@@ -16,7 +16,7 @@ namespace sampleInfo{
   // NAMESPACE VARS
   //
 
-  const std::string baby_inputDir = "/nfs-7/userdata/haweber/tupler_babies/merged/Stop_1l/v22/skim/"; // 2017Moriond MC, updated sfs, fixed bugs again
+  const std::string baby_inputDir = "/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v22/skim/"; // 2017Moriond MC, updated sfs, fixed bugs again
 
   //const std::string baby_inputDir = "/nfs-7/userdata/haweber/tupler_babies/merged/Stop_1l/v21/skim/"; // 2017Moriond MC, updated sfs, fixed bugs
 

@@ -74,16 +74,42 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     //inputBabies.push_back("data_single_electron*.root");
     //inputBabies.push_back("data_single_muon*.root");
     baby_i_o.first = "";
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016B-03Feb2017_ver2-v2/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016C-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016D-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016E-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016F-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016G-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver2-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver3-v1/skim/*.root");
-    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_electron_*.root");
-    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_muon_*.root");
+    // inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016B-03Feb2017_ver2-v2/skim/*.root");
+    // inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016C-03Feb2017-v1/skim/*.root");
+    // inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016D-03Feb2017-v1/skim/*.root");
+    // inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016E-03Feb2017-v1/skim/*.root");
+    // inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016F-03Feb2017-v1/skim/*.root");
+    // inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016G-03Feb2017-v1/skim/*.root");
+    // inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver2-v1/skim/*.root");
+    // inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver3-v1/skim/*.root");
+    // inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_electron_*.root");
+    // inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_muon_*.root");
+
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_met_Run2016B_MINIAOD_03Feb2017_ver2-v2.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_muon_Run2016B_MINIAOD_03Feb2017_ver2-v2.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_electron_Run2016B_MINIAOD_03Feb2017_ver2-v2.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_muon_Run2016C_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_electron_Run2016C_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_met_Run2016C_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_muon_Run2016D_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_electron_Run2016D_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_met_Run2016D_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_met_Run2016E_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_electron_Run2016E_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_muon_Run2016E_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_met_Run2016F_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_electron_Run2016F_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_muon_Run2016F_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_met_Run2016G_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_electron_Run2016G_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_muon_Run2016G_MINIAOD_03Feb2017-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_electron_Run2016H_MINIAOD_03Feb2017_ver2-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_electron_Run2016H_MINIAOD_03Feb2017_ver3-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_muon_Run2016H_MINIAOD_03Feb2017_ver3-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_single_muon_Run2016H_MINIAOD_03Feb2017_ver2-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_met_Run2016H_MINIAOD_03Feb2017_ver2-v1.root");
+    inputBabies.push_back("/nfs-7/userdata/stopRun2/analysis2016_SUS-16-051_35p9fbinv/v24/skim/data_met_Run2016H_MINIAOD_03Feb2017_ver3-v1.root");
+
     break;
 
   case( k_met ):

@@ -14,15 +14,15 @@ SOFLAGS       = -shared
 
 
 CXXFLAGS      += $(ROOTCFLAGS)
-LIBS           = $(ROOTLIBS) 
+LIBS           = $(ROOTLIBS)
 
-NGLIBS         = $(ROOTGLIBS) 
+NGLIBS         = $(ROOTGLIBS)
 NGLIBS        += -lMinuit
 GLIBS          = $(filter-out -lNew, $(NGLIBS))
 
-STOPPATH       = /home/users/jgwood/Stop_1Lepton/analysis2016__fullYear/CMSSW_8_0_5_patch1/src/StopAnalysis/
-SOFTWAREPATH   = $(STOPPATH)/../Software
-COREPATH       = $(STOPPATH)/../CORE
+STOPPATH       = ../
+SOFTWAREPATH   = $(STOPPATH)/tas/Software
+COREPATH       = $(STOPPATH)/CORE
 TOOLSPATH      = $(COREPATH)/Tools
 DORKYPATH      = $(TOOLSPATH)/dorky
 
@@ -32,7 +32,7 @@ CXXFLAGS       += -I$(TOOLSPATH)
 CXXFLAGS       += -I$(DORKYPATH)
 
 CORELIB        = $(COREPATH)/CMS3_CORE.so
-STOPVARLIB     = $(STOPPATH)/StopBabyMaker/stop_variables/StopVariables.so
+STOPVARLIB     = $(STOPPATH)/StopBabyMaker/StopVariables.so
 STOPCORELIB    = $(STOPPATH)/StopCORE/stopCORE.so
 
 runBabyLooper: runBabyLooper.o stopBabyLooper.o dorky.o scaleSamples.o mergeStopBabies.o tableMaker_allInputs.o zeroOutNegativeYields.o tableMaker_summedInputs.o calcErrors.o dataMCplotMaker.o plotMaker.o pieCharts.o bkgEstimate_diLepton.o bkgEstimate_1lepFromW.o bkgEstimate_1lepFromTop.o bkgEstimate_ZtoNuNu.o LinkDef_out.so
@@ -42,10 +42,10 @@ runBabyLooper.o: runBabyLooper.C
 	$(CXX) $(CXXFLAGS) -c runBabyLooper.C
 
 stopBabyLooper.o: stopBabyLooper.C stopBabyLooper.h
-	$(CXX) $(CXXFLAGS) -c stopBabyLooper.C 
+	$(CXX) $(CXXFLAGS) -c stopBabyLooper.C
 
 dorky.o: $(DORKYPATH)/dorky.cc $(DORKYPATH)/dorky.h
-	$(CXX) $(CXXFLAGS) -c $(DORKYPATH)/dorky.cc 
+	$(CXX) $(CXXFLAGS) -c $(DORKYPATH)/dorky.cc
 
 
 scaleSamples.o: scaleSamples.C stopBabyLooper.h
@@ -92,7 +92,7 @@ LinkDef_out.so: LinkDef.h
 	$(CXX) $(CXXFLAGS) $(SOFLAGS) LinkDef.cc -o $@
 
 .PHONY: clean
-clean:  
+clean:
 	rm -v -f \
 	runBabyLooper \
 	LinkDef.cc \
