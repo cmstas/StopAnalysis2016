@@ -92,6 +92,14 @@ EOL
 echo -e "\n--- end running ---\n" #                             <----- section division
 
 # Copy back the output file
+
+# Go to a enviroment that gfal-copy doesn't just fail
+export SCRAM_ARCH=slc6_amd64_gcc530
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+pushd /cvmfs/cms.cern.ch/$SCRAM_ARCH/cms/cmssw/CMSSW_9_2_8/src/ > /dev/null
+eval `scramv1 runtime -sh`
+popd > /dev/null
+
 gfal-copy -p -f -t 4200 --verbose file://`pwd`/${OUTPUTNAME}_${IFILE}.root gsiftp://gftp.t2.ucsd.edu${OUTPUTDIR}/${OUTPUTNAME}_${IFILE}.root --checksum ADLER32
 
 echo -e "\n--- cleaning up ---\n" #                             <----- section division

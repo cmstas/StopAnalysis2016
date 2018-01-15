@@ -21,8 +21,8 @@ void JetTree::InitTopMVA(ResolvedTopMVA* resTopMVAptr) {
 void JetTree::InitBtagSFTool(bool isFastsim_) {
     isFastsim = isFastsim_;
     //calib = calib_;
-    calib = new BTagCalibration("csvv2", "btagsf/CSVv2_Moriond17_B_H.csv"); // 25s version of SFs - slimmed version removed mujets and iterativefit from original one
-    calib_fastsim = new BTagCalibration("CSV", "btagsf/fastsim_csvv2_ttbar_26_1_2017.csv"); // 25ns fastsim version of SFs
+    calib         = new BTagCalibration("DeepCSV", "btagsf/DeepCSV_Moriond17_B_H.csv"); // DeepCSV version of SFs
+    calib_fastsim = new BTagCalibration("deepcsv", "btagsf/fastsim_deepcsv_ttbar_26_1_2017.csv"); // DeepCSV fastsim version of SFs
     reader_heavy      = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "central"); // central
     reader_heavy_UP   = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "up");  // sys up
     reader_heavy_DN   = new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "comb", "down");  // sys down
@@ -60,28 +60,24 @@ void JetTree::InitBtagSFTool(bool isFastsim_) {
     TH2D* h_loose_btag_eff_c_temp = NULL;
     TH2D* h_loose_btag_eff_udsg_temp = NULL;
     if(isFastsim){
-      feff =  new TFile("btagsf/BTagEff_76X_T2ttT2bWT2tb.root");
-      h_btag_eff_b_temp = (TH2D*) feff->Get("MediumBEfficiency");
-      h_btag_eff_c_temp = (TH2D*) feff->Get("MediumCEfficiency");
-      h_btag_eff_udsg_temp = (TH2D*) feff->Get("MediumLEfficiency");
-      h_tight_btag_eff_b_temp = (TH2D*) feff->Get("TightBEfficiency");
-      h_tight_btag_eff_c_temp = (TH2D*) feff->Get("TightCEfficiency");
-      h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("TightLEfficiency");
-      h_loose_btag_eff_b_temp = (TH2D*) feff->Get("LooseBEfficiency");
-      h_loose_btag_eff_c_temp = (TH2D*) feff->Get("LooseCEfficiency");
-      h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("LooseLEfficiency");
+      // Created using https://github.com/cmstas/bTagEfficiencyTools. Todo: change to deepCSV later
+      feff =  new TFile("btagsf/btageff__SMS-T1bbbb-T1qqqq_25ns_Moriond17.root");
     } else {
-      feff =  new TFile("btagsf/BTagEff_Moriond17_TTandW.root");
-      h_btag_eff_b_temp = (TH2D*) feff->Get("MediumBEfficiency");
-      h_btag_eff_c_temp = (TH2D*) feff->Get("MediumCEfficiency");
-      h_btag_eff_udsg_temp = (TH2D*) feff->Get("MediumLEfficiency");
-      h_tight_btag_eff_b_temp = (TH2D*) feff->Get("TightBEfficiency");
-      h_tight_btag_eff_c_temp = (TH2D*) feff->Get("TightCEfficiency");
-      h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("TightLEfficiency");
-      h_loose_btag_eff_b_temp = (TH2D*) feff->Get("LooseBEfficiency");
-      h_loose_btag_eff_c_temp = (TH2D*) feff->Get("LooseCEfficiency");
-      h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("LooseLEfficiency");
+      // Todo: create efficiency in the phase space of the stop analysis
+      feff =  new TFile("btagsf/btageff__ttbar_powheg_pythia8_25ns_Moriond17_deepCSV.root");
     }
+    if (!feff) throw std::invalid_argument("JetTree.cc: btagsf file does not exist!");
+    h_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_b");
+    h_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_c");
+    h_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_med_Eff_udsg");
+    h_tight_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_b");
+    h_tight_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_c");
+    h_tight_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_tight_Eff_udsg");
+    h_loose_btag_eff_b_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_b");
+    h_loose_btag_eff_c_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_c");
+    h_loose_btag_eff_udsg_temp = (TH2D*) feff->Get("h2_BTaggingEff_csv_loose_Eff_udsg");
+
+    if (!h_btag_eff_b_temp) throw std::invalid_argument("JetTree.cc: can't find the btagging efficiency histogram!");
     h_btag_eff_b = (TH2D*) h_btag_eff_b_temp->Clone("h_btag_eff_b");
     h_btag_eff_c = (TH2D*) h_btag_eff_c_temp->Clone("h_btag_eff_c");
     h_btag_eff_udsg = (TH2D*) h_btag_eff_udsg_temp->Clone("h_btag_eff_udsg");
@@ -380,7 +376,8 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx, Factorize
 	  effloose = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), 0, isFastsim);
 	  eff      = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), 1, isFastsim);
 	  efftight = getBtagEffFromFile(p4sCorrJets[jindex].pt(),p4sCorrJets[jindex].eta(), pfjets_hadronFlavour().at(jindex), 2, isFastsim);
-	  //cout << eff << " " << effloose << " " << efftight << endl;
+          if (eff == 0 || efftight == 0)
+            cerr << "JetTree.cc: Error: 0 btag eff from file found! :" << eff << " " << effloose << " " << efftight << ", pt = " << p4sCorrJets[jindex].pt() << endl;
 	  // cout<<"read uncertainty from btagsf reader:"<<endl;
 	  if (flavor == BTagEntry::FLAV_UDSG) {
 	    weight_cent = reader_light   ->eval(flavor, eta_cutoff, pt_cutoff);
