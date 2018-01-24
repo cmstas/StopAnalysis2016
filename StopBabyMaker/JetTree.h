@@ -7,7 +7,8 @@
 #include "JetCorrector.h"
 #include "StopSelections.h"
 #include "btagsf/BTagCalibrationStandalone.h"
-#include "TH2.h" 
+#include "TH2.h"
+#include "Math/VectorUtil.h"
 // forward declarations
 class TTree;
  
@@ -71,6 +72,9 @@ public:
     //int ntightbtags_jdown;
     //int nanalysisbtags_jup;
     //int nanalysisbtags_jdown;
+
+	vecLorentzVector softtags_p4;
+	int nsoftbtags;
     
     float ak4_htssm;
     float ak4_htosm;

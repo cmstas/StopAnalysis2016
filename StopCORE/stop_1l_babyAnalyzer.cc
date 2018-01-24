@@ -509,6 +509,12 @@ void stop_1l_babyAnalyzer::Init(TTree *tree) {
   if (ntightbtags_branch) ntightbtags_branch->SetAddress(&ntightbtags_);
   nanalysisbtags_branch = tree->GetBranch("nanalysisbtags");
   if (nanalysisbtags_branch) nanalysisbtags_branch->SetAddress(&nanalysisbtags_);
+
+  nsoftbtags_branch = tree->GetBranch("nsoftbtags");
+  if (nsoftbtags_branch) nsoftbtags_branch->SetAddress(&nsoftbtags_);
+  softtags_p4_branch = tree->GetBranch("softtags_p4");
+  if(softtags_p4_branch) softtags_p4_branch->SetAddress(&softtags_p4_);
+
   ak4_HT_branch = tree->GetBranch("ak4_HT");
   if (ak4_HT_branch) ak4_HT_branch->SetAddress(&ak4_HT_);
   ak4_htratiom_branch = tree->GetBranch("ak4_htratiom");
@@ -1145,6 +1151,8 @@ void stop_1l_babyAnalyzer::GetEntry(unsigned int idx) {
   nloosebtags_isLoaded = false;
   ntightbtags_isLoaded = false;
   nanalysisbtags_isLoaded = false;
+  nsoftbtags_isLoaded = false;
+  softtags_p4_isLoaded = false;
   ak4_HT_isLoaded = false;
   ak4_htratiom_isLoaded = false;
   dphi_ak4pfjet_met_isLoaded = false;
@@ -1605,6 +1613,8 @@ void stop_1l_babyAnalyzer::LoadAllBranches() {
   if (nloosebtags_branch != 0) nloosebtags();
   if (ntightbtags_branch != 0) ntightbtags();
   if (nanalysisbtags_branch != 0) nanalysisbtags();
+  if (nsoftbtags_branch != 0) nsoftbtags();
+  if (softtags_p4_branch != 0) softtags_p4();
   if (ak4_HT_branch != 0) ak4_HT();
   if (ak4_htratiom_branch != 0) ak4_htratiom();
   if (dphi_ak4pfjet_met_branch != 0) dphi_ak4pfjet_met();
@@ -4714,6 +4724,33 @@ const int &stop_1l_babyAnalyzer::nanalysisbtags() {
   }
   return nanalysisbtags_;
 }
+
+const int &stop_1l_babyAnalyzer::nsoftbtags() {
+  if (not nsoftbtags_isLoaded) {
+    if (nsoftbtags_branch != 0) {
+      nsoftbtags_branch->GetEntry(index);
+    } else {
+      printf("branch nsoftbtags_branch does not exist!\n");
+      exit(1);
+    }
+    nsoftbtags_isLoaded = true;
+  }
+  return nsoftbtags_;
+}
+
+const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &stop_1l_babyAnalyzer::softtags_p4() {
+  if (not softtags_p4_isLoaded) {
+    if (softtags_p4_branch != 0) {
+      softtags_p4_branch->GetEntry(index);
+    } else {
+      printf("branch softtags_p4_branch does not exist!\n");
+      exit(1);
+    }
+    softtags_p4_isLoaded = true;
+  }
+  return *softtags_p4_;
+}
+
 
 const float &stop_1l_babyAnalyzer::ak4_HT() {
   if (not ak4_HT_isLoaded) {
@@ -8014,6 +8051,8 @@ const int &ngoodbtags() { return babyAnalyzer.ngoodbtags(); }
 const int &nloosebtags() { return babyAnalyzer.nloosebtags(); }
 const int &ntightbtags() { return babyAnalyzer.ntightbtags(); }
 const int &nanalysisbtags() { return babyAnalyzer.nanalysisbtags(); }
+	const int &nsoftbtags() { return babyAnalyzer.nsoftbtags(); }
+	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &softtags_p4() { return babyAnalyzer.softtags_p4(); }
 const float &ak4_HT() { return babyAnalyzer.ak4_HT(); }
 const float &ak4_htratiom() { return babyAnalyzer.ak4_htratiom(); }
 const vector<float> &dphi_ak4pfjet_met() { return babyAnalyzer.dphi_ak4pfjet_met(); }

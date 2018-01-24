@@ -277,6 +277,14 @@ bool selectionInfo::pass_geX_jets(int cut_nJets, int jesType){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_ge1_bJets_inclSoft() {
+	bool result = false;
+	if(      localJesType==1  &&   babyAnalyzer.jup_ngoodbtags()+babyAnalyzer.nsoftbtags()>=1 ) result = true;
+	else if( localJesType==-1 && babyAnalyzer.jdown_ngoodbtags()+babyAnalyzer.nsoftbtags()>=1 ) result = true;
+	else if(                           babyAnalyzer.ngoodbtags()+babyAnalyzer.nsoftbtags()>=1 ) result = true;
+	return result;
+}
+
 bool selectionInfo::pass_ge1_bJets(){ return selectionInfo::pass_geX_bJets( 1, localJesType ); }
 
 bool selectionInfo::pass_geX_bJets(int cut_nBJets, int jesType){
@@ -327,6 +335,14 @@ bool selectionInfo::pass_eeX_bJets_tightBTagHighMlb(int cut_nBJets, int jesType)
   if( (nMedTags==0) || 
       (nMedTags>=1 && nTightTags==cut_nBJets && mlb>175.0) ) result = true;
   return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_ee0_bJets_inclSoft() {
+	if( !pass_ee0_bJets() ) return false;
+	if( babyAnalyzer.nsoftbtags() > 0 ) return false;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -668,6 +684,48 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_SR(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_SR_inclSoft(int jesType){
+
+  bool result = true;
+  
+  SetJesType( jesType );
+
+  selectionInfo::v_cut selection_cuts = get_selection_SR_inclSoft();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
+      result=false;
+      break;
+    }
+  }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_SR_inclSoft(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_SR) ));   // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "ee1SelLepton",  (*pass_ee1_sel_lep) ));  // 4) ==1 selected lepton
+	result.push_back( cut( "ee0VetoLepton", (*pass_ee0_veto_lep) )); // 5) ==0 veto leptons
+	result.push_back( cut( "isoTrackVeto",  (*pass_trackVeto) ));    // 6) Track Veto
+	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
+	result.push_back( cut( "ge2Jets",       (*pass_ge2_jets) ));     // 8) nGoodJets>=2
+	result.push_back( cut( "ge1BJetsInclSoft",      (*pass_ge1_bJets_inclSoft) ));    // 9) nTagJets>=1
+	result.push_back( cut( "ge150met",      (*pass_ge150_met) ));    // 10) met>150.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
+	result.push_back( cut( "ge0p8minDPhi",  (*pass_ge0p8_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.8
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 bool selectionInfo::pass_SR_corridor(int jesType) {
 
   bool result = true;
@@ -702,6 +760,52 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_SR_corridor(){
 	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
 	result.push_back( cut( "ge5Jets",       (*pass_ge5_jets) ));     // 8) nGoodJets>=5
 	result.push_back( cut( "ge1BJets",      (*pass_ge1_bJets) ));    // 9) nTagJets>=1
+	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 10) met>250.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
+	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.5
+	result.push_back( cut( "j1noBtag",      (*pass_j1NotBtag) ));    // 13) Leading jet is not b-tagged
+	result.push_back( cut( "lt150LepPt",    (*pass_lt150_lep1pt) )); // 14) Leading lepton pT < 150
+	result.push_back( cut( "lt2dPhiLepMet", (*pass_lt2_dPhiLepMet)));// 15) dPhi(lep1,MET) < 2.0
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_SR_corridor_inclSoft(int jesType) {
+
+  bool result = true;
+  
+  SetJesType( jesType );
+
+  selectionInfo::v_cut selection_cuts = get_selection_SR_corridor_inclSoft();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
+      result=false;
+      break;
+    }
+  }
+
+  return result;
+
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_SR_corridor_inclSoft(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_SR) ));   // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "ee1SelLepton",  (*pass_ee1_sel_lep) ));  // 4) ==1 selected lepton
+	result.push_back( cut( "ee0VetoLepton", (*pass_ee0_veto_lep) )); // 5) ==0 veto leptons
+	result.push_back( cut( "isoTrackVeto",  (*pass_trackVeto) ));    // 6) Track Veto
+	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
+	result.push_back( cut( "ge5Jets",       (*pass_ge5_jets) ));     // 8) nGoodJets>=5
+	result.push_back( cut( "ge1BJetsInclSoft",      (*pass_ge1_bJets_inclSoft) ));    // 9) nTagJets>=1
 	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 10) met>250.0
 	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
 	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.5
@@ -843,6 +947,51 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_CR0b_corridor(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_CR0b_corridor_inclSoft(int jesType){
+
+  bool result = true;
+
+  SetJesType( jesType );
+
+  selectionInfo::v_cut selection_cuts = get_selection_CR0b_corridor_inclSoft();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
+      result=false;
+      break;
+    }
+  }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR0b_corridor_inclSoft(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_SR) ));   // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "ee1SelLepton",  (*pass_ee1_sel_lep) ));  // 4) ==1 selected lepton
+	result.push_back( cut( "ee0VetoLepton", (*pass_ee0_veto_lep) )); // 5) ==0 veto leptons
+	result.push_back( cut( "isoTrackVeto",  (*pass_trackVeto) ));    // 6) Track Veto
+	result.push_back( cut( "tauVeto",       (*pass_tauVeto) ));      // 7) Tau Veto
+	result.push_back( cut( "ge5Jets",       (*pass_ge5_jets) ));     // 8) nGoodJets>=5
+	result.push_back( cut( "ee0BJetsInclSoft",      (*pass_ee0_bJets_inclSoft) ));    // 9) nMediumBtags==0
+	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 10) met>250.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 11) mt>150.0
+	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 12) minDPhi(met,j1/j2)>0.5
+	// (In CR0b, it can be safely assumed that the leading jet is not b-tagged)
+	result.push_back( cut( "lt150LepPt",    (*pass_lt150_lep1pt) )); // 13) Leading lepton pT < 150
+	result.push_back( cut( "lt2dPhiLepMet", (*pass_lt2_dPhiLepMet)));// 14) dPhi(lep1,MET) < 2.0
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 bool selectionInfo::pass_CR2l(int jesType){ return selectionInfo::pass_CR2l( jesType, localIncludeTaus, localAddLep2 ); }
 bool selectionInfo::pass_CR2l(int jesType, bool inclTau, bool add2ndLepToMet){
 
@@ -885,6 +1034,48 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_CR2l(){
 
 //////////////////////////////////////////////////////////////////////
 
+bool selectionInfo::pass_CR2l_inclSoft(int jesType){ return selectionInfo::pass_CR2l( jesType, localIncludeTaus, localAddLep2 ); }
+bool selectionInfo::pass_CR2l_inclSoft(int jesType, bool inclTau, bool add2ndLepToMet){
+
+  bool result = true;
+
+  SetJesType( jesType );
+	SetIncludeTaus( inclTau );
+	SetAdd2ndLep( add2ndLepToMet );
+
+  selectionInfo::v_cut selection_cuts = get_selection_CR2l_inclSoft();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
+      result=false;
+      break;
+    }
+  }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR2l_inclSoft(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_CR2l) )); // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "passDilep",     (*pass_diLep) ));        // 4) Dilepton selection
+	result.push_back( cut( "ge2Jets",       (*pass_ge2_jets) ));     // 5) nGoodJets>=2
+	result.push_back( cut( "ge1BJetsInclSoft",      (*pass_ge1_bJets_inclSoft) ));    // 6) nTagJets>=1
+	result.push_back( cut( "ge150met",      (*pass_ge150_met) ));    // 7) met>150.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 8) mt>150.0
+	result.push_back( cut( "ge0p8minDPhi",  (*pass_ge0p8_minDPhi) ));// 9) minDPhi(met,j1/j2)>0.8
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 bool selectionInfo::pass_CR2l_corridor(int jesType){ return selectionInfo::pass_CR2l( jesType, localIncludeTaus, localAddLep2 ); }
 bool selectionInfo::pass_CR2l_corridor(int jesType, bool inclTau, bool add2ndLepToMet){
 
@@ -918,6 +1109,51 @@ std::vector<selectionInfo::cut> selectionInfo::get_selection_CR2l_corridor(){
 	result.push_back( cut( "passDilep",     (*pass_diLep) ));        // 4) Dilepton selection
 	result.push_back( cut( "ge5Jets",       (*pass_ge5_jets) ));     // 5) nGoodJets>=5
 	result.push_back( cut( "ge1BJets",      (*pass_ge1_bJets) ));    // 6) nTagJets>=1
+	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 7) met>250.0
+	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 8) mt>150.0
+	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 9) minDPhi(met,j1/j2)>0.5
+	result.push_back( cut( "j1noBtag",      (*pass_j1NotBtag) ));    // 10) Leading jet is not b-tagged
+	result.push_back( cut( "lt150LepPt",    (*pass_lt150_lep1pt) )); // 11) Leading lepton pT < 150
+	result.push_back( cut( "lt2dPhiLepMet", (*pass_lt2_dPhiLepMet)));// 12) dPhi(lep1,MET) < 2.0
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool selectionInfo::pass_CR2l_corridor_inclSoft(int jesType){ return selectionInfo::pass_CR2l( jesType, localIncludeTaus, localAddLep2 ); }
+bool selectionInfo::pass_CR2l_corridor_inclSoft(int jesType, bool inclTau, bool add2ndLepToMet){
+
+  bool result = true;
+
+  SetJesType( jesType );
+	SetIncludeTaus( inclTau );
+	SetAdd2ndLep( add2ndLepToMet );
+
+  selectionInfo::v_cut selection_cuts = get_selection_CR2l_corridor_inclSoft();
+
+  for(selectionInfo::cut thiscut : selection_cuts){
+    if(!thiscut.second){ 
+      result=false;
+      break;
+    }
+  }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+std::vector<selectionInfo::cut> selectionInfo::get_selection_CR2l_corridor_inclSoft(){
+
+	std::vector<cut> result;
+
+	result.push_back( cut( "dataFilter",    (*pass_metFilter) ));    // 1) Data Filter
+	result.push_back( cut( "trigger",       (*pass_trigger_CR2l) )); // 2) Trigger
+	result.push_back( cut( "goodVertex",    (*pass_goodVtx) ));      // 3) Good Vertex
+	result.push_back( cut( "passDilep",     (*pass_diLep) ));        // 4) Dilepton selection
+	result.push_back( cut( "ge5Jets",       (*pass_ge5_jets) ));     // 5) nGoodJets>=5
+	result.push_back( cut( "ge1BJetsInclSoft",      (*pass_ge1_bJets_inclSoft) ));    // 6) nTagJets>=1
 	result.push_back( cut( "ge250met",      (*pass_ge250_met) ));    // 7) met>250.0
 	result.push_back( cut( "ge150MT",       (*pass_ge150_mt) ));     // 8) mt>150.0
 	result.push_back( cut( "ge0p5minDPhi",  (*pass_ge0p5_minDPhi) ));// 9) minDPhi(met,j1/j2)>0.5

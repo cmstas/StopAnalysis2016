@@ -13,7 +13,7 @@ void plotMaker( bool plotByGenDecay ){
   //
   // Intialize User Inputs
   //
-  bool plotData  = true;
+  bool plotData  = false;
 
   bool rescaleBinsAfterRebin = false;
   
@@ -34,12 +34,17 @@ void plotMaker( bool plotByGenDecay ){
   //
   std::vector<std::string> regionList;
   regionList.push_back("SR_bulk");
+  regionList.push_back("SR_inclSoft");
   regionList.push_back("SR_corridor");
+  regionList.push_back("SR_corridor_inclSoft");
   regionList.push_back("CR0b_bulk");
   regionList.push_back("CR0b_highMlb_bulk");
   regionList.push_back("CR0b_corridor");
+  regionList.push_back("CR0b_corridor_inclSoft");
   regionList.push_back("CR2l_bulk");
+  regionList.push_back("CR2l_inclSoft");
   regionList.push_back("CR2l_corridor");
+  regionList.push_back("CR2l_corridor_inclSoft");
   const int nRegions = regionList.size();
 
   //
@@ -146,12 +151,13 @@ void plotMaker( bool plotByGenDecay ){
  
   sample.first  = sampleInfo::k_T2tt;
   sample.second = genClassyInfo::k_incl;
-  //sigList.push_back( sample );
+  // sigList.push_back( sample );
 
   // T2tt mass points
   std::vector< std::pair< double, double > > T2tt_list;
   std::pair< double, double > T2tt_mass_point;
-    
+
+  /*
   T2tt_mass_point.first  = 400;
   T2tt_mass_point.second = 225;
   T2tt_list.push_back( T2tt_mass_point );
@@ -171,7 +177,28 @@ void plotMaker( bool plotByGenDecay ){
   T2tt_mass_point.second = 100;
   T2tt_list.push_back( T2tt_mass_point );
   //colors.push_back( kBlue );
+  */
 
+  T2tt_list.push_back( std::make_pair(150,50) );
+  T2tt_list.push_back( std::make_pair(200,100) );
+  T2tt_list.push_back( std::make_pair(250,150) );
+  T2tt_list.push_back( std::make_pair(300,200) );
+  T2tt_list.push_back( std::make_pair(350,250) );
+  T2tt_list.push_back( std::make_pair(400,300) );
+  T2tt_list.push_back( std::make_pair(450,350) );
+  T2tt_list.push_back( std::make_pair(500,400) );
+  T2tt_list.push_back( std::make_pair(550,450) );
+
+  colors.push_back( kRed+2 );
+  colors.push_back( kOrange+7 );
+  colors.push_back( kYellow+1 );
+  colors.push_back( kGreen+2 );
+  colors.push_back( kCyan-7 );
+  colors.push_back( kBlue );
+  colors.push_back( kViolet-6 );
+  colors.push_back( kMagenta-7 );
+  colors.push_back( kRed-9 );
+ 
   
   
   
@@ -295,7 +322,49 @@ void plotMaker( bool plotByGenDecay ){
   var_rebin_xBins.push_back(noRebin_xBins);
   var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
 
-  
+
+
+  // Soft tags p4 ////////////////////////////////////////
+  var_list_label.push_back( "h_softBtagPt" );
+  var_list_title.push_back( "Soft b-tag p_{T}" );
+  var_list_xaxis.push_back( "p_{T} [GeV]" );
+
+  sysList.push_back( {sysInfo::Util(sysInfo::k_nominal)} );
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // nSoftTags //////////////////////////////////////////
+  var_list_label.push_back( "h_nSoftBtags" );
+  var_list_title.push_back( "Number of soft b-tags" );
+  var_list_xaxis.push_back( "nSoftTags" );
+
+  sysList.push_back( {sysInfo::Util(sysInfo::k_nominal)} );
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+  // nSoft + Medium ///////////////////////////////////////
+  var_list_label.push_back( "h_nSoftPlusMed" );
+  var_list_title.push_back( "Number of soft plus medium b-tags" );
+  var_list_xaxis.push_back( "nTags" );
+
+  sysList.push_back( {sysInfo::Util(sysInfo::k_nominal)} );
+
+  var_doRebin.push_back(noRebin);
+  var_rebin_labels.push_back(noRebin_label);
+  var_rebin_nBins.push_back(noRebin_nBins);
+  var_rebin_xBins.push_back(noRebin_xBins);
+  var_rebin_xBinsSF.push_back(noRebin_xBinsSF);
+
+
+
   // lep1 pT, incl selection
   var_list_label.push_back( "h_lep1Pt__inclSelection" );
   var_list_title.push_back( "Lepton p_{T}, >=2 jets" );
@@ -1551,7 +1620,7 @@ void plotMaker( bool plotByGenDecay ){
 	
       } // end if plotting data
       
-      if(isGenPlot) h_data = h_null;
+      else h_data = h_null;
 
       
       // Backgrounds

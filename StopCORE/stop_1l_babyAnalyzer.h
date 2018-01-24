@@ -686,6 +686,14 @@ class stop_1l_babyAnalyzer {
   int      nanalysisbtags_;
   TBranch *nanalysisbtags_branch;
   bool     nanalysisbtags_isLoaded;
+
+	int      nsoftbtags_;
+	TBranch *nsoftbtags_branch;
+	bool     nsoftbtags_isLoaded;
+	vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > *softtags_p4_;
+	TBranch *softtags_p4_branch;
+	bool     softtags_p4_isLoaded;
+	
   float    ak4_HT_;
   TBranch *ak4_HT_branch;
   bool     ak4_HT_isLoaded;
@@ -1616,6 +1624,8 @@ void LoadAllBranches();
   const int &nloosebtags();
   const int &ntightbtags();
   const int &nanalysisbtags();
+	const int &nsoftbtags();
+	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &softtags_p4();
   const float &ak4_HT();
   const float &ak4_htratiom();
   const vector<float> &dphi_ak4pfjet_met();
@@ -2081,6 +2091,8 @@ namespace stop_1l {
   const int &nloosebtags();
   const int &ntightbtags();
   const int &nanalysisbtags();
+	const int &nsoftbtags();
+	const vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > > &softtags_p4();
   const float &ak4_HT();
   const float &ak4_htratiom();
   const vector<float> &dphi_ak4pfjet_met();

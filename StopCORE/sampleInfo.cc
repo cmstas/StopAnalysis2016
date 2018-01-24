@@ -50,16 +50,26 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     isSignal     = true;
     isSignalScan = true;
     isFastsim    = true;
-    //baby_i_o.first  = "/nfs-7/userdata/stopRun2/analysis2016__SUS-16-028__12p9fb/stopBabies__v8.0.x_v8__20160729/Nominal/";
+    baby_i_o.first  = "/nfs-7/userdata/dsklein/tupler_babies/merged/Stop_1l/v24/skim/";
     inputBabies.push_back("Signal_T2tt*.root");
-    massPt.first = 800; massPt.second = 100;
-    massPtList.push_back(massPt);
-    massPt.first = 800; massPt.second = 350;
-    massPtList.push_back(massPt);
-    massPt.first = 500; massPt.second = 325;
-    massPtList.push_back(massPt);
-    massPt.first = 400; massPt.second = 225;
-    massPtList.push_back(massPt);
+    // massPt.first = 800; massPt.second = 100;
+    // massPtList.push_back(massPt);
+    // massPt.first = 800; massPt.second = 350;
+    // massPtList.push_back(massPt);
+    // massPt.first = 500; massPt.second = 325;
+    // massPtList.push_back(massPt);
+    // massPt.first = 400; massPt.second = 225;
+    // massPtList.push_back(massPt);
+
+    massPtList.push_back( std::make_pair(150,50) );
+    massPtList.push_back( std::make_pair(200,100) );
+    massPtList.push_back( std::make_pair(250,150) );
+    massPtList.push_back( std::make_pair(300,200) );
+    massPtList.push_back( std::make_pair(350,250) );
+    massPtList.push_back( std::make_pair(400,300) );
+    massPtList.push_back( std::make_pair(450,350) );
+    massPtList.push_back( std::make_pair(500,400) );
+    massPtList.push_back( std::make_pair(550,450) );
     break;
     
   case( k_single_lepton_met ):
@@ -73,17 +83,10 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     //inputBabies.push_back("data_met*.root");
     //inputBabies.push_back("data_single_electron*.root");
     //inputBabies.push_back("data_single_muon*.root");
-    baby_i_o.first = "";
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016B-03Feb2017_ver2-v2/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016C-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016D-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016E-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016F-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016G-03Feb2017-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver2-v1/skim/*.root");
-    inputBabies.push_back("/hadoop/cms/store/user/haweber/AutoTwopler_babies/Stop_1l_v24/MET_Run2016H-03Feb2017_ver3-v1/skim/*.root");
-    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_electron_*.root");
-    inputBabies.push_back("/nfs-7/userdata//haweber/tupler_babies/merged/Stop_1l/v24_trulyunmerged/skim/data_single_muon_*.root");
+    baby_i_o.first = "/nfs-7/userdata/dsklein/tupler_babies/merged/Stop_1l/v24/skim/";
+    inputBabies.push_back("data_met_*.root");
+    inputBabies.push_back("data_single_electron_*.root");
+    inputBabies.push_back("data_single_muon_*.root");
     break;
 
   case( k_met ):
@@ -669,7 +672,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "t_tW_5f_powheg_pythia8_noHadDecays_ext1_25ns";
     title = "single t, W-channel, powheg pythia8, no had decays, ext1";
     tex   = "single $t,~t-W$-channel,~powheg~pythia8,~no~had~decyas~ext1";
-    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v23/skim/";
+    // baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v23/skim/";
     inputBabies.push_back("t_tW_5f_powheg_pythia8_noHadDecays_ext1_25ns*.root");
     break;
 
@@ -677,7 +680,7 @@ sampleInfo::sampleUtil::sampleUtil( sampleInfo::ID sample ){
     label = "t_tbarW_5f_powheg_pythia8_noHadDecays_ext1_25ns";
     title = "single tbar, W-channel, powheg pythia8, no had decays, ext1";
     tex   = "single $\\bar{t},~t-W$-channel,~powheg~pythia8,~no~had~decays,~ext1";
-    baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v23/skim/";
+    // baby_i_o.first = "/nfs-7/userdata/jgwood/tupler_babies/merged/Stop_1l/v23/skim/";
     inputBabies.push_back("t_tbarW_5f_powheg_pythia8_noHadDecays_ext1_25ns*.root");
     break;
   
@@ -1004,7 +1007,7 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
   vect_id result;
 
   // Data, SingleLepton OR MET
-  result.push_back( sampleInfo::k_single_lepton_met );
+  // result.push_back( sampleInfo::k_single_lepton_met );
 
   // MC, ttbar
   //result.push_back( sampleInfo::k_ttbar_powheg_pythia8_ext4 );
@@ -1073,7 +1076,7 @@ sampleInfo::vect_id sampleInfo::getSampleList_SR(){
 
 
   // Signal, T2tt
-  //result.push_back( sampleInfo::k_T2tt );
+  result.push_back( sampleInfo::k_T2tt );
 
 
   return result;

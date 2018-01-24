@@ -62,44 +62,67 @@ int stopBabyLooper() {
 	// Set up all the analyzer objects we'll need
 	//
 	analyzer SR_MlbBinned( "SR_bulk" );
+	analyzer SR_inclSoft( "SR_inclSoft" );
 	analyzer SR_corridor( "SR_corridor" );
+	analyzer SR_corridor_inclSoft( "SR_corridor_inclSoft" );
 	analyzer CR2l_MlbBinned( "CR2l_bulk" );
+	analyzer CR2l_inclSoft( "CR2l_inclSoft" );
 	analyzer CR2l_corridor( "CR2l_corridor" );
+	analyzer CR2l_corridor_inclSoft( "CR2l_corridor_inclSoft" );
 	analyzer CR0b_MlbBinned( "CR0b_bulk" );
 	analyzer CR0b_tightBTagHighMlb( "CR0b_highMlb_bulk" );
 	analyzer CR0b_corridor( "CR0b_corridor" );
+	analyzer CR0b_corridor_inclSoft( "CR0b_corridor_inclSoft" );
 
-	std::vector<analyzer*> analyzer_list = {&SR_MlbBinned, &SR_corridor, &CR2l_MlbBinned, &CR2l_corridor, &CR0b_MlbBinned, &CR0b_tightBTagHighMlb, &CR0b_corridor};
+	std::vector<analyzer*> analyzer_list = {&SR_MlbBinned, &SR_inclSoft, &SR_corridor, &SR_corridor_inclSoft, &CR2l_MlbBinned, &CR2l_inclSoft, &CR2l_corridor, &CR2l_corridor_inclSoft, &CR0b_MlbBinned, &CR0b_tightBTagHighMlb, &CR0b_corridor, &CR0b_corridor_inclSoft};
 
 	// Set the attributes for each analyzer
 	CR2l_MlbBinned.SetAdd2ndLep( true );
+	CR2l_inclSoft.SetAdd2ndLep( true );
 	CR2l_corridor.SetAdd2ndLep( true );
+	CR2l_corridor_inclSoft.SetAdd2ndLep( true );
 
 	SR_corridor.SetIsCorridor( true );
+	SR_corridor_inclSoft.SetIsCorridor( true );
 	CR2l_corridor.SetIsCorridor( true );
+	CR2l_corridor_inclSoft.SetIsCorridor( true );
 	CR0b_corridor.SetIsCorridor( true );
+	CR0b_corridor_inclSoft.SetIsCorridor( true );
 
 	SR_MlbBinned.SetUseMetTTbarWeights( true );
+	SR_inclSoft.SetUseMetTTbarWeights( true );
 
 	SR_MlbBinned.SetUseTightTagHighMlb( true );
+	SR_inclSoft.SetUseTightTagHighMlb( true );
 	CR2l_MlbBinned.SetUseTightTagHighMlb( true );
+	CR2l_inclSoft.SetUseTightTagHighMlb( true );
 
 	// Set selections and categories for the analyzers
 	SR_MlbBinned.AddSelections(   selectionInfo::get_selection_SR() );
+	SR_inclSoft.AddSelections(   selectionInfo::get_selection_SR_inclSoft() );
 	SR_corridor.AddSelections(    selectionInfo::get_selection_SR_corridor() );
+	SR_corridor_inclSoft.AddSelections(    selectionInfo::get_selection_SR_corridor_inclSoft() );
 	CR2l_MlbBinned.AddSelections( selectionInfo::get_selection_CR2l() );
+	CR2l_inclSoft.AddSelections( selectionInfo::get_selection_CR2l_inclSoft() );
 	CR2l_corridor.AddSelections(  selectionInfo::get_selection_CR2l_corridor() );
+	CR2l_corridor_inclSoft.AddSelections(  selectionInfo::get_selection_CR2l_corridor_inclSoft() );
 	CR0b_MlbBinned.AddSelections( selectionInfo::get_selection_CR0b() );
 	CR0b_tightBTagHighMlb.AddSelections( selectionInfo::get_selection_CR0b_tightBTagHighMlb() );
 	CR0b_corridor.AddSelections(  selectionInfo::get_selection_CR0b_corridor() );
+	CR0b_corridor_inclSoft.AddSelections( selectionInfo::get_selection_CR0b_corridor_inclSoft() );
 
 	SR_MlbBinned.AddCategories(   categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
+	SR_inclSoft.AddCategories(    categoryInfo::passCategory_SR_inclSoft);
 	SR_corridor.AddCategories(    categoryInfo::passCategory_SR_corridor);
+	SR_corridor_inclSoft.AddCategories( categoryInfo::passCategory_SR_corridor);
 	CR2l_MlbBinned.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
+	CR2l_inclSoft.AddCategories(  categoryInfo::passCategory_SR_inclSoft);
 	CR2l_corridor.AddCategories(  categoryInfo::passCategory_SR_corridor);
+	CR2l_corridor_inclSoft.AddCategories( categoryInfo::passCategory_SR_corridor);
 	CR0b_MlbBinned.AddCategories( categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
 	CR0b_tightBTagHighMlb.AddCategories(categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2);
 	CR0b_corridor.AddCategories(  categoryInfo::passCategory_SR_corridor);
+	CR0b_corridor_inclSoft.AddCategories(categoryInfo::passCategory_SR_corridor);
 
 	TH1D* h_template_MlbBinned = categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_mlb_v2();
 	TH1D* h_template_corridor  = categoryInfo::getYieldHistoTemplate_SR_corridor();
@@ -108,20 +131,30 @@ int stopBabyLooper() {
 	TH3D* h_template_corridor_signal  = categoryInfo::getYieldHistoTemplate_signal_SR_corridor();
 
 	SR_MlbBinned.SetYieldTemplate(   h_template_MlbBinned );
+	SR_inclSoft.SetYieldTemplate(  h_template_MlbBinned );
 	SR_corridor.SetYieldTemplate(    h_template_corridor );
+	SR_corridor_inclSoft.SetYieldTemplate( h_template_corridor );
 	CR2l_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
+	CR2l_inclSoft.SetYieldTemplate( h_template_MlbBinned );
 	CR2l_corridor.SetYieldTemplate(  h_template_corridor );
+	CR2l_corridor_inclSoft.SetYieldTemplate( h_template_corridor );
 	CR0b_MlbBinned.SetYieldTemplate( h_template_MlbBinned );
 	CR0b_tightBTagHighMlb.SetYieldTemplate(h_template_MlbBinned );
 	CR0b_corridor.SetYieldTemplate(  h_template_corridor );
+	CR0b_corridor_inclSoft.SetYieldTemplate( h_template_corridor );
 
 	SR_MlbBinned.SetYieldTemplateSignal(   h_template_MlbBinned_signal );
+	SR_inclSoft.SetYieldTemplateSignal( h_template_MlbBinned_signal );
 	SR_corridor.SetYieldTemplateSignal(    h_template_corridor_signal );
+	SR_corridor_inclSoft.SetYieldTemplateSignal( h_template_corridor_signal );
 	CR2l_MlbBinned.SetYieldTemplateSignal( h_template_MlbBinned_signal );
+	CR2l_inclSoft.SetYieldTemplateSignal( h_template_MlbBinned_signal );
 	CR2l_corridor.SetYieldTemplateSignal(  h_template_corridor_signal );
+	CR2l_corridor_inclSoft.SetYieldTemplateSignal( h_template_corridor_signal );
 	CR0b_MlbBinned.SetYieldTemplateSignal( h_template_MlbBinned_signal );
 	CR0b_tightBTagHighMlb.SetYieldTemplateSignal(h_template_MlbBinned_signal );
 	CR0b_corridor.SetYieldTemplateSignal(  h_template_corridor_signal );
+	CR0b_corridor_inclSoft.SetYieldTemplateSignal( h_template_corridor_signal );
 
 
   //
@@ -403,6 +436,15 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
   
   // csv jet2 pT
   TH1D *h_csvJet2Pt_incl[nHistosVars];
+
+  // Soft b-tag pT
+  TH1D *h_softBtagPt_incl[nHistosVars];
+
+  // nSoftBtags
+  TH1D *h_nSoftBtags[nHistosVars];
+
+  // nSoft + Medium b-tags
+  TH1D *h_nSoftPlusMed[nHistosVars];
   
   // met
   TH1D *h_met_incl[nHistosVars];
@@ -564,6 +606,19 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 				// Incl Selection
 				hName = "h_csvJet2Pt__inclSelection" + reg_gen_sys_name;
 				h_csvJet2Pt_incl[iHisto] = new TH1D( hName, "2nd Leading CSV Jet p_{T};p_{T} [GeV]", 24, 0.0, 600.0 );
+
+
+				// Soft b-tag pT
+				hName = "h_softBtagPt" + reg_gen_sys_name;
+				h_softBtagPt_incl[iHisto] = new TH1D( hName, "Soft b-tag p_{T};p_{T} [GeV]", 20, 0., 20. );
+
+				// Number of soft b-tags
+				hName = "h_nSoftBtags" + reg_gen_sys_name;
+				h_nSoftBtags[iHisto] = new TH1D( hName, "Number of soft b-tags;nTags", 5, -0.5, 4.5 );
+
+				// Number of soft b-tags + number of medium b-tags
+				hName = "h_nSoftPlusMed" + reg_gen_sys_name;
+				h_nSoftPlusMed[iHisto] = new TH1D( hName, "Number of soft + medium b-tags;nTags", 11, -0.5, 10.5 );
       
 	
 
@@ -1124,7 +1179,6 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 								if( TString(thisAnalyzer->GetLabel()).Contains("CR0b") ) mlb = ( lep1_p4() + ak4pfjets_leadbtag_p4() ).M();
 
 								// Met Sideband CR area, met>=150
-
 								if( met>=150 && met<250 ) {
 									// mlb, met sideband CR
 									h_mlb_150to250met_incl[iHisto]->Fill( mlb, weight );
@@ -1137,7 +1191,6 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 										if( nGoodJets<4 )  h_mlb_lep2_150to250met_lt4j[iHisto]->Fill( lep2b_TLV.M(), weight );
 										if( nGoodJets>=4 ) h_mlb_lep2_150to250met_ge4j[iHisto]->Fill( lep2b_TLV.M(), weight );
 									}
-
 								} // end if 150<met<250
 
 								// Signal Region Area, met>=250
@@ -1169,6 +1222,13 @@ int looper( sampleInfo::ID sampleID, std::vector<analyzer*> analyzers, int nEven
 
 								// csv jet2 pT
 								if(jet2_idx>=0) h_csvJet2Pt_incl[iHisto]->Fill( ak4pfjets_p4().at(jet2_idx).Pt(), weight );
+
+								// Soft b-tagger stuff
+								// if( sample.isSignalScan ) {
+									for( LorentzVector p4 : softtags_p4() ) h_softBtagPt_incl[iHisto]->Fill( p4.Pt(), weight );
+									h_nSoftBtags[iHisto]->Fill( nsoftbtags(), weight );
+									h_nSoftPlusMed[iHisto]->Fill( nsoftbtags() + ngoodbtags(), weight );
+								// }
 
 								// met
 								h_met_incl[iHisto]->Fill( met, weight );

@@ -577,6 +577,32 @@ void JetTree::FillCommon(std::vector<unsigned int> alloverlapjets_idx,  Factoriz
       }
     }
     nGoodGenJets = nGoodJets;
+
+
+    // Fill info for soft b-tags
+    for( uint i=0; i<svs_p4().size(); i++ ) {
+
+	    if( svs_p4().at(i).Pt() >= 20.0 ) continue;
+	    if( svs_nTrks().at(i) < 3 ) continue;
+	    if( svs_distXYval().at(i) >= 3.0 ) continue;
+	    if( svs_dist3Dsig().at(i) <= 4.0 ) continue;
+	    if( cos(svs_anglePV().at(i)) <= 0.98 ) continue;
+
+	    bool failDR = false;
+	    for( uint j=0; j<ak4pfjets_p4.size(); j++ ) {
+		    if( ROOT::Math::VectorUtil::DeltaR( svs_p4().at(i), ak4pfjets_p4[j] ) <= 0.4 ) {
+			    failDR = true;
+			    break;
+		    }
+	    } // end loop over ak4 jets
+
+	    if( failDR ) continue;
+
+	    softtags_p4.push_back( svs_p4().at(i) );
+
+    } // end loop over SVs
+
+    nsoftbtags = softtags_p4.size();
     
 }
         
@@ -708,6 +734,8 @@ void JetTree::Reset ()
     ak8pfjets_parton_flavor.clear();
  
     ak4genjets_p4.clear();
+
+    softtags_p4.clear();
  
     ak4pfjets_MEDbjet_pt.clear();
     ak4pfjets_passMEDbtag.clear();
@@ -724,6 +752,8 @@ void JetTree::Reset ()
     nloosebtags    = -9999;
     ntightbtags    = -9999;
     nanalysisbtags = -9999;
+
+    nsoftbtags = -9999;
 }
  
 void JetTree::SetAK4Branches (TTree* tree)
@@ -733,6 +763,9 @@ void JetTree::SetAK4Branches (TTree* tree)
     tree->Branch(Form("%snloosebtags", prefix_.c_str()) , &nloosebtags);
     tree->Branch(Form("%sntightbtags", prefix_.c_str()) , &ntightbtags);
     tree->Branch(Form("%snanalysisbtags", prefix_.c_str()) , &nanalysisbtags);
+    tree->Branch(Form("%ssofttags_p4", prefix_.c_str()) , &softtags_p4);
+    tree->Branch(Form("%snsoftbtags", prefix_.c_str()) , &nsoftbtags);
+    
     tree->Branch(Form("%sak4_HT", prefix_.c_str()) , &ak4_HT);
     tree->Branch(Form("%sak4_htratiom", prefix_.c_str()) , &ak4_htratiom);
     tree->Branch(Form("%sdphi_ak4pfjet_met", prefix_.c_str()) , &dphi_ak4pfjet_met);

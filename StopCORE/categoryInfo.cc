@@ -1129,6 +1129,257 @@ vector<int> categoryInfo::passCategory_SR_dev_ext30fb_mlb_v2( int jesType, bool 
 
 //////////////////////////////////////////////////////////////////////
 
+vector<int> categoryInfo::passCategory_SR_inclSoft( int jesType, bool add2ndLepToMet ){
+
+  vector<int> result;
+
+  int nGoodJets = babyAnalyzer.ngoodjets();
+  if( jesType==1 )  nGoodJets = babyAnalyzer.jup_ngoodjets();
+  if( jesType==-1 ) nGoodJets = babyAnalyzer.jdown_ngoodjets();
+
+
+  double modTopness = babyAnalyzer.topnessMod();
+  if( add2ndLepToMet){
+    if(jesType==0)  modTopness = babyAnalyzer.topnessMod_rl();
+    if(jesType==1)  modTopness = babyAnalyzer.topnessMod_rl_jup();
+    if(jesType==-1) modTopness = babyAnalyzer.topnessMod_rl_jdown();
+  }
+  else{
+    if(jesType==1)  modTopness = babyAnalyzer.topnessMod_jup();
+    if(jesType==-1) modTopness = babyAnalyzer.topnessMod_jdown();
+  }
+
+
+  double mlb = babyAnalyzer.Mlb_closestb();
+  
+  int nMedBTags = babyAnalyzer.ngoodbtags()+babyAnalyzer.nsoftbtags(); 
+  if( jesType==1)  nMedBTags = babyAnalyzer.jup_ngoodbtags()+babyAnalyzer.nsoftbtags();
+  if( jesType==-1) nMedBTags = babyAnalyzer.jdown_ngoodbtags()+babyAnalyzer.nsoftbtags();
+  
+  int nTightTags = babyAnalyzer.ntightbtags();
+  if(jesType==1)  nTightTags = babyAnalyzer.jup_ntightbtags();
+  if(jesType==-1) nTightTags = babyAnalyzer.jdown_ntightbtags();
+  /*
+  int nTightTags = 0;
+  double tight_wp = 0.935;
+  vector<float> jet_csvv2 = babyAnalyzer.ak4pfjets_CSV();
+  if( jesType==1 )  jet_csvv2 = babyAnalyzer.jup_ak4pfjets_CSV();
+  if( jesType==-1 ) jet_csvv2 = babyAnalyzer.jdown_ak4pfjets_CSV();
+  for(int iJet=0; iJet<(int)jet_csvv2.size(); iJet++){
+    if( jet_csvv2[iJet] >= tight_wp ) nTightTags++;
+  }
+  */
+  bool is0b = ( (nMedBTags==0) || (nMedBTags>=1 && nTightTags==0 && mlb>175.0) );
+  
+  if( is0b ){
+    if( jesType==1  ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jup_ak4pfjets_leadbtag_p4() ).M();
+    if( jesType==-1 ) mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.jdown_ak4pfjets_leadbtag_p4() ).M();
+    else              mlb = ( babyAnalyzer.lep1_p4() + babyAnalyzer.ak4pfjets_leadbtag_p4() ).M();
+  } 
+  
+  double met = babyAnalyzer.pfmet();
+  if( add2ndLepToMet){
+    if(jesType==0)  met = babyAnalyzer.pfmet_rl();
+    if(jesType==1)  met = babyAnalyzer.pfmet_rl_jup();
+    if(jesType==-1) met = babyAnalyzer.pfmet_rl_jdown();
+  }
+  else{
+    if(jesType==1)  met = babyAnalyzer.pfmet_jup();
+    if(jesType==-1) met = babyAnalyzer.pfmet_jdown();
+  }
+
+
+  // Require dPhi(met,j1,2)>=0.8
+  double dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2();
+  if( add2ndLepToMet ){
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl_jdown();
+    else dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_rl();
+  }
+  else{
+    if( jesType==1 ) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jup();
+    else if( jesType==-1) dPhiMetJet = babyAnalyzer.mindphi_met_j1_j2_jdown();
+  }
+  
+  if( dPhiMetJet<0.8 ) return result;
+
+  if( localTightTagHighMlb && babyAnalyzer.Mlb_closestb()>=175. && nTightTags<1 ) return result;
+
+
+  //
+  // 27 Signal Region Bins
+  //
+
+  // Region A
+  if( nGoodJets<4 && modTopness>=10.0 && mlb<175 ){
+    if(     met>600) result.push_back(4);
+    else if(met>450) result.push_back(3);
+    else if(met>350) result.push_back(2);
+    else if(met>250) result.push_back(1);
+  }
+
+  // Region B
+  if( nGoodJets<4 && modTopness>=10.0 && mlb>=175  ){
+    if(     met>600) result.push_back(7);
+    else if(met>450) result.push_back(6);
+    else if(met>250) result.push_back(5);
+  }
+  
+  // Region C
+  if( nGoodJets>=4 && modTopness<0 && mlb<175 ){
+    if(     met>650) result.push_back(12);
+    else if(met>550) result.push_back(11);
+    else if(met>450) result.push_back(10);
+    else if(met>350) result.push_back(9);
+    else if(met>250) result.push_back(8);
+  }
+
+  // Region D
+  if( nGoodJets>=4 && modTopness<0 && mlb>=175  ){
+    if(     met>550) result.push_back(16);
+    else if(met>450) result.push_back(15);
+    else if(met>350) result.push_back(14);
+    else if(met>250) result.push_back(13);
+  }
+
+  // Region E
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && mlb<175 ){
+    if(     met>550) result.push_back(19);
+    else if(met>350) result.push_back(18);
+    else if(met>250) result.push_back(17);
+  }
+  
+  // Region F
+  if( nGoodJets>=4 && modTopness>=0 && modTopness<10.0 && mlb>=175  ){
+    if(     met>450) result.push_back(21);
+    else if(met>250) result.push_back(20);
+  }
+
+  // Region G
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb<175 ){
+    if(     met>600) result.push_back(25);
+    else if(met>450) result.push_back(24);
+    else if(met>350) result.push_back(23);
+    else if(met>250) result.push_back(22);
+  }
+
+  // Region H
+  if( nGoodJets>=4 && modTopness>=10.0 && mlb>=175  ){
+    if(     met>450) result.push_back(27);
+    else if(met>250) result.push_back(26);
+  }
+
+
+
+  // Coarser MET bins for bkg estimates
+  if( nGoodJets<4 ){
+    if(modTopness>=10.0){
+      if(mlb<175 && met>450) result.push_back(28); 
+      if(mlb>=175  && met>450) result.push_back(29); 
+    }
+  }
+  if( nGoodJets>=4 ){
+    if( modTopness<0.0 ){
+      if( mlb<175  && met>550 ) result.push_back(30); 
+      if( mlb>=175  && met>450 ) result.push_back(31); 
+    }
+    if( modTopness>=0.0 && modTopness<10.0 ){
+      if( mlb<175  && met>350 ) result.push_back(32); 
+      if( mlb>=175  && met>250 ) result.push_back(33); 
+    }
+    if( modTopness>=10.0 ){
+      if( mlb<175  && met>450 ) result.push_back(34); 
+      if( mlb>=175  && met>250 ) result.push_back(35); 
+    }
+  }
+      
+  
+  // nJets Bins
+  if( nGoodJets<4  ) result.push_back(36); 
+  if( nGoodJets>=4 ) result.push_back(37); 
+  
+
+  // nJets and modTopness Bins
+  if( nGoodJets<4  && modTopness>=10.0 ) result.push_back(38); 
+  if( nGoodJets>=4 ){
+    if(      modTopness>=10.0 ) result.push_back(39); 
+    else if( modTopness<10.0  ) result.push_back(40); 
+    else if( modTopness<0.0   ) result.push_back(41); 
+  }
+    
+  
+  // nJet, modTopness, met bins, inclusive in Mlb
+  if( nGoodJets<4 ){
+    if(modTopness>=10.0){
+      if(met>=150.0 && met<250.0) result.push_back(42); 
+      if(met>=250.0 && met<350.0) result.push_back(43);
+      if(met>=350.0 && met<450.0) result.push_back(44); 
+      if(met>=450.0 && met<600.0) result.push_back(45); 
+      if(met>=600.0)              result.push_back(46); 
+
+      if(met>=250.0 && met<450.0) result.push_back(47); 
+      if(met>=450.0 && met<600.0) result.push_back(48); 
+      if(met>=600.0)              result.push_back(49); 
+    }
+  }
+ 
+  if( nGoodJets>=4 ){
+    if(modTopness<0.0){
+      if(met>=150.0 && met<250.0) result.push_back(50);  
+      if(met>=250.0 && met<350.0) result.push_back(51);  
+      if(met>=350.0 && met<450.0) result.push_back(52);  
+      if(met>=450.0 && met<550.0) result.push_back(53);  
+      if(met>=550.0 && met<650.0) result.push_back(54);  
+      if(met>=650.0)              result.push_back(55);  
+      if(met>=550.0)              result.push_back(56);  
+    }
+    if(modTopness>=0.0 && modTopness<10.0){
+      if(met>=150.0 && met<250.0) result.push_back(57);  
+      if(met>=250.0 && met<350.0) result.push_back(58);  
+      if(met>=350.0 && met<550.0) result.push_back(59);  
+      if(met>=550.0)              result.push_back(60);  
+      
+      if(met>=250.0 && met<450.0) result.push_back(61);  
+      if(met>=450.0)              result.push_back(62); 
+    }
+    if(modTopness>=10.0){
+      if(met>=150.0 && met<250.0) result.push_back(63);  
+      if(met>=250.0 && met<350.0) result.push_back(64);  
+      if(met>=350.0 && met<450.0) result.push_back(65);  
+      if(met>=450.0 && met<600.0) result.push_back(66);  
+      if(met>=600.0)              result.push_back(67);  
+    
+      if(met>=250.0 && met<450.0) result.push_back(68);  
+      if(met>=450.0)              result.push_back(69);  
+    }
+  } // inclusive nJets>=4 bins
+  
+
+  // 150<met<250 CR bins
+  if( nGoodJets<4 && modTopness>=10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(70); 
+    if(mlb>=175  && met>150 && met<=250) result.push_back(71); 
+  }
+  if( nGoodJets>=4 && modTopness<0.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(72); 
+    if(mlb>=175  && met>150 && met<=250) result.push_back(73); 
+  }
+  if( nGoodJets>=4 && modTopness>=0.0 && modTopness<10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(74); 
+    if(mlb>=175  && met>150 && met<=250) result.push_back(75); 
+  }
+  if( nGoodJets>=4 && modTopness>=10.0 ){
+    if(mlb<175  && met>150 && met<=250) result.push_back(76); 
+    if(mlb>=175  && met>150 && met<=250) result.push_back(77); 
+  }
+  
+     
+  return result;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+
 TH1D* categoryInfo::getYieldHistoTemplate_SR_dev_ext30fb_bJetPt_v1(){
 
   int nBins_dev_ext30fb_bJetPt_v1_ = 78;

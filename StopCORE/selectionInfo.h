@@ -77,11 +77,15 @@ namespace selectionInfo{
   bool pass_geX_bJets(int cut_nBJets=1, int jesType=0);
   bool pass_ge1_bJets();
 
+	bool pass_ge1_bJets_inclSoft();
+
   // bTagging Selection, CR0b
   bool pass_eeX_bJets(int cut_nBJets=0, int jesType=0); 
   bool pass_ee0_bJets();
   bool pass_eeX_bJets_tightBTagHighMlb(int cut_nBTags=0, int jesType=0);
   bool pass_ee0_bJets_tightBTagHighMlb();
+
+	bool pass_ee0_bJets_inclSoft();
 
   // MET Selection
   bool pass_geX_met(double cut_met=150.0, int jesType=0, bool add2ndLepToMet=false);
@@ -142,25 +146,48 @@ namespace selectionInfo{
   bool pass_SR(int jesType=0);
 	std::vector<cut> get_selection_SR();
 
+	bool pass_SR_inclSoft(int jesType=0);
+	std::vector<cut> get_selection_SR_inclSoft();
+
 	bool pass_SR_corridor(int jesType=0);
 	std::vector<cut> get_selection_SR_corridor();
+
+	bool pass_SR_corridor_inclSoft(int jesType=0);
+	std::vector<cut> get_selection_SR_corridor_inclSoft();
   
   bool pass_CR0b(int jesType=0);
 	std::vector<cut> get_selection_CR0b();
 
+  // bool pass_CR0b_inclSoft(int jesType=0);
+	// std::vector<cut> get_selection_CR0b_inclSoft();
+
   bool pass_CR0b_tightBTagHighMlb(int jesType=0);
 	std::vector<cut> get_selection_CR0b_tightBTagHighMlb();
 
+  // bool pass_CR0b_tightBTagHighMlb_inclSoft(int jesType=0);
+	// std::vector<cut> get_selection_CR0b_tightBTagHighMlb_inclSoft();
+
 	bool pass_CR0b_corridor(int jesType=0);
 	std::vector<cut> get_selection_CR0b_corridor();
+
+	bool pass_CR0b_corridor_inclSoft(int jesType=0);
+	std::vector<cut> get_selection_CR0b_corridor_inclSoft();
 
   bool pass_CR2l(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
   bool pass_CR2l(int jesType=0);
 	std::vector<cut> get_selection_CR2l();
 
+  bool pass_CR2l_inclSoft(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
+  bool pass_CR2l_inclSoft(int jesType=0);
+	std::vector<cut> get_selection_CR2l_inclSoft();
+
   bool pass_CR2l_corridor(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
 	bool pass_CR2l_corridor(int jesType=0);
 	std::vector<cut> get_selection_CR2l_corridor();
+
+  bool pass_CR2l_corridor_inclSoft(int jesType=0, bool inclTau=false, bool add2ndLepToMet=true);
+	bool pass_CR2l_corridor_inclSoft(int jesType=0);
+	std::vector<cut> get_selection_CR2l_corridor_inclSoft();
   
   bool pass_CR2l_bulkTTbar(int jesType=0, bool add2ndLepToMet=false );
   bool pass_CR2l_bulkTTbar(int jesType=0);

@@ -15,7 +15,7 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
   //
   bool blindSR = false;
 
-  bool usePsuedoData = false;
+  bool usePsuedoData = true;
 
   bool doRescale = false;
   double rescale = 1.0; // use lumi from stopCORE
@@ -94,28 +94,38 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
   std::vector< std::pair< sampleInfo::ID, genClassyInfo::ID > > sigList;
   sample.first = sampleInfo::k_T2tt; 
   sample.second = genClassyInfo::k_incl;
-  //sigList.push_back(sample);
+  sigList.push_back(sample);
 
 
   // T2tt mass points
   std::vector< std::pair< int, int > > T2tt_list;
   std::pair< int, int > T2tt_mass_point;
   
-  T2tt_mass_point.first  = 800;
-  T2tt_mass_point.second = 100;
-  T2tt_list.push_back( T2tt_mass_point );
+  // T2tt_mass_point.first  = 800;
+  // T2tt_mass_point.second = 100;
+  // T2tt_list.push_back( T2tt_mass_point );
 
-  T2tt_mass_point.first  = 800;
-  T2tt_mass_point.second = 350;
-  T2tt_list.push_back( T2tt_mass_point );
+  // T2tt_mass_point.first  = 800;
+  // T2tt_mass_point.second = 350;
+  // T2tt_list.push_back( T2tt_mass_point );
 
-  T2tt_mass_point.first  = 500;
-  T2tt_mass_point.second = 325;
-  T2tt_list.push_back( T2tt_mass_point );
+  // T2tt_mass_point.first  = 500;
+  // T2tt_mass_point.second = 325;
+  // T2tt_list.push_back( T2tt_mass_point );
 
-  T2tt_mass_point.first  = 400;
-  T2tt_mass_point.second = 225;
-  T2tt_list.push_back( T2tt_mass_point );
+  // T2tt_mass_point.first  = 400;
+  // T2tt_mass_point.second = 225;
+  // T2tt_list.push_back( T2tt_mass_point );
+
+  T2tt_list.push_back( std::make_pair(150,50) );
+  T2tt_list.push_back( std::make_pair(200,100) );
+  T2tt_list.push_back( std::make_pair(250,150) );
+  T2tt_list.push_back( std::make_pair(300,200) );
+  T2tt_list.push_back( std::make_pair(350,250) );
+  T2tt_list.push_back( std::make_pair(400,300) );
+  T2tt_list.push_back( std::make_pair(450,350) );
+  T2tt_list.push_back( std::make_pair(500,400) );
+  T2tt_list.push_back( std::make_pair(550,450) );
 
 
   //
@@ -332,12 +342,17 @@ void tableMaker_summedInputs( std::string f_input_dir, std::string f_out_name_ba
   //
   std::vector<std::pair<std::string,std::vector<std::vector<yieldHelper> > > > regionList;
   regionList.push_back( std::make_pair("SR_bulk", tableList_bulk) );
+  regionList.push_back( std::make_pair("SR_inclSoft", tableList_bulk) );
 	regionList.push_back( std::make_pair("SR_corridor", tableList_corridor) );
+	regionList.push_back( std::make_pair("SR_corridor_inclSoft", tableList_corridor) );
   regionList.push_back( std::make_pair("CR0b_bulk", tableList_bulk) );
   regionList.push_back( std::make_pair("CR0b_highMlb_bulk", tableList_bulk) );
 	regionList.push_back( std::make_pair("CR0b_corridor", tableList_corridor) );
+	regionList.push_back( std::make_pair("CR0b_corridor_inclSoft", tableList_corridor) );
   regionList.push_back( std::make_pair("CR2l_bulk", tableList_bulk) );
+  regionList.push_back( std::make_pair("CR2l_inclSoft", tableList_bulk) );
 	regionList.push_back( std::make_pair("CR2l_corridor", tableList_corridor) );
+	regionList.push_back( std::make_pair("CR2l_corridor_inclSoft", tableList_corridor) );
 
 
 
